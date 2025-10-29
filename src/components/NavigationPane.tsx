@@ -161,6 +161,15 @@ export const NavigationPane = React.memo(
         const { shortcutMap, removeShortcut, hydratedShortcuts, reorderShortcuts, addFolderShortcut, addNoteShortcut } = shortcuts;
         const { fileData, getFileDisplayName } = useFileCache();
         const dragGhostManager = useMemo(() => createDragGhostManager(app), [app]);
+        const logDebug = useCallback((message: string, payload?: Record<string, unknown>) => {
+            if (payload) {
+                console.log('[NavPaneDebug]', message, payload);
+            } else {
+                console.log('[NavPaneDebug]', message);
+            }
+        }, []);
+        const previousVirtualItemCountRef = useRef<number | null>(null);
+        const previousTotalSizeRef = useRef<number | null>(null);
 
         const menuServices = useMemo<MenuServices>(
             () => ({
@@ -721,20 +730,109 @@ export const NavigationPane = React.memo(
             setRootReorderMode(prev => !prev);
         }, [canReorderRootItems]);
 
-        const { rowVirtualizer, scrollContainerRef, scrollContainerRefCallback, requestScroll } = useNavigationPaneScroll({
-            items,
-            pathToIndex,
+        const { rowVirtualizer, scrollContainerRef, scrollContainerRefCallback, requestScroll, pendingScrollVersion, containerVisible } =
+            useNavigationPaneScroll({
+                items,
+                pathToIndex,
+                isVisible,
+                activeShortcutKey,
+                bannerHeight
+            });
+        const virtualItems = rowVirtualizer.getVirtualItems();
+        const virtualItemCount = virtualItems.length;
+        const firstVirtualIndex = virtualItems.length > 0 ? virtualItems[0].index : null;
+        const lastVirtualIndex = virtualItems.length > 0 ? virtualItems[virtualItems.length - 1].index : null;
+        const virtualTotalSize = rowVirtualizer.getTotalSize();
+
+        useEffect(() => {
+            logDebug('Navigation pane visibility updated', {
+                isVisible,
+                containerVisible
+            });
+        }, [isVisible, containerVisible, logDebug]);
+
+        useEffect(() => {
+            logDebug('Pending scroll version changed', { pendingScrollVersion });
+        }, [pendingScrollVersion, logDebug]);
+
+        useEffect(() => {
+            logDebug('Navigation items count updated', { itemCount: items.length });
+        }, [items.length, logDebug]);
+
+        useEffect(() => {
+            const prevCount = previousVirtualItemCountRef.current;
+            const prevTotal = previousTotalSizeRef.current;
+            const scrollTop = scrollContainerRef.current?.scrollTop ?? null;
+            if (items.length > 0 && virtualItemCount === 0 && prevCount !== 0) {
+                logDebug('Virtualizer returned zero items', {
+                    itemCount: items.length,
+                    virtualTotalSize,
+                    scrollTop,
+                    containerVisible,
+                    isVisible,
+                    pendingScrollVersion
+                });
+            } else if (virtualItemCount > 0 && (prevCount === 0 || prevCount === null)) {
+                logDebug('Virtualizer resumed item rendering', {
+                    itemCount: items.length,
+                    virtualItemCount,
+                    firstVirtualIndex,
+                    lastVirtualIndex,
+                    virtualTotalSize,
+                    scrollTop,
+                    containerVisible,
+                    isVisible
+                });
+            }
+
+            if (items.length > 0 && virtualTotalSize === 0 && prevTotal !== 0) {
+                logDebug('Virtualizer total size is zero', {
+                    itemCount: items.length,
+                    virtualItemCount,
+                    scrollTop,
+                    containerVisible,
+                    isVisible
+                });
+            } else if (virtualTotalSize > 0 && (prevTotal === 0 || prevTotal === null)) {
+                logDebug('Virtualizer total size restored', {
+                    itemCount: items.length,
+                    virtualItemCount,
+                    firstVirtualIndex,
+                    lastVirtualIndex,
+                    virtualTotalSize,
+                    scrollTop
+                });
+            }
+
+            previousVirtualItemCountRef.current = virtualItemCount;
+            previousTotalSizeRef.current = virtualTotalSize;
+        }, [
+            virtualItemCount,
+            virtualTotalSize,
+            items.length,
+            containerVisible,
             isVisible,
-            activeShortcutKey,
-            bannerHeight
-        });
+            logDebug,
+            pendingScrollVersion,
+            firstVirtualIndex,
+            lastVirtualIndex,
+            scrollContainerRef
+        ]);
 
         useEffect(() => {
             if (isRootReorderMode) {
+                logDebug('Skipping navigation pane measure during root reorder mode', {
+                    sectionOrder: sectionOrder.length
+                });
                 return;
             }
+            logDebug('Triggering navigation pane measure', {
+                sectionOrder: sectionOrder.length,
+                reorderableRootFolderCount: reorderableRootFolders.length,
+                reorderableRootTagCount: reorderableRootTags.length
+            });
             rowVirtualizer.measure();
-        }, [isRootReorderMode, rowVirtualizer, sectionOrder, reorderableRootFolders, reorderableRootTags]);
+        }, [isRootReorderMode, rowVirtualizer, sectionOrder, reorderableRootFolders, reorderableRootTags, logDebug]);
 
         // Scroll to top when entering root reorder mode for better UX
         useEffect(() => {
@@ -742,13 +840,22 @@ export const NavigationPane = React.memo(
                 return;
             }
 
+            logDebug('Entering root reorder mode, resetting scroll offsets', {
+                virtualTotalSize,
+                virtualItemCount
+            });
             rowVirtualizer.scrollToOffset(0, { align: 'start', behavior: 'auto' });
 
             const scroller = scrollContainerRef.current;
             if (scroller) {
+                logDebug('Resetting scroll container to top for root reorder mode', {
+                    previousScrollTop: scroller.scrollTop
+                });
                 scroller.scrollTo({ top: 0, behavior: 'auto' });
+            } else {
+                logDebug('Scroll container not ready when entering root reorder mode', {});
             }
-        }, [isRootReorderMode, rowVirtualizer, scrollContainerRef]);
+        }, [isRootReorderMode, rowVirtualizer, scrollContainerRef, logDebug, virtualTotalSize, virtualItemCount]);
 
         // Callback for after expand/collapse operations
         const handleTreeUpdateComplete = useCallback(() => {
@@ -756,9 +863,15 @@ export const NavigationPane = React.memo(
             if (selectedPath) {
                 const itemType = selectionState.selectionType === ItemType.TAG ? ItemType.TAG : ItemType.FOLDER;
                 const normalizedPath = normalizeNavigationPath(itemType, selectedPath);
+                logDebug('Tree update complete, issuing scroll request', {
+                    selectedPath,
+                    itemType
+                });
                 requestScroll(normalizedPath, { align: 'auto', itemType });
+            } else {
+                logDebug('Tree update complete without selection', {});
             }
-        }, [selectionState, requestScroll]);
+        }, [selectionState, requestScroll, logDebug]);
 
         // Handle folder toggle
         const handleFolderToggle = useCallback(
@@ -1452,14 +1565,18 @@ export const NavigationPane = React.memo(
         ]);
 
         // Updates banner height with threshold to prevent micro-adjustments
-        const handleBannerHeightChange = useCallback((height: number) => {
-            setBannerHeight(previous => {
-                if (Math.abs(previous - height) < 0.5) {
-                    return previous;
-                }
-                return height;
-            });
-        }, []);
+        const handleBannerHeightChange = useCallback(
+            (height: number) => {
+                setBannerHeight(previous => {
+                    if (Math.abs(previous - height) < 0.5) {
+                        return previous;
+                    }
+                    logDebug('Banner height changed', { previousHeight: previous, nextHeight: height });
+                    return height;
+                });
+            },
+            [logDebug]
+        );
 
         // Renders individual navigation items based on their type
         const renderItem = useCallback(
@@ -1991,14 +2108,24 @@ export const NavigationPane = React.memo(
                             <div
                                 className="nn-virtual-container"
                                 style={{
-                                    height: `${rowVirtualizer.getTotalSize()}px`
+                                    height: `${virtualTotalSize}px`
                                 }}
                             >
-                                {rowVirtualizer.getVirtualItems().map(virtualItem => {
+                                {virtualItems.map(virtualItem => {
                                     // Safe array access
                                     const item =
                                         virtualItem.index >= 0 && virtualItem.index < items.length ? items[virtualItem.index] : null;
-                                    if (!item) return null;
+                                    if (!item) {
+                                        logDebug('Virtual item index missing from data set', {
+                                            virtualIndex: virtualItem.index,
+                                            itemCount: items.length,
+                                            virtualItemCount,
+                                            firstVirtualIndex,
+                                            lastVirtualIndex,
+                                            key: virtualItem.key
+                                        });
+                                        return null;
+                                    }
 
                                     // Callback to measure dynamic-height items for virtualization
                                     const measureRef = (element: HTMLDivElement | null) => {
