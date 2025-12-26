@@ -146,9 +146,9 @@ Vault profiles create multiple filtered views of your vault. Each profile stores
 
 **Note:** The default profile cannot be deleted. Profile switching preserves the current folder or tag selection when possible.
 
-### 2.9 Search modes (new in version 1.7.3)
+### 2.9 Search and tag filtering (new in version 1.7.3)
 
-The search field operates in two modes depending on what you type:
+The search field filters notes by name and tags. Click tags in the navigation pane with modifier keys to build tag queries.
 
 **Filter mode (default):**
 
@@ -163,12 +163,16 @@ The search field operates in two modes depending on what you type:
 **Tag mode (advanced):**
 
 - Activated when search contains only tags and operators (AND/OR)
-- AND has higher precedence than OR
 - Examples:
   - `#project AND #urgent` - Files with both tags
   - `#work OR #personal` - Files with either tag
   - `#project OR #personal AND #urgent` - Files with `#project` OR (both `#personal` AND `#urgent`)
   - `#work AND !#completed` - Files with `#work` tag but NOT `#completed`
+
+**Operator precedence:** AND has higher precedence than OR. Use this to create complex filters:
+
+- `#project OR #personal AND #urgent` - Shows notes with (`#project`) or (both `#personal` and `#urgent`)
+- `#work AND #urgent OR #bug` - Shows notes with (both `#work` and `#urgent`) or (`#bug`)
 
 **Quick tag selection:**
 
@@ -176,6 +180,14 @@ The search field operates in two modes depending on what you type:
 - **Cmd/Ctrl+Shift+Click** on any tag - Adds to search with OR
 - Tags are automatically added in the correct format
 - Click tags again to remove them from search
+
+**Notes:**
+
+- Search is case-insensitive for both tags and filenames
+- Searches current folder and descendants (if descendants are enabled)
+- Tag filters work with hierarchical tags (searching `#project` includes `#project/work`)
+- Clear search with Escape key or by clicking the clear button
+- Search persists between sessions
 
 ### 2.10 Tag drag and drop, tag rename and tag deletion (new in version 1.8.0)
 
@@ -202,57 +214,6 @@ Tag renaming and deletion operations update tag references across all files in y
 - Virtual tags "Untagged" and "Tagged" cannot be renamed or used as drop targets
 - Tags cannot be renamed to become descendants of themselves
 - Desktop only (drag-and-drop not available on mobile)
-
-### 2.11 Tag multi-selection and search (new in version 1.7.3)
-
-The search field filters notes by name and tags using logical operators. Click tags in the navigation pane with modifier keys to build complex tag queries.
-
-<img width="368" height="201" alt="Screenshot 2025-11-02 at 10 00 45" src="https://github.com/user-attachments/assets/3a99b1ce-d84a-4687-973b-a7294f32fbed" />
-
-**Adding tags to search:**
-
-- **Cmd/Ctrl+Click on tag** - Adds tag with AND operator (e.g., `#project AND #urgent`)
-- **Cmd/Ctrl+Shift+Click on tag** - Adds tag with OR operator (e.g., `#project OR #urgent`)
-- **Click the search icon** (or use command) - Opens search field for manual entry
-
-**Search operators:**
-
-- **AND** - Notes must have all tags (e.g., `#project AND #urgent` shows notes with both tags)
-- **OR** - Notes must have at least one tag (e.g., `#project OR #personal` shows notes with either tag)
-- **!** (exclamation) - Excludes notes (e.g., `!#archived` shows notes without the archived tag)
-- **!#** (without tag name) - Matches untagged notes (e.g., `!#` shows notes without any tags)
-
-**Operator precedence:**
-
-AND has higher precedence than OR. Use this to create complex filters:
-
-- `#project OR #personal AND #urgent` - Shows notes with (`#project`) or (both `#personal` and `#urgent`)
-- `#work AND #urgent OR #bug` - Shows notes with (both `#work` and `#urgent`) or (`#bug`)
-
-**Example queries:**
-
-- `#project AND !#archived` - Project notes that are not archived
-- `#meeting AND #urgent OR #action` - Urgent meeting notes or any action items
-- `#work AND !#completed AND !#cancelled` - Active work notes
-- `project` - Notes with "project" in the filename (no # prefix searches by name)
-- `#project meeting` - Notes with `#project` tag and "meeting" in the filename
-- `!#` - Notes without any tags (untagged notes)
-
-**How it works:**
-
-1. Select any folder or tag in the navigation pane
-2. Cmd/Ctrl+Click tags to add them to search with AND
-3. Cmd/Ctrl+Shift+Click tags to add them with OR
-4. Add exclusions with ! prefix
-5. Mix tag filters with filename text
-6. Search persists between sessions
-
-**Notes:**
-
-- Search is case-insensitive for both tags and filenames
-- Searches current folder and descendants (if descendants are enabled)
-- Tag filters work with hierarchical tags (searching `#project` includes `#project/work`)
-- Clear search with Escape key or by clicking the clear button
 
 ## 3 Keyboard shortcuts
 
@@ -611,30 +572,54 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
   - **Modified timestamp field:** Frontmatter field name for the modified timestamp. Leave empty to only use file system date.
   - **Timestamp format:** Format used to parse timestamps in frontmatter. Leave empty to use ISO 8601 format.
 
-**Appearance**
+**Icon**
+
+- **Show file icons:** Display icons next to files in the list pane.
+  - **Match filename patterns:** Show icons based on filename patterns.
+  - **Filename icon rules:** Define icon rules for filename patterns.
+  - **Match file types:** Show icons based on file extensions.
+  - **File type icon rules:** Define icon rules for file types by extension.
+
+**Title**
 
 - **Title rows:** Number of rows to display for note titles. `1 row`, `2 rows`.
-- **Show date:** Display the date below note names.
-  - **When sorting by name:** Date to show when notes are alphabetically sorted. `Created date`, `Modified date`.
-- **Show file tags:** Display clickable tags in file items.
-  - **Color file tags:** Apply tag colors to tag badges on file items.
-  - **Show colored tags first:** Sort colored tags before other tags on file items.
-  - **Show full tag paths:** Display complete tag hierarchy paths. When enabled: 'ai/openai', 'work/projects/2024'. When disabled: 'openai', '2024'.
-  - **Show file tags in compact mode:** Display tags when date, preview, and image are hidden.
-- **Show parent folder:** Display the parent folder name for notes in subfolders or tags.
-  - **Click parent folder to go to folder:** Clicking the parent folder label opens the folder in list pane.
-  - **Show parent folder color:** Use folder colors on parent folder labels.
+
+**Preview text**
+
 - **Show note preview:** Display preview text beneath note names.
   - **Skip headings in preview:** Skip heading lines when generating preview text.
   - **Skip code blocks in preview:** Skip code blocks when generating preview text.
+  - **Strip HTML in preview:** Remove HTML tags from preview text.
   - **Preview rows:** Number of rows to display for preview text. `1 row`, `2 rows`, `3 rows`, `4 rows`, `5 rows`.
   - **Preview properties:** Comma-separated list of frontmatter properties to check for preview text. The first property with text will be used. If no preview text is found, the preview is generated from note content.
+
+**Feature image**
+
 - **Show feature image:** Display thumbnail images from frontmatter.
   - **Image properties:** Comma-separated list of frontmatter properties to check for thumbnail images. The first property with an image will be used. If empty and the fallback setting is enabled, the first embedded image is used.
   - **Force square feature image:** Render feature images as square thumbnails.
   - **Use embedded image fallback:** Use the first embedded image in the document as a fallback when no thumbnail is found in frontmatter properties (requires Obsidian 1.9.4+). Disable this to verify thumbnail configuration.
 
-**Note:** When date, preview, and feature image are disabled, list pane displays in compact "compact mode" with only note names.
+**Tags**
+
+- **Show file tags:** Display clickable tags in file items.
+  - **Color file tags:** Apply tag colors to tag badges on file items.
+  - **Show colored tags first:** Sort colored tags before other tags on file items.
+  - **Show full tag paths:** Display complete tag hierarchy paths. When enabled: 'ai/openai', 'work/projects/2024'. When disabled: 'openai', '2024'.
+  - **Show file tags in compact mode:** Display tags when date, preview, and image are hidden.
+
+**Date**
+
+- **Show date:** Display the date below note names.
+  - **When sorting by name:** Date to show when notes are alphabetically sorted. `Created date`, `Modified date`.
+
+**Parent folder**
+
+- **Show parent folder:** Display the parent folder name for notes in subfolders or tags.
+  - **Click parent folder to go to folder:** Clicking the parent folder label opens the folder in list pane.
+  - **Show parent folder color:** Use folder colors on parent folder labels.
+
+**Note:** When date, preview, and feature image are disabled, list pane displays in "compact mode" with only note names.
 
 ### 7.6 Icon packs
 
@@ -901,7 +886,7 @@ Feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/johansan/
 - **What is downloaded:** Icon font files and metadata (Bootstrap Icons, Font Awesome, Material Icons, Phosphor, RPG Awesome, Simple Icons)
 - **Source:** GitHub repository (`https://raw.githubusercontent.com/johansan/notebook-navigator/main/icon-assets/`)
 - **When:** Only when you explicitly enable icon packs - no automatic downloads
-- **Storage:** Downloaded icons are cached locally in your vault for offline use
+- **Storage:** Downloaded icons are stored in the local IndexedDB database for offline use
 
 ### 11.6 Privacy
 
