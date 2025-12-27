@@ -38,7 +38,7 @@ Here are some great resources to help you get started quickly:
 
 ### 2.2 Tutorial: How to use Notebook Navigator (by Elizabeth Tai)
 
-[![How to use Notebook Navigator (Obsidian Community plug-in)](images/notebook-navigator-demo.gif)](https://elizabethtai.com/2025/11/25/how-to-use-notebook-navigator-obsidian-community-plug-in/)
+[![How to use Notebook Navigator (Obsidian Community plug-in)](https://raw.githubusercontent.com/johansan/notebook-navigator/main/images/notebook-navigator-demo.gif)](https://elizabethtai.com/2025/11/25/how-to-use-notebook-navigator-obsidian-community-plug-in/)
 [How to use Notebook Navigator (Obsidian Community plug-in) – Elizabeth Tai](https://elizabethtai.com/2025/11/25/how-to-use-notebook-navigator-obsidian-community-plug-in/)
 
 ### 2.3 Can't see all your files?
