@@ -66,6 +66,30 @@ type FrontmatterImageTarget = { kind: 'wiki' | 'md' | 'plain'; target: string };
 export class FeatureImageContentProvider extends BaseContentProvider {
     private readonly combinedImageRegex = createCombinedImageRegex();
 
+    /**
+     * Returns a response header value using a case-insensitive lookup.
+     *
+     * HTTP header names are case-insensitive, but `requestUrl()` returns headers as a plain object
+     * whose keys are not guaranteed to be normalized. Observed on iOS: the response includes `Content-Type`
+     * (capitalized) rather than `content-type` (lowercase), so a direct `headers['content-type']` lookup
+     * can return `undefined`.
+     */
+    private getHeaderValue(headers: Record<string, string>, headerName: string): string | undefined {
+        const direct = headers[headerName];
+        if (direct !== undefined) {
+            return direct;
+        }
+
+        const needle = headerName.toLowerCase();
+        for (const [key, value] of Object.entries(headers)) {
+            if (key.toLowerCase() === needle) {
+                return value;
+            }
+        }
+
+        return undefined;
+    }
+
     getContentType(): ContentType {
         return 'featureImage';
     }
@@ -601,7 +625,10 @@ export class FeatureImageContentProvider extends BaseContentProvider {
                 return null;
             }
 
-            const mimeType = this.getMimeTypeFromContentType(response.headers['content-type']);
+            // Determine the image type from the response headers.
+            // iOS can return `Content-Type` instead of `content-type`, so use a case-insensitive lookup.
+            const contentTypeHeader = this.getHeaderValue(response.headers, 'content-type');
+            const mimeType = this.getMimeTypeFromContentType(contentTypeHeader);
             if (!mimeType || !response.arrayBuffer) {
                 return null;
             }
