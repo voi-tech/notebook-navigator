@@ -6065,6 +6065,8 @@ settings:
         format: hex
         default-light: '#'
         default-dark: '#'
+    -
+    -
         id: nn-theme-list-separator-color
         title: List separator color
         description: Divider line color between files.
