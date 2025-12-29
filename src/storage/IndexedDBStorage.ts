@@ -262,37 +262,84 @@ export class IndexedDBStorage {
         return this.initPromise;
     }
 
-    private async checkSchemaAndInit(): Promise<void> {
-        const storedSchemaVersion = localStorage.get<string>(STORAGE_KEYS.databaseSchemaVersionKey);
-        const storedContentVersion = localStorage.get<string>(STORAGE_KEYS.databaseContentVersionKey);
-        const currentSchemaVersion = DB_SCHEMA_VERSION.toString();
-        const currentContentVersion = DB_CONTENT_VERSION.toString();
-
-        // Check version changes
-        const schemaChanged = storedSchemaVersion && storedSchemaVersion !== currentSchemaVersion;
-        const contentChanged = storedContentVersion && storedContentVersion !== currentContentVersion;
-
-        // Only schema changes require database recreation
-        if (schemaChanged) {
-            console.log(`Database schema version changed from ${storedSchemaVersion} to ${currentSchemaVersion}. Recreating database.`);
-            await this.deleteDatabase();
+    private parseStoredVersion(value: unknown): number | null {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return Math.trunc(value);
         }
 
-        localStorage.set(STORAGE_KEYS.databaseSchemaVersionKey, currentSchemaVersion);
-        localStorage.set(STORAGE_KEYS.databaseContentVersionKey, currentContentVersion);
+        if (typeof value === 'string') {
+            const parsed = Number.parseInt(value, 10);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
 
-        const needsRebuild = !!(schemaChanged || contentChanged);
-        this.pendingRebuildNotice = needsRebuild;
-        await this.openDatabase(needsRebuild);
+        return null;
+    }
+
+    private getStoredVersion(key: string): number | null {
+        const raw = localStorage.get<unknown>(key);
+        return this.parseStoredVersion(raw);
+    }
+
+    private isVersionError(error: unknown): boolean {
+        return error instanceof DOMException && error.name === 'VersionError';
+    }
+
+    private async checkSchemaAndInit(): Promise<void> {
+        const storedSchemaVersion = this.getStoredVersion(STORAGE_KEYS.databaseSchemaVersionKey);
+        const storedContentVersion = this.getStoredVersion(STORAGE_KEYS.databaseContentVersionKey);
+        const currentSchemaVersion = DB_SCHEMA_VERSION;
+        const currentContentVersion = DB_CONTENT_VERSION;
+
+        // Check version changes
+        const schemaVersionUnknown = storedSchemaVersion === null;
+        const contentVersionUnknown = storedContentVersion === null;
+        const schemaChanged = storedSchemaVersion !== null && storedSchemaVersion !== currentSchemaVersion;
+        const contentChanged = storedContentVersion !== null && storedContentVersion !== currentContentVersion;
+
+        // Only downgrade schema changes require database recreation; upgrades are handled via onupgradeneeded.
+        if (schemaChanged) {
+            if (storedSchemaVersion > currentSchemaVersion) {
+                console.log(
+                    `Database schema version downgraded from ${storedSchemaVersion} to ${currentSchemaVersion}. Recreating database.`
+                );
+                await this.deleteDatabase();
+            } else {
+                console.log(`Database schema version changed from ${storedSchemaVersion} to ${currentSchemaVersion}. Rebuilding database.`);
+            }
+        } else if (schemaVersionUnknown) {
+            console.log(`Database schema version is missing. Rebuilding database.`);
+        }
+
+        if (contentChanged) {
+            console.log(`Content version changed from ${storedContentVersion} to ${currentContentVersion}. Rebuilding content.`);
+        } else if (contentVersionUnknown) {
+            console.log('Content version is missing. Rebuilding content.');
+        }
+
+        const needsRebuild = schemaChanged || contentChanged || schemaVersionUnknown || contentVersionUnknown;
+        // Only show the rebuild notice when a version mismatch is detected (not when the keys are missing).
+        this.pendingRebuildNotice = schemaChanged || contentChanged;
+
+        try {
+            await this.openDatabase(needsRebuild);
+        } catch (error: unknown) {
+            if (this.isVersionError(error)) {
+                console.log('Database version mismatch detected. Recreating database.');
+                await this.deleteDatabase();
+                await this.openDatabase(needsRebuild);
+            } else {
+                throw error;
+            }
+        }
 
         // Clear and rebuild content if either version changed
         if (needsRebuild) {
-            if (contentChanged && !schemaChanged) {
-                console.log(`Content version changed from ${storedContentVersion} to ${currentContentVersion}. Rebuilding content.`);
-            }
             // Clear all data to force rebuild
             await this.clear();
         }
+
+        localStorage.set(STORAGE_KEYS.databaseSchemaVersionKey, currentSchemaVersion.toString());
+        localStorage.set(STORAGE_KEYS.databaseContentVersionKey, currentContentVersion.toString());
     }
 
     private async deleteDatabase(): Promise<void> {

@@ -10,13 +10,34 @@
 
 export type RasterDimensions = { width: number; height: number };
 
+export function normalizeImageMimeType(mimeType: string): string {
+    const normalized = mimeType.trim().toLowerCase();
+
+    switch (normalized) {
+        case 'image/jpg':
+        case 'image/pjpeg':
+            return 'image/jpeg';
+        case 'image/x-png':
+        case 'image/apng':
+            return 'image/png';
+        case 'image/x-ms-bmp':
+        case 'image/x-bmp':
+            return 'image/bmp';
+        case 'image/svg':
+            return 'image/svg+xml';
+        default:
+            return normalized;
+    }
+}
+
 // Extracts image dimensions from a buffer by parsing format-specific headers.
 // Returns null for unsupported formats or malformed data.
 export function getImageDimensionsFromBuffer(buffer: ArrayBuffer, mimeType: string): RasterDimensions | null {
+    const normalizedMimeType = normalizeImageMimeType(mimeType);
     const bytes = new Uint8Array(buffer);
     const view = new DataView(buffer);
 
-    switch (mimeType) {
+    switch (normalizedMimeType) {
         case 'image/png':
             return getPngDimensions(bytes, view);
         case 'image/gif':

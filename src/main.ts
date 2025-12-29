@@ -1445,14 +1445,18 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     }
 
     /**
-     * Clears all localStorage data for the plugin
-     * Called on fresh install to ensure a clean start
+     * Clears localStorage data for the plugin.
+     * Called on fresh install to ensure a clean start.
+     * Preserves database version markers used for IndexedDB rebuild detection.
      */
     private clearAllLocalStorage() {
         // Clear all known localStorage keys
         // Get key names to enable proper TypeScript typing and avoid losing type information
         const storageKeyNames = Object.keys(STORAGE_KEYS) as (keyof LocalStorageKeys)[];
         storageKeyNames.forEach(storageKey => {
+            if (storageKey === 'databaseSchemaVersionKey' || storageKey === 'databaseContentVersionKey') {
+                return;
+            }
             const key = STORAGE_KEYS[storageKey];
             localStorage.remove(key);
         });

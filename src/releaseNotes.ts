@@ -68,12 +68,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         version: '2.0.1',
         date: '2025-12-29',
         showOnUpdate: true,
-        new: [
-        ],
-        improved: [
-        ],
-        changed: [
-        ],
+        new: [],
+        improved: ['Normalized remote image Content-Type headers for better external image support (e.g. `image/jpg`, `image/x-png`).'],
+        changed: [],
         fixed: [
             'Fixed **Style settings** not working due to misaligned CSS variable names.',
             '**Navigation Pane > Appearance > Root item spacing** now properly updates the view when changed.'

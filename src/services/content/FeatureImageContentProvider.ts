@@ -27,7 +27,7 @@ import { isImageExtension, isImageFile, isPdfFile } from '../../utils/fileTypeUt
 import { BaseContentProvider } from './BaseContentProvider';
 import { renderExcalidrawThumbnail } from './excalidraw/excalidrawThumbnail';
 import { renderPdfCoverThumbnail } from './pdf/pdfCoverThumbnail';
-import { getImageDimensionsFromBuffer } from './thumbnail/imageDimensions';
+import { getImageDimensionsFromBuffer, normalizeImageMimeType } from './thumbnail/imageDimensions';
 import { createOnceLogger, createRenderBudgetLimiter, createRenderLimiter } from './thumbnail/thumbnailRuntimeUtils';
 
 const MAX_THUMBNAIL_WIDTH = 256;
@@ -829,18 +829,20 @@ export class FeatureImageContentProvider extends BaseContentProvider {
 
     // Resizes an image buffer to thumbnail dimensions with platform-aware pixel limits
     private async createThumbnailBlobFromBuffer(buffer: ArrayBuffer, mimeType: string, source: string): Promise<Blob | null> {
-        if (mimeType === 'image/svg+xml') {
+        const normalizedMimeType = normalizeImageMimeType(mimeType);
+
+        if (normalizedMimeType === 'image/svg+xml') {
             // Keep SVG data as-is without raster encoding.
-            return new Blob([buffer], { type: mimeType });
+            return new Blob([buffer], { type: normalizedMimeType });
         }
 
         // Extract dimensions from the image header to determine if resizing is needed.
         // Skip images with unknown dimensions to avoid memory issues during decoding.
-        const dimensions = getImageDimensionsFromBuffer(buffer, mimeType);
+        const dimensions = getImageDimensionsFromBuffer(buffer, normalizedMimeType);
         if (!dimensions) {
             this.logOnce(
-                `featureImage-unknown-dimensions:${mimeType}:${source}`,
-                `[${source}] Skipping ${mimeType} (${buffer.byteLength} bytes) - unable to determine image dimensions`
+                `featureImage-unknown-dimensions:${normalizedMimeType}:${source}`,
+                `[${source}] Skipping ${normalizedMimeType} (${buffer.byteLength} bytes) - unable to determine image dimensions`
             );
             return null;
         }
@@ -850,8 +852,8 @@ export class FeatureImageContentProvider extends BaseContentProvider {
         const maxPixels = Platform.isMobile ? 80_000_000 : 200_000_000;
         if (pixelCount > maxPixels) {
             this.logOnce(
-                `featureImage-too-large:${mimeType}:${dimensions.width}x${dimensions.height}:${source}`,
-                `[${source}] Skipping ${mimeType} (${dimensions.width}x${dimensions.height}) - image too large`
+                `featureImage-too-large:${normalizedMimeType}:${dimensions.width}x${dimensions.height}:${source}`,
+                `[${source}] Skipping ${normalizedMimeType} (${dimensions.width}x${dimensions.height}) - image too large`
             );
             return null;
         }
@@ -859,13 +861,13 @@ export class FeatureImageContentProvider extends BaseContentProvider {
         const { width: targetWidth, height: targetHeight } = this.calculateThumbnailDimensions(dimensions.width, dimensions.height);
         if (targetWidth === dimensions.width && targetHeight === dimensions.height) {
             // Skip decoding when the image is already within thumbnail limits.
-            return new Blob([buffer], { type: mimeType });
+            return new Blob([buffer], { type: normalizedMimeType });
         }
 
         const releaseDecodeBudget = await this.imageDecodeLimiter.acquire(pixelCount);
 
         try {
-            const sourceBlob = new Blob([buffer], { type: mimeType });
+            const sourceBlob = new Blob([buffer], { type: normalizedMimeType });
 
             // Attempt direct bitmap resize which is more memory-efficient for large images.
             const resizedBitmapResult = await this.tryCreateThumbnailFromResizedBitmap(sourceBlob, targetWidth, targetHeight);
@@ -877,8 +879,8 @@ export class FeatureImageContentProvider extends BaseContentProvider {
             const maxFallbackPixels = Platform.isMobile ? 16_000_000 : 80_000_000;
             if (pixelCount > maxFallbackPixels) {
                 this.logOnce(
-                    `featureImage-fallback-skip:${mimeType}:${dimensions.width}x${dimensions.height}:${source}`,
-                    `[${source}] Skipping ${mimeType} (${dimensions.width}x${dimensions.height}) - thumbnail decode fallback disabled for large images`
+                    `featureImage-fallback-skip:${normalizedMimeType}:${dimensions.width}x${dimensions.height}:${source}`,
+                    `[${source}] Skipping ${normalizedMimeType} (${dimensions.width}x${dimensions.height}) - thumbnail decode fallback disabled for large images`
                 );
                 return null;
             }
@@ -1305,7 +1307,8 @@ export class FeatureImageContentProvider extends BaseContentProvider {
             return null;
         }
 
-        const mimeType = contentType.split(';')[0].trim().toLowerCase();
+        const rawMimeType = contentType.split(';')[0].trim();
+        const mimeType = normalizeImageMimeType(rawMimeType);
         if (!SUPPORTED_IMAGE_MIME_TYPES.has(mimeType)) {
             return null;
         }
