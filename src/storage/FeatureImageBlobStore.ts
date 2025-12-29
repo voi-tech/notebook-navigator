@@ -26,6 +26,15 @@ export interface FeatureImageChangeSet {
     featureImageStatus?: FeatureImageStatus;
 }
 
+/**
+ * Compute the normalized feature image update across:
+ * - the main IndexedDB record (key + status, no blob payload), and
+ * - the dedicated blob store (blob payload + key).
+ *
+ * Callers typically pass:
+ * - `featureImageKey` when the selected reference changes
+ * - `featureImage` when a thumbnail generation attempt completes (blob or empty blob)
+ */
 export function computeFeatureImageMutation(params: {
     existingKey: string | null;
     existingStatus: FeatureImageStatus;
@@ -56,6 +65,8 @@ export function computeFeatureImageMutation(params: {
 
     const featureImageKeyProvided = params.featureImageKey !== undefined;
     if (featureImageKeyProvided) {
+        // A key change indicates the selected feature image reference changed.
+        // This invalidates any stored blob for the path because the blob is scoped to the key.
         const requestedKey = params.featureImageKey ?? null;
         if (requestedKey !== params.existingKey) {
             nextKey = requestedKey;
@@ -70,14 +81,19 @@ export function computeFeatureImageMutation(params: {
     const featureImageProvided = params.featureImage !== undefined;
     if (featureImageProvided) {
         // Any feature image blob update invalidates the in-memory LRU entry for this path.
+        // Even when the new blob is dropped, this prevents returning an older thumbnail.
         shouldClearCache = true;
         const blob = params.featureImage;
         if (blob instanceof Blob && blob.size > 0 && nextKey !== null && nextKey !== '') {
+            // Persist non-empty blobs only when a non-empty key is present.
+            // The key is the durable marker that content providers use to avoid duplicate work.
             blobUpdate = { featureImageKey: nextKey, blob };
             nextStatus = 'has';
             changes.featureImageStatus = 'has';
             shouldDeleteBlob = false;
         } else {
+            // Empty blobs are treated as "processed but no thumbnail" and are not persisted.
+            // The durable marker for this state is the featureImageKey in the main store.
             blobUpdate = null;
             shouldDeleteBlob = true;
             nextStatus = nextKey === null ? 'unprocessed' : 'none';
@@ -93,56 +109,115 @@ export function computeFeatureImageMutation(params: {
  */
 export class FeatureImageBlobStore {
     private readonly cache: FeatureImageBlobCache;
-    private inFlight = new Map<string, Promise<Blob | null>>();
+    // Global counter used to invalidate all in-flight reads when memory caches are cleared.
+    private globalCacheEpoch = 0;
+    // Per-path counter used to invalidate in-flight reads when the cache is cleared.
+    //
+    // A get-blob request snapshots the current epoch before reading from IndexedDB.
+    // If the epoch changes before the read completes, the result is returned to the caller
+    // but is not inserted into the LRU to avoid repopulating stale data.
+    private cacheEpochs = new Map<string, number>();
+    // Tracks in-flight reads by path + expectedKey to deduplicate concurrent requests.
+    //
+    // Structure:
+    // - First key: file path
+    // - Second key: expected feature image key for that path
+    // - Value: promise resolving to the stored blob (or null)
+    private inFlight = new Map<string, Map<string, Promise<Blob | null>>>();
 
     constructor(maxEntries: number) {
         this.cache = new FeatureImageBlobCache(maxEntries);
     }
 
     clearMemoryCaches(): void {
+        // Clears:
+        // - the in-memory LRU (thumbnails)
+        // - cache invalidation epochs
+        // - in-flight request registry
+        //
+        // Called when the database connection changes (open/close/rebuild).
         this.cache.clear();
+        this.globalCacheEpoch += 1;
+        this.cacheEpochs.clear();
         this.inFlight.clear();
     }
 
     deleteFromCache(path: string): void {
+        // Used after:
+        // - key changes
+        // - blob writes/deletes
+        // - explicit content clears
+        //
+        // Bumping the epoch prevents older in-flight reads from re-populating the LRU.
         this.cache.delete(path);
+        this.bumpCacheEpoch(path);
         this.dropInFlightForPath(path);
     }
 
     moveCacheEntry(oldPath: string, newPath: string): void {
+        // Used when a file is renamed so any cached thumbnail follows the new path.
+        //
+        // Also clears in-flight reads for both paths since the caller is about to
+        // update the blob store and/or rebuild the file cache.
         this.cache.move(oldPath, newPath);
+        this.bumpCacheEpoch(oldPath);
+        this.bumpCacheEpoch(newPath);
         this.dropInFlightForPath(oldPath);
         this.dropInFlightForPath(newPath);
     }
 
     async getBlob(db: IDBDatabase, path: string, expectedKey: string): Promise<Blob | null> {
+        // Empty keys are treated as "no reference selected" and never have blobs.
         if (!expectedKey) {
             return null;
         }
 
+        // Fast path: return the in-memory LRU blob if it matches the expected key.
         const cached = this.cache.get(path, expectedKey);
         if (cached) {
             return cached;
         }
 
-        const requestKey = `${path}|${expectedKey}`;
-        const inFlight = this.inFlight.get(requestKey);
+        // Deduplicate concurrent reads for the same path+key.
+        const inFlightByKey = this.inFlight.get(path);
+        const inFlight = inFlightByKey?.get(expectedKey) ?? null;
         if (inFlight) {
             return inFlight;
         }
 
+        // Snapshot the epoch so we can avoid caching stale results after invalidation.
+        const cacheEpoch = this.getCacheEpoch(path);
+        const globalCacheEpoch = this.globalCacheEpoch;
         const request = this.readBlobFromStore(db, path, expectedKey)
             .then(blob => {
-                if (blob) {
+                // Only insert into the LRU when the cache has not been invalidated
+                // since this read started.
+                if (blob && this.globalCacheEpoch === globalCacheEpoch && this.getCacheEpoch(path) === cacheEpoch) {
                     this.cache.set(path, { featureImageKey: expectedKey, blob });
                 }
                 return blob;
             })
             .finally(() => {
-                this.inFlight.delete(requestKey);
+                // Always remove the in-flight entry so later reads can retry.
+                const byKey = this.inFlight.get(path);
+                if (!byKey) {
+                    return;
+                }
+                const currentRequest = byKey.get(expectedKey);
+                if (currentRequest !== request) {
+                    return;
+                }
+                byKey.delete(expectedKey);
+                if (byKey.size === 0) {
+                    this.inFlight.delete(path);
+                }
             });
 
-        this.inFlight.set(requestKey, request);
+        const updatedInFlightByKey = inFlightByKey ?? new Map<string, Promise<Blob | null>>();
+        updatedInFlightByKey.set(expectedKey, request);
+        if (!inFlightByKey) {
+            this.inFlight.set(path, updatedInFlightByKey);
+        }
         return request;
     }
 
@@ -210,6 +285,9 @@ export class FeatureImageBlobStore {
     }
 
     async moveBlob(db: IDBDatabase, oldPath: string, newPath: string): Promise<void> {
+        // Moves the blob store record (if present) and updates in-memory caches.
+        // The stored record includes `featureImageKey`, allowing callers to validate
+        // the blob against the main store key when rendering.
         const transaction = db.transaction([FEATURE_IMAGE_STORE_NAME], 'readwrite');
         const store = transaction.objectStore(FEATURE_IMAGE_STORE_NAME);
         let hasRecord = false;
@@ -291,6 +369,7 @@ export class FeatureImageBlobStore {
     }
 
     async deleteBlob(db: IDBDatabase, path: string): Promise<void> {
+        // Deletes the blob store record and drops any in-memory cached entry.
         const transaction = db.transaction([FEATURE_IMAGE_STORE_NAME], 'readwrite');
         const store = transaction.objectStore(FEATURE_IMAGE_STORE_NAME);
         const op = 'deleteFeatureImageBlob';
@@ -332,7 +411,13 @@ export class FeatureImageBlobStore {
         this.deleteFromCache(path);
     }
 
-    private async readBlobFromStore(db: IDBDatabase, path: string, expectedKey: string): Promise<Blob | null> {
+    protected async readBlobFromStore(db: IDBDatabase, path: string, expectedKey: string): Promise<Blob | null> {
+        // Reads a single record from the dedicated blob store.
+        //
+        // The record is considered valid only when:
+        // - it exists,
+        // - the stored key matches `expectedKey`, and
+        // - the stored blob is non-empty.
         const transaction = db.transaction([FEATURE_IMAGE_STORE_NAME], 'readonly');
         const store = transaction.objectStore(FEATURE_IMAGE_STORE_NAME);
         const op = 'getFeatureImageBlob';
@@ -360,12 +445,18 @@ export class FeatureImageBlobStore {
         });
     }
 
+    private getCacheEpoch(path: string): number {
+        // Epoch values start at 0 and only change when this class invalidates the path.
+        return this.cacheEpochs.get(path) ?? 0;
+    }
+
+    private bumpCacheEpoch(path: string): void {
+        // Invalidate future LRU inserts from previously-started reads.
+        this.cacheEpochs.set(path, this.getCacheEpoch(path) + 1);
+    }
+
     private dropInFlightForPath(path: string): void {
-        const prefix = `${path}|`;
-        for (const key of this.inFlight.keys()) {
-            if (key === prefix || key.startsWith(prefix)) {
-                this.inFlight.delete(key);
-            }
-        }
+        // Drop all in-flight reads for this path (regardless of expectedKey).
+        this.inFlight.delete(path);
     }
 }

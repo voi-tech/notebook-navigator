@@ -70,13 +70,14 @@ const RELEASE_NOTES: ReleaseNote[] = [
         showOnUpdate: true,
         new: [],
         improved: [
-            '==Updated license agreement to 1.2==. Free forks are welcome and can be shared via BRAT. If Notebook Navigator has no official release for 12 months, community forks can be listed in Obsidian Community Plugins.'
+            '==Updated license agreement to 1.2==: https://github.com/johansan/notebook-navigator/blob/main/LICENSE. Free forks are welcome and can be shared via BRAT. If Notebook Navigator has no official release for 12 months, community forks can be published to the Obsidian Community Plugin Directory.'
         ],
         changed: [],
         fixed: [
-            'Normalized **Content-Type headers** for better external image support (e.g. some web sites provide `image/jpg` for JPEG or `image/x-png` for PNG).',
             'Fixed **Style settings** not opening due to misaligned CSS variable names.',
-            '**Navigation Pane > Appearance > Root item spacing** now properly updates the view when changed.'
+            '**Navigation Pane > Appearance > Root item spacing** now properly updates the view when changed.',
+            'Internal: normalized **content-type headers** for better external image support (e.g. some web sites provide `image/jpg` for JPEG or `image/x-png` for PNG).',
+            'Internal: hardened the **thumbnail LRU cache** to prevent possible race conditions after invalidation.'
         ]
     },
     {

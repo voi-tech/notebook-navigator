@@ -17,9 +17,14 @@ export interface FeatureImageBlobEntry {
  * FeatureImageBlobCache - LRU cache keyed by file path.
  *
  * Stores a bounded number of feature image blobs in memory.
+ *
+ * Notes:
+ * - This is a pure in-memory cache; it does not read from IndexedDB.
+ * - Cached entries are scoped by `featureImageKey` so stale thumbnails are dropped
+ *   when the selected feature image reference changes.
  */
 export class FeatureImageBlobCache {
-    // Map preserves insertion order; oldest entries appear first.
+    // Map preserves insertion order; the first entry is the least recently used (LRU).
     private entries = new Map<string, FeatureImageBlobEntry>();
     // Maximum number of cached entries retained in memory.
     private maxEntries: number;
@@ -30,16 +35,20 @@ export class FeatureImageBlobCache {
     }
 
     get(path: string, expectedKey: string): Blob | null {
+        // Return a blob only when both:
+        // - `path` exists in the cache, and
+        // - the stored key matches the caller's expected key.
         const entry = this.entries.get(path);
         if (!entry) {
             return null;
         }
         if (entry.featureImageKey !== expectedKey) {
-            // Drop stale entries when the key no longer matches.
+            // The key mismatch indicates the stored blob belongs to an older feature image reference.
+            // Drop the stale entry so future reads fall back to IndexedDB.
             this.entries.delete(path);
             return null;
         }
-        // Refresh LRU order by re-inserting the entry.
+        // Refresh LRU order by re-inserting the entry as the most-recently-used.
         this.entries.delete(path);
         this.entries.set(path, entry);
         return entry.blob;
@@ -50,7 +59,7 @@ export class FeatureImageBlobCache {
         if (this.maxEntries === 0) {
             return;
         }
-        // Replace existing entries so the newest insert is most recent.
+        // Replace existing entries so the newest insert becomes most-recently-used.
         if (this.entries.has(path)) {
             this.entries.delete(path);
         }
@@ -64,11 +73,13 @@ export class FeatureImageBlobCache {
     }
 
     move(oldPath: string, newPath: string): void {
+        // Used when a file is renamed/moved so the thumbnail remains available
+        // without requiring an IndexedDB read.
         const entry = this.entries.get(oldPath);
         if (!entry) {
             return;
         }
-        // Preserve the entry while updating its key.
+        // Preserve the entry while updating its cache key (path).
         this.entries.delete(oldPath);
         this.entries.set(newPath, entry);
         this.evictIfNeeded();
@@ -85,8 +96,9 @@ export class FeatureImageBlobCache {
     }
 
     private evictIfNeeded(): void {
-        // Evict oldest entries until the cache fits within the max size.
+        // Evict least-recently-used entries until the cache fits within the configured max size.
         while (this.entries.size > this.maxEntries) {
+            // The first key in insertion order is the least-recently-used.
             const iterator = this.entries.keys();
             const first = iterator.next();
             if (first.done) {
