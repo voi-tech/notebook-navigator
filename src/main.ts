@@ -775,10 +775,14 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         const appId = (this.app as ExtendedApp).appId || '';
         // Use a fixed per-platform LRU size for feature image blobs.
         const featureImageCacheMaxEntries = Platform.isMobile ? 200 : 1000;
+        // Use a fixed per-platform LRU size for preview text strings.
+        const previewTextCacheMaxEntries = Platform.isMobile ? 25000 : 100000;
+        // Limit the number of preview text paths processed per load flush.
+        const previewLoadMaxBatch = Platform.isMobile ? 20 : 50;
         runAsyncAction(
             async () => {
                 try {
-                    await initializeDatabase(appId, { featureImageCacheMaxEntries });
+                    await initializeDatabase(appId, { featureImageCacheMaxEntries, previewTextCacheMaxEntries, previewLoadMaxBatch });
                 } catch (error: unknown) {
                     console.error('Failed to initialize database:', error);
                 }

@@ -114,7 +114,13 @@ export interface FileContentChange {
 
 interface IndexedDBStorageOptions {
     featureImageCacheMaxEntries?: number;
+    previewTextCacheMaxEntries?: number;
+    previewLoadMaxBatch?: number;
 }
+
+// Default limits for preview text caching and load batching.
+const DEFAULT_PREVIEW_TEXT_CACHE_MAX_ENTRIES = 10000;
+const DEFAULT_PREVIEW_LOAD_MAX_BATCH = 50;
 
 /**
  * IndexedDBStorage - Browser's IndexedDB wrapper for persistent file storage
@@ -136,12 +142,16 @@ interface IndexedDBStorageOptions {
  * - Provide indexed queries (by tag, by content type)
  */
 export class IndexedDBStorage {
-    private cache: MemoryFileCache = new MemoryFileCache();
+    private cache: MemoryFileCache;
     private changeListeners = new Set<(changes: FileContentChange[]) => void>();
     private db: IDBDatabase | null = null;
     private dbName: string;
     // Dedicated feature image blob store with an in-memory LRU.
     private featureImageBlobs: FeatureImageBlobStore;
+    // Maximum number of preview text strings held in memory.
+    private previewTextCacheMaxEntries: number;
+    // Maximum number of preview text paths processed per load flush.
+    private previewLoadMaxBatch: number;
     private fileChangeListeners = new Map<string, Set<(changes: FileContentChange['changes']) => void>>();
     private previewLoadPromises = new Map<string, Promise<void>>();
     private previewLoadDeferred = new Map<string, { resolve: () => void }>();
@@ -149,16 +159,25 @@ export class IndexedDBStorage {
     private previewLoadFlushTimer: ReturnType<typeof setTimeout> | null = null;
     private isPreviewLoadFlushRunning = false;
     private previewLoadSessionId = 0;
+    // Warmup state for background preview text cache population.
+    private isPreviewWarmupEnabled = false;
+    private isPreviewWarmupComplete = false;
+    private isPreviewWarmupRunning = false;
+    private previewWarmupCursorKey: string | null = null;
+    private previewWarmupTimer: ReturnType<typeof setTimeout> | null = null;
     private isClosing = false;
     private initPromise: Promise<void> | null = null;
     private pendingRebuildNotice = false;
-    private static readonly PREVIEW_LOAD_MAX_BATCH = 250;
 
     constructor(appId: string, options?: IndexedDBStorageOptions) {
         this.dbName = `notebooknavigator/cache/${appId}`;
+        const previewTextCacheMaxEntries = options?.previewTextCacheMaxEntries ?? DEFAULT_PREVIEW_TEXT_CACHE_MAX_ENTRIES;
+        this.cache = new MemoryFileCache({ previewTextCacheMaxEntries });
+        this.previewTextCacheMaxEntries = Math.max(0, previewTextCacheMaxEntries);
+        this.previewLoadMaxBatch = Math.max(1, options?.previewLoadMaxBatch ?? DEFAULT_PREVIEW_LOAD_MAX_BATCH);
         // Initialize the LRU size from caller options or fallback default.
-        const maxEntries = options?.featureImageCacheMaxEntries ?? DEFAULT_FEATURE_IMAGE_CACHE_MAX;
-        this.featureImageBlobs = new FeatureImageBlobStore(maxEntries);
+        const featureImageMaxEntries = options?.featureImageCacheMaxEntries ?? DEFAULT_FEATURE_IMAGE_CACHE_MAX;
+        this.featureImageBlobs = new FeatureImageBlobStore(featureImageMaxEntries);
     }
 
     consumePendingRebuildNotice(): boolean {
@@ -2367,7 +2386,16 @@ export class IndexedDBStorage {
         this.previewLoadPromises.set(path, loadPromise);
         this.previewLoadQueue.add(path);
         this.schedulePreviewTextLoadFlush();
+        this.enablePreviewTextWarmup();
         return loadPromise;
+    }
+
+    /**
+     * Starts warming the preview text LRU cache in the background.
+     * Safe to call multiple times; warmup only runs once per session.
+     */
+    startPreviewTextWarmup(): void {
+        this.enablePreviewTextWarmup();
     }
 
     private schedulePreviewTextLoadFlush(): void {
@@ -2382,6 +2410,246 @@ export class IndexedDBStorage {
             this.previewLoadFlushTimer = null;
             void this.flushPreviewTextLoadQueue();
         }, 0);
+    }
+
+    /**
+     * Enables preview text warmup and schedules the first warmup flush.
+     */
+    private enablePreviewTextWarmup(): void {
+        if (this.isClosing) {
+            return;
+        }
+        if (this.isPreviewWarmupComplete) {
+            return;
+        }
+        if (this.isPreviewWarmupEnabled) {
+            return;
+        }
+        if (this.previewTextCacheMaxEntries === 0) {
+            this.isPreviewWarmupComplete = true;
+            return;
+        }
+
+        this.isPreviewWarmupEnabled = true;
+        this.schedulePreviewTextWarmupFlush();
+    }
+
+    /**
+     * Schedules a warmup flush with an optional delay.
+     */
+    private schedulePreviewTextWarmupFlush(delayMs = 0): void {
+        if (this.isClosing) {
+            return;
+        }
+        if (!this.isPreviewWarmupEnabled || this.isPreviewWarmupComplete) {
+            return;
+        }
+        if (this.previewWarmupTimer !== null) {
+            return;
+        }
+
+        this.previewWarmupTimer = globalThis.setTimeout(() => {
+            this.previewWarmupTimer = null;
+            void this.flushPreviewTextWarmup();
+        }, delayMs);
+    }
+
+    /**
+     * Loads preview text strings from IndexedDB into the in-memory LRU.
+     */
+    private async flushPreviewTextWarmup(): Promise<void> {
+        if (this.isClosing) {
+            return;
+        }
+        if (!this.isPreviewWarmupEnabled || this.isPreviewWarmupComplete) {
+            return;
+        }
+        if (this.isPreviewWarmupRunning) {
+            return;
+        }
+        if (!this.cache.isReady()) {
+            return;
+        }
+
+        if (this.previewTextCacheMaxEntries === 0 || this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries) {
+            this.isPreviewWarmupEnabled = false;
+            this.isPreviewWarmupComplete = true;
+            return;
+        }
+
+        // Warm up after the initial preview requests have loaded.
+        if (this.isPreviewLoadFlushRunning || this.previewLoadFlushTimer !== null || this.previewLoadQueue.size > 0) {
+            this.schedulePreviewTextWarmupFlush(25);
+            return;
+        }
+
+        const sessionId = this.previewLoadSessionId;
+        this.isPreviewWarmupRunning = true;
+        try {
+            await this.init();
+            if (!this.db) {
+                this.isPreviewWarmupEnabled = false;
+                this.isPreviewWarmupComplete = true;
+                return;
+            }
+            if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+                return;
+            }
+
+            const cursorStepLimit = this.previewLoadMaxBatch * 10;
+            const hasMore = await this.warmPreviewTextCacheBatch(cursorStepLimit, sessionId);
+            if (!hasMore) {
+                this.isPreviewWarmupEnabled = false;
+                this.isPreviewWarmupComplete = true;
+                return;
+            }
+        } catch (error: unknown) {
+            if (!this.isClosing && sessionId === this.previewLoadSessionId) {
+                console.error('[PreviewText] Warmup failed', error);
+            }
+            this.isPreviewWarmupEnabled = false;
+            this.isPreviewWarmupComplete = true;
+            return;
+        } finally {
+            this.isPreviewWarmupRunning = false;
+        }
+
+        if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+            return;
+        }
+        if (this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries) {
+            this.isPreviewWarmupEnabled = false;
+            this.isPreviewWarmupComplete = true;
+            return;
+        }
+
+        this.schedulePreviewTextWarmupFlush();
+    }
+
+    /**
+     * Reads a cursor batch from the preview store and updates the preview text LRU.
+     */
+    private async warmPreviewTextCacheBatch(cursorStepLimit: number, sessionId: number): Promise<boolean> {
+        if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+            return false;
+        }
+        if (!this.db) {
+            return false;
+        }
+        if (!this.cache.isReady()) {
+            return false;
+        }
+        if (this.previewTextCacheMaxEntries === 0) {
+            return false;
+        }
+
+        if (this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries) {
+            return false;
+        }
+
+        const db = this.db;
+        const transaction = db.transaction([PREVIEW_STORE_NAME], 'readonly');
+        const store = transaction.objectStore(PREVIEW_STORE_NAME);
+
+        let reachedEnd = false;
+
+        await new Promise<void>((resolve, reject) => {
+            const op = 'warmPreviewTextCache';
+            let lastRequestError: DOMException | Error | null = null;
+
+            const range = this.previewWarmupCursorKey ? IDBKeyRange.lowerBound(this.previewWarmupCursorKey, true) : undefined;
+            const request = store.openCursor(range);
+
+            let steps = 0;
+            request.onsuccess = () => {
+                if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+                    return;
+                }
+
+                const cursor = request.result;
+                if (!cursor) {
+                    reachedEnd = true;
+                    return;
+                }
+
+                // Pause warmup when explicit preview-load requests are pending.
+                // The preview-load flush path emits change events used by UI components (e.g. FileItem state).
+                if (this.isPreviewLoadFlushRunning || this.previewLoadFlushTimer !== null || this.previewLoadQueue.size > 0) {
+                    return;
+                }
+
+                if (this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries) {
+                    return;
+                }
+
+                steps += 1;
+
+                const path = cursor.key;
+                const previewText: unknown = cursor.value;
+
+                if (typeof path === 'string') {
+                    this.previewWarmupCursorKey = path;
+                    if (typeof previewText === 'string' && previewText.length > 0) {
+                        const file = this.cache.getFile(path);
+                        if (file && file.previewStatus === 'has' && !this.cache.isPreviewTextLoaded(path)) {
+                            this.cache.updateFileContent(path, { previewText });
+                        }
+                    }
+                }
+
+                if (this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries || steps >= cursorStepLimit) {
+                    return;
+                }
+
+                cursor.continue();
+            };
+            request.onerror = () => {
+                lastRequestError = request.error || null;
+                console.error('[IndexedDB] openCursor failed', {
+                    store: PREVIEW_STORE_NAME,
+                    op,
+                    name: request.error?.name,
+                    message: request.error?.message
+                });
+                reject(this.normalizeIdbError(request.error, 'Cursor request failed'));
+            };
+
+            transaction.oncomplete = () => resolve();
+            transaction.onabort = () => {
+                if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+                    resolve();
+                    return;
+                }
+                console.error('[IndexedDB] transaction aborted', {
+                    store: PREVIEW_STORE_NAME,
+                    op,
+                    txError: transaction.error?.message,
+                    reqError: lastRequestError?.message
+                });
+                this.rejectWithTransactionError(reject, transaction, lastRequestError, 'Transaction aborted');
+            };
+            transaction.onerror = () => {
+                if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+                    resolve();
+                    return;
+                }
+                console.error('[IndexedDB] transaction error', {
+                    store: PREVIEW_STORE_NAME,
+                    op,
+                    txError: transaction.error?.message,
+                    reqError: lastRequestError?.message
+                });
+                this.rejectWithTransactionError(reject, transaction, lastRequestError, 'Transaction error');
+            };
+        });
+
+        if (this.isClosing || sessionId !== this.previewLoadSessionId) {
+            return false;
+        }
+        if (this.cache.getPreviewTextEntryCount() >= this.previewTextCacheMaxEntries) {
+            return false;
+        }
+        return !reachedEnd;
     }
 
     private async repairPreviewStatusRecords(updates: { path: string; previewStatus: PreviewStatus }[]): Promise<void> {
@@ -2496,9 +2764,9 @@ export class IndexedDBStorage {
                 return;
             }
 
-            const pathsToProcess = queuedPaths.slice(0, IndexedDBStorage.PREVIEW_LOAD_MAX_BATCH);
-            if (queuedPaths.length > IndexedDBStorage.PREVIEW_LOAD_MAX_BATCH) {
-                for (const path of queuedPaths.slice(IndexedDBStorage.PREVIEW_LOAD_MAX_BATCH)) {
+            const pathsToProcess = queuedPaths.slice(0, this.previewLoadMaxBatch);
+            if (queuedPaths.length > this.previewLoadMaxBatch) {
+                for (const path of queuedPaths.slice(this.previewLoadMaxBatch)) {
                     this.previewLoadQueue.add(path);
                 }
             }
@@ -2975,6 +3243,14 @@ export class IndexedDBStorage {
             globalThis.clearTimeout(this.previewLoadFlushTimer);
             this.previewLoadFlushTimer = null;
         }
+        if (this.previewWarmupTimer !== null) {
+            globalThis.clearTimeout(this.previewWarmupTimer);
+            this.previewWarmupTimer = null;
+        }
+        this.isPreviewWarmupEnabled = false;
+        this.isPreviewWarmupComplete = true;
+        this.isPreviewWarmupRunning = false;
+        this.previewWarmupCursorKey = null;
         this.previewLoadQueue.clear();
         this.previewLoadDeferred.forEach(deferred => deferred.resolve());
         this.previewLoadDeferred.clear();

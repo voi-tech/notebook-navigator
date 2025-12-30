@@ -47,6 +47,10 @@ let isInitializing = false;
 let isShuttingDown = false;
 // Configured feature image blob cache size for the current platform.
 let featureImageCacheMaxEntries: number | null = null;
+// Configured preview text LRU size for the current platform.
+let previewTextCacheMaxEntries: number | null = null;
+// Configured preview text load batch size for the current platform.
+let previewLoadMaxBatch: number | null = null;
 
 /**
  * Indicates whether a database shutdown is currently in progress.
@@ -67,8 +71,24 @@ export function getDBInstance(): IndexedDBStorage {
         if (!appId) {
             throw new Error('Database not initialized. Call initializeDatabase(appId) first.');
         }
-        // Pass the configured blob cache size into the storage instance.
-        dbInstance = new IndexedDBStorage(appId, featureImageCacheMaxEntries !== null ? { featureImageCacheMaxEntries } : undefined);
+        // Build the constructor options from the configured module-level settings.
+        const options: {
+            featureImageCacheMaxEntries?: number;
+            previewTextCacheMaxEntries?: number;
+            previewLoadMaxBatch?: number;
+        } = {};
+        if (featureImageCacheMaxEntries !== null) {
+            options.featureImageCacheMaxEntries = featureImageCacheMaxEntries;
+        }
+        if (previewTextCacheMaxEntries !== null) {
+            options.previewTextCacheMaxEntries = previewTextCacheMaxEntries;
+        }
+        if (previewLoadMaxBatch !== null) {
+            options.previewLoadMaxBatch = previewLoadMaxBatch;
+        }
+
+        // Only pass options when at least one value is configured.
+        dbInstance = new IndexedDBStorage(appId, Object.keys(options).length > 0 ? options : undefined);
     }
     return dbInstance;
 }
@@ -83,6 +103,8 @@ export async function initializeDatabase(
     appIdParam: string,
     options?: {
         featureImageCacheMaxEntries?: number;
+        previewTextCacheMaxEntries?: number;
+        previewLoadMaxBatch?: number;
     }
 ): Promise<void> {
     // Idempotent: if already initialized or in progress, skip
@@ -91,6 +113,7 @@ export async function initializeDatabase(
     }
     const existing = dbInstance;
     if (existing && existing.isInitialized()) {
+        existing.startPreviewTextWarmup();
         return;
     }
 
@@ -101,8 +124,15 @@ export async function initializeDatabase(
             // Persist feature image cache size for the singleton instance.
             featureImageCacheMaxEntries = options.featureImageCacheMaxEntries;
         }
+        if (options?.previewTextCacheMaxEntries !== undefined) {
+            previewTextCacheMaxEntries = options.previewTextCacheMaxEntries;
+        }
+        if (options?.previewLoadMaxBatch !== undefined) {
+            previewLoadMaxBatch = options.previewLoadMaxBatch;
+        }
         const db = getDBInstance();
         await db.init();
+        db.startPreviewTextWarmup();
     } finally {
         isInitializing = false;
     }

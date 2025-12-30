@@ -17,7 +17,7 @@
  */
 
 import { FileData } from './IndexedDBStorage';
-import { isMarkdownPath } from '../utils/fileTypeUtils';
+import { PreviewTextCache } from './PreviewTextCache';
 
 // Creates a deep clone of FileData to prevent mutations from affecting the original
 function cloneFileData(data: FileData): FileData {
@@ -33,17 +33,29 @@ function cloneFileData(data: FileData): FileData {
     };
 }
 
+interface MemoryFileCacheOptions {
+    previewTextCacheMaxEntries?: number;
+}
+
 /**
- * In-memory file cache that mirrors the IndexedDB storage for synchronous access.
- * This cache stores all file data in RAM to enable synchronous reads during rendering,
- * eliminating async operations in React components and fixing virtualizer height calculations.
+ * In-memory file cache for synchronous rendering.
  *
- * Memory usage is minimal - even 100k files at ~300 bytes each = 30MB RAM.
+ * Stores:
+ * - Main file records for the entire vault (no blob payloads)
+ * - A bounded in-memory LRU for preview text strings
  */
 export class MemoryFileCache {
-    private memoryMap: Map<string, FileData> = new Map();
-    private previewTextMap: Map<string, string> = new Map();
+    private fileDataByPath = new Map<string, FileData>();
+    private readonly previewTexts: PreviewTextCache;
     private isInitialized = false;
+
+    /**
+     * Creates an in-memory cache with a bounded preview text LRU.
+     */
+    constructor(options?: MemoryFileCacheOptions) {
+        const maxEntries = options?.previewTextCacheMaxEntries ?? 10000;
+        this.previewTexts = new PreviewTextCache(maxEntries);
+    }
 
     /**
      * Mark the cache as initialized after loading data.
@@ -57,8 +69,8 @@ export class MemoryFileCache {
      * Used when IndexedDB operations succeed but contain no rows.
      */
     resetToEmpty(): void {
-        this.memoryMap.clear();
-        this.previewTextMap.clear();
+        this.fileDataByPath.clear();
+        this.previewTexts.clear();
         this.isInitialized = true;
     }
 
@@ -66,7 +78,7 @@ export class MemoryFileCache {
      * Get file data synchronously.
      */
     getFile(path: string): FileData | null {
-        return this.memoryMap.get(path) || null;
+        return this.fileDataByPath.get(path) || null;
     }
 
     /**
@@ -75,7 +87,7 @@ export class MemoryFileCache {
     getFiles(paths: string[]): Map<string, FileData> {
         const result = new Map<string, FileData>();
         for (const path of paths) {
-            const file = this.memoryMap.get(path);
+            const file = this.fileDataByPath.get(path);
             if (file) {
                 result.set(path, file);
             }
@@ -87,7 +99,7 @@ export class MemoryFileCache {
      * Check if a file has preview text.
      */
     hasPreview(path: string): boolean {
-        const file = this.memoryMap.get(path);
+        const file = this.fileDataByPath.get(path);
         return file?.previewStatus === 'has';
     }
 
@@ -96,21 +108,35 @@ export class MemoryFileCache {
      * Returns empty string when preview text is not loaded.
      */
     getPreviewText(path: string): string {
-        return this.previewTextMap.get(path) ?? '';
+        return this.previewTexts.get(path) ?? '';
+    }
+
+    /**
+     * Check if preview text is currently loaded in the LRU.
+     */
+    isPreviewTextLoaded(path: string): boolean {
+        return this.previewTexts.has(path);
+    }
+
+    /**
+     * Get loaded preview text entry count.
+     */
+    getPreviewTextEntryCount(): number {
+        return this.previewTexts.getEntryCount();
     }
 
     /**
      * Check if a file exists in the cache.
      */
     hasFile(path: string): boolean {
-        return this.memoryMap.has(path);
+        return this.fileDataByPath.has(path);
     }
 
     /**
      * Get all files as an array (use sparingly).
      */
     getAllFiles(): FileData[] {
-        return Array.from(this.memoryMap.values());
+        return Array.from(this.fileDataByPath.values());
     }
 
     /**
@@ -118,7 +144,7 @@ export class MemoryFileCache {
      */
     getAllFilesWithPaths(): { path: string; data: FileData }[] {
         const result: { path: string; data: FileData }[] = [];
-        for (const [path, data] of this.memoryMap.entries()) {
+        for (const [path, data] of this.fileDataByPath.entries()) {
             result.push({ path, data });
         }
         return result;
@@ -128,14 +154,14 @@ export class MemoryFileCache {
      * Get file count without allocating intermediate arrays.
      */
     getFileCount(): number {
-        return this.memoryMap.size;
+        return this.fileDataByPath.size;
     }
 
     /**
      * Stream all files without creating copies.
      */
     forEachFile(callback: (path: string, data: FileData) => void): void {
-        this.memoryMap.forEach((data, path) => {
+        this.fileDataByPath.forEach((data, path) => {
             callback(path, data);
         });
     }
@@ -144,17 +170,17 @@ export class MemoryFileCache {
      * Update or add a file in the cache.
      */
     updateFile(path: string, data: FileData): void {
-        this.memoryMap.set(path, data);
+        this.fileDataByPath.set(path, data);
         if (data.previewStatus !== 'has') {
-            this.previewTextMap.delete(path);
+            this.previewTexts.delete(path);
         }
     }
 
     // Sets a cloned copy of file data to prevent external modifications
     setClonedFile(path: string, data: FileData): void {
-        this.memoryMap.set(path, cloneFileData(data));
+        this.fileDataByPath.set(path, cloneFileData(data));
         if (data.previewStatus !== 'has') {
-            this.previewTextMap.delete(path);
+            this.previewTexts.delete(path);
         }
     }
 
@@ -172,7 +198,7 @@ export class MemoryFileCache {
             metadata?: FileData['metadata'];
         }
     ): void {
-        const existing = this.memoryMap.get(path);
+        const existing = this.fileDataByPath.get(path);
         if (existing) {
             // Update specific fields
             if (updates.previewStatus !== undefined) {
@@ -180,13 +206,13 @@ export class MemoryFileCache {
             }
             if (updates.previewText !== undefined) {
                 if (updates.previewText.length > 0) {
-                    this.previewTextMap.set(path, updates.previewText);
+                    this.previewTexts.set(path, updates.previewText);
                 } else {
-                    this.previewTextMap.delete(path);
+                    this.previewTexts.delete(path);
                 }
             }
             if (existing.previewStatus !== 'has') {
-                this.previewTextMap.delete(path);
+                this.previewTexts.delete(path);
             }
             // Drop blob updates; the memory cache only tracks the key.
             if (updates.featureImage !== undefined) existing.featureImage = null;
@@ -200,8 +226,8 @@ export class MemoryFileCache {
      * Delete a file from the cache.
      */
     deleteFile(path: string): void {
-        this.memoryMap.delete(path);
-        this.previewTextMap.delete(path);
+        this.fileDataByPath.delete(path);
+        this.previewTexts.delete(path);
     }
 
     /**
@@ -209,8 +235,8 @@ export class MemoryFileCache {
      */
     batchDelete(paths: string[]): void {
         for (const path of paths) {
-            this.memoryMap.delete(path);
-            this.previewTextMap.delete(path);
+            this.fileDataByPath.delete(path);
+            this.previewTexts.delete(path);
         }
     }
 
@@ -219,9 +245,9 @@ export class MemoryFileCache {
      */
     batchUpdate(updates: { path: string; data: FileData }[]): void {
         for (const { path, data } of updates) {
-            this.memoryMap.set(path, data);
+            this.fileDataByPath.set(path, data);
             if (data.previewStatus !== 'has') {
-                this.previewTextMap.delete(path);
+                this.previewTexts.delete(path);
             }
         }
     }
@@ -246,38 +272,6 @@ export class MemoryFileCache {
     }
 
     /**
-     * Clear specific content type from all files.
-     */
-    clearAllFileContent(type: 'preview' | 'featureImage' | 'metadata' | 'all'): void {
-        if (type === 'all' || type === 'preview') {
-            this.previewTextMap.clear();
-        }
-        for (const [path, file] of this.memoryMap.entries()) {
-            if (type === 'all' || type === 'preview') {
-                file.previewStatus = isMarkdownPath(path) ? 'unprocessed' : 'none';
-            }
-            if (type === 'all' || type === 'featureImage') {
-                file.featureImage = null;
-                file.featureImageKey = null;
-                file.featureImageStatus = 'unprocessed';
-            }
-            if (type === 'all' || type === 'metadata') file.metadata = null;
-        }
-    }
-
-    /**
-     * Get cache statistics.
-     */
-    getStats(): { fileCount: number; memoryUsageEstimate: number } {
-        const fileCount = this.memoryMap.size;
-
-        // Rough estimate: 300 bytes per file
-        const memoryUsageEstimate = fileCount * 300;
-
-        return { fileCount, memoryUsageEstimate };
-    }
-
-    /**
      * Check if cache is initialized.
      */
     isReady(): boolean {
@@ -288,8 +282,8 @@ export class MemoryFileCache {
      * Clear the entire cache (used during cleanup).
      */
     clear(): void {
-        this.memoryMap.clear();
-        this.previewTextMap.clear();
+        this.fileDataByPath.clear();
+        this.previewTexts.clear();
         this.isInitialized = false;
     }
 }

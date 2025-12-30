@@ -73,6 +73,18 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.0.3',
+        date: '2026-01-05',
+        showOnUpdate: true,
+        new: [],
+        improved: [
+            'Improved preview text render performance - preview text elements (up to max limit: 25k on mobile, 100k on desktop) are now asyncronously loaded into our LRU cache during startup, not only on demand.',
+        ],
+        changed: [],
+        fixed: [
+        ]
+    },
+    {
         version: '2.0.2',
         date: '2025-12-30',
         showOnUpdate: true,
