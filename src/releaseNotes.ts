@@ -76,14 +76,14 @@ const RELEASE_NOTES: ReleaseNote[] = [
         version: '2.0.2',
         date: '2025-12-30',
         showOnUpdate: true,
-        info: '==Significantly improved startup performance!== You should see a massive improvement in startup time, especially on mobile devices. License is also back to GPL-3 and Style Settings works again!',
+        info: '==Significantly improved startup performance!== You should see a massive improvement in startup time, especially on mobile devices. License is back to GPL-3 and Style Settings works again!',
         new: [],
         improved: [
             '**License is back to GPL 3** after clarifications from the Obsidian team.',
-            'Internal: Deferred external icon controller initialization/sync from onload() to runAsyncAction() to improve startup time.',
+            'Internal: Deferred icon initialization from onload() to runAsyncAction() to improve startup time.',
             'Internal: Deferred IndexedDB initialization from onload() to runAsyncAction() to improve startup time.',
             'Internal: Improved database hydration performance moving from cursor to batched reads.',
-            'Internal: Moved preview text to a separate cache store which is now loaded on demand during scrolling.'
+            'Internal: Moved preview text to a separate cache store which is now loaded on demand.'
         ],
         changed: [],
         fixed: [
