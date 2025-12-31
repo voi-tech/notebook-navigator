@@ -78,10 +78,17 @@ const RELEASE_NOTES: ReleaseNote[] = [
         showOnUpdate: true,
         new: [],
         improved: [
-            'Improved preview text render performance - preview text elements (up to max limit: 25k on mobile, 100k on desktop) are now asyncronously loaded into our LRU cache during startup, not only on demand.'
+            'Improved preview text render performance - preview text is now asyncronously filling up a memory cache after startup, so text is instantly available.',
+            'Added HEIC and HEIF image support for feature images (common on Apple devices). We now support PNG, JPEG, GIF, WebP, AVIF, HEIC, HEIF, SVG, and BMP formats for feature images.'
         ],
-        changed: [],
-        fixed: []
+        changed: [
+            'Bumped DB_CONTENT_VERSION so feature image thumbnails will be re-built on upgrade.'
+        ],
+        fixed: [
+            'Feature images now display correctly when servers return incorrect Content-Type headers.',
+            'iOS-optimized PNG files (with CgBI chunks) are now parsed correctly.',
+            'Improved AVIF/HEIF dimension parsing for images with crop metadata.',
+        ]
     },
     {
         version: '2.0.2',
