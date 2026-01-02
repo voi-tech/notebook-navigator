@@ -91,7 +91,6 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     colorIconOnly: false,
     toolbarVisibility: {
         navigation: {
-            shortcuts: true,
             expandCollapse: true,
             hiddenItems: true,
             rootReorder: true,

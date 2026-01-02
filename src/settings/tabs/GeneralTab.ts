@@ -841,7 +841,6 @@ interface ToolbarButtonConfig<T extends string> {
 }
 
 const NAVIGATION_TOOLBAR_BUTTONS: ToolbarButtonConfig<NavigationToolbarButtonId>[] = [
-    { id: 'shortcuts', icon: 'lucide-star', label: strings.navigationPane.pinShortcuts },
     { id: 'expandCollapse', icon: 'lucide-chevrons-up-down', label: strings.paneHeader.expandAllFolders },
     { id: 'hiddenItems', icon: 'lucide-eye', label: strings.paneHeader.showExcludedItems },
     { id: 'rootReorder', icon: 'lucide-list-tree', label: strings.paneHeader.reorderRootFolders },

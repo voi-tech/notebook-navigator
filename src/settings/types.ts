@@ -68,7 +68,7 @@ export type ListNoteGroupingOption = 'none' | 'date' | 'folder';
 export type AlphabeticalDateMode = 'created' | 'modified';
 
 /** Buttons available in the navigation toolbar */
-export type NavigationToolbarButtonId = 'shortcuts' | 'expandCollapse' | 'hiddenItems' | 'rootReorder' | 'newFolder';
+export type NavigationToolbarButtonId = 'expandCollapse' | 'hiddenItems' | 'rootReorder' | 'newFolder';
 
 /** Buttons available in the list toolbar */
 export type ListToolbarButtonId = 'search' | 'descendants' | 'sort' | 'appearance' | 'newNote';

@@ -132,6 +132,10 @@
     overflow-x: auto;
 }
 
+.nn-toolbar-visibility-grid-scroll {
+    justify-content: flex-end;
+}
+
 .nn-quick-actions-buttons.is-disabled {
     opacity: 0.4;
     pointer-events: none;
