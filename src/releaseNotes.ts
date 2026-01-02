@@ -77,8 +77,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-01-05',
         showOnUpdate: true,
         new: [
-            'The user interface now has a slight transparency for all overlay elements. This can be modified or disabled in Style Settings.',
-            'Two new theme variables: --nn-theme-nav-overlay-opacity and --nn-theme-nav-overlay-filter to control the new overlay opacity.'
+            '==The user interface now has a slight transparency== for all overlay elements. This can be modified or disabled in Style Settings.',
+            'Two new theme variables: ==--nn-theme-nav-overlay-opacity== and ==--nn-theme-nav-overlay-filter== to control the new overlay opacity.',
+            'New setting: ==General > Vault title placement==. You can now show the vault title either in header or in the navigation pane (default).'
         ],
         improved: [
             'You can now ==rename shortcuts== by right clicking and selecting "Rename shortcut".',
