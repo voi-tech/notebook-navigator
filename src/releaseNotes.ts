@@ -82,6 +82,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New setting: ==General > Vault title placement==. You can now show the vault title either in the header or in the navigation pane (default).'
         ],
         improved: [
+            'Recent files are now saved per vault profile.',
             'You can now ==rename shortcuts== by right clicking and selecting "Rename shortcut".',
             'You can now quickly ==remove shortcuts by clicking on the (X)== on the right side of each shortcut.',
             'Shortcuts and recent notes with truncated titles now show full title on hover with a tooltip.'
