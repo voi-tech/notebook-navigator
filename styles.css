@@ -5660,6 +5660,12 @@ body.nn-list-pane-transparent .notebook-navigator-obsidian-1-11-plus-ios .nn-lis
    Icon System
    ================================================================================= */
 
+/* Plugin icon - ensure transparent background */
+.svg-icon.notebook-navigator {
+    background: transparent;
+    overflow: visible;
+}
+
 /* Emoji icon styles */
 .nn-emoji-icon {
     font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;

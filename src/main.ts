@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Plugin, TFile, FileView, TFolder, WorkspaceLeaf, Platform } from 'obsidian';
+import { Plugin, TFile, FileView, TFolder, WorkspaceLeaf, Platform, addIcon } from 'obsidian';
 import { NotebookNavigatorSettings, DEFAULT_SETTINGS, NotebookNavigatorSettingTab } from './settings';
 import {
     LocalStorageKeys,
@@ -75,6 +75,7 @@ import { clearHiddenTagPatternCache } from './utils/tagPrefixMatcher';
 import { getPathPatternCacheKey } from './utils/pathPatternMatcher';
 import { DEFAULT_UI_SCALE, sanitizeUIScale } from './utils/uiScale';
 import { MAX_RECENT_COLORS } from './constants/colorPalette';
+import { NOTEBOOK_NAVIGATOR_ICON_ID, NOTEBOOK_NAVIGATOR_ICON_SVG } from './constants/notebookNavigatorIcon';
 
 const DEFAULT_UX_PREFERENCES: UXPreferences = {
     searchActive: false,
@@ -770,6 +771,10 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     async onload() {
         // Initialize localStorage before database so version checks work
         localStorage.init(this.app);
+
+        if (typeof addIcon === 'function') {
+            addIcon(NOTEBOOK_NAVIGATOR_ICON_ID, NOTEBOOK_NAVIGATOR_ICON_SVG);
+        }
 
         // Initialize database early for StorageContext consumers
         const appId = (this.app as ExtendedApp).appId || '';
