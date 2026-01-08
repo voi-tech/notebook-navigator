@@ -1,5 +1,7 @@
 # Notebook Navigator metadata pipeline
 
+Updated: January 8, 2026
+
 ## Table of contents
 
 - [Overview](#overview)
@@ -80,7 +82,7 @@ sequenceDiagram
     Storage->>Storage: rebuildTagTree()
     Storage->>Storage: isStorageReady=true
 
-    Storage->>Obsidian: queueMetadataContentWhenReady(markdown files)
+    Storage->>Obsidian: queueMetadataContentWhenReady(markdown files, markdownPipeline/tags/metadata)
     Storage->>Registry: queue fileThumbnails (PDF)
 
     par Background content generation
@@ -94,7 +96,7 @@ sequenceDiagram
 ### What gets queued after the database reset
 
 - `recordFileChanges(...)` writes file records without clearing provider output fields for existing paths. Providers use processed mtimes and status fields to decide what needs regeneration.
-- `queueMetadataContentWhenReady(...)` gates markdown work on `app.metadataCache.getFileCache(file)` being available.
+- `queueMetadataContentWhenReady(...)` gates metadata-dependent providers (`markdownPipeline`, `tags`, `metadata`) on `app.metadataCache.getFileCache(file)` being available.
 - PDF thumbnail generation is queued directly through the registry (`fileThumbnails`).
 
 ## Markdown pipeline stages
@@ -114,6 +116,8 @@ flowchart LR
     P2 --> P3[Processor: feature image]
     P3 --> G[Write patch to IndexedDB\nupdate status fields + markdownPipelineMtime]
 ```
+
+Body reads are only performed when at least one processor needs content (preview text, word count custom property, or feature image resolution from the note body). Feature image references can be resolved from frontmatter without reading the file body.
 
 ## Completion signals
 
