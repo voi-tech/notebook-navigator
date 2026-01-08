@@ -592,7 +592,18 @@ export const FileItem = React.memo(function FileItem({
         return true;
     }, [categorizedTags, isCompactMode, settings.showFileTags, settings.showFileTagsInCompactMode, settings.showTags]);
 
-    const customPropertyLabel = customProperty ?? '';
+    const customPropertyLabel = useMemo(() => {
+        const value = customProperty ?? '';
+        if (value === '' || settings.customPropertyType !== 'wordCount') {
+            return value;
+        }
+        const num = parseInt(value, 10);
+        if (Number.isNaN(num)) {
+            return value;
+        }
+        return num.toLocaleString();
+    }, [customProperty, settings.customPropertyType]);
+
     const shouldShowCustomProperty = useMemo(() => {
         return shouldShowCustomPropertyRow({
             customPropertyType: settings.customPropertyType,
@@ -703,17 +714,15 @@ export const FileItem = React.memo(function FileItem({
             return customPropertyContent;
         }
 
+        const iconName = settings.customPropertyType === 'wordCount' ? 'lucide-whole-word' : 'lucide-align-left';
+
         return (
             <div className="nn-file-pill-row nn-file-pill-row-custom-property">
-                <ObsidianIcon
-                    name="lucide-align-left"
-                    className="nn-file-pill-row-icon nn-file-pill-row-icon-custom-property"
-                    aria-hidden={true}
-                />
+                <ObsidianIcon name={iconName} className="nn-file-pill-row-icon nn-file-pill-row-icon-custom-property" aria-hidden={true} />
                 {customPropertyContent}
             </div>
         );
-    }, [customPropertyLabel, shouldShowCustomProperty, shouldShowPillRowIcons]);
+    }, [customPropertyLabel, settings.customPropertyType, shouldShowCustomProperty, shouldShowPillRowIcons]);
 
     // Format display date based on current sort
     const displayDate = useMemo(() => {
