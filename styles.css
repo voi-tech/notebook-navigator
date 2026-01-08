@@ -242,11 +242,11 @@ body {
     --nn-theme-file-name-color: var(--text-normal);
     --nn-theme-file-preview-color: var(--text-muted);
     --nn-theme-file-feature-border-radius: 4px;
-    --nn-theme-file-date-color: var(--text-normal);
-    --nn-theme-file-parent-color: var(--text-muted);
-    --nn-theme-file-tag-color: var(--text-muted);
+    --nn-theme-file-date-color: var(--text-faint);
+    --nn-theme-file-parent-color: var(--text-faint);
+    --nn-theme-file-tag-color: var(--text-faint);
     --nn-theme-file-tag-custom-color-text-color: var(--nn-theme-navitem-name-color);
-    --nn-theme-file-tag-bg: var(--background-modifier-border);
+    --nn-theme-file-tag-bg: transparent;
     --nn-theme-file-custom-property-color: var(--nn-theme-file-tag-color);
     --nn-theme-file-custom-property-bg: var(--nn-theme-file-tag-bg);
     --nn-theme-file-tag-border-radius: 10px;
@@ -258,6 +258,8 @@ body {
     --nn-theme-file-selected-parent-color: var(--nn-theme-file-parent-color);
     --nn-theme-file-selected-tag-color: var(--nn-theme-file-tag-color);
     --nn-theme-file-selected-tag-bg: var(--nn-theme-file-tag-bg);
+    --nn-theme-file-selected-custom-property-color: var(--nn-theme-file-custom-property-color);
+    --nn-theme-file-selected-custom-property-bg: var(--nn-theme-file-custom-property-bg);
     --nn-theme-file-selected-inactive-bg: var(--background-modifier-hover);
     --nn-theme-file-selected-inactive-name-color: var(--nn-theme-file-selected-name-color);
     --nn-theme-file-selected-inactive-preview-color: var(--nn-theme-file-selected-preview-color);
@@ -265,6 +267,8 @@ body {
     --nn-theme-file-selected-inactive-parent-color: var(--nn-theme-file-selected-parent-color);
     --nn-theme-file-selected-inactive-tag-color: var(--nn-theme-file-selected-tag-color);
     --nn-theme-file-selected-inactive-tag-bg: var(--nn-theme-file-selected-tag-bg);
+    --nn-theme-file-selected-inactive-custom-property-color: var(--nn-theme-file-selected-custom-property-color);
+    --nn-theme-file-selected-inactive-custom-property-bg: var(--nn-theme-file-selected-custom-property-bg);
 
     /* -- File Item Text Styling -- */
     --nn-theme-list-group-header-font-weight: 600;
@@ -370,6 +374,8 @@ body {
     --nn-selected-file-parent-color: var(--nn-theme-file-selected-parent-color);
     --nn-selected-file-tag-color: var(--nn-theme-file-selected-tag-color);
     --nn-selected-file-tag-bg: var(--nn-theme-file-selected-tag-bg);
+    --nn-selected-file-custom-property-color: var(--nn-theme-file-selected-custom-property-color);
+    --nn-selected-file-custom-property-bg: var(--nn-theme-file-selected-custom-property-bg);
     --nn-selected-navitem-bg-color: var(--nn-theme-navitem-selected-bg-solid, var(--nn-theme-navitem-selected-bg));
     --nn-selected-navitem-name-color: var(--nn-theme-navitem-selected-name-color);
     --nn-selected-navitem-chevron-color: var(--nn-theme-navitem-selected-chevron-color);
@@ -386,6 +392,8 @@ body {
     --nn-selected-file-parent-color: var(--nn-theme-file-selected-inactive-parent-color);
     --nn-selected-file-tag-color: var(--nn-theme-file-selected-inactive-tag-color);
     --nn-selected-file-tag-bg: var(--nn-theme-file-selected-inactive-tag-bg);
+    --nn-selected-file-custom-property-color: var(--nn-theme-file-selected-inactive-custom-property-color);
+    --nn-selected-file-custom-property-bg: var(--nn-theme-file-selected-inactive-custom-property-bg);
 }
 
 .nn-split-container:is([data-navigator-focused='false'], [data-focus-pane='files'], [data-focus-pane='search']) {
@@ -2585,7 +2593,7 @@ body {
     display: inline-flex;
     align-items: center;
     height: 20px;
-    line-height: 20px;
+    line-height: 1;
     padding: 0 8px;
     background-color: var(--nn-theme-file-tag-bg);
     color: var(--nn-theme-file-tag-color);
@@ -2637,9 +2645,14 @@ body {
 }
 
 /* Selected file tag styles - only for tags without custom colors */
-.nn-file.nn-selected .nn-file-tag:not([data-has-color='true']):not([data-has-background='true']) {
+.nn-file.nn-selected .nn-file-tag:not(.nn-file-custom-property):not([data-has-color='true']):not([data-has-background='true']) {
     background-color: var(--nn-selected-file-tag-bg);
     color: var(--nn-selected-file-tag-color);
+}
+
+.nn-file.nn-selected .nn-file-tag.nn-file-custom-property {
+    background-color: var(--nn-selected-file-custom-property-bg);
+    color: var(--nn-selected-file-custom-property-color);
 }
 
 /* Selected file text colors */
@@ -6822,6 +6835,24 @@ settings:
         default-dark: '#'
     -
     -
+        id: nn-theme-file-selected-custom-property-color
+        title: Selected custom property text color
+        description: Text color for custom property pill when selected.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-file-selected-custom-property-bg
+        title: Selected custom property background
+        description: Background color for custom property pill when selected.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
         id: nn-theme-file-selected-inactive-preview-color
         title: Selected file preview color (inactive)
         description: Content preview color when file is selected and pane is inactive.
@@ -6861,6 +6892,24 @@ settings:
         id: nn-theme-file-selected-inactive-tag-bg
         title: Selected file tag background (inactive)
         description: Tag background color when file is selected and pane is inactive.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-file-selected-inactive-custom-property-color
+        title: Selected custom property text color (inactive)
+        description: Text color for custom property pill when file is selected and pane is inactive.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-file-selected-inactive-custom-property-bg
+        title: Selected custom property background (inactive)
+        description: Background color for custom property pill when file is selected and pane is inactive.
         type: variable-themed-color
         format: hex
         default-light: '#'
