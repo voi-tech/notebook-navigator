@@ -79,55 +79,27 @@ applied via effects in `NotebookNavigatorComponent` and `useNavigatorScale` so r
 
 ## Component Hierarchy
 
+### Top-level stack
+
 ```mermaid
-graph TD
-    subgraph "Obsidian Integration"
-        OV[NotebookNavigatorView<br/>• ItemView host<br/>• Lifecycle bridge]
-    end
-
-    subgraph "React Application"
-        subgraph "Context Providers"
-            SP[SettingsProvider]
-            UX[UXPreferencesProvider]
-            RD[RecentDataProvider]
-            SVC[ServicesProvider]
-            SHC[ShortcutsProvider]
-            ST[StorageProvider]
-            EP[ExpansionProvider]
-            SEL[SelectionProvider]
-            UI[UIStateProvider]
-        end
-
-        subgraph "Main Container"
-            NC[NotebookNavigatorContainer<br/>• Scale wrapper<br/>• Skeleton fallback]
-            NNC[NotebookNavigatorComponent<br/>• Pane orchestration]
-            SK[SkeletonView]
-        end
-
-        subgraph "NotebookNavigatorComponent"
-            UNB[UpdateNoticeBanner]
-            UNI[UpdateNoticeIndicator]
-            NPR[NavigationPane]
-            LPR[ListPane]
-        end
-
-        subgraph "NavigationPane"
-            NPH[NavigationPaneHeader]
-            VTA[VaultTitleArea]
-            NTB[NavigationToolbar]
-            NB[NavigationBanner]
-            NPL[Virtualized navigation list]
-            NRP[NavigationRootReorderPanel]
-        end
-
-        subgraph "ListPane"
-            LPH[ListPaneHeader]
-            LTA[ListPaneTitleArea]
-            SI[SearchInput]
-            LPL[Virtualized file list]
-            LTB[ListToolbar]
-        end
-    end
+flowchart TD
+    OV[NotebookNavigatorView]
+    SP[SettingsProvider]
+    UX[UXPreferencesProvider]
+    RD[RecentDataProvider]
+    SVC[ServicesProvider]
+    SHC[ShortcutsProvider]
+    ST[StorageProvider]
+    EP[ExpansionProvider]
+    SEL[SelectionProvider]
+    UI[UIStateProvider]
+    NC[NotebookNavigatorContainer]
+    SK[SkeletonView]
+    NNC[NotebookNavigatorComponent]
+    UNB[UpdateNoticeBanner]
+    UNI[UpdateNoticeIndicator]
+    NPR[NavigationPane]
+    LPR[ListPane]
 
     OV --> SP --> UX --> RD --> SVC --> SHC --> ST --> EP --> SEL --> UI --> NC
     NC --> SK
@@ -136,30 +108,44 @@ graph TD
     NNC --> UNI
     NNC --> NPR
     NNC --> LPR
+```
+
+### NavigationPane subtree
+
+```mermaid
+flowchart TD
+    NPR[NavigationPane]
+    NPH[NavigationPaneHeader]
+    VTA[VaultTitleArea]
+    NTB[NavigationToolbar]
+    NB[NavigationBanner]
+    NPL[Virtualized navigation list]
+    NRP[NavigationRootReorderPanel]
 
     NPR --> NPH
-    NPR --> VTA
-    NPR --> NTB
+    NPH --> VTA
+    NPH --> NTB
     NPR --> NB
     NPR --> NPL
     NPR --> NRP
+```
+
+### ListPane subtree
+
+```mermaid
+flowchart TD
+    LPR[ListPane]
+    LPH[ListPaneHeader]
+    LTA[ListPaneTitleArea]
+    SI[SearchInput]
+    LTB[ListToolbar]
+    LPL[Virtualized file list]
 
     LPR --> LPH
-    LPR --> LTA
-    LPR --> SI
+    LPH --> LTA
+    LPH --> SI
+    LPH --> LTB
     LPR --> LPL
-    LPR --> LTB
-
-    classDef obsidian fill:#e8f4f8,stroke:#0ea5e9,stroke-width:2px
-    classDef context fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
-    classDef container fill:#e9d5ff,stroke:#a855f7,stroke-width:2px
-    classDef pane fill:#dcfce7,stroke:#22c55e,stroke-width:2px
-    classDef ui fill:#fee2e2,stroke:#ef4444,stroke-width:2px
-
-    class OV obsidian
-    class SP,UX,RD,SVC,SHC,ST,EP,SEL,UI context
-    class NC,NNC,SK container
-    class UNB,UNI,NPR,LPR,NPH,VTA,NTB,NB,NPL,NRP,LPH,LTA,SI,LPL,LTB pane
 ```
 
 ## Component Responsibilities
