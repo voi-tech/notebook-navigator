@@ -478,9 +478,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
         try {
             let nextValue = '';
             if (context.settings.customPropertyType === 'wordCount') {
-                nextValue = context.isExcalidraw
-                    ? ''
-                    : countWordsForCustomProperty(context.content, context.bodyStartIndex).toString();
+                nextValue = context.isExcalidraw ? '' : countWordsForCustomProperty(context.content, context.bodyStartIndex).toString();
             } else if (context.settings.customPropertyType === 'frontmatter') {
                 nextValue = resolveCustomPropertyFromFrontmatter(context.frontmatter, context.customPropertyFrontmatterFields);
             }

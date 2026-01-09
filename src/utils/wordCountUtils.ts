@@ -45,4 +45,3 @@ export function countWordsForCustomProperty(content: string, startIndex: number)
     }
     return count;
 }
-
