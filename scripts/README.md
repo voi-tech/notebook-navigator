@@ -121,18 +121,8 @@ cp main.js manifest.json styles.css ~/Documents/ObsidianVault/.obsidian/plugins/
 
 ## check-unused-strings.mjs
 
-Checks for unused i18n keys defined in `src/i18n/locales/en.ts` by scanning for `strings.<keyPath>` usage across `src` (excluding `src/i18n/locales`).
-
-**Usage:**
+Finds unused i18n keys in `src/i18n/locales/en.ts` by scanning for `strings.<keyPath>` usage across `src` (excluding `src/i18n/locales`). Prompts to remove unused keys from all locale files.
 
 ```bash
 node scripts/check-unused-strings.mjs
-node scripts/check-unused-strings.mjs --fail
-node scripts/check-unused-strings.mjs --fix
-node scripts/check-unused-strings.mjs --fix --yes
 ```
-
-**Notes:**
-
-- `--fix` updates all locale files in `src/i18n/locales/*.ts`
-- `--fix` removes single-line entries that have a trailing comma (inline comments are supported)

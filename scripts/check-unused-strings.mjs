@@ -119,9 +119,9 @@ function extractLeafKeyPaths(localeSource) {
             continue;
         }
 
-        const objectStartMatch = code.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*\{\s*$/);
+        const objectStartMatch = code.match(/^(?:([a-zA-Z_][a-zA-Z0-9_]*)|(['"])([^'"]+)\2)\s*:\s*\{\s*$/);
         if (objectStartMatch) {
-            currentPath.push(objectStartMatch[1]);
+            currentPath.push(objectStartMatch[1] ?? objectStartMatch[3]);
             continue;
         }
 
@@ -132,9 +132,9 @@ function extractLeafKeyPaths(localeSource) {
             continue;
         }
 
-        const leafMatch = code.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*/);
+        const leafMatch = code.match(/^(?:([a-zA-Z_][a-zA-Z0-9_]*)|(['"])([^'"]+)\2)\s*:\s*/);
         if (leafMatch) {
-            keys.push([...currentPath, leafMatch[1]].join('.'));
+            keys.push([...currentPath, leafMatch[1] ?? leafMatch[3]].join('.'));
         }
     }
 
@@ -176,8 +176,8 @@ async function collectSourceFiles(rootDir, excludedDirs) {
     return files;
 }
 
-// Builds a regex for matching non-`strings.` access like `settings.items.foo` from destructured/aliased objects.
-function buildTopLevelKeyRegex(topLevelKeys) {
+// Builds matchers for non-`strings.` access like `settings.items.foo` from destructured/aliased objects.
+function buildTopLevelMatchers(topLevelKeys) {
     const escapedKeys = topLevelKeys
         .slice()
         .sort((a, b) => b.length - a.length)
@@ -187,7 +187,16 @@ function buildTopLevelKeyRegex(topLevelKeys) {
         return null;
     }
 
-    return new RegExp(`\\b(${escapedKeys.join('|')})\\.([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*)`, 'g');
+    const group = `(${escapedKeys.join('|')})`;
+
+    return {
+        dotAccessRegex: new RegExp(`\\b${group}\\.([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*)`, 'g'),
+        bracketLiteralRegex: new RegExp(
+            `\\b${group}\\.([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*\\[\\s*(['\"])([^'\"\\n\\r]+)\\2\\s*\\]`,
+            'g'
+        ),
+        bracketAnyRegex: new RegExp(`\\b${group}\\.([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*\\[`, 'g')
+    };
 }
 
 // Resolves `a.b.c.d` to the nearest existing key in the locale map (e.g. `a.b.c`) when deeper access is detected.
@@ -210,8 +219,9 @@ function resolveExistingKeyPath(candidatePath, allKeys) {
 }
 
 // Finds used leaf keys in a source file by scanning for `strings.<path>` and common destructured access patterns.
-function findUsedKeys(sourceText, allKeys, topLevelKeyRegex) {
+function findUsedKeys(sourceText, allKeys, topLevelMatchers) {
     const used = new Set();
+    const usedPrefixes = new Set();
 
     const stringsAccessRegex = /\bstrings\.([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)/g;
     let match = stringsAccessRegex.exec(sourceText);
@@ -223,18 +233,54 @@ function findUsedKeys(sourceText, allKeys, topLevelKeyRegex) {
         match = stringsAccessRegex.exec(sourceText);
     }
 
-    if (topLevelKeyRegex) {
-        match = topLevelKeyRegex.exec(sourceText);
+    const stringsBracketLiteralRegex = /\bstrings\.([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\[\s*(['"])([^'"\n\r]+)\2\s*\]/g;
+    match = stringsBracketLiteralRegex.exec(sourceText);
+    while (match) {
+        const candidatePath = `${match[1]}.${match[3]}`;
+        if (allKeys.has(candidatePath)) {
+            used.add(candidatePath);
+        }
+        match = stringsBracketLiteralRegex.exec(sourceText);
+    }
+
+    const stringsBracketAnyRegex = /\bstrings\.([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\[/g;
+    match = stringsBracketAnyRegex.exec(sourceText);
+    while (match) {
+        usedPrefixes.add(match[1]);
+        match = stringsBracketAnyRegex.exec(sourceText);
+    }
+
+    if (topLevelMatchers?.dotAccessRegex) {
+        match = topLevelMatchers.dotAccessRegex.exec(sourceText);
         while (match) {
             const resolvedPath = resolveExistingKeyPath(`${match[1]}.${match[2]}`, allKeys);
             if (resolvedPath) {
                 used.add(resolvedPath);
             }
-            match = topLevelKeyRegex.exec(sourceText);
+            match = topLevelMatchers.dotAccessRegex.exec(sourceText);
         }
     }
 
-    return used;
+    if (topLevelMatchers?.bracketLiteralRegex) {
+        match = topLevelMatchers.bracketLiteralRegex.exec(sourceText);
+        while (match) {
+            const candidatePath = `${match[1]}.${match[2]}.${match[4]}`;
+            if (allKeys.has(candidatePath)) {
+                used.add(candidatePath);
+            }
+            match = topLevelMatchers.bracketLiteralRegex.exec(sourceText);
+        }
+    }
+
+    if (topLevelMatchers?.bracketAnyRegex) {
+        match = topLevelMatchers.bracketAnyRegex.exec(sourceText);
+        while (match) {
+            usedPrefixes.add(`${match[1]}.${match[2]}`);
+            match = topLevelMatchers.bracketAnyRegex.exec(sourceText);
+        }
+    }
+
+    return { usedKeys: used, usedPrefixes };
 }
 
 // Prompts for a yes/no confirmation on stdin.
@@ -265,65 +311,89 @@ function groupByTopLevelKey(keyPaths) {
     return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b));
 }
 
-// Prints CLI usage and option descriptions.
-function printUsage() {
-    console.log('Usage: node scripts/check-unused-strings.mjs [--fix] [--yes] [--fail]');
-    console.log('');
-    console.log('Options:');
-    console.log('  --fix   Remove unused keys from locale files (safe line removal)');
-    console.log('  --yes   Skip confirmation prompt (requires --fix)');
-    console.log('  --fail  Exit with status 1 if unused keys are found');
-}
-
-// Parses CLI flags and validates option combinations.
-function parseArgs(argv) {
-    const options = {
-        fix: false,
-        yes: false,
-        fail: false,
-        help: false
-    };
-
-    for (const arg of argv) {
-        if (arg === '--fix') {
-            options.fix = true;
-            continue;
-        }
-
-        if (arg === '--yes' || arg === '-y') {
-            options.yes = true;
-            continue;
-        }
-
-        if (arg === '--fail') {
-            options.fail = true;
-            continue;
-        }
-
-        if (arg === '--help' || arg === '-h') {
-            options.help = true;
-            continue;
-        }
-
-        throw new Error(`Unknown option: ${arg}`);
+function removeTrailingCommaFromLine(line) {
+    const commentlessLine = stripInlineComment(line);
+    const trimmedRight = commentlessLine.replace(/\s+$/, '');
+    if (!trimmedRight.endsWith(',')) {
+        return line;
     }
 
-    if (options.yes && !options.fix) {
-        throw new Error('--yes requires --fix');
-    }
-
-    return options;
+    const commaIndex = trimmedRight.lastIndexOf(',');
+    return line.slice(0, commaIndex) + line.slice(commaIndex + 1);
 }
 
-// Removes unused keys from a locale file by deleting single-line `key: value,` entries (keeps formatting and comments).
+function getNextMeaningfulCodeLine(lines, startIndex) {
+    for (let index = startIndex; index < lines.length; index++) {
+        const code = stripInlineComment(lines[index]).trim();
+        if (code) {
+            return code;
+        }
+    }
+
+    return null;
+}
+
+function removeTrailingCommaFromLastMeaningfulOutputLine(output) {
+    for (let index = output.length - 1; index >= 0; index--) {
+        const code = stripInlineComment(output[index]).trim();
+        if (!code) {
+            continue;
+        }
+
+        if (code.endsWith(',')) {
+            output[index] = removeTrailingCommaFromLine(output[index]);
+        }
+        break;
+    }
+}
+
+function findHeaderStartIndex(output) {
+    let index = output.length;
+    while (index > 0) {
+        const trimmedLine = output[index - 1].trim();
+        if (trimmedLine === '' || trimmedLine.startsWith('//')) {
+            index--;
+            continue;
+        }
+        break;
+    }
+
+    return index;
+}
+
+function collapseConsecutiveBlankLines(lines) {
+    const collapsed = [];
+    let previousBlank = false;
+
+    for (const line of lines) {
+        const isBlank = line.trim() === '';
+        if (isBlank) {
+            if (previousBlank) {
+                continue;
+            }
+            previousBlank = true;
+            collapsed.push('');
+            continue;
+        }
+
+        previousBlank = false;
+        collapsed.push(line);
+    }
+
+    return collapsed;
+}
+
+// Removes unused keys from a locale file by deleting safe single-line leaf entries, removing empty objects, and collapsing blank lines.
 function removeKeysFromLocaleSource(localeSource, keysToRemove) {
     const lines = normalizeNewlines(localeSource).split('\n');
     const currentPath = [];
     const output = [];
     const removedKeys = new Set();
+    const objectStack = [];
     let inExport = false;
 
-    for (const line of lines) {
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        const line = lines[lineIndex];
         const trimmedLine = line.trim();
         if (!inExport) {
             output.push(line);
@@ -335,50 +405,62 @@ function removeKeysFromLocaleSource(localeSource, keysToRemove) {
 
         const code = stripInlineComment(line).trim();
 
-        const objectStartMatch = code.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*\{\s*$/);
+        const objectStartMatch = code.match(/^(?:([a-zA-Z_][a-zA-Z0-9_]*)|(['"])([^'"]+)\2)\s*:\s*\{\s*$/);
         if (objectStartMatch) {
-            currentPath.push(objectStartMatch[1]);
+            currentPath.push(objectStartMatch[1] ?? objectStartMatch[3]);
+            objectStack.push({ headerStartIndex: findHeaderStartIndex(output), hasContent: false });
             output.push(line);
             continue;
         }
 
         if (/^\}\s*,?\s*;?\s*$/.test(code)) {
-            if (currentPath.length > 0) {
+            removeTrailingCommaFromLastMeaningfulOutputLine(output);
+
+            if (objectStack.length > 0) {
+                const { headerStartIndex, hasContent } = objectStack.pop();
+                currentPath.pop();
+
+                if (!hasContent) {
+                    output.splice(headerStartIndex);
+                    continue;
+                }
+
+                if (objectStack.length > 0) {
+                    objectStack[objectStack.length - 1].hasContent = true;
+                }
+            } else if (currentPath.length > 0) {
                 currentPath.pop();
             }
+
             output.push(line);
             continue;
         }
 
-        const leafMatch = code.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*/);
+        const leafMatch = code.match(/^(?:([a-zA-Z_][a-zA-Z0-9_]*)|(['"])([^'"]+)\2)\s*:\s*/);
         if (leafMatch) {
-            const keyPath = [...currentPath, leafMatch[1]].join('.');
-            if (keysToRemove.has(keyPath) && code.endsWith(',')) {
-                removedKeys.add(keyPath);
-                continue;
+            const keyPath = [...currentPath, leafMatch[1] ?? leafMatch[3]].join('.');
+            if (keysToRemove.has(keyPath)) {
+                if (code.endsWith(',')) {
+                    removedKeys.add(keyPath);
+                    continue;
+                }
+
+                const nextMeaningfulLine = getNextMeaningfulCodeLine(lines, lineIndex + 1);
+                if (nextMeaningfulLine && /^\}\s*,?\s*;?\s*$/.test(nextMeaningfulLine)) {
+                    removedKeys.add(keyPath);
+                    continue;
+                }
+            }
+
+            if (objectStack.length > 0) {
+                objectStack[objectStack.length - 1].hasContent = true;
             }
         }
 
         output.push(line);
     }
 
-    return { updatedSource: output.join('\n'), removedKeys };
-}
-
-const options = (() => {
-    try {
-        return parseArgs(process.argv.slice(2));
-    } catch (error) {
-        console.error(error instanceof Error ? error.message : String(error));
-        console.log('');
-        printUsage();
-        process.exit(1);
-    }
-})();
-
-if (options.help) {
-    printUsage();
-    process.exit(0);
+    return { updatedSource: collapseConsecutiveBlankLines(output).join('\n'), removedKeys };
 }
 
 try {
@@ -396,13 +478,27 @@ const topLevelKeys = Array.from(new Set(allKeyPaths.map(keyPath => keyPath.split
 const excludedDirs = [localesDir];
 const sourceFiles = await collectSourceFiles(srcDir, excludedDirs);
 
-const topLevelKeyRegex = buildTopLevelKeyRegex(topLevelKeys);
+const topLevelMatchers = buildTopLevelMatchers(topLevelKeys);
 const usedKeys = new Set();
+const usedKeyPrefixes = new Set();
 
 for (const filePath of sourceFiles) {
     const sourceText = await fs.readFile(filePath, 'utf8');
-    for (const key of findUsedKeys(sourceText, allKeys, topLevelKeyRegex)) {
+    const { usedKeys: fileUsedKeys, usedPrefixes } = findUsedKeys(sourceText, allKeys, topLevelMatchers);
+    for (const key of fileUsedKeys) {
         usedKeys.add(key);
+    }
+    for (const prefix of usedPrefixes) {
+        usedKeyPrefixes.add(prefix);
+    }
+}
+
+for (const prefix of usedKeyPrefixes) {
+    const prefixWithDot = `${prefix}.`;
+    for (const keyPath of allKeyPaths) {
+        if (keyPath.startsWith(prefixWithDot)) {
+            usedKeys.add(keyPath);
+        }
     }
 }
 
@@ -432,9 +528,9 @@ if (unusedKeys.length > 0) {
     console.log('All keys are being used.');
 }
 
-if (unusedKeys.length > 0 && options.fix) {
+if (unusedKeys.length > 0) {
     console.log('');
-    const shouldRemove = options.yes ? true : await promptYesNo(`Remove ${unusedKeys.length} unused keys from locale files? [y/N] `);
+    const shouldRemove = await promptYesNo(`Remove ${unusedKeys.length} unused keys from locale files? [y/N] `);
 
     if (shouldRemove) {
         const keysToRemove = new Set(unusedKeys);
@@ -462,12 +558,7 @@ if (unusedKeys.length > 0 && options.fix) {
         console.log('');
         console.log(`Updated locale files: ${updatedFiles}/${localeFiles.length}`);
         console.log(`Removed keys: ${totalRemoved}`);
-        console.log('Note: Only removes single-line entries with a trailing comma (inline comments are supported).');
     } else {
         console.log('No changes made.');
     }
-}
-
-if (options.fail && unusedKeys.length > 0) {
-    process.exitCode = 1;
 }
