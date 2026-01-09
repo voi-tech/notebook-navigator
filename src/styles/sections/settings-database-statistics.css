@@ -282,14 +282,6 @@
     padding-left: 12px; /* Standard padding for snap position */
 }
 
-/* Mobile breadcrumb icon */
-.notebook-navigator-mobile .nn-mobile-breadcrumb-icon {
-    display: inline-block;
-    margin-right: 8px;
-    color: var(--nn-theme-navitem-name-color);
-    vertical-align: middle;
-}
-
 /* Breadcrumb current segment - desktop uses list header color, mobile uses navitem color */
 .nn-path-current {
     color: var(--nn-theme-list-header-breadcrumb-color);

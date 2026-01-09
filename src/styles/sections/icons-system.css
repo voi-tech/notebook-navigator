@@ -26,8 +26,7 @@
 }
 
 /* Ensure emojis in navigation items display properly */
-.nn-navitem-icon.nn-emoji-icon,
-.nn-tag-icon.nn-emoji-icon {
+.nn-navitem-icon.nn-emoji-icon {
     font-size: var(--nn-nav-icon-size);
     width: var(--nn-nav-icon-size);
     height: var(--nn-nav-icon-size);

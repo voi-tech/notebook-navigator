@@ -200,14 +200,12 @@
     height: var(--nn-nav-icon-size);
 }
 
-.nn-navitem-icon.nn-iconfont,
-.nn-tag-icon.nn-iconfont {
+.nn-navitem-icon.nn-iconfont {
     font-size: var(--nn-nav-icon-size);
     line-height: var(--nn-nav-icon-size);
 }
 
-.nn-navitem-icon[data-has-color='true'] svg,
-.nn-tag-icon[data-has-color='true'] svg {
+.nn-navitem-icon[data-has-color='true'] svg {
     stroke-width: 2.4;
 }
 
@@ -464,15 +462,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-}
-
-.nn-root-reorder-section--dragging {
-    opacity: 0;
-}
-
-.nn-root-reorder-section-list {
-    display: flex;
-    flex-direction: column;
 }
 
 .nn-root-reorder-item {

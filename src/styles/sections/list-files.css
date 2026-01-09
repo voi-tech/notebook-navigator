@@ -204,16 +204,6 @@
     color: var(--nn-file-name-custom-color);
 }
 
-.nn-file-external-icon {
-    margin-inline-end: 4px;
-}
-
-.nn-file-external-icon svg,
-.nn-compact-file-type-icon svg {
-    width: 14px;
-    height: 14px;
-}
-
 .nn-file-icon {
     width: var(--nn-file-icon-size-mobile, var(--nn-file-icon-size));
     height: var(--nn-file-icon-size-mobile, var(--nn-file-icon-size));

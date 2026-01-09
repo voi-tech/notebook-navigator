@@ -1771,14 +1771,12 @@ body {
     height: var(--nn-nav-icon-size);
 }
 
-.nn-navitem-icon.nn-iconfont,
-.nn-tag-icon.nn-iconfont {
+.nn-navitem-icon.nn-iconfont {
     font-size: var(--nn-nav-icon-size);
     line-height: var(--nn-nav-icon-size);
 }
 
-.nn-navitem-icon[data-has-color='true'] svg,
-.nn-tag-icon[data-has-color='true'] svg {
+.nn-navitem-icon[data-has-color='true'] svg {
     stroke-width: 2.4;
 }
 
@@ -2035,15 +2033,6 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-}
-
-.nn-root-reorder-section--dragging {
-    opacity: 0;
-}
-
-.nn-root-reorder-section-list {
-    display: flex;
-    flex-direction: column;
 }
 
 .nn-root-reorder-item {
@@ -2339,16 +2328,6 @@ body {
 
 .nn-file-name[data-has-color='true'] {
     color: var(--nn-file-name-custom-color);
-}
-
-.nn-file-external-icon {
-    margin-inline-end: 4px;
-}
-
-.nn-file-external-icon svg,
-.nn-compact-file-type-icon svg {
-    width: 14px;
-    height: 14px;
 }
 
 .nn-file-icon {
@@ -3266,41 +3245,13 @@ body.nn-resizing {
     fill: none;
 }
 
-/* Featured image in drag ghost - circular */
-.nn-drag-ghost-icon.nn-drag-ghost-featured-image {
-    padding: 0;
-    overflow: hidden;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 2px solid #000000;
-}
-
-/* Dark mode: use dark gray border for featured image */
-.theme-dark .nn-drag-ghost-icon.nn-drag-ghost-featured-image {
-    border-color: var(--background-modifier-border);
-}
-
-.nn-drag-ghost-icon.nn-drag-ghost-featured-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
 /* Header actions layout variations 
    Different layouts are needed for mobile vs desktop views:
    - space-between: Mobile file pane (back button + folder name + actions)
-   - flex-end: Mobile folder pane (actions only, aligned right)
 */
 .nn-header-actions--space-between {
     width: 100%;
     justify-content: space-between;
-}
-
-.nn-header-actions--flex-end {
-    width: 100%;
-    justify-content: flex-end;
 }
 /* Source: src/styles/sections/state-context-menu.css */
 
@@ -4398,15 +4349,6 @@ body.nn-resizing {
     display: none;
 }
 
-/* Informational text in settings */
-.nn-setting-info {
-    margin-top: 4px;
-    font-size: var(--font-ui-smaller);
-    color: var(--text-normal);
-    font-weight: var(--font-semibold);
-    line-height: 1.4;
-}
-
 /* Container for additional info below settings */
 .nn-setting-info-container {
     margin-top: 8px;
@@ -4901,14 +4843,6 @@ body.nn-resizing {
     color: var(--nn-theme-mobile-list-header-breadcrumb-color);
     white-space: nowrap;
     padding-left: 12px; /* Standard padding for snap position */
-}
-
-/* Mobile breadcrumb icon */
-.notebook-navigator-mobile .nn-mobile-breadcrumb-icon {
-    display: inline-block;
-    margin-right: 8px;
-    color: var(--nn-theme-navitem-name-color);
-    vertical-align: middle;
 }
 
 /* Breadcrumb current segment - desktop uses list header color, mobile uses navitem color */
@@ -5942,8 +5876,7 @@ body.nn-resizing {
 }
 
 /* Ensure emojis in navigation items display properly */
-.nn-navitem-icon.nn-emoji-icon,
-.nn-tag-icon.nn-emoji-icon {
+.nn-navitem-icon.nn-emoji-icon {
     font-size: var(--nn-nav-icon-size);
     width: var(--nn-nav-icon-size);
     height: var(--nn-nav-icon-size);
@@ -6118,11 +6051,6 @@ body.nn-resizing {
 /* Export button - stays on the right */
 .nn-metadata-export-button {
     flex-shrink: 0;
-}
-
-/* Settings subsetting indentation */
-.notebook-navigator-subsetting {
-    margin-left: 20px;
 }
 
 /* Make delete menu items red (items with trash icon) */
