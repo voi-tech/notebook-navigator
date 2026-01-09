@@ -1,6 +1,6 @@
 # Notebook Navigator Theming Guide
 
-Updated: January 8, 2026
+Updated: January 9, 2026
 
 ## Table of Contents
 
@@ -124,11 +124,11 @@ Priority order: folder note styles override custom color styles, which override 
 | `--nn-theme-file-feature-border-radius`           | `4px`                                         | Corner radius for feature images (0-32px)                       |
 | `--nn-theme-file-date-color`                      | `var(--text-faint)`                           | Text color for creation or modification dates                   |
 | `--nn-theme-file-parent-color`                    | `var(--text-faint)`                           | Text color for parent folder path (when showing subfolders)     |
-| `--nn-theme-file-tag-color`                       | `var(--text-faint)`                           | Text color for tag pills without custom colors                  |
+| `--nn-theme-file-tag-color`                       | `var(--text-muted)`                           | Text color for tag pills without custom colors                  |
 | `--nn-theme-file-tag-custom-color-text-color`     | `var(--nn-theme-navitem-name-color)`          | Text color for tags with custom backgrounds but no custom color |
 | `--nn-theme-file-tag-bg`                          | `transparent`                                 | Background color for tag pills without custom backgrounds       |
-| `--nn-theme-file-custom-property-color`           | `var(--nn-theme-file-tag-color)`              | Text color for custom property pill                             |
-| `--nn-theme-file-custom-property-bg`              | `var(--nn-theme-file-tag-bg)`                 | Background color for custom property pill                        |
+| `--nn-theme-file-custom-property-color`           | `var(--text-muted)`                           | Text color for custom property pill                             |
+| `--nn-theme-file-custom-property-bg`              | `transparent`                                 | Background color for custom property pill                       |
 | `--nn-theme-file-tag-border-radius`               | `10px`                                        | Corner radius for tag pills (0-10px)                            |
 | `--nn-theme-file-border-radius`                   | `8px`                                         | Corner radius for file items (0-16px)                           |
 | `--nn-theme-file-selected-bg`                     | `var(--text-selection)`                       | Selected file background color                                  |
@@ -136,9 +136,9 @@ Priority order: folder note styles override custom color styles, which override 
 | `--nn-theme-file-selected-preview-color`          | `var(--nn-theme-file-preview-color)`          | Text color for content preview when selected                    |
 | `--nn-theme-file-selected-date-color`             | `var(--text-muted)`                           | Text color for file dates when selected                         |
 | `--nn-theme-file-selected-parent-color`           | `var(--text-muted)`                           | Text color for parent folder path when selected                 |
-| `--nn-theme-file-selected-tag-color`              | `var(--text-muted)`                           | Text color for tag pills when selected                          |
+| `--nn-theme-file-selected-tag-color`              | `var(--nn-theme-file-tag-color)`              | Text color for tag pills when selected                          |
 | `--nn-theme-file-selected-tag-bg`                 | `var(--nn-theme-file-tag-bg)`                 | Background color for tag pills when selected                    |
-| `--nn-theme-file-selected-custom-property-color`  | `var(--text-muted)`                           | Text color for custom property pill when selected               |
+| `--nn-theme-file-selected-custom-property-color`  | `var(--nn-theme-file-custom-property-color)`  | Text color for custom property pill when selected               |
 | `--nn-theme-file-selected-custom-property-bg`     | `var(--nn-theme-file-custom-property-bg)`     | Background color for custom property pill when selected         |
 | `--nn-theme-file-selected-inactive-bg`            | `var(--background-modifier-hover)`            | Selected file background when pane is inactive (desktop only)   |
 | `--nn-theme-file-selected-inactive-name-color`    | `var(--nn-theme-file-selected-name-color)`    | File name color when selected and pane is inactive              |
