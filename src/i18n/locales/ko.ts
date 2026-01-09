@@ -267,6 +267,7 @@ export const STRINGS_KO = {
                 'list-new-note': '새 노트',
                 'nav-folder-open': '열린 폴더',
                 'nav-folder-closed': '닫힌 폴더',
+                'nav-folder-note': '폴더 노트',
                 'nav-tag': '태그',
                 'list-pinned': '고정 항목',
                 'file-word-count': '단어 수',

@@ -268,6 +268,7 @@ export const STRINGS_IT = {
                 'list-new-note': 'Nuova nota',
                 'nav-folder-open': 'Cartella aperta',
                 'nav-folder-closed': 'Cartella chiusa',
+                'nav-folder-note': 'Nota cartella',
                 'nav-tag': 'Tag',
                 'list-pinned': 'Elementi fissati',
                 'file-word-count': 'Conteggio parole',

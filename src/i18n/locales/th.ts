@@ -268,6 +268,7 @@ export const STRINGS_TH = {
                 'list-new-note': 'โน้ตใหม่',
                 'nav-folder-open': 'โฟลเดอร์เปิด',
                 'nav-folder-closed': 'โฟลเดอร์ปิด',
+                'nav-folder-note': 'โน้ตโฟลเดอร์',
                 'nav-tag': 'แท็ก',
                 'list-pinned': 'รายการที่ปักหมุด',
                 'file-word-count': 'จำนวนคำ',

@@ -268,6 +268,7 @@ export const STRINGS_ZH_CN = {
                 'list-new-note': '新建笔记',
                 'nav-folder-open': '文件夹打开',
                 'nav-folder-closed': '文件夹关闭',
+                'nav-folder-note': '文件夹笔记',
                 'nav-tag': '标签',
                 'list-pinned': '固定项目',
                 'file-word-count': '字数统计',

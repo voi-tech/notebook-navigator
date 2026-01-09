@@ -268,6 +268,7 @@ export const STRINGS_PT = {
                 'list-new-note': 'Nova nota',
                 'nav-folder-open': 'Pasta aberta',
                 'nav-folder-closed': 'Pasta fechada',
+                'nav-folder-note': 'Nota da pasta',
                 'nav-tag': 'Etiqueta',
                 'list-pinned': 'Itens fixados',
                 'file-word-count': 'Contagem de palavras',

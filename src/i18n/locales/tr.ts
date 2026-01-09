@@ -268,6 +268,7 @@ export const STRINGS_TR = {
                 'list-new-note': 'Yeni not',
                 'nav-folder-open': 'Klasör açık',
                 'nav-folder-closed': 'Klasör kapalı',
+                'nav-folder-note': 'Klasör notu',
                 'nav-tag': 'Etiket',
                 'list-pinned': 'Sabitlenmiş öğeler',
                 'file-word-count': 'Kelime sayısı',

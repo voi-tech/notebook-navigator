@@ -268,6 +268,7 @@ export const STRINGS_FR = {
                 'list-new-note': 'Nouvelle note',
                 'nav-folder-open': 'Dossier ouvert',
                 'nav-folder-closed': 'Dossier fermé',
+                'nav-folder-note': 'Note de dossier',
                 'nav-tag': 'Étiquette',
                 'list-pinned': 'Éléments épinglés',
                 'file-word-count': 'Nombre de mots',

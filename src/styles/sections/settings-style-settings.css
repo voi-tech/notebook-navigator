@@ -331,7 +331,7 @@ settings:
         title: Folder note weight
         description: Font weight for folders with notes (overrides all others).
         type: variable-number-slider
-        default: 600
+        default: 400
         min: 100
         max: 900
         step: 100
@@ -341,7 +341,7 @@ settings:
         title: Folder note decoration
         description: Text decoration for folders with notes.
         type: variable-select
-        default: underline
+        default: none
         options:
           -
             label: None

@@ -268,6 +268,7 @@ export const STRINGS_JA = {
                 'list-new-note': '新規ノート',
                 'nav-folder-open': 'フォルダ（開）',
                 'nav-folder-closed': 'フォルダ（閉）',
+                'nav-folder-note': 'フォルダノート',
                 'nav-tag': 'タグ',
                 'list-pinned': 'ピン留め項目',
                 'file-word-count': '単語数',

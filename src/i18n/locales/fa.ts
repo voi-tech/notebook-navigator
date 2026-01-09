@@ -268,6 +268,7 @@ export const STRINGS_FA = {
                 'list-new-note': 'یادداشت جدید',
                 'nav-folder-open': 'پوشه باز',
                 'nav-folder-closed': 'پوشه بسته',
+                'nav-folder-note': 'یادداشت پوشه',
                 'nav-tag': 'برچسب',
                 'list-pinned': 'آیتم‌های سنجاق شده',
                 'file-word-count': 'تعداد کلمات',

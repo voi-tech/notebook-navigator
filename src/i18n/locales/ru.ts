@@ -268,6 +268,7 @@ export const STRINGS_RU = {
                 'list-new-note': 'Новая заметка',
                 'nav-folder-open': 'Папка открыта',
                 'nav-folder-closed': 'Папка закрыта',
+                'nav-folder-note': 'Заметка папки',
                 'nav-tag': 'Тег',
                 'list-pinned': 'Закреплённые элементы',
                 'file-word-count': 'Количество слов',

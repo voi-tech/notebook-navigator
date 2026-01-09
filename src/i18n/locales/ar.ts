@@ -268,6 +268,7 @@ export const STRINGS_AR = {
                 'list-new-note': 'ملاحظة جديدة',
                 'nav-folder-open': 'مجلد مفتوح',
                 'nav-folder-closed': 'مجلد مغلق',
+                'nav-folder-note': 'ملاحظة المجلد',
                 'nav-tag': 'وسم',
                 'list-pinned': 'العناصر المثبتة',
                 'file-word-count': 'عدد الكلمات',

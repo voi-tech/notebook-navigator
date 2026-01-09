@@ -269,6 +269,7 @@ export const STRINGS_PL = {
                 'list-new-note': 'Nowa notatka',
                 'nav-folder-open': 'Folder otwarty',
                 'nav-folder-closed': 'Folder zamknięty',
+                'nav-folder-note': 'Notatka folderu',
                 'nav-tag': 'Tag',
                 'list-pinned': 'Przypięte elementy',
                 'file-word-count': 'Liczba słów',

@@ -268,6 +268,7 @@ export const STRINGS_ZH_TW = {
                 'list-new-note': '新建筆記',
                 'nav-folder-open': '資料夾開啟',
                 'nav-folder-closed': '資料夾關閉',
+                'nav-folder-note': '資料夾筆記',
                 'nav-tag': '標籤',
                 'list-pinned': '釘選項目',
                 'file-word-count': '字數統計',

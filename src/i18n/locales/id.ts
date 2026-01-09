@@ -268,6 +268,7 @@ export const STRINGS_ID = {
                 'list-new-note': 'Catatan baru',
                 'nav-folder-open': 'Folder terbuka',
                 'nav-folder-closed': 'Folder tertutup',
+                'nav-folder-note': 'Catatan folder',
                 'nav-tag': 'Tag',
                 'list-pinned': 'Item tersemat',
                 'file-word-count': 'Jumlah kata',

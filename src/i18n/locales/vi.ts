@@ -268,6 +268,7 @@ export const STRINGS_VI = {
                 'list-new-note': 'Ghi chú mới',
                 'nav-folder-open': 'Thư mục mở',
                 'nav-folder-closed': 'Thư mục đóng',
+                'nav-folder-note': 'Ghi chú thư mục',
                 'nav-tag': 'Thẻ',
                 'list-pinned': 'Mục đã ghim',
                 'file-word-count': 'Số từ',

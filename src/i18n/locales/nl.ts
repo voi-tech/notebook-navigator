@@ -269,6 +269,7 @@ export const STRINGS_NL = {
                 'list-new-note': 'Nieuwe notitie',
                 'nav-folder-open': 'Map open',
                 'nav-folder-closed': 'Map gesloten',
+                'nav-folder-note': 'Mapnotitie',
                 'nav-tag': 'Tag',
                 'list-pinned': 'Vastgezette items',
                 'file-word-count': 'Aantal woorden',

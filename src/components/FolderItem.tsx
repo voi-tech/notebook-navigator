@@ -190,18 +190,6 @@ export const FolderItem = React.memo(function FolderItem({
     const customColor = color;
     // Determine whether to apply color to the folder name instead of the icon
     const applyColorToName = Boolean(customColor) && !settings.colorIconOnly;
-    const dragIconId = useMemo(() => {
-        if (icon) {
-            return icon;
-        }
-        if (folder.path === '/') {
-            return hasChildren && isExpanded ? 'open-vault' : 'vault';
-        }
-        return hasChildren && isExpanded
-            ? resolveUXIcon(settings.interfaceIcons, 'nav-folder-open')
-            : resolveUXIcon(settings.interfaceIcons, 'nav-folder-closed');
-    }, [folder.path, hasChildren, icon, isExpanded, settings.interfaceIcons]);
-    const customBackground = backgroundColor;
 
     const hasFolderNote = useMemo(() => {
         if (!settings.enableFolderNotes) return false;
@@ -211,6 +199,22 @@ export const FolderItem = React.memo(function FolderItem({
         // NOTE TO REVIEWER: Including **vaultChangeVersion** to react to new folder notes
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [folder, settings, noteCounts.current, vaultChangeVersion]);
+
+    const dragIconId = useMemo(() => {
+        if (icon) {
+            return icon;
+        }
+        if (folder.path === '/') {
+            return hasChildren && isExpanded ? 'open-vault' : 'vault';
+        }
+        if (hasFolderNote) {
+            return resolveUXIcon(settings.interfaceIcons, 'nav-folder-note');
+        }
+        return hasChildren && isExpanded
+            ? resolveUXIcon(settings.interfaceIcons, 'nav-folder-open')
+            : resolveUXIcon(settings.interfaceIcons, 'nav-folder-closed');
+    }, [folder.path, hasChildren, icon, isExpanded, settings.interfaceIcons, hasFolderNote]);
+    const customBackground = backgroundColor;
 
     // Memoize className to avoid string concatenation on every render
     const className = useMemo(() => {
@@ -326,6 +330,10 @@ export const FolderItem = React.memo(function FolderItem({
                 // Root folder - use vault icon (open/closed based on expansion state)
                 const vaultIconName = hasChildren && isExpanded ? 'open-vault' : 'vault';
                 iconService.renderIcon(iconRef.current, vaultIconName);
+            } else if (hasFolderNote) {
+                // Folder note - show folder note icon
+                const folderNoteIconName = resolveUXIcon(settings.interfaceIcons, 'nav-folder-note');
+                iconService.renderIcon(iconRef.current, folderNoteIconName);
             } else {
                 // Default icon - show open folder only if has children AND is expanded
                 const iconName =
@@ -335,7 +343,7 @@ export const FolderItem = React.memo(function FolderItem({
                 iconService.renderIcon(iconRef.current, iconName);
             }
         }
-    }, [hasChildren, icon, iconVersion, isExpanded, folder.path, settings.showFolderIcons, settings.interfaceIcons]);
+    }, [hasChildren, icon, iconVersion, isExpanded, folder.path, settings.showFolderIcons, settings.interfaceIcons, hasFolderNote]);
 
     // Enable context menu
     const folderMenuConfig = disableContextMenu

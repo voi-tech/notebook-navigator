@@ -24,6 +24,7 @@ import { getDBInstance } from '../../storage/fileOperations';
 import { getCachedCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
 import { isCustomPropertyEnabled } from '../../utils/customPropertyUtils';
 import { PreviewTextUtils } from '../../utils/previewTextUtils';
+import { countWordsForCustomProperty } from '../../utils/wordCountUtils';
 import type { ContentProviderProcessResult } from './BaseContentProvider';
 import { findFeatureImageReference, type FeatureImageReference } from './featureImageReferenceResolver';
 import { FeatureImageContentProvider } from './FeatureImageContentProvider';
@@ -75,104 +76,6 @@ function resolveMarkdownBodyStartIndex(metadata: CachedMetadata, content: string
     }
 
     return index;
-}
-
-// Characters that count individually - NOT in Obsidian's gF letter class
-// Tibetan, Hiragana, Katakana, CJK Ideographs each count as 1 word
-// Korean Hangul IS in gF and forms words, so not listed here
-const INDIVIDUAL_CHARS =
-    '\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C' + // Tibetan
-    '\u3041-\u3096\u309D-\u309F' + // Hiragana
-    '\u30A1-\u30FA\u30FC-\u30FF' + // Katakana
-    '\u4E00-\u9FD5'; // CJK Ideographs
-
-// CJK_SINGLE_CHARS for the pattern alternation (includes Korean for completeness)
-const CJK_SINGLE_CHARS =
-    '\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C' + // Tibetan
-    '\u3041-\u3096\u309D-\u309F' + // Hiragana
-    '\u30A1-\u30FA\u30FC-\u30FF' + // Katakana
-    '\u4E00-\u9FD5' + // CJK Ideographs
-    '\uAC00-\uD7A3\uA960-\uA97C\uD7B0-\uD7C6'; // Korean Hangul
-
-// Pattern matches Obsidian's word counting behavior:
-// 1. Numbers with separators (1,000 or 3.14) grouped with adjacent letters (GPT-5.2)
-// 2. Letters with hyphens/apostrophes (don't, mother-in-law)
-// 3. CJK characters counted individually via separate alternation
-// Apostrophe variants: ' (U+0027), ' (U+2018), ' (U+2019)
-// Note: \p{L} includes CJK, but we post-process to split them out
-const WORD_PATTERN = new RegExp(`(?:[0-9]+(?:[,.][0-9]+)*|[\\-'\\u2018\\u2019\\p{L}]+)+|[${CJK_SINGLE_CHARS}]`, 'gu');
-
-// Test if match contains characters that should be counted individually
-const CONTAINS_INDIVIDUAL = new RegExp(`[${INDIVIDUAL_CHARS}]`);
-// Match individual characters (global) for splitting
-const MATCH_INDIVIDUAL_GLOBAL = new RegExp(`[${INDIVIDUAL_CHARS}]`, 'g');
-// Test for word-forming content (letters or numbers)
-const WORD_CONTENT = /[\p{L}0-9]/u;
-
-// Mathematical Alphanumeric Symbols (U+1D400-U+1D7FF) - styled letters/digits
-const MATH_ALPHANUMERIC_PATTERN = /[\u{1D400}-\u{1D7FF}]/u;
-// Pattern to strip Math Alphanumeric chars (global flag for replace)
-const MATH_ALPHANUMERIC_GLOBAL = /[\u{1D400}-\u{1D7FF}]/gu;
-// Punctuation that counts as words when isolated from Math Bold text
-// Matches Obsidian's behavior where BMP-only letter class leaves punctuation orphaned
-const ISOLATED_PUNCT_PATTERN = /[-'\u2018\u2019]/g;
-
-function countWords(content: string, startIndex: number): number {
-    const text = startIndex > 0 ? content.slice(startIndex) : content;
-    const matches = text.match(WORD_PATTERN);
-    if (!matches) return 0;
-
-    let count = 0;
-    for (const m of matches) {
-        if (MATH_ALPHANUMERIC_PATTERN.test(m)) {
-            // Contains Math Bold - Obsidian's BMP-only pattern wouldn't match the Math Bold
-            // letters, but would match punctuation (hyphens, apostrophes) as separate words.
-            const stripped = m.replace(MATH_ALPHANUMERIC_GLOBAL, '');
-            const punct = stripped.match(ISOLATED_PUNCT_PATTERN);
-            if (punct) {
-                count += punct.length;
-            }
-        } else if (CONTAINS_INDIVIDUAL.test(m)) {
-            // Contains CJK/Tibetan/Hiragana/Katakana that should be counted individually
-            // Split the match: each individual char = 1 word, each non-individual run = 1 word
-            count += countWithIndividualChars(m);
-        } else {
-            // Regular word - count as 1
-            count += 1;
-        }
-    }
-    return count;
-}
-
-// Counts a match containing individual characters (CJK ideographs, Hiragana, Katakana, Tibetan)
-// Each individual char counts as 1 word, each non-individual run counts as 1 word
-// Example: "HunyuanOCR开源模型" -> ["HunyuanOCR", "开", "源", "模", "型"] = 5 words
-function countWithIndividualChars(match: string): number {
-    let count = 0;
-    let lastEnd = 0;
-
-    for (const charMatch of match.matchAll(MATCH_INDIVIDUAL_GLOBAL)) {
-        const start = charMatch.index ?? 0;
-        if (start > lastEnd) {
-            // Non-individual run before this char - count as 1 word if it has word content
-            const run = match.slice(lastEnd, start);
-            if (WORD_CONTENT.test(run)) {
-                count += 1;
-            }
-        }
-        count += 1; // Each individual char counts as 1 word
-        lastEnd = start + charMatch[0].length;
-    }
-
-    // Check for trailing non-individual content
-    if (lastEnd < match.length) {
-        const trailing = match.slice(lastEnd);
-        if (WORD_CONTENT.test(trailing)) {
-            count += 1;
-        }
-    }
-
-    return count;
 }
 
 function formatFrontmatterValue(value: unknown): string | null {
@@ -575,7 +478,9 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
         try {
             let nextValue = '';
             if (context.settings.customPropertyType === 'wordCount') {
-                nextValue = context.isExcalidraw ? '' : countWords(context.content, context.bodyStartIndex).toString();
+                nextValue = context.isExcalidraw
+                    ? ''
+                    : countWordsForCustomProperty(context.content, context.bodyStartIndex).toString();
             } else if (context.settings.customPropertyType === 'frontmatter') {
                 nextValue = resolveCustomPropertyFromFrontmatter(context.frontmatter, context.customPropertyFrontmatterFields);
             }
