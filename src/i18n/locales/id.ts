@@ -25,7 +25,7 @@ export const STRINGS_ID = {
     common: {
         cancel: 'Batal',
         delete: 'Hapus',
-        clear: 'Hapus',
+        clear: 'Bersihkan',
         remove: 'Buang',
         submit: 'Kirim',
         noSelection: 'Tidak ada pilihan',
@@ -120,7 +120,7 @@ export const STRINGS_ID = {
     searchInput: {
         placeholder: 'Cari...',
         placeholderOmnisearch: 'Omnisearch...',
-        clearSearch: 'Hapus pencarian',
+        clearSearch: 'Bersihkan pencarian',
         saveSearchShortcut: 'Simpan pintasan pencarian',
         removeSearchShortcut: 'Hapus pintasan pencarian',
         shortcutModalTitle: 'Simpan pintasan pencarian',
@@ -217,7 +217,7 @@ export const STRINGS_ID = {
             removeIcon: 'Hapus ikon',
             removeColor: 'Hapus warna',
             removeBackground: 'Hapus latar belakang',
-            clear: 'Hapus gaya'
+            clear: 'Bersihkan gaya'
         }
     },
 
@@ -294,11 +294,11 @@ export const STRINGS_ID = {
             pasteInvalidJson: 'Clipboard tidak berisi teks yang valid',
             pasteInvalidFormat: 'Diharapkan nilai warna hex',
             colorsPasted: 'Warna berhasil ditempel',
-            resetUserColors: 'Hapus warna kustom',
-            clearCustomColorsConfirm: 'Hapus semua warna kustom?',
+            resetUserColors: 'Bersihkan warna kustom',
+            clearCustomColorsConfirm: 'Bersihkan semua warna kustom?',
             userColorSlot: 'Warna {slot}',
             recentColors: 'Warna terbaru',
-            clearRecentColors: 'Hapus warna terbaru',
+            clearRecentColors: 'Bersihkan warna terbaru',
             removeRecentColor: 'Hapus warna',
             removeColor: 'Hapus warna',
             apply: 'Terapkan',
@@ -600,7 +600,7 @@ export const STRINGS_ID = {
     // Settings
     settings: {
         metadataReport: {
-            exportSuccess: 'Laporan metadata gagal diekspor ke: {filename}',
+            exportSuccess: 'Laporan metadata yang gagal diekspor ke: {filename}',
             exportFailed: 'Gagal mengekspor laporan metadata'
         },
         sections: {
@@ -642,7 +642,7 @@ export const STRINGS_ID = {
                 previewText: 'Teks pratinjau',
                 featureImage: 'Gambar fitur',
                 tags: 'Tag',
-                customProperty: 'Custom property',
+                customProperty: 'Properti kustom',
                 date: 'Tanggal',
                 parentFolder: 'Folder induk'
             }
@@ -1028,22 +1028,22 @@ export const STRINGS_ID = {
                 desc: 'Tampilkan tag saat tanggal, pratinjau, dan gambar disembunyikan.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tipe',
+                desc: 'Pilih properti kustom untuk ditampilkan di item file.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Properti frontmatter',
+                    wordCount: 'Jumlah kata',
+                    none: 'Tidak ada'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Properti frontmatter',
+                desc: 'Daftar properti frontmatter yang dipisahkan koma. Properti pertama yang memiliki nilai akan digunakan.',
+                placeholder: 'status, tipe, kategori'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Tampilkan properti kustom dalam mode kompak',
+                desc: 'Tampilkan properti kustom saat tanggal, pratinjau, dan gambar disembunyikan.'
             },
             dateFormat: {
                 name: 'Format tanggal',

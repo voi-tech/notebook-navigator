@@ -164,10 +164,10 @@ export const STRINGS_UK = {
             deleteFile: 'Видалити файл',
             deleteMultipleNotes: 'Видалити {count} нотаток',
             deleteMultipleFiles: 'Видалити {count} файлів',
-            moveNoteToFolder: 'Перемістити нотатку...',
-            moveFileToFolder: 'Перемістити файл...',
-            moveMultipleNotesToFolder: 'Перемістити {count} нотаток...',
-            moveMultipleFilesToFolder: 'Перемістити {count} файлів...',
+            moveNoteToFolder: 'Перемістити нотатку до...',
+            moveFileToFolder: 'Перемістити файл до...',
+            moveMultipleNotesToFolder: 'Перемістити {count} нотаток до...',
+            moveMultipleFilesToFolder: 'Перемістити {count} файлів до...',
             addTag: 'Додати тег',
             removeTag: 'Вилучити тег',
             removeAllTags: 'Вилучити всі теги',
@@ -642,7 +642,7 @@ export const STRINGS_UK = {
                 previewText: 'Текст попереднього перегляду',
                 featureImage: 'Зображення запису',
                 tags: 'Теги',
-                customProperty: 'Custom property',
+                customProperty: 'Користувацька властивість',
                 date: 'Дата',
                 parentFolder: 'Батьківська папка'
             }
@@ -1028,22 +1028,22 @@ export const STRINGS_UK = {
                 desc: 'Відображати теги, коли дата, попередній перегляд та зображення приховані.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Тип',
+                desc: 'Виберіть користувацьку властивість для відображення в елементах файлів.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Властивість frontmatter',
+                    wordCount: 'Кількість слів',
+                    none: 'Немає'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Властивості frontmatter',
+                desc: 'Список властивостей frontmatter через кому. Використовується перша властивість зі значенням.',
+                placeholder: 'статус, тип, категорія'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Показувати користувацьку властивість у компактному режимі',
+                desc: 'Відображати користувацьку властивість, коли дата, попередній перегляд та зображення приховані.'
             },
             dateFormat: {
                 name: 'Формат дати',
@@ -1237,7 +1237,7 @@ export const STRINGS_UK = {
             folderNoteProperties: {
                 name: 'Властивості нотатки папки',
                 desc: 'YAML frontmatter, що додається до нових нотаток папок. Маркери --- додаються автоматично.',
-                placeholder: 'тема: темна\nnотатка_папки: true'
+                placeholder: 'theme: dark\nfoldernote: true'
             },
             hideFolderNoteInList: {
                 name: 'Приховувати нотатку папки в списку',

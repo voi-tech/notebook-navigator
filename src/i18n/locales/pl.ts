@@ -315,7 +315,7 @@ export const STRINGS_PL = {
                 emerald: 'Szmaragdowy',
                 teal: 'Morski',
                 cyan: 'Cyjan',
-                sky: 'Niebieski',
+                sky: 'Błękitny',
                 blue: 'Niebieski',
                 indigo: 'Indygo',
                 violet: 'Fioletowy',
@@ -644,7 +644,7 @@ export const STRINGS_PL = {
                 previewText: 'Tekst podglądu',
                 featureImage: 'Obraz wyróżniający',
                 tags: 'Tagi',
-                customProperty: 'Custom property',
+                customProperty: 'Właściwość niestandardowa',
                 date: 'Data',
                 parentFolder: 'Folder nadrzędny'
             }
@@ -1011,7 +1011,7 @@ export const STRINGS_PL = {
             },
             showFileTags: {
                 name: 'Pokaż tagi plików',
-                desc: 'Wyświetl klikalne tagi w elementach plików. Użyj kolorów tagów aby wizualnie odróżnić różne typy tagów.'
+                desc: 'Wyświetl klikalne tagi w elementach plików.'
             },
             showFileTagAncestors: {
                 name: 'Pokaż pełne ścieżki tagów',
@@ -1030,22 +1030,22 @@ export const STRINGS_PL = {
                 desc: 'Wyświetl tagi, gdy data, podgląd i obraz są ukryte.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Typ',
+                desc: 'Wybierz właściwość niestandardową do wyświetlenia w elementach plików.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Właściwość frontmatter',
+                    wordCount: 'Liczba słów',
+                    none: 'Brak'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Właściwości frontmatter',
+                desc: 'Lista właściwości frontmatter oddzielonych przecinkami. Używana jest pierwsza właściwość z wartością.',
+                placeholder: 'status, typ, kategoria'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Pokaż właściwość niestandardową w trybie kompaktowym',
+                desc: 'Wyświetl właściwość niestandardową, gdy data, podgląd i obraz są ukryte.'
             },
             dateFormat: {
                 name: 'Format daty',

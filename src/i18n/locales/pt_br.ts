@@ -642,8 +642,8 @@ export const STRINGS_PT_BR = {
                 title: 'Título',
                 previewText: 'Texto de pré-visualização',
                 featureImage: 'Imagem de destaque',
-                tags: 'Etiquetas',
-                customProperty: 'Custom property',
+                tags: 'Tags',
+                customProperty: 'Propriedade personalizada',
                 date: 'Data',
                 parentFolder: 'Pasta superior'
             }
@@ -771,13 +771,13 @@ export const STRINGS_PT_BR = {
                 desc: 'Usar altura compacta para notas fixadas e notas sem texto de visualização.'
             },
             compactItemHeight: {
-                name: 'Altura do item simples',
-                desc: 'Defina a altura dos itens de lista simples no desktop e celular.',
+                name: 'Altura do item compacto',
+                desc: 'Defina a altura dos itens de lista compactos no desktop e celular.',
                 resetTooltip: 'Restaurar para padrão (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Dimensionar texto com altura do item simples',
-                desc: 'Dimensionar texto da lista simples quando a altura do item é reduzida.'
+                name: 'Dimensionar texto com altura do item compacto',
+                desc: 'Dimensionar texto da lista compacta quando a altura do item é reduzida.'
             },
             showParentFolder: {
                 name: 'Mostrar pasta pai',
@@ -1025,26 +1025,26 @@ export const STRINGS_PT_BR = {
                 desc: 'Ordena as tags coloridas antes das outras tags nos itens de arquivo.'
             },
             showFileTagsInCompactMode: {
-                name: 'Mostrar tags de arquivo no modo simples',
+                name: 'Mostrar tags de arquivo no modo compacto',
                 desc: 'Exibir tags quando data, visualização e imagem estão ocultas.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tipo',
+                desc: 'Selecione a propriedade personalizada a exibir nos itens de arquivo.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Propriedade frontmatter',
+                    wordCount: 'Contagem de palavras',
+                    none: 'Nenhum'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Propriedades frontmatter',
+                desc: 'Lista de propriedades frontmatter separadas por vírgula. A primeira propriedade com valor é usada.',
+                placeholder: 'status, tipo, categoria'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Mostrar propriedade personalizada no modo compacto',
+                desc: 'Exibir a propriedade personalizada quando data, visualização e imagem estão ocultas.'
             },
             dateFormat: {
                 name: 'Formato de data',

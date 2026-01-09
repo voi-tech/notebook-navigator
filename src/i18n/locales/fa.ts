@@ -323,7 +323,7 @@ export const STRINGS_FA = {
                 pink: 'صورتی',
                 rose: 'گلی',
                 gray: 'خاکستری',
-                slate: 'تیره',
+                slate: 'خاکستری مایل به آبی',
                 stone: 'سنگی'
             }
         },
@@ -344,12 +344,12 @@ export const STRINGS_FA = {
             andMore: '...و {count} مورد دیگر',
             confirmRename: 'تغییر نام برچسب',
             renameUnchanged: '{tag} بدون تغییر',
-            renameNoChanges: '{oldTag} ← {newTag} ({countLabel})',
+            renameNoChanges: '{oldTag} → {newTag} ({countLabel})',
             invalidTagName: 'نام برچسب معتبری وارد کنید.',
             descendantRenameError: 'نمی‌توان برچسب را به خود یا زیرمجموعه آن منتقل کرد.',
             confirmDelete: 'حذف برچسب',
             file: 'فایل',
-            files: 'فایل'
+            files: 'فایل‌ها'
         },
         fileSystem: {
             newFolderTitle: 'پوشه جدید',
@@ -642,7 +642,7 @@ export const STRINGS_FA = {
                 previewText: 'متن پیش‌نمایش',
                 featureImage: 'تصویر ویژه',
                 tags: 'برچسب‌ها',
-                customProperty: 'Custom property',
+                customProperty: 'ویژگی سفارشی',
                 date: 'تاریخ',
                 parentFolder: 'پوشه والد'
             }
@@ -1027,22 +1027,22 @@ export const STRINGS_FA = {
                 desc: 'برچسب‌ها را هنگامی که تاریخ، پیش‌نمایش و تصویر مخفی هستند نمایش دهید.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'نوع',
+                desc: 'ویژگی سفارشی را برای نمایش در آیتم‌های فایل انتخاب کنید.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'ویژگی Frontmatter',
+                    wordCount: 'تعداد کلمات',
+                    none: 'هیچ‌کدام'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'ویژگی‌های Frontmatter',
+                desc: 'لیست ویژگی‌های Frontmatter جدا شده با کاما. اولین ویژگی دارای مقدار استفاده می‌شود.',
+                placeholder: 'وضعیت، نوع، دسته‌بندی'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'نمایش ویژگی سفارشی در حالت فشرده',
+                desc: 'ویژگی سفارشی را هنگامی که تاریخ، پیش‌نمایش و تصویر مخفی هستند نمایش دهید.'
             },
             dateFormat: {
                 name: 'قالب تاریخ',

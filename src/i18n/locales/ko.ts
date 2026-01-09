@@ -85,7 +85,7 @@ export const STRINGS_KO = {
         addNotesCount: '바로가기에 노트 {count}개 추가',
         addFilesCount: '바로가기에 파일 {count}개 추가',
         rename: '바로가기 이름 변경',
-        remove: '바로가기에 제거',
+        remove: '바로가기에서 제거',
         removeAll: '모든 바로가기 제거',
         removeAllConfirm: '모든 바로가기를 제거하시겠습니까?',
         folderNotesPinned: '폴더 노트 {count}개를 고정했습니다'
@@ -190,7 +190,7 @@ export const STRINGS_KO = {
             detachFolderNote: '폴더 노트 해제',
             deleteFolderNote: '폴더 노트 삭제',
             changeIcon: '아이콘 변경',
-            changeColor: '아이콘 색상 변경',
+            changeColor: '색상 변경',
             changeBackground: '배경색 변경',
             excludeFolder: '폴더 숨기기',
             unhideFolder: '폴더 표시',
@@ -642,7 +642,7 @@ export const STRINGS_KO = {
                 previewText: '미리보기 텍스트',
                 featureImage: '대표 이미지',
                 tags: '태그',
-                customProperty: 'Custom property',
+                customProperty: '사용자 정의 속성',
                 date: '날짜',
                 parentFolder: '상위 폴더'
             }
@@ -1008,7 +1008,7 @@ export const STRINGS_KO = {
             },
             showFileTags: {
                 name: '파일 태그 표시',
-                desc: '파일 항목에 클릭 가능한 태그를 표시합니다. 태그 색상을 사용하여 다른 태그 유형을 시각적으로 구분합니다.'
+                desc: '파일 항목에 클릭 가능한 태그를 표시합니다.'
             },
             showFileTagAncestors: {
                 name: '전체 태그 경로 표시',
@@ -1027,22 +1027,22 @@ export const STRINGS_KO = {
                 desc: '날짜, 미리보기, 이미지가 숨겨져 있을 때 태그를 표시합니다.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: '유형',
+                desc: '파일 항목에 표시할 사용자 정의 속성을 선택합니다.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: '프론트매터 속성',
+                    wordCount: '단어 수',
+                    none: '없음'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: '프론트매터 속성',
+                desc: '표시할 프론트매터 속성의 쉼표로 구분된 목록. 값이 있는 첫 번째 속성이 사용됩니다.',
+                placeholder: '상태, 유형, 카테고리'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: '슬림 모드에서 사용자 정의 속성 표시',
+                desc: '날짜, 미리보기, 이미지가 숨겨져 있을 때 사용자 정의 속성을 표시합니다.'
             },
             dateFormat: {
                 name: '날짜 형식',

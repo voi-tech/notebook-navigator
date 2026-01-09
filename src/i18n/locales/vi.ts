@@ -255,7 +255,7 @@ export const STRINGS_VI = {
         interfaceIcons: {
             title: 'Biểu tượng giao diện',
             items: {
-                'nav-shortcuts': 'Phím tắt',
+                'nav-shortcuts': 'Lối tắt',
                 'nav-recent-files': 'Tệp gần đây',
                 'nav-expand-all': 'Mở rộng tất cả',
                 'nav-collapse-all': 'Thu gọn tất cả',
@@ -642,7 +642,7 @@ export const STRINGS_VI = {
                 previewText: 'Văn bản xem trước',
                 featureImage: 'Hình ảnh nổi bật',
                 tags: 'Thẻ',
-                customProperty: 'Custom property',
+                customProperty: 'Thuộc tính tùy chỉnh',
                 date: 'Ngày',
                 parentFolder: 'Thư mục cha'
             }
@@ -1027,22 +1027,22 @@ export const STRINGS_VI = {
                 desc: 'Hiển thị thẻ khi ngày, xem trước và ảnh bị ẩn.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Loại',
+                desc: 'Chọn thuộc tính tùy chỉnh để hiển thị trong các mục tệp.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Thuộc tính frontmatter',
+                    wordCount: 'Số từ',
+                    none: 'Không'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Thuộc tính frontmatter',
+                desc: 'Danh sách các thuộc tính frontmatter phân cách bằng dấu phẩy. Thuộc tính đầu tiên có giá trị sẽ được sử dụng.',
+                placeholder: 'trạng thái, loại, danh mục'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Hiện thuộc tính tùy chỉnh ở chế độ gọn',
+                desc: 'Hiển thị thuộc tính tùy chỉnh khi ngày, xem trước và ảnh bị ẩn.'
             },
             dateFormat: {
                 name: 'Định dạng ngày',

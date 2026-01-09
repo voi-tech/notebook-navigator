@@ -68,9 +68,9 @@ export const STRINGS_IT = {
         pinShortcuts: 'Fissa scorciatoie',
         pinShortcutsAndRecentNotes: 'Fissa scorciatoie e note recenti',
         pinShortcutsAndRecentFiles: 'Fissa scorciatoie e file recenti',
-        unpinShortcuts: 'Sblocca scorciatoie',
-        unpinShortcutsAndRecentNotes: 'Sblocca scorciatoie e note recenti',
-        unpinShortcutsAndRecentFiles: 'Sblocca scorciatoie e file recenti',
+        unpinShortcuts: 'Rimuovi fissatura scorciatoie',
+        unpinShortcutsAndRecentNotes: 'Rimuovi fissatura scorciatoie e note recenti',
+        unpinShortcutsAndRecentFiles: 'Rimuovi fissatura scorciatoie e file recenti',
         profileMenuLabel: 'Profilo',
         profileMenuAria: 'Cambia profilo vault'
     },
@@ -141,12 +141,12 @@ export const STRINGS_IT = {
             openMultipleFilesInNewWindows: 'Apri {count} file in nuove finestre',
             pinNote: 'Fissa nota',
             pinFile: 'Fissa file',
-            unpinNote: 'Sblocca nota',
-            unpinFile: 'Sblocca file',
+            unpinNote: 'Rimuovi fissatura nota',
+            unpinFile: 'Rimuovi fissatura file',
             pinMultipleNotes: 'Fissa {count} note',
             pinMultipleFiles: 'Fissa {count} file',
-            unpinMultipleNotes: 'Sblocca {count} note',
-            unpinMultipleFiles: 'Sblocca {count} file',
+            unpinMultipleNotes: 'Rimuovi fissatura {count} note',
+            unpinMultipleFiles: 'Rimuovi fissatura {count} file',
             duplicateNote: 'Duplica nota',
             duplicateFile: 'Duplica file',
             duplicateMultipleNotes: 'Duplica {count} note',
@@ -312,7 +312,7 @@ export const STRINGS_IT = {
                 lime: 'Lime',
                 green: 'Verde',
                 emerald: 'Smeraldo',
-                teal: 'Foglia di tè',
+                teal: 'Verde acqua',
                 cyan: 'Ciano',
                 sky: 'Cielo',
                 blue: 'Blu',
@@ -642,7 +642,7 @@ export const STRINGS_IT = {
                 previewText: 'Testo anteprima',
                 featureImage: 'Immagine in evidenza',
                 tags: 'Tag',
-                customProperty: 'Custom property',
+                customProperty: 'Proprietà personalizzata',
                 date: 'Data',
                 parentFolder: 'Cartella superiore'
             }
@@ -1028,22 +1028,22 @@ export const STRINGS_IT = {
                 desc: 'Visualizza tag quando data, anteprima e immagine sono nascosti.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tipo',
+                desc: 'Seleziona la proprietà personalizzata da visualizzare negli elementi file.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Proprietà frontmatter',
+                    wordCount: 'Conteggio parole',
+                    none: 'Nessuno'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Proprietà frontmatter',
+                desc: 'Elenco di proprietà frontmatter separate da virgola. Viene usata la prima proprietà con un valore.',
+                placeholder: 'stato, tipo, categoria'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Mostra proprietà personalizzata in modalità compatta',
+                desc: 'Visualizza la proprietà personalizzata quando data, anteprima e immagine sono nascosti.'
             },
             dateFormat: {
                 name: 'Formato data',

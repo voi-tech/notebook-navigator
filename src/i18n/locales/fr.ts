@@ -333,14 +333,14 @@ export const STRINGS_FR = {
             emptyState: 'Aucun profil de coffre disponible.'
         },
         tagOperation: {
-            renameTitle: "Renommer l'étiquette",
-            deleteTitle: "Supprimer l'étiquette",
+            renameTitle: "Renommer l'étiquette {tag}",
+            deleteTitle: "Supprimer l'étiquette {tag}",
             newTagPrompt: "Entrez le nouveau nom de l'étiquette :",
             newTagPlaceholder: 'nouveau-nom',
-            renameWarning: "Cela renommera l'étiquette dans toutes les notes affectées.",
-            deleteWarning: "Cela supprimera l'étiquette de toutes les notes affectées.",
-            modificationWarning: "Modification de l'étiquette",
-            affectedFiles: '{count} fichier(s) affecté(s)',
+            renameWarning: "Renommer l'étiquette {oldTag} modifiera {count} {files}.",
+            deleteWarning: "Supprimer l'étiquette {tag} modifiera {count} {files}.",
+            modificationWarning: 'Cela mettra à jour les dates de modification des fichiers.',
+            affectedFiles: 'Fichiers affectés :',
             andMore: 'et {count} de plus...',
             confirmRename: "Renommer l'étiquette",
             renameUnchanged: '{tag} inchangé',
@@ -514,7 +514,7 @@ export const STRINGS_FR = {
             failedToAddTag: 'Échec de l\'ajout de l\'étiquette "{tag}"',
             failedToClearTags: 'Échec de la suppression des étiquettes',
             failedToMoveFolder: 'Échec du déplacement du dossier "{name}"',
-            failedToImportFiles: 'Failed to import: {names}'
+            failedToImportFiles: "Échec de l'importation : {names}"
         },
         notifications: {
             filesAlreadyExist: '{count} fichiers existent déjà dans la destination',
@@ -522,8 +522,8 @@ export const STRINGS_FR = {
             filesAlreadyHaveTag: '{count} fichiers ont déjà cette étiquette ou une plus spécifique',
             clearedTags: 'Toutes les étiquettes supprimées de {count} fichiers',
             noTagsToClear: 'Aucune étiquette à supprimer',
-            fileImported: 'Imported 1 file',
-            filesImported: 'Imported {count} files'
+            fileImported: '1 fichier importé',
+            filesImported: '{count} fichiers importés'
         }
     },
 
@@ -606,11 +606,11 @@ export const STRINGS_FR = {
         },
         sections: {
             general: 'Général',
-            notes: 'Affichage des notes',
-            navigationPane: 'Affichage des dossiers',
+            notes: 'Notes',
+            navigationPane: 'Panneau de navigation',
             icons: "Packs d'icônes",
-            tags: 'Affichage des étiquettes',
-            folders: 'Notes de dossier',
+            tags: 'Étiquettes',
+            folders: 'Dossiers',
             foldersAndTags: 'Dossiers et étiquettes',
             search: 'Rechercher',
             searchAndHotkeys: 'Recherche et raccourcis',
@@ -643,7 +643,7 @@ export const STRINGS_FR = {
                 previewText: "Texte d'aperçu",
                 featureImage: 'Image vedette',
                 tags: 'Étiquettes',
-                customProperty: 'Custom property',
+                customProperty: 'Propriété personnalisée',
                 date: 'Date',
                 parentFolder: 'Dossier parent'
             }
@@ -1012,7 +1012,7 @@ export const STRINGS_FR = {
             },
             showFileTags: {
                 name: 'Afficher les tags de fichier',
-                desc: 'Affiche les tags cliquables dans les éléments de fichier. Utilisez les couleurs de tags pour distinguer visuellement les différents types de tags.'
+                desc: 'Affiche les tags cliquables dans les éléments de fichier.'
             },
             showFileTagAncestors: {
                 name: 'Afficher les chemins complets des tags',
@@ -1032,21 +1032,21 @@ export const STRINGS_FR = {
             },
             customPropertyType: {
                 name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                desc: 'Sélectionnez la propriété personnalisée à afficher dans les éléments de fichier.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Propriété frontmatter',
+                    wordCount: 'Nombre de mots',
+                    none: 'Aucun'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Propriétés frontmatter',
+                desc: 'Liste de propriétés frontmatter séparées par des virgules à afficher. La première propriété avec une valeur est utilisée.',
+                placeholder: 'statut, type, catégorie'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Afficher la propriété personnalisée en mode compact',
+                desc: "Afficher la propriété personnalisée lorsque la date, l'aperçu et l'image sont masqués."
             },
             dateFormat: {
                 name: 'Format de date',
@@ -1160,8 +1160,8 @@ export const STRINGS_FR = {
                 }
             },
             smartCollapse: {
-                name: 'Garder lélément sélectionné déplié',
-                desc: 'Lors du repliement, garde le dossier ou létiquette actuellement sélectionné et ses parents dépliés.'
+                name: "Garder l'élément sélectionné déplié",
+                desc: "Lors du repliement, garde le dossier ou l'étiquette actuellement sélectionné et ses parents dépliés."
             },
             navIndent: {
                 name: "Indentation de l'arbre",

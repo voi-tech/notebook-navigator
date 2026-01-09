@@ -214,7 +214,7 @@ export const STRINGS_RU = {
             title: 'Стиль',
             copy: 'Копировать стиль',
             paste: 'Вставить стиль',
-            removeIcon: 'Удалить значок',
+            removeIcon: 'Удалить иконку',
             removeColor: 'Удалить цвет',
             removeBackground: 'Удалить фон',
             clear: 'Очистить стиль'
@@ -642,7 +642,7 @@ export const STRINGS_RU = {
                 previewText: 'Текст превью',
                 featureImage: 'Изображение записи',
                 tags: 'Теги',
-                customProperty: 'Custom property',
+                customProperty: 'Пользовательское свойство',
                 date: 'Дата',
                 parentFolder: 'Родительская папка'
             }
@@ -792,8 +792,8 @@ export const STRINGS_RU = {
                 desc: 'Использовать цвета папок на метках родительских папок.'
             },
             showParentFolderIcon: {
-                name: 'Показывать значок родительской папки',
-                desc: 'Показывать значки папок рядом с метками родительских папок.'
+                name: 'Показывать иконку родительской папки',
+                desc: 'Показывать иконки папок рядом с метками родительских папок.'
             },
             showQuickActions: {
                 name: 'Показывать быстрые действия (только компьютер)',
@@ -1029,22 +1029,22 @@ export const STRINGS_RU = {
                 desc: 'Отображать теги, когда дата, превью и изображение скрыты.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Тип',
+                desc: 'Выберите пользовательское свойство для отображения в элементах файлов.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Свойство frontmatter',
+                    wordCount: 'Количество слов',
+                    none: 'Нет'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Свойства frontmatter',
+                desc: 'Список свойств frontmatter через запятую. Используется первое свойство с значением.',
+                placeholder: 'статус, тип, категория'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Показывать пользовательское свойство в компактном режиме',
+                desc: 'Отображать пользовательское свойство, когда дата, превью и изображение скрыты.'
             },
             dateFormat: {
                 name: 'Формат даты',

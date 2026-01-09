@@ -333,14 +333,14 @@ export const STRINGS_JA = {
             emptyState: '利用できる保管庫プロファイルがありません。'
         },
         tagOperation: {
-            renameTitle: 'タグの名前を変更',
-            deleteTitle: 'タグを削除',
+            renameTitle: 'タグ {tag} の名前を変更',
+            deleteTitle: 'タグ {tag} を削除',
             newTagPrompt: '新しいタグ名を入力：',
             newTagPlaceholder: '新しい名前',
-            renameWarning: 'これにより、影響を受けるすべてのノートでタグが名前変更されます。',
-            deleteWarning: 'これにより、影響を受けるすべてのノートからタグが削除されます。',
-            modificationWarning: 'タグの変更',
-            affectedFiles: '{count}個のファイルが影響を受けます',
+            renameWarning: 'タグ {oldTag} の名前変更により {count} 個の{files}が変更されます。',
+            deleteWarning: 'タグ {tag} の削除により {count} 個の{files}が変更されます。',
+            modificationWarning: 'これによりファイルの変更日が更新されます。',
+            affectedFiles: '影響を受けるファイル:',
             andMore: 'さらに{count}個...',
             confirmRename: 'タグを名前変更',
             renameUnchanged: '{tag} は変更されませんでした',
@@ -514,7 +514,7 @@ export const STRINGS_JA = {
             failedToAddTag: 'タグ "{tag}" の追加に失敗しました',
             failedToClearTags: 'タグのクリアに失敗しました',
             failedToMoveFolder: 'フォルダ「{name}」の移動に失敗しました',
-            failedToImportFiles: 'Failed to import: {names}'
+            failedToImportFiles: 'インポートに失敗しました: {names}'
         },
         notifications: {
             filesAlreadyExist: '{count}個のファイルが移動先に既に存在します',
@@ -522,8 +522,8 @@ export const STRINGS_JA = {
             filesAlreadyHaveTag: '{count}個のファイルには既にこのタグまたはより具体的なタグがあります',
             clearedTags: '{count}個のファイルからすべてのタグをクリアしました',
             noTagsToClear: 'クリアするタグがありません',
-            fileImported: 'Imported 1 file',
-            filesImported: 'Imported {count} files'
+            fileImported: '1個のファイルをインポートしました',
+            filesImported: '{count}個のファイルをインポートしました'
         }
     },
 
@@ -643,7 +643,7 @@ export const STRINGS_JA = {
                 previewText: 'プレビューテキスト',
                 featureImage: 'アイキャッチ画像',
                 tags: 'タグ',
-                customProperty: 'Custom property',
+                customProperty: 'カスタムプロパティ',
                 date: '日付',
                 parentFolder: '親フォルダ'
             }
@@ -1011,7 +1011,7 @@ export const STRINGS_JA = {
             },
             showFileTags: {
                 name: 'ファイルタグを表示',
-                desc: 'ファイルアイテムにクリック可能なタグを表示します。タグの色を使用して、異なるタグタイプを視覚的に区別できます。'
+                desc: 'ファイルアイテムにクリック可能なタグを表示します。'
             },
             showFileTagAncestors: {
                 name: '完全なタグパスを表示',
@@ -1030,22 +1030,22 @@ export const STRINGS_JA = {
                 desc: '日付、プレビュー、画像が非表示のときにタグを表示します。'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'タイプ',
+                desc: 'ファイルアイテムに表示するカスタムプロパティを選択します。',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'フロントマタープロパティ',
+                    wordCount: '文字数',
+                    none: 'なし'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'フロントマタープロパティ',
+                desc: 'カンマ区切りのフロントマタープロパティのリスト。値を持つ最初のプロパティが使用されます。',
+                placeholder: 'ステータス, タイプ, カテゴリ'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'スリムモードでカスタムプロパティを表示',
+                desc: '日付、プレビュー、画像が非表示のときにカスタムプロパティを表示します。'
             },
             dateFormat: {
                 name: '日付形式',

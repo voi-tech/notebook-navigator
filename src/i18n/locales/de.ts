@@ -158,10 +158,8 @@ export const STRINGS_DE = {
             addTag: 'Tag hinzufügen',
             removeTag: 'Tag entfernen',
             removeAllTags: 'Alle Tags entfernen',
-            changeIcon: 'Icon ändern',
-            removeIcon: 'Icon entfernen',
+            changeIcon: 'Symbol ändern',
             changeColor: 'Farbe ändern',
-            removeColor: 'Farbe entfernen',
             // File-specific context menu items (non-markdown files)
             openMultipleFilesInNewTabs: '{count} Dateien in neuen Tabs öffnen',
             openMultipleFilesToRight: '{count} Dateien rechts öffnen',
@@ -608,11 +606,11 @@ export const STRINGS_DE = {
         },
         sections: {
             general: 'Allgemein',
-            notes: 'Notizenanzeige',
-            navigationPane: 'Ordneranzeige',
+            notes: 'Notizen',
+            navigationPane: 'Navigationsbereich',
             icons: 'Icon-Pakete',
-            tags: 'Tag-Anzeige',
-            folders: 'Ordnernotizen',
+            tags: 'Tags',
+            folders: 'Ordner',
             foldersAndTags: 'Ordner & Tags',
             search: 'Suchen',
             searchAndHotkeys: 'Suche & Tastenkürzel',
@@ -645,7 +643,7 @@ export const STRINGS_DE = {
                 previewText: 'Vorschautext',
                 featureImage: 'Hauptbild',
                 tags: 'Tags',
-                customProperty: 'Custom property',
+                customProperty: 'Benutzerdefinierte Eigenschaft',
                 date: 'Datum',
                 parentFolder: 'Übergeordneter Ordner'
             }
@@ -1012,7 +1010,7 @@ export const STRINGS_DE = {
             },
             showFileTags: {
                 name: 'Datei-Tags anzeigen',
-                desc: 'Zeigt klickbare Tags in Datei-Elementen an. Verwenden Sie Tag-Farben, um verschiedene Tag-Typen visuell zu unterscheiden.'
+                desc: 'Zeigt klickbare Tags in Datei-Elementen an.'
             },
             showFileTagAncestors: {
                 name: 'Vollständige Tag-Pfade anzeigen',
@@ -1031,22 +1029,22 @@ export const STRINGS_DE = {
                 desc: 'Tags anzeigen, wenn Datum, Vorschau und Bild ausgeblendet sind.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Typ',
+                desc: 'Wählen Sie die benutzerdefinierte Eigenschaft, die in Datei-Elementen angezeigt werden soll.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Frontmatter-Eigenschaft',
+                    wordCount: 'Wortanzahl',
+                    none: 'Keine'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Frontmatter-Eigenschaften',
+                desc: 'Kommagetrennte Liste der anzuzeigenden Frontmatter-Eigenschaften. Die erste Eigenschaft mit einem Wert wird verwendet.',
+                placeholder: 'status, typ, kategorie'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Benutzerdefinierte Eigenschaft im Kompaktmodus anzeigen',
+                desc: 'Die benutzerdefinierte Eigenschaft anzeigen, wenn Datum, Vorschau und Bild ausgeblendet sind.'
             },
             dateFormat: {
                 name: 'Datumsformat',

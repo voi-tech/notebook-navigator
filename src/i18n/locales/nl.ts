@@ -322,7 +322,7 @@ export const STRINGS_NL = {
                 purple: 'Paars',
                 fuchsia: 'Fuchsia',
                 pink: 'Roze',
-                rose: 'Rozé',
+                rose: 'Oud roze',
                 gray: 'Grijs',
                 slate: 'Leisteen',
                 stone: 'Steen'
@@ -644,7 +644,7 @@ export const STRINGS_NL = {
                 previewText: 'Voorbeeldtekst',
                 featureImage: 'Uitgelichte afbeelding',
                 tags: 'Tags',
-                customProperty: 'Custom property',
+                customProperty: 'Aangepaste eigenschap',
                 date: 'Datum',
                 parentFolder: 'Bovenliggende map'
             }
@@ -1031,21 +1031,21 @@ export const STRINGS_NL = {
             },
             customPropertyType: {
                 name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                desc: 'Selecteer de aangepaste eigenschap om weer te geven in bestandsitems.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Frontmatter eigenschap',
+                    wordCount: 'Woordentelling',
+                    none: 'Geen'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Frontmatter eigenschappen',
+                desc: 'Komma-gescheiden lijst van frontmatter eigenschappen om weer te geven. De eerste eigenschap met een waarde wordt gebruikt.',
+                placeholder: 'status, type, categorie'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Toon aangepaste eigenschap in compacte modus',
+                desc: 'Toon de aangepaste eigenschap wanneer datum, voorbeeld en afbeelding verborgen zijn.'
             },
             dateFormat: {
                 name: 'Datumformaat',

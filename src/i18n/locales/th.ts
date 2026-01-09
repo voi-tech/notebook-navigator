@@ -642,7 +642,7 @@ export const STRINGS_TH = {
                 previewText: 'ข้อความตัวอย่าง',
                 featureImage: 'รูปภาพเด่น',
                 tags: 'แท็ก',
-                customProperty: 'Custom property',
+                customProperty: 'คุณสมบัติกำหนดเอง',
                 date: 'วันที่',
                 parentFolder: 'โฟลเดอร์หลัก'
             }
@@ -1027,22 +1027,22 @@ export const STRINGS_TH = {
                 desc: 'แสดงแท็กเมื่อวันที่ ตัวอย่าง และรูปภาพถูกซ่อน'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'ประเภท',
+                desc: 'เลือกคุณสมบัติกำหนดเองที่จะแสดงในรายการไฟล์',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'คุณสมบัติ Frontmatter',
+                    wordCount: 'จำนวนคำ',
+                    none: 'ไม่มี'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'คุณสมบัติ Frontmatter',
+                desc: 'รายการคุณสมบัติ Frontmatter ที่คั่นด้วยเครื่องหมายจุลภาค คุณสมบัติแรกที่มีค่าจะถูกใช้',
+                placeholder: 'สถานะ, ประเภท, หมวดหมู่'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'แสดงคุณสมบัติกำหนดเองในโหมดกะทัดรัด',
+                desc: 'แสดงคุณสมบัติกำหนดเองเมื่อวันที่ ตัวอย่าง และรูปภาพถูกซ่อน'
             },
             dateFormat: {
                 name: 'รูปแบบวันที่',

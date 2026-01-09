@@ -312,7 +312,7 @@ export const STRINGS_TR = {
                 lime: 'Limon yeşili',
                 green: 'Yeşil',
                 emerald: 'Zümrüt',
-                teal: 'Deniz mavisi',
+                teal: 'Deniz yeşili',
                 cyan: 'Camgöbeği',
                 sky: 'Gök mavisi',
                 blue: 'Mavi',
@@ -642,7 +642,7 @@ export const STRINGS_TR = {
                 previewText: 'Önizleme metni',
                 featureImage: 'Öne çıkan görsel',
                 tags: 'Etiketler',
-                customProperty: 'Custom property',
+                customProperty: 'Özel özellik',
                 date: 'Tarih',
                 parentFolder: 'Üst klasör'
             }
@@ -720,7 +720,7 @@ export const STRINGS_TR = {
                 name: 'Notları grupla',
                 desc: 'Tarihe veya klasöre göre gruplandırılmış notlar arasında başlıklar görüntüle. Etiket görünümleri klasör gruplandırması etkinken tarih gruplarını kullanır.',
                 options: {
-                    none: 'Gruplandırma',
+                    none: 'Gruplama yok',
                     date: 'Tarihe göre grupla',
                     folder: 'Klasöre göre grupla'
                 }
@@ -1027,22 +1027,22 @@ export const STRINGS_TR = {
                 desc: 'Tarih, önizleme ve görsel gizlendiğinde etiketleri görüntüle.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tür',
+                desc: 'Dosya öğelerinde görüntülenecek özel özelliği seçin.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Frontmatter özelliği',
+                    wordCount: 'Kelime sayısı',
+                    none: 'Hiçbiri'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Frontmatter özellikleri',
+                desc: 'Görüntülenecek frontmatter özelliklerinin virgülle ayrılmış listesi. Değeri olan ilk özellik kullanılır.',
+                placeholder: 'durum, tür, kategori'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Kompakt modda özel özelliği göster',
+                desc: 'Tarih, önizleme ve görsel gizlendiğinde özel özelliği görüntüle.'
             },
             dateFormat: {
                 name: 'Tarih formatı',

@@ -323,7 +323,7 @@ export const STRINGS_AR = {
                 pink: 'وردي',
                 rose: 'وردي فاتح',
                 gray: 'رمادي',
-                slate: 'رمادي داكن',
+                slate: 'رمادي مزرق',
                 stone: 'حجري'
             }
         },
@@ -344,7 +344,7 @@ export const STRINGS_AR = {
             andMore: '...و {count} أخرى',
             confirmRename: 'إعادة تسمية الوسم',
             renameUnchanged: '{tag} لم يتغير',
-            renameNoChanges: '{oldTag} ← {newTag} ({countLabel})',
+            renameNoChanges: '{oldTag} → {newTag} ({countLabel})',
             invalidTagName: 'أدخل اسم وسم صالح.',
             descendantRenameError: 'لا يمكن نقل الوسم إلى نفسه أو إلى فرع منه.',
             confirmDelete: 'حذف الوسم',
@@ -642,7 +642,7 @@ export const STRINGS_AR = {
                 previewText: 'نص المعاينة',
                 featureImage: 'الصورة المميزة',
                 tags: 'الوسوم',
-                customProperty: 'Custom property',
+                customProperty: 'خاصية مخصصة',
                 date: 'التاريخ',
                 parentFolder: 'المجلد الأصلي'
             }
@@ -1027,22 +1027,22 @@ export const STRINGS_AR = {
                 desc: 'عرض الوسوم عند إخفاء التاريخ والمعاينة والصورة.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'النوع',
+                desc: 'حدد الخاصية المخصصة لعرضها في عناصر الملفات.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'خاصية الواجهة الأمامية',
+                    wordCount: 'عدد الكلمات',
+                    none: 'لا شيء'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'خصائص الواجهة الأمامية',
+                desc: 'قائمة خصائص الواجهة الأمامية مفصولة بفواصل. يتم استخدام أول خاصية لها قيمة.',
+                placeholder: 'الحالة، النوع، الفئة'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'إظهار الخاصية المخصصة في الوضع المضغوط',
+                desc: 'عرض الخاصية المخصصة عند إخفاء التاريخ والمعاينة والصورة.'
             },
             dateFormat: {
                 name: 'تنسيق التاريخ',

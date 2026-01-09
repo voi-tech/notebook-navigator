@@ -642,7 +642,7 @@ export const STRINGS_PT = {
                 previewText: 'Texto de pré-visualização',
                 featureImage: 'Imagem de destaque',
                 tags: 'Etiquetas',
-                customProperty: 'Custom property',
+                customProperty: 'Propriedade personalizada',
                 date: 'Data',
                 parentFolder: 'Pasta superior'
             }
@@ -1028,22 +1028,22 @@ export const STRINGS_PT = {
                 desc: 'Exibir etiquetas quando data, pré-visualização e imagem estão ocultas.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tipo',
+                desc: 'Selecione a propriedade personalizada a exibir nos itens de ficheiro.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Propriedade frontmatter',
+                    wordCount: 'Contagem de palavras',
+                    none: 'Nenhum'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Propriedades frontmatter',
+                desc: 'Lista de propriedades frontmatter separadas por vírgulas. É usada a primeira propriedade com valor.',
+                placeholder: 'estado, tipo, categoria'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Mostrar propriedade personalizada no modo compacto',
+                desc: 'Exibir a propriedade personalizada quando data, pré-visualização e imagem estão ocultas.'
             },
             dateFormat: {
                 name: 'Formato de data',

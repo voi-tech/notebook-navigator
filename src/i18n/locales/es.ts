@@ -333,14 +333,14 @@ export const STRINGS_ES = {
             emptyState: 'No hay perfiles de bóveda disponibles.'
         },
         tagOperation: {
-            renameTitle: 'Renombrar etiqueta',
-            deleteTitle: 'Eliminar etiqueta',
-            newTagPrompt: 'Introduce el nuevo nombre de la etiqueta:',
-            newTagPlaceholder: 'nuevo-nombre',
-            renameWarning: 'Esto renombrará la etiqueta en todas las notas afectadas.',
-            deleteWarning: 'Esto eliminará la etiqueta de todas las notas afectadas.',
-            modificationWarning: 'Modificación de etiqueta',
-            affectedFiles: '{count} archivo(s) afectado(s)',
+            renameTitle: 'Renombrar etiqueta {tag}',
+            deleteTitle: 'Eliminar etiqueta {tag}',
+            newTagPrompt: 'Nuevo nombre de etiqueta',
+            newTagPlaceholder: 'Introduce el nuevo nombre de etiqueta',
+            renameWarning: 'Renombrar la etiqueta {oldTag} modificará {count} {files}.',
+            deleteWarning: 'Eliminar la etiqueta {tag} modificará {count} {files}.',
+            modificationWarning: 'Esto actualizará las fechas de modificación de los archivos.',
+            affectedFiles: 'Archivos afectados:',
             andMore: 'y {count} más...',
             confirmRename: 'Renombrar etiqueta',
             renameUnchanged: '{tag} sin cambios',
@@ -514,7 +514,7 @@ export const STRINGS_ES = {
             failedToAddTag: 'Error al agregar la etiqueta "{tag}"',
             failedToClearTags: 'Error al eliminar las etiquetas',
             failedToMoveFolder: 'Error al mover la carpeta "{name}"',
-            failedToImportFiles: 'Failed to import: {names}'
+            failedToImportFiles: 'Error al importar: {names}'
         },
         notifications: {
             filesAlreadyExist: '{count} archivos ya existen en el destino',
@@ -522,8 +522,8 @@ export const STRINGS_ES = {
             filesAlreadyHaveTag: '{count} archivos ya tienen esta etiqueta o una más específica',
             clearedTags: 'Se eliminaron todas las etiquetas de {count} archivos',
             noTagsToClear: 'No hay etiquetas para eliminar',
-            fileImported: 'Imported 1 file',
-            filesImported: 'Imported {count} files'
+            fileImported: '1 archivo importado',
+            filesImported: '{count} archivos importados'
         }
     },
 
@@ -606,11 +606,11 @@ export const STRINGS_ES = {
         },
         sections: {
             general: 'General',
-            notes: 'Visualización de notas',
-            navigationPane: 'Visualización de carpetas',
+            notes: 'Notas',
+            navigationPane: 'Panel de navegación',
             icons: 'Paquetes de iconos',
-            tags: 'Visualización de etiquetas',
-            folders: 'Notas de carpeta',
+            tags: 'Etiquetas',
+            folders: 'Carpetas',
             foldersAndTags: 'Carpetas y etiquetas',
             search: 'Buscar',
             searchAndHotkeys: 'Búsqueda y atajos',
@@ -643,7 +643,7 @@ export const STRINGS_ES = {
                 previewText: 'Texto de vista previa',
                 featureImage: 'Imagen destacada',
                 tags: 'Etiquetas',
-                customProperty: 'Custom property',
+                customProperty: 'Propiedad personalizada',
                 date: 'Fecha',
                 parentFolder: 'Carpeta superior'
             }
@@ -1010,7 +1010,7 @@ export const STRINGS_ES = {
             },
             showFileTags: {
                 name: 'Mostrar etiquetas de archivo',
-                desc: 'Muestra etiquetas clicables en los elementos de archivo. Use colores de etiquetas para distinguir visualmente diferentes tipos de etiquetas.'
+                desc: 'Muestra etiquetas clicables en los elementos de archivo.'
             },
             showFileTagAncestors: {
                 name: 'Mostrar rutas completas de etiquetas',
@@ -1029,22 +1029,22 @@ export const STRINGS_ES = {
                 desc: 'Mostrar etiquetas cuando la fecha, vista previa e imagen están ocultas.'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Tipo',
+                desc: 'Selecciona la propiedad personalizada a mostrar en los elementos de archivo.',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: 'Propiedad del frontmatter',
+                    wordCount: 'Conteo de palabras',
+                    none: 'Ninguno'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: 'Propiedades del frontmatter',
+                desc: 'Lista de propiedades del frontmatter separadas por comas a mostrar. Se usa la primera propiedad con valor.',
+                placeholder: 'estado, tipo, categoría'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Mostrar propiedad personalizada en modo compacto',
+                desc: 'Mostrar la propiedad personalizada cuando la fecha, vista previa e imagen están ocultas.'
             },
             dateFormat: {
                 name: 'Formato de fecha',

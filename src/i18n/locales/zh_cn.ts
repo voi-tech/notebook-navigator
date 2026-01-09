@@ -333,14 +333,14 @@ export const STRINGS_ZH_CN = {
             emptyState: '没有可用的仓库配置文件。'
         },
         tagOperation: {
-            renameTitle: '重命名标签',
-            deleteTitle: '删除标签',
+            renameTitle: '重命名标签 {tag}',
+            deleteTitle: '删除标签 {tag}',
             newTagPrompt: '输入新的标签名称：',
             newTagPlaceholder: '新名称',
-            renameWarning: '这将重命名所有受影响笔记中的标签。',
-            deleteWarning: '这将从所有受影响笔记中删除标签。',
-            modificationWarning: '标签修改',
-            affectedFiles: '{count} 个文件受影响',
+            renameWarning: '重命名标签 {oldTag} 将修改 {count} 个{files}。',
+            deleteWarning: '删除标签 {tag} 将修改 {count} 个{files}。',
+            modificationWarning: '这将更新文件的修改日期。',
+            affectedFiles: '受影响的文件:',
             andMore: '以及 {count} 个更多...',
             confirmRename: '重命名标签',
             renameUnchanged: '{tag} 未更改',
@@ -512,7 +512,7 @@ export const STRINGS_ZH_CN = {
             failedToAddTag: '添加标签 "{tag}" 失败',
             failedToClearTags: '清除标签失败',
             failedToMoveFolder: '移动文件夹"{name}"失败',
-            failedToImportFiles: 'Failed to import: {names}'
+            failedToImportFiles: '导入失败: {names}'
         },
         notifications: {
             filesAlreadyExist: '{count} 个文件在目标位置已存在',
@@ -520,8 +520,8 @@ export const STRINGS_ZH_CN = {
             filesAlreadyHaveTag: '{count} 个文件已经有此标签或更具体的标签',
             clearedTags: '已从 {count} 个文件中清除所有标签',
             noTagsToClear: '没有要清除的标签',
-            fileImported: 'Imported 1 file',
-            filesImported: 'Imported {count} files'
+            fileImported: '已导入 1 个文件',
+            filesImported: '已导入 {count} 个文件'
         }
     },
 
@@ -604,11 +604,11 @@ export const STRINGS_ZH_CN = {
         },
         sections: {
             general: '通用',
-            notes: '笔记显示',
-            navigationPane: '文件夹显示',
+            notes: '笔记',
+            navigationPane: '导航窗格',
             icons: '图标包',
-            tags: '标签显示',
-            folders: '文件夹笔记',
+            tags: '标签',
+            folders: '文件夹',
             foldersAndTags: '文件夹与标签',
             search: '搜索',
             searchAndHotkeys: '搜索与快捷键',
@@ -641,7 +641,7 @@ export const STRINGS_ZH_CN = {
                 previewText: '预览文本',
                 featureImage: '特色图片',
                 tags: '标签',
-                customProperty: 'Custom property',
+                customProperty: '自定义属性',
                 date: '日期',
                 parentFolder: '父文件夹'
             }
@@ -1007,7 +1007,7 @@ export const STRINGS_ZH_CN = {
             },
             showFileTags: {
                 name: '显示文件标签',
-                desc: '在文件项中显示可点击的标签。使用标签颜色来直观区分不同的标签类型。'
+                desc: '在文件项中显示可点击的标签。'
             },
             showFileTagAncestors: {
                 name: '显示完整标签路径',
@@ -1026,22 +1026,22 @@ export const STRINGS_ZH_CN = {
                 desc: '当日期、预览和图像被隐藏时显示标签。'
             },
             customPropertyType: {
-                name: 'Type',
-                desc: 'Select the custom property to display in file items.',
+                name: '类型',
+                desc: '选择要在文件项中显示的自定义属性。',
                 options: {
-                    frontmatter: 'Frontmatter property',
-                    wordCount: 'Word count',
-                    none: 'None'
+                    frontmatter: '前置元数据属性',
+                    wordCount: '字数统计',
+                    none: '无'
                 }
             },
             customPropertyFrontmatterFields: {
-                name: 'Frontmatter properties',
-                desc: 'Comma-separated list of frontmatter properties to display. The first property with a value is used.',
-                placeholder: 'status, type, category'
+                name: '前置元数据属性',
+                desc: '逗号分隔的前置元数据属性列表。使用第一个有值的属性。',
+                placeholder: '状态, 类型, 分类'
             },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: '在精简模式中显示自定义属性',
+                desc: '当日期、预览和图像被隐藏时显示自定义属性。'
             },
             dateFormat: {
                 name: '日期格式',
