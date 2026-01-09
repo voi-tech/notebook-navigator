@@ -30,7 +30,6 @@ export const STRINGS_EN = {
         submit: 'Submit', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'No selection', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Untagged', // Label for notes without any tags (English: Untagged)
-        untitled: 'Untitled', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Feature image', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Unknown error', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator update available',
@@ -51,7 +50,6 @@ export const STRINGS_EN = {
     // Tag list
     tagList: {
         untaggedLabel: 'Untagged', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Hidden tags', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Tags' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_EN = {
         unpinShortcuts: 'Unpin shortcuts',
         unpinShortcutsAndRecentNotes: 'Unpin shortcuts and recent notes',
         unpinShortcutsAndRecentFiles: 'Unpin shortcuts and recent files',
-        profileMenuLabel: 'Profile',
         profileMenuAria: 'Change vault profile'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_EN = {
     paneHeader: {
         collapseAllFolders: 'Collapse items', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Expand all items', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Scroll to top',
         newFolder: 'New folder', // Tooltip for create new folder button (English: New folder)
         newNote: 'New note', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Back to navigation', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Change sort order', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Default', // Label for default sorting mode (English: Default)
-        customSort: 'Custom', // Label for custom sorting mode (English: Custom)
         showFolders: 'Show navigation', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Hide navigation', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Reorder navigation',
         finishRootFolderReorder: 'Done reordering',
         toggleDescendantNotes: 'Show notes from subfolders / descendants', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Expand on selection', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Expand on selection)
         showExcludedItems: 'Show hidden folders, tags, and notes', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Hide hidden folders, tags, and notes', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Show dual panes', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_EN = {
         titleRows: 'Title rows',
         previewRows: 'Preview rows',
         groupBy: 'Group by',
-        defaultOption: (rows: number) => `Default (${rows})`,
         defaultTitleOption: (rows: number) => `Default title rows (${rows})`,
         defaultPreviewOption: (rows: number) => `Default preview rows (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Default grouping (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_EN = {
         colorPicker: {
             currentColor: 'Current',
             newColor: 'New',
-            presetColors: 'Preset colors',
-            userColors: 'User colors',
             paletteDefault: 'Default',
             paletteCustom: 'Custom',
             copyColors: 'Copy color',
@@ -291,7 +281,6 @@ export const STRINGS_EN = {
             copyClipboardError: 'Could not write to clipboard',
             pasteColors: 'Paste color',
             pasteClipboardError: 'Could not read clipboard',
-            pasteInvalidJson: 'Clipboard does not contain valid text',
             pasteInvalidFormat: 'Expected a hex color value',
             colorsPasted: 'Color pasted successfully',
             resetUserColors: 'Clear custom colors',
@@ -303,29 +292,7 @@ export const STRINGS_EN = {
             removeColor: 'Remove color',
             apply: 'Apply',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Red',
-                orange: 'Orange',
-                amber: 'Amber',
-                yellow: 'Yellow',
-                lime: 'Lime',
-                green: 'Green',
-                emerald: 'Emerald',
-                teal: 'Teal',
-                cyan: 'Cyan',
-                sky: 'Sky',
-                blue: 'Blue',
-                indigo: 'Indigo',
-                violet: 'Violet',
-                purple: 'Purple',
-                fuchsia: 'Fuchsia',
-                pink: 'Pink',
-                rose: 'Rose',
-                gray: 'Gray',
-                slate: 'Slate',
-                stone: 'Stone'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Select vault profile',
@@ -400,7 +367,6 @@ export const STRINGS_EN = {
             }
         },
         tagSuggest: {
-            placeholder: 'Search tags...',
             navigatePlaceholder: 'Navigate to tag...',
             addPlaceholder: 'Search for tag to add...',
             removePlaceholder: 'Select tag to remove...',
@@ -436,8 +402,6 @@ export const STRINGS_EN = {
             deleteFolder: 'Failed to delete folder: {error}',
             deleteFile: 'Failed to delete file: {error}',
             duplicateNote: 'Failed to duplicate note: {error}',
-            createCanvas: 'Failed to create canvas: {error}',
-            createDatabase: 'Failed to create database: {error}',
             duplicateFolder: 'Failed to duplicate folder: {error}',
             openVersionHistory: 'Failed to open version history: {error}',
             versionHistoryNotFound: 'Version history command not found. Ensure Obsidian Sync is enabled.',
@@ -499,8 +463,7 @@ export const STRINGS_EN = {
             deleteConfirmation: 'This action cannot be undone.'
         },
         defaultNames: {
-            untitled: 'Untitled',
-            untitledNumber: 'Untitled {number}'
+            untitled: 'Untitled'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_EN = {
         },
         notifications: {
             filesAlreadyExist: '{count} files already exist in destination',
-            addedTag: 'Added tag "{tag}" to {count} files',
             filesAlreadyHaveTag: '{count} files already have this tag or a more specific one',
-            clearedTags: 'Cleared all tags from {count} files',
             noTagsToClear: 'No tags to clear',
             fileImported: 'Imported 1 file',
             filesImported: 'Imported {count} files'
@@ -532,17 +493,6 @@ export const STRINGS_EN = {
         yesterday: 'Yesterday',
         previous7Days: 'Previous 7 days',
         previous30Days: 'Previous 30 days'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Sunday',
-        monday: 'Monday',
-        tuesday: 'Tuesday',
-        wednesday: 'Wednesday',
-        thursday: 'Thursday',
-        friday: 'Friday',
-        saturday: 'Saturday'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_EN = {
             },
             list: {
                 display: 'Appearance',
-                pinnedNotes: 'Pinned notes',
-                quickActions: 'Quick actions'
+                pinnedNotes: 'Pinned notes'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -965,11 +914,9 @@ export const STRINGS_EN = {
                 editProfilesButton: 'Edit profiles',
                 addProfileOption: 'Add profile...',
                 applyButton: 'Apply',
-                editButton: 'Edit profile',
                 deleteButton: 'Delete profile',
                 addModalTitle: 'Add profile',
                 editProfilesModalTitle: 'Edit profiles',
-                editModalTitle: 'Edit profile',
                 addModalPlaceholder: 'Profile name',
                 deleteModalTitle: 'Delete {name}',
                 deleteModalMessage: 'Remove {name}? Hidden file, folder, tag, and note filters saved in this profile will be deleted.',
@@ -1261,7 +1208,6 @@ export const STRINGS_EN = {
                 name: 'Rebuild cache',
                 desc: 'Use this if you experience missing tags, incorrect previews or missing feature images. This can happen after sync conflicts or unexpected closures.',
                 buttonText: 'Rebuild cache',
-                success: 'Cache rebuilt',
                 error: 'Failed to rebuild cache',
                 indexingTitle: 'Indexing vault...',
                 progress: 'Updating Notebook Navigator cache.'

@@ -30,7 +30,6 @@ export const STRINGS_UK = {
         submit: 'Надіслати', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Нічого не вибрано', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Без тегів', // Label for notes without any tags (English: Untagged)
-        untitled: 'Без назви', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Головне зображення', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Невідома помилка', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Доступне оновлення Notebook Navigator',
@@ -51,7 +50,6 @@ export const STRINGS_UK = {
     // Tag list
     tagList: {
         untaggedLabel: 'Без тегів', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Приховані теги', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Теги' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_UK = {
         unpinShortcuts: 'Відкріпити ярлики',
         unpinShortcutsAndRecentNotes: 'Відкріпити ярлики та останні нотатки',
         unpinShortcutsAndRecentFiles: 'Відкріпити ярлики та останні файли',
-        profileMenuLabel: 'Профіль',
         profileMenuAria: 'Змінити профіль сховища'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_UK = {
     paneHeader: {
         collapseAllFolders: 'Згорнути елементи', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Розгорнути всі елементи', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Прокрутити вгору',
         newFolder: 'Нова папка', // Tooltip for create new folder button (English: New folder)
         newNote: 'Нова нотатка', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Назад до навігації', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Змінити порядок сортування', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'За замовчуванням', // Label for default sorting mode (English: Default)
-        customSort: 'Власний', // Label for custom sorting mode (English: Custom)
         showFolders: 'Показати навігацію', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Сховати навігацію', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Змінити порядок навігації',
         finishRootFolderReorder: 'Готово',
         toggleDescendantNotes: 'Показати нотатки з підпапок / нащадків', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Розгортати при виборі', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Expand on selection)
         showExcludedItems: 'Показати приховані папки, теги та нотатки', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Сховати приховані папки, теги та нотатки', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Показати подвійну панель', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_UK = {
         titleRows: 'Рядки заголовка',
         previewRows: 'Рядки попереднього перегляду',
         groupBy: 'Групувати за',
-        defaultOption: (rows: number) => `За замовчуванням (${rows})`,
         defaultTitleOption: (rows: number) => `Рядки заголовка за замовчуванням (${rows})`,
         defaultPreviewOption: (rows: number) => `Рядки попереднього перегляду за замовчуванням (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Групування за замовчуванням (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_UK = {
         colorPicker: {
             currentColor: 'Поточний',
             newColor: 'Новий',
-            presetColors: 'Готові кольори',
-            userColors: 'Користувацькі кольори',
             paletteDefault: 'За замовчуванням',
             paletteCustom: 'Власні',
             copyColors: 'Копіювати колір',
@@ -291,7 +281,6 @@ export const STRINGS_UK = {
             copyClipboardError: 'Не вдалося записати в буфер обміну',
             pasteColors: 'Вставити колір',
             pasteClipboardError: 'Не вдалося прочитати буфер обміну',
-            pasteInvalidJson: 'Буфер обміну не містить дійсний текст',
             pasteInvalidFormat: 'Очікується hex-значення кольору',
             colorsPasted: 'Колір успішно вставлено',
             resetUserColors: 'Очистити власні кольори',
@@ -303,29 +292,7 @@ export const STRINGS_UK = {
             removeColor: 'Вилучити колір',
             apply: 'Застосувати',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Червоний',
-                orange: 'Помаранчевий',
-                amber: 'Бурштиновий',
-                yellow: 'Жовтий',
-                lime: 'Лаймовий',
-                green: 'Зелений',
-                emerald: 'Смарагдовий',
-                teal: 'Бірюзовий',
-                cyan: 'Блакитний',
-                sky: 'Небесний',
-                blue: 'Синій',
-                indigo: 'Індиго',
-                violet: 'Фіолетовий',
-                purple: 'Пурпуровий',
-                fuchsia: 'Фуксія',
-                pink: 'Рожевий',
-                rose: 'Троянда',
-                gray: 'Сірий',
-                slate: 'Сланцевий',
-                stone: "Кам'яний"
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Вибрати профіль сховища',
@@ -400,7 +367,6 @@ export const STRINGS_UK = {
             }
         },
         tagSuggest: {
-            placeholder: 'Пошук тегів...',
             navigatePlaceholder: 'Перейти до тегу...',
             addPlaceholder: 'Знайти тег для додавання...',
             removePlaceholder: 'Виберіть тег для вилучення...',
@@ -436,8 +402,6 @@ export const STRINGS_UK = {
             deleteFolder: 'Не вдалося видалити папку: {error}',
             deleteFile: 'Не вдалося видалити файл: {error}',
             duplicateNote: 'Не вдалося дублювати нотатку: {error}',
-            createCanvas: 'Не вдалося створити полотно: {error}',
-            createDatabase: 'Не вдалося створити базу даних: {error}',
             duplicateFolder: 'Не вдалося дублювати папку: {error}',
             openVersionHistory: 'Не вдалося відкрити історію версій: {error}',
             versionHistoryNotFound: 'Команда історії версій не знайдена. Переконайтеся, що Obsidian Sync увімкнено.',
@@ -499,8 +463,7 @@ export const STRINGS_UK = {
             deleteConfirmation: 'Цю дію неможливо скасувати.'
         },
         defaultNames: {
-            untitled: 'Без назви',
-            untitledNumber: 'Без назви {number}'
+            untitled: 'Без назви'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_UK = {
         },
         notifications: {
             filesAlreadyExist: '{count} файлів вже існує в місці призначення',
-            addedTag: 'Тег "{tag}" додано до {count} файлів',
             filesAlreadyHaveTag: '{count} файлів вже мають цей тег або більш специфічний',
-            clearedTags: 'Очищено всі теги з {count} файлів',
             noTagsToClear: 'Немає тегів для очищення',
             fileImported: 'Імпортовано 1 файл',
             filesImported: 'Імпортовано {count} файлів'
@@ -532,17 +493,6 @@ export const STRINGS_UK = {
         yesterday: 'Вчора',
         previous7Days: 'Попередні 7 днів',
         previous30Days: 'Попередні 30 днів'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Неділя',
-        monday: 'Понеділок',
-        tuesday: 'Вівторок',
-        wednesday: 'Середа',
-        thursday: 'Четвер',
-        friday: "П'ятниця",
-        saturday: 'Субота'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_UK = {
             },
             list: {
                 display: 'Вигляд',
-                pinnedNotes: 'Закріплені нотатки',
-                quickActions: 'Швидкі дії'
+                pinnedNotes: 'Закріплені нотатки'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -966,11 +915,9 @@ export const STRINGS_UK = {
                 editProfilesButton: 'Редагувати профілі',
                 addProfileOption: 'Додати профіль...',
                 applyButton: 'Застосувати',
-                editButton: 'Редагувати профіль',
                 deleteButton: 'Видалити профіль',
                 addModalTitle: 'Додати профіль',
                 editProfilesModalTitle: 'Редагувати профілі',
-                editModalTitle: 'Редагувати профіль',
                 addModalPlaceholder: 'Назва профілю',
                 deleteModalTitle: 'Видалити {name}',
                 deleteModalMessage:
@@ -1265,7 +1212,6 @@ export const STRINGS_UK = {
                 name: 'Перебудувати кеш',
                 desc: 'Використовуйте, якщо у вас зникають теги, неправильні попередні перегляди або відсутні головні зображення. Це може статися після конфліктів синхронізації або неочікуваних закриттів.',
                 buttonText: 'Перебудувати кеш',
-                success: 'Кеш перебудовано',
                 error: 'Не вдалося перебудувати кеш',
                 indexingTitle: 'Індексація сховища...',
                 progress: 'Оновлення кешу Notebook Navigator.'

@@ -30,7 +30,6 @@ export const STRINGS_VI = {
         submit: 'Gửi', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Chưa chọn gì', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Không có thẻ', // Label for notes without any tags (English: Untagged)
-        untitled: 'Chưa đặt tên', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Ảnh nổi bật', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Lỗi không xác định', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Có bản cập nhật Notebook Navigator',
@@ -51,7 +50,6 @@ export const STRINGS_VI = {
     // Tag list
     tagList: {
         untaggedLabel: 'Không có thẻ', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Thẻ ẩn', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Thẻ' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_VI = {
         unpinShortcuts: 'Bỏ ghim lối tắt',
         unpinShortcutsAndRecentNotes: 'Bỏ ghim lối tắt và ghi chú gần đây',
         unpinShortcutsAndRecentFiles: 'Bỏ ghim lối tắt và tệp gần đây',
-        profileMenuLabel: 'Hồ sơ',
         profileMenuAria: 'Đổi hồ sơ vault'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_VI = {
     paneHeader: {
         collapseAllFolders: 'Thu gọn các mục', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Mở rộng tất cả các mục', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Cuộn lên đầu',
         newFolder: 'Thư mục mới', // Tooltip for create new folder button (English: New folder)
         newNote: 'Ghi chú mới', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Quay lại điều hướng', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Đổi thứ tự sắp xếp', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Mặc định', // Label for default sorting mode (English: Default)
-        customSort: 'Tùy chỉnh', // Label for custom sorting mode (English: Custom)
         showFolders: 'Hiện điều hướng', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Ẩn điều hướng', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Sắp xếp lại điều hướng',
         finishRootFolderReorder: 'Hoàn tất',
         toggleDescendantNotes: 'Hiện ghi chú từ thư mục con / phần tử con', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Mở rộng khi chọn', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Expand on selection)
         showExcludedItems: 'Hiện thư mục, thẻ và ghi chú ẩn', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Ẩn thư mục, thẻ và ghi chú ẩn', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Hiện hai ngăn', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_VI = {
         titleRows: 'Dòng tiêu đề',
         previewRows: 'Dòng xem trước',
         groupBy: 'Nhóm theo',
-        defaultOption: (rows: number) => `Mặc định (${rows})`,
         defaultTitleOption: (rows: number) => `Dòng tiêu đề mặc định (${rows})`,
         defaultPreviewOption: (rows: number) => `Dòng xem trước mặc định (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Nhóm mặc định (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_VI = {
         colorPicker: {
             currentColor: 'Hiện tại',
             newColor: 'Mới',
-            presetColors: 'Màu có sẵn',
-            userColors: 'Màu người dùng',
             paletteDefault: 'Mặc định',
             paletteCustom: 'Tùy chỉnh',
             copyColors: 'Sao chép màu',
@@ -291,7 +281,6 @@ export const STRINGS_VI = {
             copyClipboardError: 'Không thể ghi vào clipboard',
             pasteColors: 'Dán màu',
             pasteClipboardError: 'Không thể đọc clipboard',
-            pasteInvalidJson: 'Clipboard không chứa văn bản hợp lệ',
             pasteInvalidFormat: 'Yêu cầu giá trị màu hex',
             colorsPasted: 'Đã dán màu thành công',
             resetUserColors: 'Xóa màu tùy chỉnh',
@@ -303,29 +292,7 @@ export const STRINGS_VI = {
             removeColor: 'Gỡ màu',
             apply: 'Áp dụng',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Đỏ',
-                orange: 'Cam',
-                amber: 'Hổ phách',
-                yellow: 'Vàng',
-                lime: 'Chanh',
-                green: 'Xanh lá',
-                emerald: 'Ngọc lục bảo',
-                teal: 'Xanh mòng két',
-                cyan: 'Xanh lơ',
-                sky: 'Xanh trời',
-                blue: 'Xanh dương',
-                indigo: 'Chàm',
-                violet: 'Tím',
-                purple: 'Tía',
-                fuchsia: 'Hồng sẫm',
-                pink: 'Hồng',
-                rose: 'Hồng đào',
-                gray: 'Xám',
-                slate: 'Xám đá',
-                stone: 'Đá'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Chọn hồ sơ vault',
@@ -400,7 +367,6 @@ export const STRINGS_VI = {
             }
         },
         tagSuggest: {
-            placeholder: 'Tìm thẻ...',
             navigatePlaceholder: 'Chuyển đến thẻ...',
             addPlaceholder: 'Tìm thẻ để thêm...',
             removePlaceholder: 'Chọn thẻ để gỡ...',
@@ -436,8 +402,6 @@ export const STRINGS_VI = {
             deleteFolder: 'Không thể xóa thư mục: {error}',
             deleteFile: 'Không thể xóa tệp: {error}',
             duplicateNote: 'Không thể nhân bản ghi chú: {error}',
-            createCanvas: 'Không thể tạo canvas: {error}',
-            createDatabase: 'Không thể tạo cơ sở dữ liệu: {error}',
             duplicateFolder: 'Không thể nhân bản thư mục: {error}',
             openVersionHistory: 'Không thể mở lịch sử phiên bản: {error}',
             versionHistoryNotFound: 'Không tìm thấy lệnh lịch sử phiên bản. Đảm bảo Obsidian Sync đã bật.',
@@ -499,8 +463,7 @@ export const STRINGS_VI = {
             deleteConfirmation: 'Hành động này không thể hoàn tác.'
         },
         defaultNames: {
-            untitled: 'Chưa đặt tên',
-            untitledNumber: 'Chưa đặt tên {number}'
+            untitled: 'Chưa đặt tên'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_VI = {
         },
         notifications: {
             filesAlreadyExist: '{count} tệp đã tồn tại ở đích',
-            addedTag: 'Đã thêm thẻ "{tag}" vào {count} tệp',
             filesAlreadyHaveTag: '{count} tệp đã có thẻ này hoặc thẻ cụ thể hơn',
-            clearedTags: 'Đã xóa tất cả thẻ khỏi {count} tệp',
             noTagsToClear: 'Không có thẻ để xóa',
             fileImported: 'Đã nhập 1 tệp',
             filesImported: 'Đã nhập {count} tệp'
@@ -532,17 +493,6 @@ export const STRINGS_VI = {
         yesterday: 'Hôm qua',
         previous7Days: '7 ngày trước',
         previous30Days: '30 ngày trước'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Chủ nhật',
-        monday: 'Thứ hai',
-        tuesday: 'Thứ ba',
-        wednesday: 'Thứ tư',
-        thursday: 'Thứ năm',
-        friday: 'Thứ sáu',
-        saturday: 'Thứ bảy'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_VI = {
             },
             list: {
                 display: 'Giao diện',
-                pinnedNotes: 'Ghi chú đã ghim',
-                quickActions: 'Thao tác nhanh'
+                pinnedNotes: 'Ghi chú đã ghim'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -966,11 +915,9 @@ export const STRINGS_VI = {
                 editProfilesButton: 'Sửa hồ sơ',
                 addProfileOption: 'Thêm hồ sơ...',
                 applyButton: 'Áp dụng',
-                editButton: 'Sửa hồ sơ',
                 deleteButton: 'Xóa hồ sơ',
                 addModalTitle: 'Thêm hồ sơ',
                 editProfilesModalTitle: 'Sửa hồ sơ',
-                editModalTitle: 'Sửa hồ sơ',
                 addModalPlaceholder: 'Tên hồ sơ',
                 deleteModalTitle: 'Xóa {name}',
                 deleteModalMessage: 'Gỡ {name}? Bộ lọc tệp, thư mục, thẻ và ghi chú ẩn được lưu trong hồ sơ này sẽ bị xóa.',
@@ -1263,7 +1210,6 @@ export const STRINGS_VI = {
                 name: 'Xây dựng lại cache',
                 desc: 'Dùng nếu bạn gặp thẻ bị thiếu, xem trước không đúng hoặc ảnh nổi bật bị thiếu. Điều này có thể xảy ra sau xung đột đồng bộ hoặc đóng bất thường.',
                 buttonText: 'Xây dựng lại cache',
-                success: 'Đã xây dựng lại cache',
                 error: 'Không thể xây dựng lại cache',
                 indexingTitle: 'Đang lập chỉ mục vault...',
                 progress: 'Đang cập nhật cache Notebook Navigator.'

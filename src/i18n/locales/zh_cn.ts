@@ -30,7 +30,6 @@ export const STRINGS_ZH_CN = {
         submit: '提交', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: '未选择', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: '无标签', // Label for notes without any tags (English: Untagged)
-        untitled: '未命名', // Default name for notes without a title (English: Untitled)
         featureImageAlt: '特色图片', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: '未知错误', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator 有可用更新',
@@ -51,7 +50,6 @@ export const STRINGS_ZH_CN = {
     // Tag list
     tagList: {
         untaggedLabel: '无标签', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: '隐藏标签', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: '标签' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_ZH_CN = {
         unpinShortcuts: '取消固定快捷方式',
         unpinShortcutsAndRecentNotes: '取消固定快捷方式和最近笔记',
         unpinShortcutsAndRecentFiles: '取消固定快捷方式和最近文件',
-        profileMenuLabel: '配置文件',
         profileMenuAria: '更改仓库配置文件'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_ZH_CN = {
     paneHeader: {
         collapseAllFolders: '折叠项目', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: '展开所有项目', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: '滚动到顶部',
         newFolder: '新建文件夹', // Tooltip for create new folder button (English: New folder)
         newNote: '新笔记', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: '返回导航', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: '更改排序方式', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: '默认', // Label for default sorting mode (English: Default)
-        customSort: '自定义', // Label for custom sorting mode (English: Custom)
         showFolders: '显示导航', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: '隐藏导航', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: '重新排列导航',
         finishRootFolderReorder: '完成',
         toggleDescendantNotes: '显示子文件夹/后代的笔记', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
-        autoExpandFoldersTags: '自动展开文件夹和标签', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: '显示隐藏的文件夹、标签和笔记', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '隐藏隐藏的文件夹、标签和笔记', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: '显示双窗格', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_ZH_CN = {
         titleRows: '标题行数',
         previewRows: '预览行数',
         groupBy: '分组依据',
-        defaultOption: (rows: number) => `默认 (${rows})`,
         defaultTitleOption: (rows: number) => `默认标题行数 (${rows})`,
         defaultPreviewOption: (rows: number) => `默认预览行数 (${rows})`,
         defaultGroupOption: (groupLabel: string) => `默认分组 (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_ZH_CN = {
         colorPicker: {
             currentColor: '当前',
             newColor: '新颜色',
-            presetColors: '预设颜色',
-            userColors: '自定义颜色',
             paletteDefault: '默认',
             paletteCustom: '自定义',
             copyColors: '复制颜色',
@@ -291,7 +281,6 @@ export const STRINGS_ZH_CN = {
             copyClipboardError: '无法写入剪贴板',
             pasteColors: '粘贴颜色',
             pasteClipboardError: '无法读取剪贴板',
-            pasteInvalidJson: '剪贴板不包含有效的文本',
             pasteInvalidFormat: '需要十六进制颜色值',
             colorsPasted: '颜色粘贴成功',
             resetUserColors: '清除自定义颜色',
@@ -303,29 +292,7 @@ export const STRINGS_ZH_CN = {
             removeColor: '移除颜色',
             apply: '应用',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: '红色',
-                orange: '橙色',
-                amber: '琥珀色',
-                yellow: '黄色',
-                lime: '青柠色',
-                green: '绿色',
-                emerald: '翡翠色',
-                teal: '青绿色',
-                cyan: '青色',
-                sky: '天蓝色',
-                blue: '蓝色',
-                indigo: '靛蓝色',
-                violet: '紫罗兰色',
-                purple: '紫色',
-                fuchsia: '品红色',
-                pink: '粉色',
-                rose: '玫瑰色',
-                gray: '灰色',
-                slate: '石板色',
-                stone: '石灰色'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: '更改仓库配置文件',
@@ -400,7 +367,6 @@ export const STRINGS_ZH_CN = {
             }
         },
         tagSuggest: {
-            placeholder: '搜索标签...',
             navigatePlaceholder: '导航到标签...',
             addPlaceholder: '搜索要添加的标签...',
             removePlaceholder: '选择要移除的标签...',
@@ -435,8 +401,6 @@ export const STRINGS_ZH_CN = {
             deleteFolder: '删除文件夹失败：{error}',
             deleteFile: '删除文件失败：{error}',
             duplicateNote: '复制笔记失败：{error}',
-            createCanvas: '创建画布失败：{error}',
-            createDatabase: '创建数据库失败：{error}',
             duplicateFolder: '复制文件夹失败：{error}',
             openVersionHistory: '打开版本历史失败：{error}',
             versionHistoryNotFound: '未找到版本历史命令。请确保已启用 Obsidian 同步。',
@@ -498,8 +462,7 @@ export const STRINGS_ZH_CN = {
             deleteConfirmation: '此操作无法撤销。'
         },
         defaultNames: {
-            untitled: '未命名',
-            untitledNumber: '未命名 {number}'
+            untitled: '未命名'
         }
     },
 
@@ -516,9 +479,7 @@ export const STRINGS_ZH_CN = {
         },
         notifications: {
             filesAlreadyExist: '{count} 个文件在目标位置已存在',
-            addedTag: '已将标签 "{tag}" 添加到 {count} 个文件',
             filesAlreadyHaveTag: '{count} 个文件已经有此标签或更具体的标签',
-            clearedTags: '已从 {count} 个文件中清除所有标签',
             noTagsToClear: '没有要清除的标签',
             fileImported: '已导入 1 个文件',
             filesImported: '已导入 {count} 个文件'
@@ -531,17 +492,6 @@ export const STRINGS_ZH_CN = {
         yesterday: '昨天',
         previous7Days: '过去 7 天',
         previous30Days: '过去 30 天'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: '星期日',
-        monday: '星期一',
-        tuesday: '星期二',
-        wednesday: '星期三',
-        thursday: '星期四',
-        friday: '星期五',
-        saturday: '星期六'
     },
 
     // Plugin commands
@@ -631,8 +581,7 @@ export const STRINGS_ZH_CN = {
             },
             list: {
                 display: '外观',
-                pinnedNotes: '固定笔记',
-                quickActions: '快捷操作'
+                pinnedNotes: '固定笔记'
             },
             notes: {
                 frontmatter: '前置元数据',
@@ -943,11 +892,9 @@ export const STRINGS_ZH_CN = {
                 editProfilesButton: '编辑配置文件',
                 addProfileOption: '添加配置文件...',
                 applyButton: '应用',
-                editButton: '编辑配置文件',
                 deleteButton: '删除配置文件',
                 addModalTitle: '添加配置文件',
                 editProfilesModalTitle: '编辑配置文件',
-                editModalTitle: '编辑配置文件',
                 addModalPlaceholder: '配置文件名称',
                 deleteModalTitle: '删除 {name}',
                 deleteModalMessage: '删除 {name}？保存在此配置文件中的隐藏文件、文件夹、标签和笔记过滤器将被删除。',
@@ -1262,7 +1209,6 @@ export const STRINGS_ZH_CN = {
                 name: '重建缓存',
                 desc: '如果出现标签缺失、预览不正确或图片缺失，请使用此功能。这可能在同步冲突或意外关闭后发生。',
                 buttonText: '重建缓存',
-                success: '缓存已重建',
                 error: '重建缓存失败',
                 indexingTitle: '正在索引仓库...',
                 progress: '正在更新 Notebook Navigator 缓存.'

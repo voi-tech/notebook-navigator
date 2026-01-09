@@ -30,7 +30,6 @@ export const STRINGS_NL = {
         submit: 'Verzenden',
         noSelection: 'Geen selectie',
         untagged: 'Zonder tags',
-        untitled: 'Zonder titel',
         featureImageAlt: 'Uitgelichte afbeelding',
         unknownError: 'Onbekende fout',
         updateBannerTitle: 'Notebook Navigator update beschikbaar',
@@ -51,7 +50,6 @@ export const STRINGS_NL = {
     // Tag list
     tagList: {
         untaggedLabel: 'Zonder tags',
-        hiddenTags: 'Verborgen tags',
         tags: 'Tags'
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_NL = {
         unpinShortcuts: 'Snelkoppelingen losmaken',
         unpinShortcutsAndRecentNotes: 'Snelkoppelingen en recente notities losmaken',
         unpinShortcutsAndRecentFiles: 'Snelkoppelingen en recente bestanden losmaken',
-        profileMenuLabel: 'Profiel',
         profileMenuAria: 'Kluis profiel wijzigen'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_NL = {
     paneHeader: {
         collapseAllFolders: 'Items inklappen',
         expandAllFolders: 'Alle items uitklappen',
-        scrollToTop: 'Naar boven scrollen',
         newFolder: 'Nieuwe map',
         newNote: 'Nieuwe notitie',
         mobileBackToNavigation: 'Terug naar navigatie',
         changeSortOrder: 'Sorteervolgorde wijzigen',
         defaultSort: 'Standaard',
-        customSort: 'Aangepast',
         showFolders: 'Navigatie tonen',
-        hideFolders: 'Navigatie verbergen',
         reorderRootFolders: 'Navigatie herschikken',
         finishRootFolderReorder: 'Klaar',
         toggleDescendantNotes: 'Notities uit submappen / afstammelingen tonen',
-        autoExpandFoldersTags: 'Mappen en tags automatisch uitklappen',
         showExcludedItems: 'Verborgen mappen, tags en notities tonen',
         hideExcludedItems: 'Verborgen mappen, tags en notities verbergen',
         showDualPane: 'Dubbel paneel tonen',
@@ -230,7 +223,6 @@ export const STRINGS_NL = {
         titleRows: 'Titelrijen',
         previewRows: 'Voorbeeldrijen',
         groupBy: 'Groeperen op',
-        defaultOption: (rows: number) => `Standaard (${rows})`,
         defaultTitleOption: (rows: number) => `Standaard titelrijen (${rows})`,
         defaultPreviewOption: (rows: number) => `Standaard voorbeeldrijen (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Standaardgroepering (${groupLabel})`,
@@ -283,8 +275,6 @@ export const STRINGS_NL = {
         colorPicker: {
             currentColor: 'Huidig',
             newColor: 'Nieuw',
-            presetColors: 'Vooraf ingestelde kleuren',
-            userColors: 'Gebruikerskleuren',
             paletteDefault: 'Standaard',
             paletteCustom: 'Aangepast',
             copyColors: 'Kleur kopiëren',
@@ -292,7 +282,6 @@ export const STRINGS_NL = {
             copyClipboardError: 'Kon niet naar klembord schrijven',
             pasteColors: 'Kleur plakken',
             pasteClipboardError: 'Kan klembord niet lezen',
-            pasteInvalidJson: 'Klembord bevat geen geldige tekst',
             pasteInvalidFormat: 'Een hex kleurwaarde verwacht',
             colorsPasted: 'Kleur succesvol geplakt',
             resetUserColors: 'Aangepaste kleuren wissen',
@@ -304,29 +293,7 @@ export const STRINGS_NL = {
             removeColor: 'Kleur verwijderen',
             apply: 'Toepassen',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Rood',
-                orange: 'Oranje',
-                amber: 'Amber',
-                yellow: 'Geel',
-                lime: 'Limoen',
-                green: 'Groen',
-                emerald: 'Smaragd',
-                teal: 'Blauwgroen',
-                cyan: 'Cyaan',
-                sky: 'Hemelsblauw',
-                blue: 'Blauw',
-                indigo: 'Indigo',
-                violet: 'Violet',
-                purple: 'Paars',
-                fuchsia: 'Fuchsia',
-                pink: 'Roze',
-                rose: 'Oud roze',
-                gray: 'Grijs',
-                slate: 'Leisteen',
-                stone: 'Steen'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Kluisprofiel wijzigen',
@@ -401,7 +368,6 @@ export const STRINGS_NL = {
             }
         },
         tagSuggest: {
-            placeholder: 'Tags zoeken...',
             navigatePlaceholder: 'Navigeren naar tag...',
             addPlaceholder: 'Zoeken naar tag om toe te voegen...',
             removePlaceholder: 'Selecteer tag om te verwijderen...',
@@ -438,8 +404,6 @@ export const STRINGS_NL = {
             deleteFolder: 'Kan map niet verwijderen: {error}',
             deleteFile: 'Kan bestand niet verwijderen: {error}',
             duplicateNote: 'Kan notitie niet dupliceren: {error}',
-            createCanvas: 'Kan canvas niet maken: {error}',
-            createDatabase: 'Kan database niet maken: {error}',
             duplicateFolder: 'Kan map niet dupliceren: {error}',
             openVersionHistory: 'Kan versiegeschiedenis niet openen: {error}',
             versionHistoryNotFound: 'Versiegeschiedenis commando niet gevonden. Zorg dat Obsidian Sync is ingeschakeld.',
@@ -501,8 +465,7 @@ export const STRINGS_NL = {
             deleteConfirmation: 'Deze actie kan niet ongedaan worden gemaakt.'
         },
         defaultNames: {
-            untitled: 'Zonder titel',
-            untitledNumber: 'Zonder titel {number}'
+            untitled: 'Zonder titel'
         }
     },
 
@@ -519,9 +482,7 @@ export const STRINGS_NL = {
         },
         notifications: {
             filesAlreadyExist: '{count} bestanden bestaan al op de bestemming',
-            addedTag: 'Tag "{tag}" toegevoegd aan {count} bestanden',
             filesAlreadyHaveTag: '{count} bestanden hebben deze tag of een specifiekere al',
-            clearedTags: 'Alle tags verwijderd van {count} bestanden',
             noTagsToClear: 'Geen tags om te wissen',
             fileImported: '1 bestand geïmporteerd',
             filesImported: '{count} bestanden geïmporteerd'
@@ -534,17 +495,6 @@ export const STRINGS_NL = {
         yesterday: 'Gisteren',
         previous7Days: 'Afgelopen 7 dagen',
         previous30Days: 'Afgelopen 30 dagen'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Zondag',
-        monday: 'Maandag',
-        tuesday: 'Dinsdag',
-        wednesday: 'Woensdag',
-        thursday: 'Donderdag',
-        friday: 'Vrijdag',
-        saturday: 'Zaterdag'
     },
 
     // Plugin commands
@@ -634,8 +584,7 @@ export const STRINGS_NL = {
             },
             list: {
                 display: 'Uiterlijk',
-                pinnedNotes: 'Vastgezette notities',
-                quickActions: 'Snelle acties'
+                pinnedNotes: 'Vastgezette notities'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -968,11 +917,9 @@ export const STRINGS_NL = {
                 editProfilesButton: 'Profielen bewerken',
                 addProfileOption: 'Profiel toevoegen...',
                 applyButton: 'Toepassen',
-                editButton: 'Profiel bewerken',
                 deleteButton: 'Profiel verwijderen',
                 addModalTitle: 'Profiel toevoegen',
                 editProfilesModalTitle: 'Profielen bewerken',
-                editModalTitle: 'Profiel bewerken',
                 addModalPlaceholder: 'Profielnaam',
                 deleteModalTitle: '{name} verwijderen',
                 deleteModalMessage:
@@ -1267,7 +1214,6 @@ export const STRINGS_NL = {
                 name: 'Cache opnieuw opbouwen',
                 desc: 'Gebruik dit als u ontbrekende tags, onjuiste voorbeelden of ontbrekende uitgelichte afbeeldingen ervaart. Dit kan gebeuren na synchronisatieconflicten of onverwachte afsluitingen.',
                 buttonText: 'Cache opnieuw opbouwen',
-                success: 'Cache opnieuw opgebouwd',
                 error: 'Kan cache niet opnieuw opbouwen',
                 indexingTitle: 'Kluis wordt geïndexeerd...',
                 progress: 'Notebook Navigator-cache wordt bijgewerkt.'

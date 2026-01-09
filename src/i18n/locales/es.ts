@@ -30,7 +30,6 @@ export const STRINGS_ES = {
         submit: 'Enviar', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Sin selección', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Sin etiquetas', // Label for notes without any tags (English: Untagged)
-        untitled: 'Sin título', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Imagen destacada', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Error desconocido', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Actualización de Notebook Navigator disponible',
@@ -51,7 +50,6 @@ export const STRINGS_ES = {
     // Tag list
     tagList: {
         untaggedLabel: 'Sin etiquetas', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Etiquetas ocultas', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Etiquetas' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_ES = {
         unpinShortcuts: 'Desfijar accesos directos',
         unpinShortcutsAndRecentNotes: 'Desfijar accesos directos y notas recientes',
         unpinShortcutsAndRecentFiles: 'Desfijar accesos directos y archivos recientes',
-        profileMenuLabel: 'Perfil',
         profileMenuAria: 'Cambiar perfil de bóveda'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_ES = {
     paneHeader: {
         collapseAllFolders: 'Contraer elementos', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Expandir todos los elementos', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Desplazarse arriba',
         newFolder: 'Nueva carpeta', // Tooltip for create new folder button (English: New folder)
         newNote: 'Nueva nota', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Volver a navegación', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Cambiar orden de clasificación', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Predeterminado', // Label for default sorting mode (English: Default)
-        customSort: 'Personalizado', // Label for custom sorting mode (English: Custom)
         showFolders: 'Mostrar navegación', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Ocultar navegación', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Reordenar navegación',
         finishRootFolderReorder: 'Listo',
         toggleDescendantNotes: 'Mostrar notas de subcarpetas / descendientes', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
-        autoExpandFoldersTags: 'Expandir carpetas y etiquetas automáticamente', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: 'Mostrar carpetas, etiquetas y notas ocultas', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Ocultar carpetas, etiquetas y notas ocultas', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Mostrar paneles dobles', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_ES = {
         titleRows: 'Filas de título',
         previewRows: 'Filas de vista previa',
         groupBy: 'Agrupar por',
-        defaultOption: (rows: number) => `Predeterminado (${rows})`,
         defaultTitleOption: (rows: number) => `Filas de título predeterminadas (${rows})`,
         defaultPreviewOption: (rows: number) => `Filas de vista previa predeterminadas (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Agrupación predeterminada (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_ES = {
         colorPicker: {
             currentColor: 'Actual',
             newColor: 'Nuevo',
-            presetColors: 'Colores predefinidos',
-            userColors: 'Colores de usuario',
             paletteDefault: 'Predeterminado',
             paletteCustom: 'Personalizado',
             copyColors: 'Copiar color',
@@ -291,7 +281,6 @@ export const STRINGS_ES = {
             copyClipboardError: 'No se pudo escribir en el portapapeles',
             pasteColors: 'Pegar color',
             pasteClipboardError: 'No se pudo leer el portapapeles',
-            pasteInvalidJson: 'El portapapeles no contiene texto válido',
             pasteInvalidFormat: 'Se esperaba un valor de color hex',
             colorsPasted: 'Color pegado correctamente',
             resetUserColors: 'Borrar colores personalizados',
@@ -303,29 +292,7 @@ export const STRINGS_ES = {
             removeColor: 'Quitar color',
             apply: 'Aplicar',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Rojo',
-                orange: 'Naranja',
-                amber: 'Ámbar',
-                yellow: 'Amarillo',
-                lime: 'Lima',
-                green: 'Verde',
-                emerald: 'Esmeralda',
-                teal: 'Verde azulado',
-                cyan: 'Cian',
-                sky: 'Cielo',
-                blue: 'Azul',
-                indigo: 'Índigo',
-                violet: 'Violeta',
-                purple: 'Púrpura',
-                fuchsia: 'Fucsia',
-                pink: 'Rosa',
-                rose: 'Rosa claro',
-                gray: 'Gris',
-                slate: 'Pizarra',
-                stone: 'Piedra'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Cambiar perfil de bóveda',
@@ -400,7 +367,6 @@ export const STRINGS_ES = {
             }
         },
         tagSuggest: {
-            placeholder: 'Buscar etiquetas...',
             navigatePlaceholder: 'Navegar a etiqueta...',
             addPlaceholder: 'Buscar etiqueta para añadir...',
             removePlaceholder: 'Seleccionar etiqueta para eliminar...',
@@ -437,8 +403,6 @@ export const STRINGS_ES = {
             deleteFolder: 'Error al eliminar la carpeta: {error}',
             deleteFile: 'Error al eliminar el archivo: {error}',
             duplicateNote: 'Error al duplicar la nota: {error}',
-            createCanvas: 'Error al crear el lienzo: {error}',
-            createDatabase: 'Error al crear la base de datos: {error}',
             duplicateFolder: 'Error al duplicar la carpeta: {error}',
             openVersionHistory: 'Error al abrir el historial de versiones: {error}',
             versionHistoryNotFound: 'Comando de historial de versiones no encontrado. Asegúrate de que Obsidian Sync esté habilitado.',
@@ -500,8 +464,7 @@ export const STRINGS_ES = {
             deleteConfirmation: 'Esta acción no se puede deshacer.'
         },
         defaultNames: {
-            untitled: 'Sin título',
-            untitledNumber: 'Sin título {number}'
+            untitled: 'Sin título'
         }
     },
 
@@ -518,9 +481,7 @@ export const STRINGS_ES = {
         },
         notifications: {
             filesAlreadyExist: '{count} archivos ya existen en el destino',
-            addedTag: 'Etiqueta "{tag}" agregada a {count} archivos',
             filesAlreadyHaveTag: '{count} archivos ya tienen esta etiqueta o una más específica',
-            clearedTags: 'Se eliminaron todas las etiquetas de {count} archivos',
             noTagsToClear: 'No hay etiquetas para eliminar',
             fileImported: '1 archivo importado',
             filesImported: '{count} archivos importados'
@@ -533,17 +494,6 @@ export const STRINGS_ES = {
         yesterday: 'Ayer',
         previous7Days: 'Últimos 7 días',
         previous30Days: 'Últimos 30 días'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Domingo',
-        monday: 'Lunes',
-        tuesday: 'Martes',
-        wednesday: 'Miércoles',
-        thursday: 'Jueves',
-        friday: 'Viernes',
-        saturday: 'Sábado'
     },
 
     // Plugin commands
@@ -633,8 +583,7 @@ export const STRINGS_ES = {
             },
             list: {
                 display: 'Apariencia',
-                pinnedNotes: 'Notas fijadas',
-                quickActions: 'Acciones rápidas'
+                pinnedNotes: 'Notas fijadas'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -946,11 +895,9 @@ export const STRINGS_ES = {
                 editProfilesButton: 'Editar perfiles',
                 addProfileOption: 'Añadir perfil...',
                 applyButton: 'Aplicar',
-                editButton: 'Editar perfil',
                 deleteButton: 'Eliminar perfil',
                 addModalTitle: 'Añadir perfil',
                 editProfilesModalTitle: 'Editar perfiles',
-                editModalTitle: 'Editar perfil',
                 addModalPlaceholder: 'Nombre del perfil',
                 deleteModalTitle: 'Eliminar {name}',
                 deleteModalMessage:
@@ -1266,7 +1213,6 @@ export const STRINGS_ES = {
                 name: 'Reconstruir caché',
                 desc: 'Úselo si faltan etiquetas, las vistas previas son incorrectas o faltan imágenes. Esto puede ocurrir después de conflictos de sincronización o cierres inesperados.',
                 buttonText: 'Reconstruir caché',
-                success: 'Caché reconstruido',
                 error: 'Error al reconstruir caché',
                 indexingTitle: 'Indexando la bóveda...',
                 progress: 'Actualizando la caché de Notebook Navigator.'

@@ -30,7 +30,6 @@ export const STRINGS_JA = {
         submit: '送信', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: '選択なし', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'タグなし', // Label for notes without any tags (English: Untagged)
-        untitled: '無題', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'アイキャッチ画像', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: '不明なエラー', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator の更新があります',
@@ -51,7 +50,6 @@ export const STRINGS_JA = {
     // Tag list
     tagList: {
         untaggedLabel: 'タグなし', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: '非表示タグ', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'タグ' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_JA = {
         unpinShortcuts: 'ショートカットの固定を解除',
         unpinShortcutsAndRecentNotes: 'ショートカットと最近のノートの固定を解除',
         unpinShortcutsAndRecentFiles: 'ショートカットと最近のファイルの固定を解除',
-        profileMenuLabel: 'プロファイル',
         profileMenuAria: '保管庫のプロファイルを変更'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_JA = {
     paneHeader: {
         collapseAllFolders: 'アイテムを折りたたむ', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'すべてのアイテムを展開', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'トップにスクロール',
         newFolder: '新規フォルダ', // Tooltip for create new folder button (English: New folder)
         newNote: '新規ノート', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'ナビゲーションに戻る', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: '並び順を変更', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'デフォルト', // Label for default sorting mode (English: Default)
-        customSort: 'カスタム', // Label for custom sorting mode (English: Custom)
         showFolders: 'ナビゲーションを表示', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'ナビゲーションを非表示', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'ナビゲーションを並び替え',
         finishRootFolderReorder: '完了',
         toggleDescendantNotes: 'サブフォルダ / 子孫のノートを表示', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
-        autoExpandFoldersTags: 'フォルダとタグを自動展開', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: '非表示のフォルダ・タグ・ノートを表示', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '非表示のフォルダ・タグ・ノートを非表示', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'デュアルペインを表示', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_JA = {
         titleRows: 'タイトル行数',
         previewRows: 'プレビュー行数',
         groupBy: 'グループ分け',
-        defaultOption: (rows: number) => `デフォルト (${rows})`,
         defaultTitleOption: (rows: number) => `デフォルトタイトル行数 (${rows})`,
         defaultPreviewOption: (rows: number) => `デフォルトプレビュー行数 (${rows})`,
         defaultGroupOption: (groupLabel: string) => `デフォルトのグループ化 (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_JA = {
         colorPicker: {
             currentColor: '現在',
             newColor: '新規',
-            presetColors: 'プリセット色',
-            userColors: 'ユーザー色',
             paletteDefault: 'デフォルト',
             paletteCustom: 'カスタム',
             copyColors: '色をコピー',
@@ -291,7 +281,6 @@ export const STRINGS_JA = {
             copyClipboardError: 'クリップボードに書き込めませんでした',
             pasteColors: '色を貼り付け',
             pasteClipboardError: 'クリップボードを読み取れませんでした',
-            pasteInvalidJson: 'クリップボードに有効なテキストがありません',
             pasteInvalidFormat: '16進数の色の値が必要です',
             colorsPasted: '色を貼り付けました',
             resetUserColors: 'カスタム色をクリア',
@@ -303,29 +292,7 @@ export const STRINGS_JA = {
             removeColor: '色を削除',
             apply: '適用',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: '赤',
-                orange: 'オレンジ',
-                amber: '琥珀',
-                yellow: '黄',
-                lime: 'ライム',
-                green: '緑',
-                emerald: 'エメラルド',
-                teal: 'ティール',
-                cyan: 'シアン',
-                sky: 'スカイ',
-                blue: '青',
-                indigo: '藍',
-                violet: 'バイオレット',
-                purple: '紫',
-                fuchsia: 'フクシア',
-                pink: 'ピンク',
-                rose: 'ローズ',
-                gray: 'グレー',
-                slate: 'スレート',
-                stone: 'ストーン'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: '保管庫のプロファイルを変更',
@@ -400,7 +367,6 @@ export const STRINGS_JA = {
             }
         },
         tagSuggest: {
-            placeholder: 'タグを検索...',
             navigatePlaceholder: 'タグにナビゲート...',
             addPlaceholder: '追加するタグを検索...',
             removePlaceholder: '削除するタグを選択...',
@@ -437,8 +403,6 @@ export const STRINGS_JA = {
             deleteFolder: 'フォルダの削除に失敗しました：{error}',
             deleteFile: 'ファイルの削除に失敗しました：{error}',
             duplicateNote: 'ノートの複製に失敗しました：{error}',
-            createCanvas: 'キャンバスの作成に失敗しました：{error}',
-            createDatabase: 'データベースの作成に失敗しました：{error}',
             duplicateFolder: 'フォルダの複製に失敗しました：{error}',
             openVersionHistory: 'バージョン履歴を開くのに失敗しました：{error}',
             versionHistoryNotFound: 'バージョン履歴コマンドが見つかりません。Obsidian Syncが有効になっていることを確認してください。',
@@ -500,8 +464,7 @@ export const STRINGS_JA = {
             deleteConfirmation: 'この操作は元に戻せません。'
         },
         defaultNames: {
-            untitled: '無題',
-            untitledNumber: '無題 {number}'
+            untitled: '無題'
         }
     },
 
@@ -518,9 +481,7 @@ export const STRINGS_JA = {
         },
         notifications: {
             filesAlreadyExist: '{count}個のファイルが移動先に既に存在します',
-            addedTag: '{count}個のファイルにタグ "{tag}" を追加しました',
             filesAlreadyHaveTag: '{count}個のファイルには既にこのタグまたはより具体的なタグがあります',
-            clearedTags: '{count}個のファイルからすべてのタグをクリアしました',
             noTagsToClear: 'クリアするタグがありません',
             fileImported: '1個のファイルをインポートしました',
             filesImported: '{count}個のファイルをインポートしました'
@@ -533,17 +494,6 @@ export const STRINGS_JA = {
         yesterday: '昨日',
         previous7Days: '過去7日間',
         previous30Days: '過去30日間'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: '日曜日',
-        monday: '月曜日',
-        tuesday: '火曜日',
-        wednesday: '水曜日',
-        thursday: '木曜日',
-        friday: '金曜日',
-        saturday: '土曜日'
     },
 
     // Plugin commands
@@ -633,8 +583,7 @@ export const STRINGS_JA = {
             },
             list: {
                 display: '外観',
-                pinnedNotes: 'ピン留めされたノート',
-                quickActions: 'クイック操作'
+                pinnedNotes: 'ピン留めされたノート'
             },
             notes: {
                 frontmatter: 'フロントマター',
@@ -946,11 +895,9 @@ export const STRINGS_JA = {
                 editProfilesButton: 'プロファイルを編集',
                 addProfileOption: 'プロファイルを追加...',
                 applyButton: '適用',
-                editButton: 'プロファイルを編集',
                 deleteButton: 'プロファイルを削除',
                 addModalTitle: 'プロファイルを追加',
                 editProfilesModalTitle: 'プロファイルを編集',
-                editModalTitle: 'プロファイルを編集',
                 addModalPlaceholder: 'プロファイル名',
                 deleteModalTitle: '{name}を削除',
                 deleteModalMessage:
@@ -1266,7 +1213,6 @@ export const STRINGS_JA = {
                 name: 'キャッシュを再構築',
                 desc: 'タグの欠落、不正確なプレビュー、画像の欠落がある場合に使用してください。同期の競合や予期しない終了後に発生することがあります。',
                 buttonText: 'キャッシュを再構築',
-                success: 'キャッシュを再構築しました',
                 error: 'キャッシュの再構築に失敗しました',
                 indexingTitle: 'ボールトをインデックス中...',
                 progress: 'Notebook Navigator のキャッシュを更新しています.'

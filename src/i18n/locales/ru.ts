@@ -30,7 +30,6 @@ export const STRINGS_RU = {
         submit: 'Отправить', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Ничего не выбрано', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Без тегов', // Label for notes without any tags (English: Untagged)
-        untitled: 'Без названия', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Изображение', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Неизвестная ошибка', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Доступно обновление Notebook Navigator',
@@ -51,7 +50,6 @@ export const STRINGS_RU = {
     // Tag list
     tagList: {
         untaggedLabel: 'Без тегов', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Скрытые теги', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Теги' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_RU = {
         unpinShortcuts: 'Открепить ярлыки',
         unpinShortcutsAndRecentNotes: 'Открепить ярлыки и недавние заметки',
         unpinShortcutsAndRecentFiles: 'Открепить ярлыки и недавние файлы',
-        profileMenuLabel: 'Профиль',
         profileMenuAria: 'Сменить профиль хранилища'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_RU = {
     paneHeader: {
         collapseAllFolders: 'Свернуть элементы', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Развернуть все элементы', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Прокрутить вверх',
         newFolder: 'Новая папка', // Tooltip for create new folder button (English: New folder)
         newNote: 'Новая заметка', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Назад к навигации', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Изменить сортировку', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'По умолчанию', // Label for default sorting mode (English: Default)
-        customSort: 'Пользовательская', // Label for custom sorting mode (English: Custom)
         showFolders: 'Показать навигацию', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Скрыть навигацию', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Изменить порядок навигации',
         finishRootFolderReorder: 'Готово',
         toggleDescendantNotes: 'Показать заметки из подпапок / потомков', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Разворачивать при выборе', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Expand on selection)
         showExcludedItems: 'Показать скрытые папки, теги и заметки', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Скрыть скрытые папки, теги и заметки', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Показать двойную панель', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_RU = {
         titleRows: 'Строки заголовка',
         previewRows: 'Строки превью',
         groupBy: 'Группировать по',
-        defaultOption: (rows: number) => `По умолчанию (${rows})`,
         defaultTitleOption: (rows: number) => `Строк заголовка по умолчанию (${rows})`,
         defaultPreviewOption: (rows: number) => `Строк превью по умолчанию (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Группировка по умолчанию (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_RU = {
         colorPicker: {
             currentColor: 'Текущий',
             newColor: 'Новый',
-            presetColors: 'Предустановленные цвета',
-            userColors: 'Пользовательские цвета',
             paletteDefault: 'По умолчанию',
             paletteCustom: 'Пользовательские',
             copyColors: 'Копировать цвет',
@@ -291,7 +281,6 @@ export const STRINGS_RU = {
             copyClipboardError: 'Не удалось записать в буфер обмена',
             pasteColors: 'Вставить цвет',
             pasteClipboardError: 'Не удалось прочитать буфер обмена',
-            pasteInvalidJson: 'Буфер обмена не содержит корректный текст',
             pasteInvalidFormat: 'Ожидалось hex-значение цвета',
             colorsPasted: 'Цвет успешно вставлен',
             resetUserColors: 'Очистить пользовательские цвета',
@@ -303,29 +292,7 @@ export const STRINGS_RU = {
             removeColor: 'Удалить цвет',
             apply: 'Применить',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Красный',
-                orange: 'Оранжевый',
-                amber: 'Янтарный',
-                yellow: 'Жёлтый',
-                lime: 'Лаймовый',
-                green: 'Зелёный',
-                emerald: 'Изумрудный',
-                teal: 'Бирюзовый',
-                cyan: 'Голубой',
-                sky: 'Небесный',
-                blue: 'Синий',
-                indigo: 'Индиго',
-                violet: 'Фиолетовый',
-                purple: 'Пурпурный',
-                fuchsia: 'Фуксия',
-                pink: 'Розовый',
-                rose: 'Алый',
-                gray: 'Серый',
-                slate: 'Сланцевый',
-                stone: 'Каменный'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Выбор профиля хранилища',
@@ -400,7 +367,6 @@ export const STRINGS_RU = {
             }
         },
         tagSuggest: {
-            placeholder: 'Поиск тегов...',
             navigatePlaceholder: 'Перейти к тегу...',
             addPlaceholder: 'Найти тег для добавления...',
             removePlaceholder: 'Выберите тег для удаления...',
@@ -436,8 +402,6 @@ export const STRINGS_RU = {
             deleteFolder: 'Не удалось удалить папку: {error}',
             deleteFile: 'Не удалось удалить файл: {error}',
             duplicateNote: 'Не удалось дублировать заметку: {error}',
-            createCanvas: 'Не удалось создать холст: {error}',
-            createDatabase: 'Не удалось создать базу данных: {error}',
             duplicateFolder: 'Не удалось дублировать папку: {error}',
             openVersionHistory: 'Не удалось открыть историю версий: {error}',
             versionHistoryNotFound: 'Команда истории версий не найдена. Убедитесь, что Obsidian Sync включён.',
@@ -499,8 +463,7 @@ export const STRINGS_RU = {
             deleteConfirmation: 'Это действие нельзя отменить.'
         },
         defaultNames: {
-            untitled: 'Без названия',
-            untitledNumber: 'Без названия {number}'
+            untitled: 'Без названия'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_RU = {
         },
         notifications: {
             filesAlreadyExist: '{count} файлов уже существуют в месте назначения',
-            addedTag: 'Добавлен тег "{tag}" к {count} файлам',
             filesAlreadyHaveTag: '{count} файлов уже имеют этот тег или более специфичный',
-            clearedTags: 'Все теги удалены из {count} файлов',
             noTagsToClear: 'Нет тегов для очистки',
             fileImported: 'Импортирован 1 файл',
             filesImported: 'Импортировано файлов: {count}'
@@ -532,17 +493,6 @@ export const STRINGS_RU = {
         yesterday: 'Вчера',
         previous7Days: 'Последние 7 дней',
         previous30Days: 'Последние 30 дней'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Воскресенье',
-        monday: 'Понедельник',
-        tuesday: 'Вторник',
-        wednesday: 'Среда',
-        thursday: 'Четверг',
-        friday: 'Пятница',
-        saturday: 'Суббота'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_RU = {
             },
             list: {
                 display: 'Внешний вид',
-                pinnedNotes: 'Закреплённые заметки',
-                quickActions: 'Быстрые действия'
+                pinnedNotes: 'Закреплённые заметки'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -967,11 +916,9 @@ export const STRINGS_RU = {
                 editProfilesButton: 'Редактировать профили',
                 addProfileOption: 'Добавить профиль...',
                 applyButton: 'Применить',
-                editButton: 'Редактировать профиль',
                 deleteButton: 'Удалить профиль',
                 addModalTitle: 'Добавить профиль',
                 editProfilesModalTitle: 'Редактировать профили',
-                editModalTitle: 'Редактировать профиль',
                 addModalPlaceholder: 'Название профиля',
                 deleteModalTitle: 'Удалить {name}',
                 deleteModalMessage:
@@ -1266,7 +1213,6 @@ export const STRINGS_RU = {
                 name: 'Пересобрать кэш',
                 desc: 'Используйте, если вы испытываете проблемы с отсутствующими тегами, некорректными превью или отсутствующими изображениями. Это может произойти после конфликтов синхронизации или неожиданных закрытий.',
                 buttonText: 'Пересобрать кэш',
-                success: 'Кэш пересобран',
                 error: 'Не удалось пересобрать кэш',
                 indexingTitle: 'Индексирование хранилища...',
                 progress: 'Обновление кэша Notebook Navigator.'

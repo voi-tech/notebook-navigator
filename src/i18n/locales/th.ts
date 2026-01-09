@@ -30,7 +30,6 @@ export const STRINGS_TH = {
         submit: 'ส่ง',
         noSelection: 'ไม่มีการเลือก',
         untagged: 'ไม่มีแท็ก',
-        untitled: 'ไม่มีชื่อ',
         featureImageAlt: 'รูปภาพประกอบ',
         unknownError: 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ',
         updateBannerTitle: 'มีการอัปเดต Notebook Navigator',
@@ -51,7 +50,6 @@ export const STRINGS_TH = {
     // Tag list
     tagList: {
         untaggedLabel: 'ไม่มีแท็ก',
-        hiddenTags: 'แท็กที่ซ่อน',
         tags: 'แท็ก'
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_TH = {
         unpinShortcuts: 'เลิกปักหมุดทางลัด',
         unpinShortcutsAndRecentNotes: 'เลิกปักหมุดทางลัดและโน้ตล่าสุด',
         unpinShortcutsAndRecentFiles: 'เลิกปักหมุดทางลัดและไฟล์ล่าสุด',
-        profileMenuLabel: 'โปรไฟล์',
         profileMenuAria: 'เปลี่ยนโปรไฟล์ห้องนิรภัย'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_TH = {
     paneHeader: {
         collapseAllFolders: 'ยุบรายการ',
         expandAllFolders: 'ขยายรายการทั้งหมด',
-        scrollToTop: 'เลื่อนขึ้นบนสุด',
         newFolder: 'โฟลเดอร์ใหม่',
         newNote: 'โน้ตใหม่',
         mobileBackToNavigation: 'กลับไปการนำทาง',
         changeSortOrder: 'เปลี่ยนลำดับการเรียง',
         defaultSort: 'ค่าเริ่มต้น',
-        customSort: 'กำหนดเอง',
         showFolders: 'แสดงการนำทาง',
-        hideFolders: 'ซ่อนการนำทาง',
         reorderRootFolders: 'จัดเรียงการนำทางใหม่',
         finishRootFolderReorder: 'เสร็จสิ้น',
         toggleDescendantNotes: 'แสดงโน้ตจากโฟลเดอร์ย่อย / ลูกหลาน',
-        autoExpandFoldersTags: 'ขยายเมื่อเลือก',
         showExcludedItems: 'แสดงโฟลเดอร์ แท็ก และโน้ตที่ซ่อน',
         hideExcludedItems: 'ซ่อนโฟลเดอร์ แท็ก และโน้ตที่ซ่อน',
         showDualPane: 'แสดงแผงคู่',
@@ -229,7 +222,6 @@ export const STRINGS_TH = {
         titleRows: 'แถวชื่อเรื่อง',
         previewRows: 'แถวตัวอย่าง',
         groupBy: 'จัดกลุ่มตาม',
-        defaultOption: (rows: number) => `ค่าเริ่มต้น (${rows})`,
         defaultTitleOption: (rows: number) => `แถวชื่อเรื่องเริ่มต้น (${rows})`,
         defaultPreviewOption: (rows: number) => `แถวตัวอย่างเริ่มต้น (${rows})`,
         defaultGroupOption: (groupLabel: string) => `การจัดกลุ่มเริ่มต้น (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_TH = {
         colorPicker: {
             currentColor: 'ปัจจุบัน',
             newColor: 'ใหม่',
-            presetColors: 'สีที่ตั้งไว้',
-            userColors: 'สีผู้ใช้',
             paletteDefault: 'ค่าเริ่มต้น',
             paletteCustom: 'กำหนดเอง',
             copyColors: 'คัดลอกสี',
@@ -291,7 +281,6 @@ export const STRINGS_TH = {
             copyClipboardError: 'ไม่สามารถเขียนลงคลิปบอร์ด',
             pasteColors: 'วางสี',
             pasteClipboardError: 'ไม่สามารถอ่านคลิปบอร์ด',
-            pasteInvalidJson: 'คลิปบอร์ดไม่มีข้อความที่ถูกต้อง',
             pasteInvalidFormat: 'ต้องการค่าสี hex',
             colorsPasted: 'วางสีสำเร็จ',
             resetUserColors: 'ล้างสีที่กำหนดเอง',
@@ -303,29 +292,7 @@ export const STRINGS_TH = {
             removeColor: 'นำสีออก',
             apply: 'นำไปใช้',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'แดง',
-                orange: 'ส้ม',
-                amber: 'อำพัน',
-                yellow: 'เหลือง',
-                lime: 'มะนาว',
-                green: 'เขียว',
-                emerald: 'มรกต',
-                teal: 'น้ำเงินเขียว',
-                cyan: 'ฟ้า',
-                sky: 'ท้องฟ้า',
-                blue: 'น้ำเงิน',
-                indigo: 'คราม',
-                violet: 'ม่วง',
-                purple: 'ม่วงเข้ม',
-                fuchsia: 'ฟิวเชีย',
-                pink: 'ชมพู',
-                rose: 'กุหลาบ',
-                gray: 'เทา',
-                slate: 'หินชนวน',
-                stone: 'หิน'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'เลือกโปรไฟล์ห้องนิรภัย',
@@ -400,7 +367,6 @@ export const STRINGS_TH = {
             }
         },
         tagSuggest: {
-            placeholder: 'ค้นหาแท็ก...',
             navigatePlaceholder: 'นำทางไปยังแท็ก...',
             addPlaceholder: 'ค้นหาแท็กเพื่อเพิ่ม...',
             removePlaceholder: 'เลือกแท็กเพื่อนำออก...',
@@ -436,8 +402,6 @@ export const STRINGS_TH = {
             deleteFolder: 'ลบโฟลเดอร์ล้มเหลว: {error}',
             deleteFile: 'ลบไฟล์ล้มเหลว: {error}',
             duplicateNote: 'ทำซ้ำโน้ตล้มเหลว: {error}',
-            createCanvas: 'สร้าง canvas ล้มเหลว: {error}',
-            createDatabase: 'สร้างฐานข้อมูลล้มเหลว: {error}',
             duplicateFolder: 'ทำซ้ำโฟลเดอร์ล้มเหลว: {error}',
             openVersionHistory: 'เปิดประวัติเวอร์ชันล้มเหลว: {error}',
             versionHistoryNotFound: 'ไม่พบคำสั่งประวัติเวอร์ชัน ตรวจสอบว่า Obsidian Sync เปิดใช้งานอยู่',
@@ -499,8 +463,7 @@ export const STRINGS_TH = {
             deleteConfirmation: 'การดำเนินการนี้ไม่สามารถยกเลิกได้'
         },
         defaultNames: {
-            untitled: 'ไม่มีชื่อ',
-            untitledNumber: 'ไม่มีชื่อ {number}'
+            untitled: 'ไม่มีชื่อ'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_TH = {
         },
         notifications: {
             filesAlreadyExist: '{count} ไฟล์มีอยู่ในปลายทางแล้ว',
-            addedTag: 'เพิ่มแท็ก "{tag}" ใน {count} ไฟล์แล้ว',
             filesAlreadyHaveTag: '{count} ไฟล์มีแท็กนี้หรือแท็กที่เฉพาะเจาะจงกว่าอยู่แล้ว',
-            clearedTags: 'ล้างแท็กทั้งหมดจาก {count} ไฟล์แล้ว',
             noTagsToClear: 'ไม่มีแท็กให้ล้าง',
             fileImported: 'นำเข้า 1 ไฟล์แล้ว',
             filesImported: 'นำเข้า {count} ไฟล์แล้ว'
@@ -532,17 +493,6 @@ export const STRINGS_TH = {
         yesterday: 'เมื่อวาน',
         previous7Days: '7 วันที่ผ่านมา',
         previous30Days: '30 วันที่ผ่านมา'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'วันอาทิตย์',
-        monday: 'วันจันทร์',
-        tuesday: 'วันอังคาร',
-        wednesday: 'วันพุธ',
-        thursday: 'วันพฤหัสบดี',
-        friday: 'วันศุกร์',
-        saturday: 'วันเสาร์'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_TH = {
             },
             list: {
                 display: 'ลักษณะ',
-                pinnedNotes: 'โน้ตที่ปักหมุด',
-                quickActions: 'การกระทำด่วน'
+                pinnedNotes: 'โน้ตที่ปักหมุด'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -966,11 +915,9 @@ export const STRINGS_TH = {
                 editProfilesButton: 'แก้ไขโปรไฟล์',
                 addProfileOption: 'เพิ่มโปรไฟล์...',
                 applyButton: 'นำไปใช้',
-                editButton: 'แก้ไขโปรไฟล์',
                 deleteButton: 'ลบโปรไฟล์',
                 addModalTitle: 'เพิ่มโปรไฟล์',
                 editProfilesModalTitle: 'แก้ไขโปรไฟล์',
-                editModalTitle: 'แก้ไขโปรไฟล์',
                 addModalPlaceholder: 'ชื่อโปรไฟล์',
                 deleteModalTitle: 'ลบ {name}',
                 deleteModalMessage: 'ลบ {name}? ตัวกรองไฟล์ โฟลเดอร์ แท็ก และโน้ตที่ซ่อนที่บันทึกในโปรไฟล์นี้จะถูกลบ',
@@ -1263,7 +1210,6 @@ export const STRINGS_TH = {
                 name: 'สร้างแคชใหม่',
                 desc: 'ใช้เมื่อพบแท็กที่หายไป ตัวอย่างไม่ถูกต้อง หรือรูปภาพประกอบที่หายไป สิ่งนี้อาจเกิดขึ้นหลังจากความขัดแย้งการซิงค์หรือการปิดที่ไม่คาดคิด',
                 buttonText: 'สร้างแคชใหม่',
-                success: 'สร้างแคชใหม่แล้ว',
                 error: 'สร้างแคชใหม่ล้มเหลว',
                 indexingTitle: 'กำลังสร้างดัชนีห้องนิรภัย...',
                 progress: 'Notebook Navigator กำลังอัปเดตแคช.'

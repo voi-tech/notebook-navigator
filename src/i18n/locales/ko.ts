@@ -30,7 +30,6 @@ export const STRINGS_KO = {
         submit: '제출', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: '선택 없음', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: '태그 없음', // Label for notes without any tags (English: Untagged)
-        untitled: '제목 없음', // Default name for notes without a title (English: Untitled)
         featureImageAlt: '대표 이미지', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: '알 수 없는 오류', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator 업데이트 사용 가능',
@@ -51,7 +50,6 @@ export const STRINGS_KO = {
     // Tag list
     tagList: {
         untaggedLabel: '태그 없음', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: '숨겨진 태그', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: '태그' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_KO = {
         unpinShortcuts: '바로가기 고정을 해제',
         unpinShortcutsAndRecentNotes: '바로가기와 최근 노트 고정을 해제',
         unpinShortcutsAndRecentFiles: '바로가기와 최근 파일 고정을 해제',
-        profileMenuLabel: '프로필',
         profileMenuAria: '보관소 프로필 변경'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_KO = {
     paneHeader: {
         collapseAllFolders: '항목 접기', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: '모든 항목 펼치기', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: '맨 위로 스크롤',
         newFolder: '새 폴더', // Tooltip for create new folder button (English: New folder)
         newNote: '새 노트', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: '탐색으로 돌아가기', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: '정렬 순서 변경', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: '기본', // Label for default sorting mode (English: Default)
-        customSort: '사용자 정의', // Label for custom sorting mode (English: Custom)
         showFolders: '탐색 표시', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: '탐색 숨기기', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: '내비게이션 재정렬',
         finishRootFolderReorder: '완료',
         toggleDescendantNotes: '하위 폴더 / 하위 항목 노트 표시', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: '폴더 및 태그 자동 펼치기', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: '숨긴 폴더, 태그, 노트 표시', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '숨긴 폴더, 태그, 노트 숨기기', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: '이중 창 표시', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -228,7 +221,6 @@ export const STRINGS_KO = {
         titleRows: '제목 행',
         previewRows: '미리보기 행',
         groupBy: '그룹화 기준',
-        defaultOption: (rows: number) => `기본 (${rows})`,
         defaultTitleOption: (rows: number) => `기본 제목 행 (${rows})`,
         defaultPreviewOption: (rows: number) => `기본 미리보기 행 (${rows})`,
         defaultGroupOption: (groupLabel: string) => `기본 그룹화 (${groupLabel})`,
@@ -281,8 +273,6 @@ export const STRINGS_KO = {
         colorPicker: {
             currentColor: '현재',
             newColor: '새로운',
-            presetColors: '프리셋 색상',
-            userColors: '사용자 색상',
             paletteDefault: '기본',
             paletteCustom: '사용자 정의',
             copyColors: '색상 복사',
@@ -290,7 +280,6 @@ export const STRINGS_KO = {
             copyClipboardError: '클립보드에 쓸 수 없습니다',
             pasteColors: '색상 붙여넣기',
             pasteClipboardError: '클립보드를 읽을 수 없습니다',
-            pasteInvalidJson: '클립보드에 유효한 텍스트가 없습니다',
             pasteInvalidFormat: '16진수 색상 값이 필요합니다',
             colorsPasted: '색상을 붙여넣었습니다',
             resetUserColors: '사용자 정의 색상 지우기',
@@ -302,29 +291,7 @@ export const STRINGS_KO = {
             removeColor: '색상 제거',
             apply: '적용',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: '빨강',
-                orange: '주황',
-                amber: '호박색',
-                yellow: '노랑',
-                lime: '라임',
-                green: '초록',
-                emerald: '에메랄드',
-                teal: '청록',
-                cyan: '시안',
-                sky: '하늘',
-                blue: '파랑',
-                indigo: '남색',
-                violet: '보라',
-                purple: '자주',
-                fuchsia: '푸크시아',
-                pink: '분홍',
-                rose: '장미',
-                gray: '회색',
-                slate: '슬레이트',
-                stone: '돌'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: '보관소 프로필 변경',
@@ -399,7 +366,6 @@ export const STRINGS_KO = {
             }
         },
         tagSuggest: {
-            placeholder: '태그 검색...',
             navigatePlaceholder: '태그로 이동...',
             addPlaceholder: '추가할 태그 검색...',
             removePlaceholder: '제거할 태그 선택...',
@@ -436,8 +402,6 @@ export const STRINGS_KO = {
             deleteFolder: '폴더 삭제 실패: {error}',
             deleteFile: '파일 삭제 실패: {error}',
             duplicateNote: '노트 복제 실패: {error}',
-            createCanvas: '캔버스 생성 실패: {error}',
-            createDatabase: '데이터베이스 생성 실패: {error}',
             duplicateFolder: '폴더 복제 실패: {error}',
             openVersionHistory: '버전 기록 열기 실패: {error}',
             versionHistoryNotFound: '버전 기록 명령을 찾을 수 없습니다. Obsidian Sync가 활성화되어 있는지 확인하세요.',
@@ -499,8 +463,7 @@ export const STRINGS_KO = {
             deleteConfirmation: '이 작업은 취소할 수 없습니다.'
         },
         defaultNames: {
-            untitled: '제목 없음',
-            untitledNumber: '제목 없음 {number}'
+            untitled: '제목 없음'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_KO = {
         },
         notifications: {
             filesAlreadyExist: '대상에 {count}개의 파일이 이미 존재합니다',
-            addedTag: '{count}개의 파일에 태그 "{tag}" 추가됨',
             filesAlreadyHaveTag: '{count}개의 파일이 이미 이 태그나 더 구체적인 태그를 가지고 있습니다',
-            clearedTags: '{count}개의 파일에서 모든 태그 제거됨',
             noTagsToClear: '지울 태그 없음',
             fileImported: '1개의 파일 가져옴',
             filesImported: '{count}개의 파일 가져옴'
@@ -532,17 +493,6 @@ export const STRINGS_KO = {
         yesterday: '어제',
         previous7Days: '지난 7일',
         previous30Days: '지난 30일'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: '일요일',
-        monday: '월요일',
-        tuesday: '화요일',
-        wednesday: '수요일',
-        thursday: '목요일',
-        friday: '금요일',
-        saturday: '토요일'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_KO = {
             },
             list: {
                 display: '모양',
-                pinnedNotes: '고정된 노트',
-                quickActions: '빠른 작업'
+                pinnedNotes: '고정된 노트'
             },
             notes: {
                 frontmatter: '프런트매터',
@@ -966,11 +915,9 @@ export const STRINGS_KO = {
                 editProfilesButton: '프로필 편집',
                 addProfileOption: '프로필 추가...',
                 applyButton: '적용',
-                editButton: '프로필 편집',
                 deleteButton: '프로필 삭제',
                 addModalTitle: '프로필 추가',
                 editProfilesModalTitle: '프로필 편집',
-                editModalTitle: '프로필 편집',
                 addModalPlaceholder: '프로필 이름',
                 deleteModalTitle: '{name} 삭제',
                 deleteModalMessage: '{name}을(를) 제거하시겠습니까? 이 프로필에 저장된 숨겨진 파일, 폴더, 태그 및 노트 필터가 삭제됩니다.',
@@ -1263,7 +1210,6 @@ export const STRINGS_KO = {
                 name: '캐시 다시 빌드',
                 desc: '태그 누락, 잘못된 미리보기 또는 누락된 이미지가 있을 때 사용하세요. 동기화 충돌이나 예기치 않은 종료 후에 발생할 수 있습니다.',
                 buttonText: '캐시 다시 빌드',
-                success: '캐시가 다시 빌드되었습니다',
                 error: '캐시 다시 빌드 실패',
                 indexingTitle: '보관함을 인덱싱하는 중...',
                 progress: 'Notebook Navigator 캐시를 업데이트하는 중.'

@@ -30,7 +30,6 @@ export const STRINGS_FA = {
         submit: 'ارسال',
         noSelection: 'بدون انتخاب',
         untagged: 'بدون برچسب',
-        untitled: 'بدون عنوان',
         featureImageAlt: 'تصویر ویژه',
         unknownError: 'خطای ناشناخته',
         updateBannerTitle: 'به‌روزرسانی Notebook Navigator موجود است',
@@ -51,7 +50,6 @@ export const STRINGS_FA = {
     // Tag list
     tagList: {
         untaggedLabel: 'بدون برچسب',
-        hiddenTags: 'برچسب‌های پنهان',
         tags: 'برچسب‌ها'
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_FA = {
         unpinShortcuts: 'برداشتن سنجاق میانبرها',
         unpinShortcutsAndRecentNotes: 'برداشتن سنجاق میانبرها و یادداشت‌های اخیر',
         unpinShortcutsAndRecentFiles: 'برداشتن سنجاق میانبرها و فایل‌های اخیر',
-        profileMenuLabel: 'پروفایل',
         profileMenuAria: 'تغییر پروفایل خزانه'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_FA = {
     paneHeader: {
         collapseAllFolders: 'جمع کردن آیتم‌ها',
         expandAllFolders: 'باز کردن همه آیتم‌ها',
-        scrollToTop: 'رفتن به بالا',
         newFolder: 'پوشه جدید',
         newNote: 'یادداشت جدید',
         mobileBackToNavigation: 'بازگشت به ناوبری',
         changeSortOrder: 'تغییر ترتیب',
         defaultSort: 'پیش‌فرض',
-        customSort: 'سفارشی',
         showFolders: 'نمایش ناوبری',
-        hideFolders: 'مخفی کردن ناوبری',
         reorderRootFolders: 'مرتب‌سازی مجدد ناوبری',
         finishRootFolderReorder: 'تمام',
         toggleDescendantNotes: 'نمایش یادداشت‌ها از زیرپوشه‌ها / زیرمجموعه‌ها',
-        autoExpandFoldersTags: 'باز کردن هنگام انتخاب',
         showExcludedItems: 'نمایش پوشه‌ها، برچسب‌ها و یادداشت‌های پنهان',
         hideExcludedItems: 'مخفی کردن پوشه‌ها، برچسب‌ها و یادداشت‌های پنهان',
         showDualPane: 'نمایش پنل‌های دوگانه',
@@ -229,7 +222,6 @@ export const STRINGS_FA = {
         titleRows: 'ردیف‌های عنوان',
         previewRows: 'ردیف‌های پیش‌نمایش',
         groupBy: 'گروه‌بندی بر اساس',
-        defaultOption: (rows: number) => `پیش‌فرض (${rows})`,
         defaultTitleOption: (rows: number) => `ردیف‌های عنوان پیش‌فرض (${rows})`,
         defaultPreviewOption: (rows: number) => `ردیف‌های پیش‌نمایش پیش‌فرض (${rows})`,
         defaultGroupOption: (groupLabel: string) => `گروه‌بندی پیش‌فرض (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_FA = {
         colorPicker: {
             currentColor: 'فعلی',
             newColor: 'جدید',
-            presetColors: 'رنگ‌های پیش‌تنظیم',
-            userColors: 'رنگ‌های کاربر',
             paletteDefault: 'پیش‌فرض',
             paletteCustom: 'سفارشی',
             copyColors: 'کپی رنگ',
@@ -291,7 +281,6 @@ export const STRINGS_FA = {
             copyClipboardError: 'نمی‌توان در کلیپ‌بورد نوشت',
             pasteColors: 'چسباندن رنگ',
             pasteClipboardError: 'نمی‌توان کلیپ‌بورد را خواند',
-            pasteInvalidJson: 'کلیپ‌بورد حاوی متن معتبر نیست',
             pasteInvalidFormat: 'مقدار رنگ hex مورد انتظار است',
             colorsPasted: 'رنگ با موفقیت چسبانده شد',
             resetUserColors: 'پاک کردن رنگ‌های سفارشی',
@@ -303,29 +292,7 @@ export const STRINGS_FA = {
             removeColor: 'حذف رنگ',
             apply: 'اعمال',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'قرمز',
-                orange: 'نارنجی',
-                amber: 'کهربایی',
-                yellow: 'زرد',
-                lime: 'لیمویی',
-                green: 'سبز',
-                emerald: 'زمردی',
-                teal: 'سبزآبی',
-                cyan: 'فیروزه‌ای',
-                sky: 'آسمانی',
-                blue: 'آبی',
-                indigo: 'نیلی',
-                violet: 'بنفش',
-                purple: 'ارغوانی',
-                fuchsia: 'سرخابی',
-                pink: 'صورتی',
-                rose: 'گلی',
-                gray: 'خاکستری',
-                slate: 'خاکستری مایل به آبی',
-                stone: 'سنگی'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'انتخاب پروفایل خزانه',
@@ -400,7 +367,6 @@ export const STRINGS_FA = {
             }
         },
         tagSuggest: {
-            placeholder: 'جستجوی برچسب...',
             navigatePlaceholder: 'رفتن به برچسب...',
             addPlaceholder: 'جستجوی برچسب برای افزودن...',
             removePlaceholder: 'انتخاب برچسب برای حذف...',
@@ -436,8 +402,6 @@ export const STRINGS_FA = {
             deleteFolder: 'حذف پوشه ناموفق بود: {error}',
             deleteFile: 'حذف فایل ناموفق بود: {error}',
             duplicateNote: 'کپی یادداشت ناموفق بود: {error}',
-            createCanvas: 'ایجاد بوم ناموفق بود: {error}',
-            createDatabase: 'ایجاد پایگاه داده ناموفق بود: {error}',
             duplicateFolder: 'کپی پوشه ناموفق بود: {error}',
             openVersionHistory: 'باز کردن تاریخچه نسخه ناموفق بود: {error}',
             versionHistoryNotFound: 'دستور تاریخچه نسخه یافت نشد. اطمینان حاصل کنید که Obsidian Sync فعال است.',
@@ -499,8 +463,7 @@ export const STRINGS_FA = {
             deleteConfirmation: 'این عمل قابل بازگشت نیست.'
         },
         defaultNames: {
-            untitled: 'بدون عنوان',
-            untitledNumber: 'بدون عنوان {number}'
+            untitled: 'بدون عنوان'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_FA = {
         },
         notifications: {
             filesAlreadyExist: '{count} فایل در مقصد وجود دارد',
-            addedTag: 'برچسب "{tag}" به {count} فایل اضافه شد',
             filesAlreadyHaveTag: '{count} فایل این برچسب یا برچسب دقیق‌تر را دارد',
-            clearedTags: 'همه برچسب‌ها از {count} فایل پاک شد',
             noTagsToClear: 'برچسبی برای پاک کردن نیست',
             fileImported: '۱ فایل وارد شد',
             filesImported: '{count} فایل وارد شد'
@@ -532,17 +493,6 @@ export const STRINGS_FA = {
         yesterday: 'دیروز',
         previous7Days: '۷ روز گذشته',
         previous30Days: '۳۰ روز گذشته'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'یکشنبه',
-        monday: 'دوشنبه',
-        tuesday: 'سه‌شنبه',
-        wednesday: 'چهارشنبه',
-        thursday: 'پنجشنبه',
-        friday: 'جمعه',
-        saturday: 'شنبه'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_FA = {
             },
             list: {
                 display: 'ظاهر',
-                pinnedNotes: 'یادداشت‌های سنجاق‌شده',
-                quickActions: 'اقدامات سریع'
+                pinnedNotes: 'یادداشت‌های سنجاق‌شده'
             },
             notes: {
                 frontmatter: 'فرانت‌متر',
@@ -966,11 +915,9 @@ export const STRINGS_FA = {
                 editProfilesButton: 'ویرایش پروفایل‌ها',
                 addProfileOption: 'افزودن پروفایل...',
                 applyButton: 'اعمال',
-                editButton: 'ویرایش پروفایل',
                 deleteButton: 'حذف پروفایل',
                 addModalTitle: 'افزودن پروفایل',
                 editProfilesModalTitle: 'ویرایش پروفایل‌ها',
-                editModalTitle: 'ویرایش پروفایل',
                 addModalPlaceholder: 'نام پروفایل',
                 deleteModalTitle: 'حذف {name}',
                 deleteModalMessage: '{name} حذف شود؟ فیلترهای فایل، پوشه، برچسب و یادداشت مخفی ذخیره‌شده در این پروفایل حذف می‌شوند.',
@@ -1263,7 +1210,6 @@ export const STRINGS_FA = {
                 name: 'بازسازی کش',
                 desc: 'اگر برچسب‌های گمشده، پیش‌نمایش‌های نادرست یا تصاویر ویژه گمشده دارید از این استفاده کنید. این می‌تواند بعد از تداخل‌های همگام‌سازی یا بسته‌شدن‌های غیرمنتظره اتفاق بیفتد.',
                 buttonText: 'بازسازی کش',
-                success: 'کش بازسازی شد',
                 error: 'بازسازی کش ناموفق بود',
                 indexingTitle: 'در حال نمایه\u200cسازی خزانه...',
                 progress: 'Notebook Navigator در حال به\u200cروزرسانی کش است.'

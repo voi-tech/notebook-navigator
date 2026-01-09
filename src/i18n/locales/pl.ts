@@ -30,7 +30,6 @@ export const STRINGS_PL = {
         submit: 'Wyślij', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Brak wyboru', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Bez tagów', // Label for notes without any tags (English: Untagged)
-        untitled: 'Bez tytułu', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Obraz wyróżniający', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Nieznany błąd', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Aktualizacja Notebook Navigator dostępna',
@@ -51,7 +50,6 @@ export const STRINGS_PL = {
     // Tag list
     tagList: {
         untaggedLabel: 'Bez tagów', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Ukryte tagi', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Tagi' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_PL = {
         unpinShortcuts: 'Odepnij skróty',
         unpinShortcutsAndRecentNotes: 'Odepnij skróty i ostatnie notatki',
         unpinShortcutsAndRecentFiles: 'Odepnij skróty i ostatnie pliki',
-        profileMenuLabel: 'Profil',
         profileMenuAria: 'Zmień profil sejfu'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_PL = {
     paneHeader: {
         collapseAllFolders: 'Zwiń elementy', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Rozwiń wszystkie elementy', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Przewiń do góry',
         newFolder: 'Nowy folder', // Tooltip for create new folder button (English: New folder)
         newNote: 'Nowa notatka', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Wróć do nawigacji', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Zmień kolejność sortowania', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Domyślne', // Label for default sorting mode (English: Default)
-        customSort: 'Własne', // Label for custom sorting mode (English: Custom)
         showFolders: 'Pokaż nawigację', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Ukryj nawigację', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'Przestaw nawigację',
         finishRootFolderReorder: 'Gotowe',
         toggleDescendantNotes: 'Pokaż notatki z podfolderów / potomnych', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Automatycznie rozwijaj foldery i tagi', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: 'Pokaż ukryte foldery, tagi i notatki', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Ukryj ukryte foldery, tagi i notatki', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Pokaż podwójne panele', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -228,7 +221,6 @@ export const STRINGS_PL = {
         titleRows: 'Wiersze tytułu',
         previewRows: 'Wiersze podglądu',
         groupBy: 'Grupuj według',
-        defaultOption: (rows: number) => `Domyślne (${rows})`,
         defaultTitleOption: (rows: number) => `Domyślne wiersze tytułu (${rows})`,
         defaultPreviewOption: (rows: number) => `Domyślne wiersze podglądu (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Domyślne grupowanie (${groupLabel})`,
@@ -283,8 +275,6 @@ export const STRINGS_PL = {
         colorPicker: {
             currentColor: 'Obecny',
             newColor: 'Nowy',
-            presetColors: 'Kolory predefiniowane',
-            userColors: 'Kolory użytkownika',
             paletteDefault: 'Domyślne',
             paletteCustom: 'Własne',
             copyColors: 'Kopiuj kolor',
@@ -292,7 +282,6 @@ export const STRINGS_PL = {
             copyClipboardError: 'Nie można zapisać do schowka',
             pasteColors: 'Wklej kolor',
             pasteClipboardError: 'Nie można odczytać schowka',
-            pasteInvalidJson: 'Schowek nie zawiera prawidłowego tekstu',
             pasteInvalidFormat: 'Oczekiwano wartości koloru hex',
             colorsPasted: 'Kolor wklejony pomyślnie',
             resetUserColors: 'Wyczyść własne kolory',
@@ -304,29 +293,7 @@ export const STRINGS_PL = {
             removeColor: 'Usuń kolor',
             apply: 'Zastosuj',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Czerwony',
-                orange: 'Pomarańczowy',
-                amber: 'Bursztynowy',
-                yellow: 'Żółty',
-                lime: 'Limonkowy',
-                green: 'Zielony',
-                emerald: 'Szmaragdowy',
-                teal: 'Morski',
-                cyan: 'Cyjan',
-                sky: 'Błękitny',
-                blue: 'Niebieski',
-                indigo: 'Indygo',
-                violet: 'Fioletowy',
-                purple: 'Purpurowy',
-                fuchsia: 'Fuksja',
-                pink: 'Różowy',
-                rose: 'Różany',
-                gray: 'Szary',
-                slate: 'Łupkowy',
-                stone: 'Kamienny'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Zmień profil sejfu',
@@ -401,7 +368,6 @@ export const STRINGS_PL = {
             }
         },
         tagSuggest: {
-            placeholder: 'Szukaj tagów...',
             navigatePlaceholder: 'Przejdź do tagu...',
             addPlaceholder: 'Szukaj tagu do dodania...',
             removePlaceholder: 'Wybierz tag do usunięcia...',
@@ -438,8 +404,6 @@ export const STRINGS_PL = {
             deleteFolder: 'Nie udało się usunąć folderu: {error}',
             deleteFile: 'Nie udało się usunąć pliku: {error}',
             duplicateNote: 'Nie udało się zduplikować notatki: {error}',
-            createCanvas: 'Nie udało się utworzyć tablicy: {error}',
-            createDatabase: 'Nie udało się utworzyć bazy danych: {error}',
             duplicateFolder: 'Nie udało się zduplikować folderu: {error}',
             openVersionHistory: 'Nie udało się otworzyć historii wersji: {error}',
             versionHistoryNotFound: 'Nie znaleziono komendy historii wersji. Upewnij się, że Obsidian Sync jest włączony.',
@@ -501,8 +465,7 @@ export const STRINGS_PL = {
             deleteConfirmation: 'Tej akcji nie można cofnąć.'
         },
         defaultNames: {
-            untitled: 'Bez tytułu',
-            untitledNumber: 'Bez tytułu {number}'
+            untitled: 'Bez tytułu'
         }
     },
 
@@ -519,9 +482,7 @@ export const STRINGS_PL = {
         },
         notifications: {
             filesAlreadyExist: '{count} plików już istnieje w miejscu docelowym',
-            addedTag: 'Dodano tag "{tag}" do {count} plików',
             filesAlreadyHaveTag: '{count} plików już ma ten tag lub bardziej szczegółowy',
-            clearedTags: 'Wyczyszczono wszystkie tagi z {count} plików',
             noTagsToClear: 'Brak tagów do wyczyszczenia',
             fileImported: 'Zaimportowano 1 plik',
             filesImported: 'Zaimportowano {count} plików'
@@ -534,17 +495,6 @@ export const STRINGS_PL = {
         yesterday: 'Wczoraj',
         previous7Days: 'Poprzednie 7 dni',
         previous30Days: 'Poprzednie 30 dni'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Niedziela',
-        monday: 'Poniedziałek',
-        tuesday: 'Wtorek',
-        wednesday: 'Środa',
-        thursday: 'Czwartek',
-        friday: 'Piątek',
-        saturday: 'Sobota'
     },
 
     // Plugin commands
@@ -634,8 +584,7 @@ export const STRINGS_PL = {
             },
             list: {
                 display: 'Wygląd',
-                pinnedNotes: 'Przypięte notatki',
-                quickActions: 'Szybkie akcje'
+                pinnedNotes: 'Przypięte notatki'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -968,11 +917,9 @@ export const STRINGS_PL = {
                 editProfilesButton: 'Edytuj profile',
                 addProfileOption: 'Dodaj profil...',
                 applyButton: 'Zastosuj',
-                editButton: 'Edytuj profil',
                 deleteButton: 'Usuń profil',
                 addModalTitle: 'Dodaj profil',
                 editProfilesModalTitle: 'Edytuj profile',
-                editModalTitle: 'Edytuj profil',
                 addModalPlaceholder: 'Nazwa profilu',
                 deleteModalTitle: 'Usuń {name}',
                 deleteModalMessage:
@@ -1267,7 +1214,6 @@ export const STRINGS_PL = {
                 name: 'Odbuduj pamięć podręczną',
                 desc: 'Użyj tego, jeśli brakuje tagów, podglądy są nieprawidłowe lub brakuje obrazów. Może się to zdarzyć po konfliktach synchronizacji lub nieoczekiwanych zamknięciach.',
                 buttonText: 'Odbuduj pamięć podręczną',
-                success: 'Pamięć podręczna została odbudowana',
                 error: 'Nie udało się odbudować pamięci podręcznej',
                 indexingTitle: 'Indeksowanie magazynu...',
                 progress: 'Aktualizowanie pamięci podręcznej Notebook Navigator.'

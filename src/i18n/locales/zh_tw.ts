@@ -30,7 +30,6 @@ export const STRINGS_ZH_TW = {
         submit: '提交',
         noSelection: '未選擇',
         untagged: '無標籤',
-        untitled: '未命名',
         featureImageAlt: '特色圖片',
         unknownError: '未知錯誤',
         updateBannerTitle: 'Notebook Navigator 有可用更新',
@@ -51,7 +50,6 @@ export const STRINGS_ZH_TW = {
     // Tag list
     tagList: {
         untaggedLabel: '無標籤',
-        hiddenTags: '隱藏標籤',
         tags: '標籤'
     },
 
@@ -70,7 +68,6 @@ export const STRINGS_ZH_TW = {
         unpinShortcuts: '取消釘選捷徑',
         unpinShortcutsAndRecentNotes: '取消釘選捷徑和最近筆記',
         unpinShortcutsAndRecentFiles: '取消釘選捷徑和最近檔案',
-        profileMenuLabel: '設定檔',
         profileMenuAria: '變更保險庫設定檔'
     },
 
@@ -95,19 +92,15 @@ export const STRINGS_ZH_TW = {
     paneHeader: {
         collapseAllFolders: '摺疊項目',
         expandAllFolders: '展開所有項目',
-        scrollToTop: '捲動到頂部',
         newFolder: '新建資料夾',
         newNote: '新筆記',
         mobileBackToNavigation: '返回導覽',
         changeSortOrder: '變更排序方式',
         defaultSort: '預設',
-        customSort: '自訂',
         showFolders: '顯示導覽',
-        hideFolders: '隱藏導覽',
         reorderRootFolders: '重新排列導覽',
         finishRootFolderReorder: '完成重新排列',
         toggleDescendantNotes: '顯示子資料夾/後代的筆記',
-        autoExpandFoldersTags: '選取時展開',
         showExcludedItems: '顯示隱藏的資料夾、標籤和筆記',
         hideExcludedItems: '隱藏隱藏的資料夾、標籤和筆記',
         showDualPane: '顯示雙窗格',
@@ -229,7 +222,6 @@ export const STRINGS_ZH_TW = {
         titleRows: '標題行數',
         previewRows: '預覽行數',
         groupBy: '分組依據',
-        defaultOption: (rows: number) => `預設 (${rows})`,
         defaultTitleOption: (rows: number) => `預設標題行數 (${rows})`,
         defaultPreviewOption: (rows: number) => `預設預覽行數 (${rows})`,
         defaultGroupOption: (groupLabel: string) => `預設分組 (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_ZH_TW = {
         colorPicker: {
             currentColor: '目前',
             newColor: '新顏色',
-            presetColors: '預設顏色',
-            userColors: '自訂顏色',
             paletteDefault: '預設',
             paletteCustom: '自訂',
             copyColors: '複製顏色',
@@ -291,7 +281,6 @@ export const STRINGS_ZH_TW = {
             copyClipboardError: '無法寫入剪貼簿',
             pasteColors: '貼上顏色',
             pasteClipboardError: '無法讀取剪貼簿',
-            pasteInvalidJson: '剪貼簿不包含有效的文字',
             pasteInvalidFormat: '需要十六進位顏色值',
             colorsPasted: '顏色貼上成功',
             resetUserColors: '清除自訂顏色',
@@ -303,29 +292,7 @@ export const STRINGS_ZH_TW = {
             removeColor: '移除顏色',
             apply: '套用',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: '紅色',
-                orange: '橙色',
-                amber: '琥珀色',
-                yellow: '黃色',
-                lime: '青檸色',
-                green: '綠色',
-                emerald: '翡翠色',
-                teal: '青綠色',
-                cyan: '青色',
-                sky: '天藍色',
-                blue: '藍色',
-                indigo: '靛藍色',
-                violet: '紫羅蘭色',
-                purple: '紫色',
-                fuchsia: '品紅色',
-                pink: '粉色',
-                rose: '玫瑰色',
-                gray: '灰色',
-                slate: '石板色',
-                stone: '石灰色'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: '選擇保險庫設定檔',
@@ -400,7 +367,6 @@ export const STRINGS_ZH_TW = {
             }
         },
         tagSuggest: {
-            placeholder: '搜尋標籤...',
             navigatePlaceholder: '導覽至標籤...',
             addPlaceholder: '搜尋要新增的標籤...',
             removePlaceholder: '選擇要移除的標籤...',
@@ -435,8 +401,6 @@ export const STRINGS_ZH_TW = {
             deleteFolder: '刪除資料夾失敗：{error}',
             deleteFile: '刪除檔案失敗：{error}',
             duplicateNote: '複製筆記失敗：{error}',
-            createCanvas: '建立畫布失敗：{error}',
-            createDatabase: '建立資料庫失敗：{error}',
             duplicateFolder: '複製資料夾失敗：{error}',
             openVersionHistory: '開啟版本歷史失敗：{error}',
             versionHistoryNotFound: '未找到版本歷史命令。請確保已啟用 Obsidian 同步。',
@@ -498,8 +462,7 @@ export const STRINGS_ZH_TW = {
             deleteConfirmation: '此操作無法復原。'
         },
         defaultNames: {
-            untitled: '未命名',
-            untitledNumber: '未命名 {number}'
+            untitled: '未命名'
         }
     },
 
@@ -516,9 +479,7 @@ export const STRINGS_ZH_TW = {
         },
         notifications: {
             filesAlreadyExist: '{count} 個檔案在目標位置已存在',
-            addedTag: '已將標籤「{tag}」新增到 {count} 個檔案',
             filesAlreadyHaveTag: '{count} 個檔案已經有此標籤或更具體的標籤',
-            clearedTags: '已從 {count} 個檔案中清除所有標籤',
             noTagsToClear: '沒有要清除的標籤',
             fileImported: '已匯入 1 個檔案',
             filesImported: '已匯入 {count} 個檔案'
@@ -531,17 +492,6 @@ export const STRINGS_ZH_TW = {
         yesterday: '昨天',
         previous7Days: '過去 7 天',
         previous30Days: '過去 30 天'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: '星期日',
-        monday: '星期一',
-        tuesday: '星期二',
-        wednesday: '星期三',
-        thursday: '星期四',
-        friday: '星期五',
-        saturday: '星期六'
     },
 
     // Plugin commands
@@ -631,8 +581,7 @@ export const STRINGS_ZH_TW = {
             },
             list: {
                 display: '外觀',
-                pinnedNotes: '釘選筆記',
-                quickActions: '快速操作'
+                pinnedNotes: '釘選筆記'
             },
             notes: {
                 frontmatter: '前置中繼資料',
@@ -943,11 +892,9 @@ export const STRINGS_ZH_TW = {
                 editProfilesButton: '編輯設定檔',
                 addProfileOption: '新增設定檔...',
                 applyButton: '套用',
-                editButton: '編輯設定檔',
                 deleteButton: '刪除設定檔',
                 addModalTitle: '新增設定檔',
                 editProfilesModalTitle: '編輯設定檔',
-                editModalTitle: '編輯設定檔',
                 addModalPlaceholder: '設定檔名稱',
                 deleteModalTitle: '刪除 {name}',
                 deleteModalMessage: '刪除 {name}？儲存在此設定檔中的隱藏檔案、資料夾、標籤和筆記篩選器將被刪除。',
@@ -1261,7 +1208,6 @@ export const STRINGS_ZH_TW = {
                 name: '重建快取',
                 desc: '如果出現標籤缺失、預覽不正確或圖片缺失，請使用此功能。這可能在同步衝突或意外關閉後發生。',
                 buttonText: '重建快取',
-                success: '快取已重建',
                 error: '重建快取失敗',
                 indexingTitle: '正在索引保險庫...',
                 progress: '正在更新 Notebook Navigator 快取.'

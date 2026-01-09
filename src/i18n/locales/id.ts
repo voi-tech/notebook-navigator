@@ -30,7 +30,6 @@ export const STRINGS_ID = {
         submit: 'Kirim',
         noSelection: 'Tidak ada pilihan',
         untagged: 'Tanpa tag',
-        untitled: 'Tanpa judul',
         featureImageAlt: 'Gambar unggulan',
         unknownError: 'Kesalahan tidak diketahui',
         updateBannerTitle: 'Pembaruan Notebook Navigator tersedia',
@@ -51,7 +50,6 @@ export const STRINGS_ID = {
     // Tag list
     tagList: {
         untaggedLabel: 'Tanpa tag',
-        hiddenTags: 'Tag tersembunyi',
         tags: 'Tag'
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_ID = {
         unpinShortcuts: 'Lepas sematan pintasan',
         unpinShortcutsAndRecentNotes: 'Lepas sematan pintasan dan catatan terbaru',
         unpinShortcutsAndRecentFiles: 'Lepas sematan pintasan dan file terbaru',
-        profileMenuLabel: 'Profil',
         profileMenuAria: 'Ubah profil vault'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_ID = {
     paneHeader: {
         collapseAllFolders: 'Ciutkan item',
         expandAllFolders: 'Luaskan semua item',
-        scrollToTop: 'Gulir ke atas',
         newFolder: 'Folder baru',
         newNote: 'Catatan baru',
         mobileBackToNavigation: 'Kembali ke navigasi',
         changeSortOrder: 'Ubah urutan',
         defaultSort: 'Default',
-        customSort: 'Kustom',
         showFolders: 'Tampilkan navigasi',
-        hideFolders: 'Sembunyikan navigasi',
         reorderRootFolders: 'Atur ulang navigasi',
         finishRootFolderReorder: 'Selesai',
         toggleDescendantNotes: 'Tampilkan catatan dari subfolder / turunan',
-        autoExpandFoldersTags: 'Luaskan saat dipilih',
         showExcludedItems: 'Tampilkan folder, tag, dan catatan tersembunyi',
         hideExcludedItems: 'Sembunyikan folder, tag, dan catatan tersembunyi',
         showDualPane: 'Tampilkan panel ganda',
@@ -229,7 +222,6 @@ export const STRINGS_ID = {
         titleRows: 'Baris judul',
         previewRows: 'Baris pratinjau',
         groupBy: 'Kelompokkan berdasarkan',
-        defaultOption: (rows: number) => `Default (${rows})`,
         defaultTitleOption: (rows: number) => `Baris judul default (${rows})`,
         defaultPreviewOption: (rows: number) => `Baris pratinjau default (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Pengelompokan default (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_ID = {
         colorPicker: {
             currentColor: 'Saat ini',
             newColor: 'Baru',
-            presetColors: 'Warna preset',
-            userColors: 'Warna pengguna',
             paletteDefault: 'Bawaan',
             paletteCustom: 'Kustom',
             copyColors: 'Salin warna',
@@ -291,7 +281,6 @@ export const STRINGS_ID = {
             copyClipboardError: 'Tidak dapat menulis ke clipboard',
             pasteColors: 'Tempel warna',
             pasteClipboardError: 'Tidak dapat membaca clipboard',
-            pasteInvalidJson: 'Clipboard tidak berisi teks yang valid',
             pasteInvalidFormat: 'Diharapkan nilai warna hex',
             colorsPasted: 'Warna berhasil ditempel',
             resetUserColors: 'Bersihkan warna kustom',
@@ -303,29 +292,7 @@ export const STRINGS_ID = {
             removeColor: 'Hapus warna',
             apply: 'Terapkan',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Merah',
-                orange: 'Oranye',
-                amber: 'Amber',
-                yellow: 'Kuning',
-                lime: 'Limau',
-                green: 'Hijau',
-                emerald: 'Zamrud',
-                teal: 'Teal',
-                cyan: 'Sian',
-                sky: 'Langit',
-                blue: 'Biru',
-                indigo: 'Nila',
-                violet: 'Ungu',
-                purple: 'Ungu tua',
-                fuchsia: 'Fuchsia',
-                pink: 'Merah muda',
-                rose: 'Mawar',
-                gray: 'Abu-abu',
-                slate: 'Batu tulis',
-                stone: 'Batu'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Pilih profil vault',
@@ -400,7 +367,6 @@ export const STRINGS_ID = {
             }
         },
         tagSuggest: {
-            placeholder: 'Cari tag...',
             navigatePlaceholder: 'Navigasi ke tag...',
             addPlaceholder: 'Cari tag untuk ditambahkan...',
             removePlaceholder: 'Pilih tag untuk dihapus...',
@@ -436,8 +402,6 @@ export const STRINGS_ID = {
             deleteFolder: 'Gagal menghapus folder: {error}',
             deleteFile: 'Gagal menghapus file: {error}',
             duplicateNote: 'Gagal menduplikat catatan: {error}',
-            createCanvas: 'Gagal membuat canvas: {error}',
-            createDatabase: 'Gagal membuat database: {error}',
             duplicateFolder: 'Gagal menduplikat folder: {error}',
             openVersionHistory: 'Gagal membuka riwayat versi: {error}',
             versionHistoryNotFound: 'Perintah riwayat versi tidak ditemukan. Pastikan Obsidian Sync diaktifkan.',
@@ -499,8 +463,7 @@ export const STRINGS_ID = {
             deleteConfirmation: 'Tindakan ini tidak dapat dibatalkan.'
         },
         defaultNames: {
-            untitled: 'Tanpa judul',
-            untitledNumber: 'Tanpa judul {number}'
+            untitled: 'Tanpa judul'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_ID = {
         },
         notifications: {
             filesAlreadyExist: '{count} file sudah ada di tujuan',
-            addedTag: 'Menambahkan tag "{tag}" ke {count} file',
             filesAlreadyHaveTag: '{count} file sudah memiliki tag ini atau yang lebih spesifik',
-            clearedTags: 'Menghapus semua tag dari {count} file',
             noTagsToClear: 'Tidak ada tag untuk dihapus',
             fileImported: 'Mengimpor 1 file',
             filesImported: 'Mengimpor {count} file'
@@ -532,17 +493,6 @@ export const STRINGS_ID = {
         yesterday: 'Kemarin',
         previous7Days: '7 hari terakhir',
         previous30Days: '30 hari terakhir'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Minggu',
-        monday: 'Senin',
-        tuesday: 'Selasa',
-        wednesday: 'Rabu',
-        thursday: 'Kamis',
-        friday: 'Jumat',
-        saturday: 'Sabtu'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_ID = {
             },
             list: {
                 display: 'Tampilan',
-                pinnedNotes: 'Catatan yang disematkan',
-                quickActions: 'Aksi cepat'
+                pinnedNotes: 'Catatan yang disematkan'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -966,11 +915,9 @@ export const STRINGS_ID = {
                 editProfilesButton: 'Edit profil',
                 addProfileOption: 'Tambah profil...',
                 applyButton: 'Terapkan',
-                editButton: 'Edit profil',
                 deleteButton: 'Hapus profil',
                 addModalTitle: 'Tambah profil',
                 editProfilesModalTitle: 'Edit profil',
-                editModalTitle: 'Edit profil',
                 addModalPlaceholder: 'Nama profil',
                 deleteModalTitle: 'Hapus {name}',
                 deleteModalMessage:
@@ -1264,7 +1211,6 @@ export const STRINGS_ID = {
                 name: 'Bangun ulang cache',
                 desc: 'Gunakan ini jika Anda mengalami tag yang hilang, pratinjau yang salah, atau gambar unggulan yang hilang. Ini dapat terjadi setelah konflik sinkronisasi atau penutupan yang tidak terduga.',
                 buttonText: 'Bangun ulang cache',
-                success: 'Cache dibangun ulang',
                 error: 'Gagal membangun ulang cache',
                 indexingTitle: 'Mengindeks vault...',
                 progress: 'Memperbarui cache Notebook Navigator.'

@@ -30,7 +30,6 @@ export const STRINGS_AR = {
         submit: 'إرسال', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'لا يوجد تحديد', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'بدون وسم', // Label for notes without any tags (English: Untagged)
-        untitled: 'بدون عنوان', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'صورة مميزة', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'خطأ غير معروف', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'تحديث متصفح الدفتر متاح',
@@ -51,7 +50,6 @@ export const STRINGS_AR = {
     // Tag list
     tagList: {
         untaggedLabel: 'بدون وسم', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'وسوم مخفية', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'وسوم' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_AR = {
         unpinShortcuts: 'إلغاء تثبيت الاختصارات',
         unpinShortcutsAndRecentNotes: 'إلغاء تثبيت الاختصارات والملاحظات الحديثة',
         unpinShortcutsAndRecentFiles: 'إلغاء تثبيت الاختصارات والملفات الحديثة',
-        profileMenuLabel: 'الملف الشخصي',
         profileMenuAria: 'تغيير ملف الخزنة'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_AR = {
     paneHeader: {
         collapseAllFolders: 'طي العناصر', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'توسيع جميع العناصر', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'التمرير للأعلى',
         newFolder: 'مجلد جديد', // Tooltip for create new folder button (English: New folder)
         newNote: 'ملاحظة جديدة', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'العودة للتنقل', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'تغيير ترتيب الفرز', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'افتراضي', // Label for default sorting mode (English: Default)
-        customSort: 'مخصص', // Label for custom sorting mode (English: Custom)
         showFolders: 'إظهار التنقل', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'إخفاء التنقل', // Tooltip for button to hide the navigation pane (English: Hide navigation)
         reorderRootFolders: 'إعادة ترتيب التنقل',
         finishRootFolderReorder: 'تم',
         toggleDescendantNotes: 'إظهار ملاحظات المجلدات الفرعية / الفروع', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'توسيع عند التحديد', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Expand on selection)
         showExcludedItems: 'إظهار المجلدات والوسوم والملاحظات المخفية', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'إخفاء المجلدات والوسوم والملاحظات المخفية', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'إظهار لوحتين', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -229,7 +222,6 @@ export const STRINGS_AR = {
         titleRows: 'صفوف العنوان',
         previewRows: 'صفوف المعاينة',
         groupBy: 'تجميع حسب',
-        defaultOption: (rows: number) => `افتراضي (${rows})`,
         defaultTitleOption: (rows: number) => `صفوف العنوان الافتراضية (${rows})`,
         defaultPreviewOption: (rows: number) => `صفوف المعاينة الافتراضية (${rows})`,
         defaultGroupOption: (groupLabel: string) => `التجميع الافتراضي (${groupLabel})`,
@@ -282,8 +274,6 @@ export const STRINGS_AR = {
         colorPicker: {
             currentColor: 'الحالي',
             newColor: 'جديد',
-            presetColors: 'ألوان مسبقة',
-            userColors: 'ألوان المستخدم',
             paletteDefault: 'افتراضي',
             paletteCustom: 'مخصص',
             copyColors: 'نسخ اللون',
@@ -291,7 +281,6 @@ export const STRINGS_AR = {
             copyClipboardError: 'تعذرت الكتابة إلى الحافظة',
             pasteColors: 'لصق اللون',
             pasteClipboardError: 'تعذرت قراءة الحافظة',
-            pasteInvalidJson: 'الحافظة لا تحتوي على نص صالح',
             pasteInvalidFormat: 'متوقع قيمة لون hex',
             colorsPasted: 'تم لصق اللون بنجاح',
             resetUserColors: 'مسح الألوان المخصصة',
@@ -303,29 +292,7 @@ export const STRINGS_AR = {
             removeColor: 'إزالة اللون',
             apply: 'تطبيق',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'أحمر',
-                orange: 'برتقالي',
-                amber: 'كهرماني',
-                yellow: 'أصفر',
-                lime: 'ليموني',
-                green: 'أخضر',
-                emerald: 'زمردي',
-                teal: 'أزرق مخضر',
-                cyan: 'سماوي',
-                sky: 'سماء',
-                blue: 'أزرق',
-                indigo: 'نيلي',
-                violet: 'بنفسجي',
-                purple: 'أرجواني',
-                fuchsia: 'فوشيا',
-                pink: 'وردي',
-                rose: 'وردي فاتح',
-                gray: 'رمادي',
-                slate: 'رمادي مزرق',
-                stone: 'حجري'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'اختر ملف الخزنة',
@@ -400,7 +367,6 @@ export const STRINGS_AR = {
             }
         },
         tagSuggest: {
-            placeholder: 'البحث عن وسوم...',
             navigatePlaceholder: 'الانتقال إلى وسم...',
             addPlaceholder: 'البحث عن وسم لإضافته...',
             removePlaceholder: 'اختر وسمًا لإزالته...',
@@ -436,8 +402,6 @@ export const STRINGS_AR = {
             deleteFolder: 'فشل حذف المجلد: {error}',
             deleteFile: 'فشل حذف الملف: {error}',
             duplicateNote: 'فشل تكرار الملاحظة: {error}',
-            createCanvas: 'فشل إنشاء اللوحة: {error}',
-            createDatabase: 'فشل إنشاء قاعدة البيانات: {error}',
             duplicateFolder: 'فشل تكرار المجلد: {error}',
             openVersionHistory: 'فشل فتح سجل الإصدارات: {error}',
             versionHistoryNotFound: 'لم يتم العثور على أمر سجل الإصدارات. تأكد من تمكين Obsidian Sync.',
@@ -499,8 +463,7 @@ export const STRINGS_AR = {
             deleteConfirmation: 'لا يمكن التراجع عن هذا الإجراء.'
         },
         defaultNames: {
-            untitled: 'بدون عنوان',
-            untitledNumber: 'بدون عنوان {number}'
+            untitled: 'بدون عنوان'
         }
     },
 
@@ -517,9 +480,7 @@ export const STRINGS_AR = {
         },
         notifications: {
             filesAlreadyExist: '{count} ملفات موجودة بالفعل في الوجهة',
-            addedTag: 'تمت إضافة الوسم "{tag}" إلى {count} ملفات',
             filesAlreadyHaveTag: '{count} ملفات تحتوي بالفعل على هذا الوسم أو وسم أكثر تحديدًا',
-            clearedTags: 'تم مسح جميع الوسوم من {count} ملفات',
             noTagsToClear: 'لا توجد وسوم لمسحها',
             fileImported: 'تم استيراد ملف واحد',
             filesImported: 'تم استيراد {count} ملفات'
@@ -532,17 +493,6 @@ export const STRINGS_AR = {
         yesterday: 'أمس',
         previous7Days: 'آخر 7 أيام',
         previous30Days: 'آخر 30 يومًا'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'الأحد',
-        monday: 'الاثنين',
-        tuesday: 'الثلاثاء',
-        wednesday: 'الأربعاء',
-        thursday: 'الخميس',
-        friday: 'الجمعة',
-        saturday: 'السبت'
     },
 
     // Plugin commands
@@ -632,8 +582,7 @@ export const STRINGS_AR = {
             },
             list: {
                 display: 'المظهر',
-                pinnedNotes: 'الملاحظات المثبتة',
-                quickActions: 'الإجراءات السريعة'
+                pinnedNotes: 'الملاحظات المثبتة'
             },
             notes: {
                 frontmatter: 'البيانات الأمامية',
@@ -966,11 +915,9 @@ export const STRINGS_AR = {
                 editProfilesButton: 'تحرير الملفات',
                 addProfileOption: 'إضافة ملف...',
                 applyButton: 'تطبيق',
-                editButton: 'تحرير الملف',
                 deleteButton: 'حذف الملف',
                 addModalTitle: 'إضافة ملف',
                 editProfilesModalTitle: 'تحرير الملفات',
-                editModalTitle: 'تحرير الملف',
                 addModalPlaceholder: 'اسم الملف',
                 deleteModalTitle: 'حذف {name}',
                 deleteModalMessage: 'إزالة {name}؟ سيتم حذف مرشحات الملفات والمجلدات والوسوم والملاحظات المخفية المحفوظة في هذا الملف.',
@@ -1263,7 +1210,6 @@ export const STRINGS_AR = {
                 name: 'إعادة بناء الذاكرة المؤقتة',
                 desc: 'استخدم هذا إذا واجهت وسومًا مفقودة أو معاينات غير صحيحة أو صورًا مميزة مفقودة. يمكن أن يحدث هذا بعد تعارضات المزامنة أو الإغلاق غير المتوقع.',
                 buttonText: 'إعادة بناء الذاكرة المؤقتة',
-                success: 'تم إعادة بناء الذاكرة المؤقتة',
                 error: 'فشل إعادة بناء الذاكرة المؤقتة',
                 indexingTitle: 'جارٍ فهرسة الخزنة...',
                 progress: 'جارٍ تحديث ذاكرة التخزين المؤقت لـ Notebook Navigator.'

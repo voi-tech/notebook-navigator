@@ -30,7 +30,6 @@ export const STRINGS_PT_BR = {
         submit: 'Enviar',
         noSelection: 'Nenhuma seleção',
         untagged: 'Sem tags',
-        untitled: 'Sem título',
         featureImageAlt: 'Imagem destacada',
         unknownError: 'Erro desconhecido',
         updateBannerTitle: 'Atualização do Notebook Navigator disponível',
@@ -51,7 +50,6 @@ export const STRINGS_PT_BR = {
     // Tag list
     tagList: {
         untaggedLabel: 'Sem tags',
-        hiddenTags: 'Tags ocultas',
         tags: 'Tags'
     },
 
@@ -71,7 +69,6 @@ export const STRINGS_PT_BR = {
         unpinShortcuts: 'Desafixar atalhos',
         unpinShortcutsAndRecentNotes: 'Desafixar atalhos e notas recentes',
         unpinShortcutsAndRecentFiles: 'Desafixar atalhos e arquivos recentes',
-        profileMenuLabel: 'Perfil',
         profileMenuAria: 'Alterar perfil do cofre'
     },
 
@@ -96,19 +93,15 @@ export const STRINGS_PT_BR = {
     paneHeader: {
         collapseAllFolders: 'Recolher itens',
         expandAllFolders: 'Expandir todos os itens',
-        scrollToTop: 'Rolar para o topo',
         newFolder: 'Nova pasta',
         newNote: 'Nova nota',
         mobileBackToNavigation: 'Voltar à navegação',
         changeSortOrder: 'Alterar ordem de classificação',
         defaultSort: 'Padrão',
-        customSort: 'Personalizado',
         showFolders: 'Mostrar navegação',
-        hideFolders: 'Ocultar navegação',
         reorderRootFolders: 'Reordenar navegação',
         finishRootFolderReorder: 'Concluído',
         toggleDescendantNotes: 'Mostrar notas de subpastas / descendentes',
-        autoExpandFoldersTags: 'Expandir automaticamente pastas e tags',
         showExcludedItems: 'Mostrar pastas, tags e notas ocultas',
         hideExcludedItems: 'Ocultar pastas, tags e notas ocultas',
         showDualPane: 'Mostrar painéis duplos',
@@ -230,7 +223,6 @@ export const STRINGS_PT_BR = {
         titleRows: 'Linhas do título',
         previewRows: 'Linhas de visualização',
         groupBy: 'Agrupar por',
-        defaultOption: (rows: number) => `Padrão (${rows})`,
         defaultTitleOption: (rows: number) => `Linhas de título padrão (${rows})`,
         defaultPreviewOption: (rows: number) => `Linhas de visualização padrão (${rows})`,
         defaultGroupOption: (groupLabel: string) => `Agrupamento padrão (${groupLabel})`,
@@ -283,8 +275,6 @@ export const STRINGS_PT_BR = {
         colorPicker: {
             currentColor: 'Atual',
             newColor: 'Nova',
-            presetColors: 'Cores predefinidas',
-            userColors: 'Cores do usuário',
             paletteDefault: 'Padrão',
             paletteCustom: 'Personalizado',
             copyColors: 'Copiar cor',
@@ -292,7 +282,6 @@ export const STRINGS_PT_BR = {
             copyClipboardError: 'Não foi possível gravar na área de transferência',
             pasteColors: 'Colar cor',
             pasteClipboardError: 'Não foi possível ler a área de transferência',
-            pasteInvalidJson: 'A área de transferência não contém texto válido',
             pasteInvalidFormat: 'Esperado um valor de cor hex',
             colorsPasted: 'Cor colada com sucesso',
             resetUserColors: 'Limpar cores personalizadas',
@@ -304,29 +293,7 @@ export const STRINGS_PT_BR = {
             removeColor: 'Remover cor',
             apply: 'Aplicar',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Vermelho',
-                orange: 'Laranja',
-                amber: 'Âmbar',
-                yellow: 'Amarelo',
-                lime: 'Lima',
-                green: 'Verde',
-                emerald: 'Esmeralda',
-                teal: 'Azul-petróleo',
-                cyan: 'Ciano',
-                sky: 'Céu',
-                blue: 'Azul',
-                indigo: 'Índigo',
-                violet: 'Violeta',
-                purple: 'Roxo',
-                fuchsia: 'Fúcsia',
-                pink: 'Rosa',
-                rose: 'Rosa-claro',
-                gray: 'Cinza',
-                slate: 'Ardósia',
-                stone: 'Pedra'
-            }
+            rgbLabel: 'RGBA'
         },
         selectVaultProfile: {
             title: 'Alterar perfil do cofre',
@@ -400,7 +367,6 @@ export const STRINGS_PT_BR = {
             }
         },
         tagSuggest: {
-            placeholder: 'Pesquisar tags...',
             navigatePlaceholder: 'Navegar para tag...',
             addPlaceholder: 'Pesquisar tag para adicionar...',
             removePlaceholder: 'Selecionar tag para remover...',
@@ -437,8 +403,6 @@ export const STRINGS_PT_BR = {
             deleteFolder: 'Falha ao excluir pasta: {error}',
             deleteFile: 'Falha ao excluir arquivo: {error}',
             duplicateNote: 'Falha ao duplicar nota: {error}',
-            createCanvas: 'Falha ao criar tela: {error}',
-            createDatabase: 'Falha ao criar base de dados: {error}',
             duplicateFolder: 'Falha ao duplicar pasta: {error}',
             openVersionHistory: 'Falha ao abrir histórico de versões: {error}',
             versionHistoryNotFound: 'Comando de histórico de versões não encontrado. Certifique-se de que o Obsidian Sync está ativado.',
@@ -500,8 +464,7 @@ export const STRINGS_PT_BR = {
             deleteConfirmation: 'Esta ação não pode ser desfeita.'
         },
         defaultNames: {
-            untitled: 'Sem título',
-            untitledNumber: 'Sem título {number}'
+            untitled: 'Sem título'
         }
     },
 
@@ -518,9 +481,7 @@ export const STRINGS_PT_BR = {
         },
         notifications: {
             filesAlreadyExist: '{count} arquivos já existem no destino',
-            addedTag: 'Tag "{tag}" adicionada a {count} arquivos',
             filesAlreadyHaveTag: '{count} arquivos já têm esta tag ou uma mais específica',
-            clearedTags: 'Todas as tags removidas de {count} arquivos',
             noTagsToClear: 'Sem tags para remover',
             fileImported: '1 arquivo importado',
             filesImported: '{count} arquivos importados'
@@ -533,17 +494,6 @@ export const STRINGS_PT_BR = {
         yesterday: 'Ontem',
         previous7Days: 'Últimos 7 dias',
         previous30Days: 'Últimos 30 dias'
-    },
-
-    // Weekdays
-    weekdays: {
-        sunday: 'Domingo',
-        monday: 'Segunda-feira',
-        tuesday: 'Terça-feira',
-        wednesday: 'Quarta-feira',
-        thursday: 'Quinta-feira',
-        friday: 'Sexta-feira',
-        saturday: 'Sábado'
     },
 
     // Plugin commands
@@ -633,8 +583,7 @@ export const STRINGS_PT_BR = {
             },
             list: {
                 display: 'Aparência',
-                pinnedNotes: 'Notas fixadas',
-                quickActions: 'Ações rápidas'
+                pinnedNotes: 'Notas fixadas'
             },
             notes: {
                 frontmatter: 'Frontmatter',
@@ -967,11 +916,9 @@ export const STRINGS_PT_BR = {
                 editProfilesButton: 'Editar perfis',
                 addProfileOption: 'Adicionar perfil...',
                 applyButton: 'Aplicar',
-                editButton: 'Editar perfil',
                 deleteButton: 'Excluir perfil',
                 addModalTitle: 'Adicionar perfil',
                 editProfilesModalTitle: 'Editar perfis',
-                editModalTitle: 'Editar perfil',
                 addModalPlaceholder: 'Nome do perfil',
                 deleteModalTitle: 'Excluir {name}',
                 deleteModalMessage:
@@ -1265,7 +1212,6 @@ export const STRINGS_PT_BR = {
                 name: 'Reconstruir cache',
                 desc: 'Use isso se você tiver tags ausentes, visualizações incorretas ou imagens destacadas ausentes. Isso pode acontecer após conflitos de sincronização ou fechamentos inesperados.',
                 buttonText: 'Reconstruir cache',
-                success: 'Cache reconstruído',
                 error: 'Falha ao reconstruir cache',
                 indexingTitle: 'Indexando o cofre...',
                 progress: 'Atualizando o cache do Notebook Navigator.'
