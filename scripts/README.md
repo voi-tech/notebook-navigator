@@ -126,3 +126,11 @@ Finds unused i18n keys in `src/i18n/locales/en.ts` by scanning for `strings.<key
 ```bash
 node scripts/check-unused-strings.mjs
 ```
+
+## check-unused-css.mjs
+
+Scans `styles.css` and `src` for unused plugin CSS classes and variables.
+
+```bash
+node scripts/check-unused-css.mjs
+```
