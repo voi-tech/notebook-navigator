@@ -29,9 +29,9 @@
  * - Managing tag expansion state
  */
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { TFile, TFolder, debounce } from 'obsidian';
-import type { MetadataCache } from 'obsidian';
+import type { App } from 'obsidian';
 import { useServices, useMetadataService } from '../context/ServicesContext';
 import { useRecentData } from '../context/RecentDataContext';
 import { useExpansionState } from '../context/ExpansionContext';
@@ -40,6 +40,7 @@ import { useShortcuts } from '../context/ShortcutsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
 import { strings } from '../i18n';
 import {
+    TAGGED_TAG_ID,
     UNTAGGED_TAG_ID,
     NavigationPaneItemType,
     VirtualFolder,
@@ -52,13 +53,18 @@ import { TIMEOUTS } from '../types/obsidian-extended';
 import { TagTreeNode } from '../types/storage';
 import type { CombinedNavigationItem } from '../types/virtualization';
 import type { NotebookNavigatorSettings, TagSortOrder } from '../settings/types';
-import { isFolderInExcludedFolder } from '../utils/fileFilters';
-import { shouldDisplayFile, FILE_VISIBILITY, isImageFile } from '../utils/fileTypeUtils';
-import { isExcalidrawFile } from '../utils/fileNameUtils';
+import {
+    createHiddenFileNameMatcherForVisibility,
+    isFolderInExcludedFolder,
+    shouldExcludeFile,
+    shouldExcludeFileName
+} from '../utils/fileFilters';
+import { shouldDisplayFile, FILE_VISIBILITY } from '../utils/fileTypeUtils';
+import { resolveFileIconId, type FileNameIconNeedle } from '../utils/fileIconUtils';
 // Use Obsidian's trailing debounce for vault-driven updates
 import { getTotalNoteCount, excludeFromTagTree, findTagNode } from '../utils/tagTree';
 import { flattenFolderTree, flattenTagTree, compareTagOrderWithFallback } from '../utils/treeFlattener';
-import { createHiddenTagVisibility } from '../utils/tagPrefixMatcher';
+import { createHiddenTagVisibility, matchesHiddenTagPattern } from '../utils/tagPrefixMatcher';
 import { setNavigationIndex } from '../utils/navigationIndex';
 import { resolveCanonicalTagPath } from '../utils/tagUtils';
 import { isFolderShortcut, isNoteShortcut, isSearchShortcut, isTagShortcut } from '../types/shortcuts';
@@ -71,6 +77,16 @@ import type { NoteCountInfo } from '../types/noteCounts';
 import { calculateFolderNoteCounts } from '../utils/noteCountUtils';
 import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
 import { sanitizeNavigationSectionOrder } from '../utils/navigationSections';
+import { getVirtualTagCollection, isVirtualTagCollectionId, VIRTUAL_TAG_COLLECTION_IDS } from '../utils/virtualTagCollections';
+import {
+    buildFolderSeparatorKey,
+    buildSectionSeparatorKey,
+    buildTagSeparatorKey,
+    parseNavigationSeparatorKey
+} from '../utils/navigationSeparators';
+import { resolveUXIcon } from '../utils/uxIcons';
+import type { MetadataService } from '../services/MetadataService';
+import { useSettingsDerived, type ActiveProfileState } from '../context/SettingsContext';
 
 // Checks if a navigation item is a shortcut-related item (virtual folder, shortcut, or header)
 const isShortcutNavigationItem = (item: CombinedNavigationItem): boolean => {
@@ -87,35 +103,204 @@ const isShortcutNavigationItem = (item: CombinedNavigationItem): boolean => {
     );
 };
 
-// Maps non-markdown document extensions to their icon names
-const DOCUMENT_EXTENSION_ICONS: Record<string, string> = {
-    canvas: 'lucide-layout-grid',
-    base: 'lucide-database'
+// Checks if a navigation item is part of the recent notes section
+const isRecentNavigationItem = (item: CombinedNavigationItem): boolean => {
+    if (item.type === NavigationPaneItemType.VIRTUAL_FOLDER) {
+        return item.data.id === RECENT_NOTES_VIRTUAL_FOLDER_ID;
+    }
+    return item.type === NavigationPaneItemType.RECENT_NOTE;
 };
 
-// Returns the appropriate icon for a document based on its type and extension
-const getDocumentIcon = (file: TFile | null, metadataCache?: MetadataCache): string | undefined => {
-    if (!file) {
-        return undefined;
-    }
+/** Options controlling which navigation items are eligible for root spacing */
+interface RootSpacingOptions {
+    showRootFolder: boolean;
+    tagRootLevel: number;
+}
 
-    if (isImageFile(file)) {
-        return 'lucide-image';
+/** Determines if the navigation item is a top-level folder or tag eligible for root spacing */
+const isRootSpacingCandidate = (item: CombinedNavigationItem, options: RootSpacingOptions): boolean => {
+    if (item.type === NavigationPaneItemType.FOLDER) {
+        const desiredLevel = options.showRootFolder ? 1 : 0;
+        return item.level === desiredLevel;
     }
-
-    if (isExcalidrawFile(file)) {
-        return 'lucide-image';
+    if (item.type === NavigationPaneItemType.TAG || item.type === NavigationPaneItemType.UNTAGGED) {
+        return item.level === options.tagRootLevel;
     }
+    return false;
+};
 
-    if (metadataCache) {
-        const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
-        if (frontmatter?.['excalidraw-plugin']) {
-            return 'lucide-image';
+function decorateNavigationItems(
+    source: CombinedNavigationItem[],
+    app: App,
+    settings: NotebookNavigatorSettings,
+    fileNameIconNeedles: readonly FileNameIconNeedle[],
+    getFileDisplayName: (file: TFile) => string,
+    metadataService: MetadataService,
+    parsedExcludedFolders: string[],
+    _metadataVersion: string
+): CombinedNavigationItem[] {
+    void _metadataVersion;
+    const shouldResolveFileNameIcons = settings.showFilenameMatchIcons;
+    const fileIconSettings = {
+        showFilenameMatchIcons: settings.showFilenameMatchIcons,
+        fileNameIconMap: settings.fileNameIconMap,
+        showCategoryIcons: true,
+        fileTypeIconMap: settings.fileTypeIconMap
+    };
+    const fileIconFallbackMode = 'file';
+
+    return source.map(item => {
+        if (item.type === NavigationPaneItemType.FOLDER) {
+            return {
+                ...item,
+                color: metadataService.getFolderColor(item.data.path),
+                backgroundColor: metadataService.getFolderBackgroundColor(item.data.path),
+                icon: metadataService.getFolderIcon(item.data.path),
+                parsedExcludedFolders
+            };
         }
+        if (item.type === NavigationPaneItemType.TAG || item.type === NavigationPaneItemType.UNTAGGED) {
+            const tagNode = item.data;
+            // Resolve both color and background in one pass (including inherited values when enabled).
+            const tagColorData = metadataService.getTagColorData(tagNode.path);
+            return {
+                ...item,
+                color: tagColorData.color,
+                backgroundColor: tagColorData.background,
+                icon: metadataService.getTagIcon(tagNode.path)
+            };
+        }
+        if (item.type === NavigationPaneItemType.SHORTCUT_FOLDER) {
+            const folderPath = item.folder?.path;
+            const folderColor = folderPath ? metadataService.getFolderColor(folderPath) : undefined;
+            const folderBackground = folderPath ? metadataService.getFolderBackgroundColor(folderPath) : undefined;
+            const customIcon = folderPath ? metadataService.getFolderIcon(folderPath) : undefined;
+            const defaultIcon = folderPath === '/' ? 'vault' : 'lucide-folder';
+            return {
+                ...item,
+                icon: customIcon || defaultIcon,
+                color: folderColor,
+                backgroundColor: folderBackground
+            };
+        }
+        if (item.type === NavigationPaneItemType.SHORTCUT_TAG) {
+            // Resolve both color and background in one pass (including inherited values when enabled).
+            const tagColorData = metadataService.getTagColorData(item.tagPath);
+            return {
+                ...item,
+                icon: metadataService.getTagIcon(item.tagPath) || 'lucide-tags',
+                color: tagColorData.color,
+                backgroundColor: tagColorData.background
+            };
+        }
+        if (item.type === NavigationPaneItemType.SHORTCUT_NOTE) {
+            const note = item.note;
+            if (!note) {
+                return item;
+            }
+            const color = metadataService.getFileColor(note.path);
+            const customIconId = metadataService.getFileIcon(note.path);
+            const isExternalFile = !shouldDisplayFile(note, FILE_VISIBILITY.SUPPORTED, app);
+            const resolvedIconId = resolveFileIconId(note, fileIconSettings, {
+                customIconId,
+                metadataCache: app.metadataCache,
+                isExternalFile,
+                fallbackMode: fileIconFallbackMode,
+                fileNameNeedles: fileNameIconNeedles,
+                fileNameForMatch: shouldResolveFileNameIcons ? getFileDisplayName(note) : undefined
+            });
+            return {
+                ...item,
+                icon: resolvedIconId ?? undefined,
+                color
+            };
+        }
+        if (item.type === NavigationPaneItemType.RECENT_NOTE) {
+            const note = item.note;
+            const customIconId = metadataService.getFileIcon(note.path);
+            const color = metadataService.getFileColor(note.path);
+            const isExternalFile = !shouldDisplayFile(note, FILE_VISIBILITY.SUPPORTED, app);
+            const resolvedIconId = resolveFileIconId(note, fileIconSettings, {
+                customIconId,
+                metadataCache: app.metadataCache,
+                isExternalFile,
+                fallbackMode: fileIconFallbackMode,
+                fileNameNeedles: fileNameIconNeedles,
+                fileNameForMatch: shouldResolveFileNameIcons ? getFileDisplayName(note) : undefined
+            });
+            return {
+                ...item,
+                icon: resolvedIconId ?? undefined,
+                color
+            };
+        }
+        return item;
+    });
+}
+
+/**
+ * Inserts spacer items between consecutive root-level folders or tags
+ * @param items Navigation items to augment with spacing
+ * @param spacing Spacing value in pixels
+ */
+const CUSTOM_SEPARATOR_PREFIXES = ['folder:', 'tag:'];
+const isCustomSeparatorKey = (key: string): boolean => CUSTOM_SEPARATOR_PREFIXES.some(prefix => key.startsWith(prefix));
+const SPACER_ITEM_TYPES = new Set<NavigationPaneItemType>([
+    NavigationPaneItemType.TOP_SPACER,
+    NavigationPaneItemType.LIST_SPACER,
+    NavigationPaneItemType.BOTTOM_SPACER,
+    NavigationPaneItemType.ROOT_SPACER
+]);
+
+const insertRootSpacing = (items: CombinedNavigationItem[], spacing: number, options: RootSpacingOptions): CombinedNavigationItem[] => {
+    if (spacing <= 0) {
+        return items;
     }
 
-    const extension = file.extension.toLowerCase();
-    return DOCUMENT_EXTENSION_ICONS[extension] ?? undefined;
+    const result: CombinedNavigationItem[] = [];
+    let rootCountInSection = 0;
+    let spacerId = 0;
+
+    const shouldResetSection = (item: CombinedNavigationItem): boolean => {
+        if (
+            item.type === NavigationPaneItemType.TOP_SPACER ||
+            item.type === NavigationPaneItemType.BOTTOM_SPACER ||
+            item.type === NavigationPaneItemType.VIRTUAL_FOLDER
+        ) {
+            return true;
+        }
+
+        if (item.type === NavigationPaneItemType.LIST_SPACER) {
+            return !isCustomSeparatorKey(item.key);
+        }
+
+        return false;
+    };
+
+    for (const item of items) {
+        if (shouldResetSection(item)) {
+            rootCountInSection = 0;
+            result.push(item);
+            continue;
+        }
+
+        if (isRootSpacingCandidate(item, options)) {
+            if (rootCountInSection > 0) {
+                result.push({
+                    type: NavigationPaneItemType.ROOT_SPACER,
+                    key: `root-spacer-${spacerId++}`,
+                    spacing
+                });
+            }
+            rootCountInSection += 1;
+            result.push(item);
+            continue;
+        }
+
+        result.push(item);
+    }
+
+    return result;
 };
 
 /** Comparator function type for sorting tag tree nodes */
@@ -167,6 +352,8 @@ const createTagComparator = (order: TagSortOrder, includeDescendantNotes: boolea
 interface UseNavigationPaneDataParams {
     /** Plugin settings */
     settings: NotebookNavigatorSettings;
+    /** Active profile-derived values */
+    activeProfile: ActiveProfileState;
     /** Whether the navigation pane is currently visible */
     isVisible: boolean;
     /** Whether the shortcuts virtual folder is expanded */
@@ -185,10 +372,18 @@ interface UseNavigationPaneDataParams {
 interface UseNavigationPaneDataResult {
     /** Combined list of navigation items (folders and tags) */
     items: CombinedNavigationItem[];
+    /** First visible navigation section when shortcuts are inlined */
+    firstSectionId: NavigationSectionId | null;
+    /** First folder path rendered inline after spacers when shortcuts are pinned */
+    firstInlineFolderPath: string | null;
     /** Shortcuts rendered separately when pinShortcuts is enabled */
     shortcutItems: CombinedNavigationItem[];
     /** Whether the tags virtual folder has visible children */
     tagsVirtualFolderHasChildren: boolean;
+    /** Recent notes items rendered in the pinned area when pinning is enabled */
+    pinnedRecentNotesItems: CombinedNavigationItem[];
+    /** Whether recent notes are pinned with shortcuts */
+    shouldPinRecentNotes: boolean;
     /** Map from item keys to index in items array */
     pathToIndex: Map<string, number>;
     /** Map from shortcut id to index */
@@ -211,6 +406,8 @@ interface UseNavigationPaneDataResult {
     missingRootTagPaths: string[];
     /** Version marker that bumps when vault files or metadata change */
     vaultChangeVersion: number;
+    /** Path to the navigation banner from the active vault profile */
+    navigationBannerPath: string | null;
 }
 
 /**
@@ -222,6 +419,7 @@ interface UseNavigationPaneDataResult {
  */
 export function useNavigationPaneData({
     settings,
+    activeProfile,
     isVisible,
     shortcutsExpanded,
     recentNotesExpanded,
@@ -229,16 +427,22 @@ export function useNavigationPaneData({
     sectionOrder
 }: UseNavigationPaneDataParams): UseNavigationPaneDataResult {
     const { app } = useServices();
+    const { fileNameIconNeedles } = useSettingsDerived();
     const { recentNotes } = useRecentData();
     const metadataService = useMetadataService();
     const expansionState = useExpansionState();
-    const { fileData } = useFileCache();
+    const { fileData, getFileDisplayName } = useFileCache();
     const { hydratedShortcuts } = useShortcuts();
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
     // Resolves frontmatter exclusions, returns empty array when hidden items are shown
     const effectiveFrontmatterExclusions = getEffectiveFrontmatterExclusions(settings, showHiddenItems);
+    const { hiddenFolders, hiddenFiles, hiddenFileNamePatterns, hiddenTags, fileVisibility, navigationBanner } = activeProfile;
+    const navigationBannerPath = navigationBanner;
+    const folderCountFileNameMatcher = useMemo(() => {
+        return createHiddenFileNameMatcherForVisibility(hiddenFileNamePatterns, showHiddenItems);
+    }, [hiddenFileNamePatterns, showHiddenItems]);
 
     // Version counter that increments when vault files change
     const [fileChangeVersion, setFileChangeVersion] = useState(0);
@@ -257,12 +461,18 @@ export function useNavigationPaneData({
     const untaggedCount = fileData.untagged;
 
     // Create matcher for hidden tag patterns (supports "archive", "temp*", "*draft")
-    const hiddenTagVisibility = useMemo(
-        () => createHiddenTagVisibility(settings.hiddenTags, showHiddenItems),
-        [settings.hiddenTags, showHiddenItems]
-    );
+    const hiddenTagVisibility = useMemo(() => createHiddenTagVisibility(hiddenTags, showHiddenItems), [hiddenTags, showHiddenItems]);
     const hiddenTagMatcher = hiddenTagVisibility.matcher;
     const hiddenMatcherHasRules = hiddenTagVisibility.hasHiddenRules;
+
+    const visibleTagTree = useMemo(() => {
+        if (!hiddenMatcherHasRules || showHiddenItems) {
+            return tagTree;
+        }
+        return excludeFromTagTree(tagTree, hiddenTagMatcher);
+    }, [tagTree, hiddenMatcherHasRules, showHiddenItems, hiddenTagMatcher]);
+
+    const visibleTaggedCount = fileData.tagged ?? 0;
 
     /** Create tag comparator based on current sort order and descendant note settings */
     const tagComparator = useMemo(
@@ -303,26 +513,34 @@ export function useNavigationPaneData({
      * Build folder items from vault structure
      */
     const folderItems = useMemo(() => {
-        return flattenFolderTree(rootFolders, expansionState.expandedFolders, settings.excludedFolders, 0, new Set(), {
+        return flattenFolderTree(rootFolders, expansionState.expandedFolders, hiddenFolders, 0, new Set(), {
             rootOrderMap: rootFolderOrderMap
         });
-    }, [rootFolders, expansionState.expandedFolders, settings.excludedFolders, rootFolderOrderMap]);
+    }, [rootFolders, expansionState.expandedFolders, hiddenFolders, rootFolderOrderMap]);
 
     /**
      * Build tag items with a single tag tree
      */
-    const { tagItems, hasTagContent, resolvedRootTagKeys } = useMemo(() => {
+    const { tagItems, resolvedRootTagKeys, tagsVirtualFolderHasChildren } = useMemo(() => {
         if (!settings.showTags) {
-            return { tagItems: [] as CombinedNavigationItem[], hasTagContent: false, resolvedRootTagKeys: [] };
+            return {
+                tagItems: [] as CombinedNavigationItem[],
+                resolvedRootTagKeys: [],
+                tagsVirtualFolderHasChildren: false
+            };
         }
 
         const items: CombinedNavigationItem[] = [];
 
         const shouldHideTags = !showHiddenItems;
         const hasHiddenPatterns = hiddenMatcherHasRules;
-        const visibleTagTree = hasHiddenPatterns && shouldHideTags ? excludeFromTagTree(tagTree, hiddenTagMatcher) : tagTree;
         const shouldIncludeUntagged = settings.showUntagged && untaggedCount > 0;
         const matcherForMarking = !shouldHideTags && hasHiddenPatterns ? hiddenTagMatcher : undefined;
+        const taggedCollectionCount: NoteCountInfo = {
+            current: visibleTaggedCount,
+            descendants: 0,
+            total: visibleTaggedCount
+        };
 
         // Adds the untagged node to the items list at the specified level
         const pushUntaggedNode = (level: number) => {
@@ -332,7 +550,7 @@ export function useNavigationPaneData({
             const untaggedNode: TagTreeNode = {
                 path: UNTAGGED_TAG_ID,
                 displayPath: UNTAGGED_TAG_ID,
-                name: strings.tagList.untaggedLabel,
+                name: getVirtualTagCollection(VIRTUAL_TAG_COLLECTION_IDS.UNTAGGED).getLabel(),
                 children: new Map(),
                 notesWithTag: new Set()
             };
@@ -345,34 +563,54 @@ export function useNavigationPaneData({
             });
         };
 
-        const addVirtualFolder = (id: string, name: string, icon?: string) => {
+        const addVirtualFolder = (
+            id: string,
+            name: string,
+            icon?: string,
+            options?: { tagCollectionId?: string; showFileCount?: boolean; noteCount?: NoteCountInfo; hasChildren?: boolean }
+        ) => {
             const folder: VirtualFolder = { id, name, icon };
             items.push({
                 type: NavigationPaneItemType.VIRTUAL_FOLDER,
                 data: folder,
                 level: 0,
-                key: id
+                key: id,
+                isSelectable: Boolean(options?.tagCollectionId),
+                tagCollectionId: options?.tagCollectionId,
+                hasChildren: options?.hasChildren,
+                showFileCount: options?.showFileCount,
+                noteCount: options?.noteCount
             });
         };
 
-        if (!visibleTagTree) {
-            if (!shouldIncludeUntagged) {
-                return { tagItems: items, hasTagContent: false, resolvedRootTagKeys: [] };
-            }
-
+        if (visibleTagTree.size === 0) {
             if (settings.showAllTagsFolder) {
                 const folderId = 'tags-root';
-                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags');
+                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags', {
+                    tagCollectionId: TAGGED_TAG_ID,
+                    hasChildren: shouldIncludeUntagged,
+                    showFileCount: settings.showNoteCount,
+                    noteCount: taggedCollectionCount
+                });
 
-                if (expansionState.expandedVirtualFolders.has(folderId)) {
+                if (expansionState.expandedVirtualFolders.has(folderId) && shouldIncludeUntagged) {
                     pushUntaggedNode(1);
                 }
 
-                return { tagItems: items, hasTagContent: true, resolvedRootTagKeys: [UNTAGGED_TAG_ID] };
+                const tagsVirtualFolderHasChildren = shouldIncludeUntagged;
+                return {
+                    tagItems: items,
+                    resolvedRootTagKeys: shouldIncludeUntagged ? [UNTAGGED_TAG_ID] : [],
+                    tagsVirtualFolderHasChildren
+                };
             }
 
-            pushUntaggedNode(0);
-            return { tagItems: items, hasTagContent: true, resolvedRootTagKeys: [UNTAGGED_TAG_ID] };
+            if (shouldIncludeUntagged) {
+                pushUntaggedNode(0);
+                return { tagItems: items, resolvedRootTagKeys: [UNTAGGED_TAG_ID], tagsVirtualFolderHasChildren: true };
+            }
+
+            return { tagItems: items, resolvedRootTagKeys: [], tagsVirtualFolderHasChildren: false };
         }
 
         // Extract root nodes and determine effective comparator based on custom ordering
@@ -382,7 +620,9 @@ export function useNavigationPaneData({
             rootTagOrderMap.size > 0 ? (a, b) => compareTagOrderWithFallback(a, b, rootTagOrderMap, baseComparator) : baseComparator;
         const sortedRootNodes = visibleRootNodes.length > 0 ? visibleRootNodes.slice().sort(effectiveComparator) : visibleRootNodes;
         const hasVisibleTags = sortedRootNodes.length > 0;
-        const hasContent = hasVisibleTags || shouldIncludeUntagged;
+        const hasTagCollectionContent = visibleTaggedCount > 0;
+        const hasContent = hasVisibleTags || shouldIncludeUntagged || hasTagCollectionContent;
+        const tagsVirtualFolderHasChildren = hasVisibleTags || shouldIncludeUntagged;
 
         // Build map of all root nodes including visible and hidden ones
         const rootNodeMap = new Map<string, TagTreeNode>();
@@ -442,7 +682,12 @@ export function useNavigationPaneData({
         if (settings.showAllTagsFolder) {
             if (hasContent) {
                 const folderId = 'tags-root';
-                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags');
+                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags', {
+                    tagCollectionId: TAGGED_TAG_ID,
+                    hasChildren: tagsVirtualFolderHasChildren,
+                    showFileCount: settings.showNoteCount,
+                    noteCount: taggedCollectionCount
+                });
 
                 if (expansionState.expandedVirtualFolders.has(folderId)) {
                     resolvedRootTagKeys.forEach(key => {
@@ -478,7 +723,7 @@ export function useNavigationPaneData({
             });
         }
 
-        return { tagItems: items, hasTagContent: hasContent, resolvedRootTagKeys };
+        return { tagItems: items, resolvedRootTagKeys, tagsVirtualFolderHasChildren };
     }, [
         settings.showTags,
         settings.showAllTagsFolder,
@@ -486,8 +731,10 @@ export function useNavigationPaneData({
         settings.showUntagged,
         hiddenTagMatcher,
         hiddenMatcherHasRules,
-        tagTree,
+        visibleTagTree,
+        visibleTaggedCount,
         untaggedCount,
+        settings.showNoteCount,
         settings.rootTagOrder,
         expansionState.expandedTags,
         expansionState.expandedVirtualFolders,
@@ -499,7 +746,7 @@ export function useNavigationPaneData({
     /**
      * Pre-compute parsed excluded folders to avoid repeated parsing
      */
-    const parsedExcludedFolders = useMemo(() => settings.excludedFolders, [settings.excludedFolders]);
+    const parsedExcludedFolders = hiddenFolders;
 
     // Build list of shortcut items with proper hierarchy
     const shortcutItems = useMemo(() => {
@@ -510,6 +757,9 @@ export function useNavigationPaneData({
         const headerLevel = 0;
         const itemLevel = headerLevel + 1;
 
+        const fileVisibilityCache = new Map<string, boolean>();
+        const tagVisibilityCache = new Map<string, boolean>();
+
         // Start with the shortcuts header/virtual folder
         const items: CombinedNavigationItem[] = [
             {
@@ -519,8 +769,9 @@ export function useNavigationPaneData({
                 data: {
                     id: SHORTCUTS_VIRTUAL_FOLDER_ID,
                     name: strings.navigationPane.shortcutsHeader,
-                    icon: 'lucide-bookmark'
-                }
+                    icon: resolveUXIcon(settings.interfaceIcons, 'nav-shortcuts')
+                },
+                hasChildren: hydratedShortcuts.length > 0
             }
         ];
 
@@ -528,6 +779,100 @@ export function useNavigationPaneData({
         if (!shortcutsExpanded) {
             return items;
         }
+
+        const isFileVisibleWhenHiddenItemsOff = (path: string): boolean => {
+            if (fileVisibilityCache.has(path)) {
+                return fileVisibilityCache.get(path) ?? false;
+            }
+
+            const abstractFile = app.vault.getAbstractFileByPath(path);
+            if (!(abstractFile instanceof TFile)) {
+                fileVisibilityCache.set(path, false);
+                return false;
+            }
+
+            if (abstractFile.extension !== 'md') {
+                fileVisibilityCache.set(path, false);
+                return false;
+            }
+
+            if (hiddenFiles.length > 0 && shouldExcludeFile(abstractFile, hiddenFiles, app)) {
+                fileVisibilityCache.set(path, false);
+                return false;
+            }
+
+            if (hiddenFileNamePatterns.length > 0 && shouldExcludeFileName(abstractFile, hiddenFileNamePatterns)) {
+                fileVisibilityCache.set(path, false);
+                return false;
+            }
+
+            if (hiddenFolders.length > 0 && abstractFile.parent !== null && isFolderInExcludedFolder(abstractFile.parent, hiddenFolders)) {
+                fileVisibilityCache.set(path, false);
+                return false;
+            }
+
+            fileVisibilityCache.set(path, true);
+            return true;
+        };
+
+        const isTagVisibleWhenHiddenItemsOff = (tagPath: string): boolean => {
+            if (tagVisibilityCache.has(tagPath)) {
+                return tagVisibilityCache.get(tagPath) ?? false;
+            }
+
+            if (isVirtualTagCollectionId(tagPath)) {
+                tagVisibilityCache.set(tagPath, true);
+                return true;
+            }
+
+            if (!showHiddenItems) {
+                const visible = Boolean(findTagNode(visibleTagTree, tagPath));
+                tagVisibilityCache.set(tagPath, visible);
+                return visible;
+            }
+
+            const rootNode = findTagNode(tagTreeForOrdering, tagPath);
+            if (!rootNode) {
+                tagVisibilityCache.set(tagPath, false);
+                return false;
+            }
+
+            const stack: TagTreeNode[] = [rootNode];
+            const visited = new Set<TagTreeNode>();
+
+            while (stack.length > 0) {
+                const current = stack.pop();
+                if (!current) {
+                    continue;
+                }
+                if (visited.has(current)) {
+                    continue;
+                }
+                visited.add(current);
+
+                if (
+                    hiddenMatcherHasRules &&
+                    !isVirtualTagCollectionId(current.path) &&
+                    matchesHiddenTagPattern(current.path, current.name, hiddenTagMatcher)
+                ) {
+                    continue;
+                }
+
+                for (const filePath of current.notesWithTag) {
+                    if (isFileVisibleWhenHiddenItemsOff(filePath)) {
+                        tagVisibilityCache.set(tagPath, true);
+                        return true;
+                    }
+                }
+
+                for (const child of current.children.values()) {
+                    stack.push(child);
+                }
+            }
+
+            tagVisibilityCache.set(tagPath, false);
+            return false;
+        };
 
         // Add individual shortcut items based on their type
         hydratedShortcuts.forEach(entry => {
@@ -548,11 +893,7 @@ export function useNavigationPaneData({
                     return;
                 }
 
-                const isExcluded = settings.excludedFolders.length > 0 && isFolderInExcludedFolder(folder, settings.excludedFolders);
-                if (isExcluded && !showHiddenItems) {
-                    return;
-                }
-
+                const isExcluded = hiddenFolders.length > 0 && isFolderInExcludedFolder(folder, hiddenFolders);
                 items.push({
                     type: NavigationPaneItemType.SHORTCUT_FOLDER,
                     key,
@@ -578,15 +919,17 @@ export function useNavigationPaneData({
                     });
                     return;
                 }
-                const isExternalFile = !shouldDisplayFile(note, FILE_VISIBILITY.SUPPORTED, app);
-                const icon = isExternalFile ? 'lucide-external-link' : getDocumentIcon(note, app.metadataCache);
+                const isExcluded =
+                    (note.extension === 'md' && hiddenFiles.length > 0 && shouldExcludeFile(note, hiddenFiles, app)) ||
+                    (hiddenFileNamePatterns.length > 0 && shouldExcludeFileName(note, hiddenFileNamePatterns)) ||
+                    (hiddenFolders.length > 0 && note.parent !== null && isFolderInExcludedFolder(note.parent, hiddenFolders));
                 items.push({
                     type: NavigationPaneItemType.SHORTCUT_NOTE,
                     key,
                     level: itemLevel,
                     shortcut,
                     note,
-                    icon
+                    isExcluded
                 });
                 return;
             }
@@ -610,14 +953,20 @@ export function useNavigationPaneData({
                     return;
                 }
 
-                const canonicalPath = resolveCanonicalTagPath(resolvedPath, tagTree);
+                const canonicalPath = resolveCanonicalTagPath(resolvedPath, tagTreeForOrdering);
                 if (!canonicalPath) {
                     return;
                 }
 
-                const tagNode = findTagNode(tagTree, canonicalPath);
-                const displayPath = tagNode?.displayPath ?? resolvedPath;
-                const isMissing = !tagNode;
+                const tagNode = findTagNode(tagTreeForOrdering, canonicalPath);
+                let displayPath = tagNode?.displayPath ?? resolvedPath;
+                let isMissing = !tagNode;
+                const isExcluded = !isTagVisibleWhenHiddenItemsOff(canonicalPath);
+
+                if (isVirtualTagCollectionId(canonicalPath)) {
+                    displayPath = getVirtualTagCollection(canonicalPath).getLabel();
+                    isMissing = false;
+                }
 
                 items.push({
                     type: NavigationPaneItemType.SHORTCUT_TAG,
@@ -627,15 +976,38 @@ export function useNavigationPaneData({
                     tagPath: canonicalPath,
                     displayName: displayPath,
                     isMissing,
+                    isExcluded,
                     missingLabel: isMissing ? resolvedPath : undefined
                 });
             }
         });
 
         return items;
-    }, [app, hydratedShortcuts, tagTree, settings.excludedFolders, showHiddenItems, settings.showShortcuts, shortcutsExpanded]);
+    }, [
+        app,
+        hydratedShortcuts,
+        hiddenFileNamePatterns,
+        hiddenFiles,
+        hiddenFolders,
+        hiddenMatcherHasRules,
+        hiddenTagMatcher,
+        shortcutsExpanded,
+        showHiddenItems,
+        settings.interfaceIcons,
+        settings.showShortcuts,
+        visibleTagTree,
+        tagTreeForOrdering
+    ]);
 
-    // Build list of recent notes items with proper hierarchy
+    // Build list of recent notes items with proper hierarchy.
+    //
+    // `recentNotes` is persisted as an array of paths, and the vault can change independently (files moved/deleted).
+    // The navigation UI uses `hasChildren` to decide whether to render an expander chevron on the recent section header.
+    //
+    // Design:
+    // - Collapsed: return only the header and compute `hasChildren` via a short scan over the configured limit, stopping at the
+    //   first path that resolves to a `TFile`. This keeps the chevron accurate without building child items.
+    // - Expanded: build the child item list, filtering out paths that do not resolve to a `TFile`.
     const recentNotesItems = useMemo(() => {
         if (!settings.showRecentNotes) {
             return [] as CombinedNavigationItem[];
@@ -644,13 +1016,54 @@ export function useNavigationPaneData({
         const headerLevel = 0;
         const itemLevel = headerLevel + 1;
 
+        const limit = Math.max(1, settings.recentNotesCount ?? 1);
+        const recentPaths = recentNotes.slice(0, limit);
+
         // Use appropriate header based on file visibility setting
         const recentHeaderName =
-            settings.fileVisibility === FILE_VISIBILITY.DOCUMENTS
+            fileVisibility === FILE_VISIBILITY.DOCUMENTS
                 ? strings.navigationPane.recentNotesHeader
                 : strings.navigationPane.recentFilesHeader;
 
-        // Start with the recent notes header/virtual folder
+        // Collapsed: return only the header (no child items), with `hasChildren` reflecting whether expansion would render any notes.
+        if (!recentNotesExpanded) {
+            let hasChildren = false;
+            for (const path of recentPaths) {
+                const file = app.vault.getAbstractFileByPath(path);
+                if (file instanceof TFile) {
+                    hasChildren = true;
+                    break;
+                }
+            }
+            return [
+                {
+                    type: NavigationPaneItemType.VIRTUAL_FOLDER,
+                    key: RECENT_NOTES_VIRTUAL_FOLDER_ID,
+                    level: headerLevel,
+                    data: {
+                        id: RECENT_NOTES_VIRTUAL_FOLDER_ID,
+                        name: recentHeaderName,
+                        icon: resolveUXIcon(settings.interfaceIcons, 'nav-recent-files')
+                    },
+                    hasChildren
+                }
+            ];
+        }
+
+        // Expanded: build child items and keep `hasChildren` aligned with the filtered child list.
+        const childItems: CombinedNavigationItem[] = [];
+        recentPaths.forEach(path => {
+            const file = app.vault.getAbstractFileByPath(path);
+            if (file instanceof TFile) {
+                childItems.push({
+                    type: NavigationPaneItemType.RECENT_NOTE,
+                    key: `recent-${path}`,
+                    level: itemLevel,
+                    note: file
+                });
+            }
+        });
+
         const items: CombinedNavigationItem[] = [
             {
                 type: NavigationPaneItemType.VIRTUAL_FOLDER,
@@ -659,37 +1072,30 @@ export function useNavigationPaneData({
                 data: {
                     id: RECENT_NOTES_VIRTUAL_FOLDER_ID,
                     name: recentHeaderName,
-                    icon: 'lucide-history'
-                }
+                    icon: resolveUXIcon(settings.interfaceIcons, 'nav-recent-files')
+                },
+                hasChildren: childItems.length > 0
             }
         ];
 
-        // Return only header if recent notes folder is collapsed
-        if (!recentNotesExpanded) {
+        if (childItems.length === 0) {
             return items;
         }
 
-        // Add recent note items up to the configured limit
-        const limit = Math.max(1, settings.recentNotesCount ?? 1);
-        const recentPaths = recentNotes.slice(0, limit);
-
-        recentPaths.forEach(path => {
-            const file = app.vault.getAbstractFileByPath(path);
-            if (file instanceof TFile) {
-                const isExternalFile = !shouldDisplayFile(file, FILE_VISIBILITY.SUPPORTED, app);
-                const icon = isExternalFile ? 'lucide-external-link' : getDocumentIcon(file, app.metadataCache);
-                items.push({
-                    type: NavigationPaneItemType.RECENT_NOTE,
-                    key: `recent-${path}`,
-                    level: itemLevel,
-                    note: file,
-                    icon
-                });
-            }
-        });
+        items.push(...childItems);
 
         return items;
-    }, [app, settings.showRecentNotes, recentNotes, settings.recentNotesCount, settings.fileVisibility, recentNotesExpanded]);
+    }, [
+        app,
+        settings.recentNotesCount,
+        settings.showRecentNotes,
+        settings.interfaceIcons,
+        recentNotes,
+        fileVisibility,
+        recentNotesExpanded
+    ]);
+
+    const shouldPinRecentNotes = pinShortcuts && settings.pinRecentNotesWithShortcuts && settings.showRecentNotes;
 
     // Sanitize section order from local storage and ensure defaults are present
     const normalizedSectionOrder = useMemo(() => sanitizeNavigationSectionOrder(sectionOrder), [sectionOrder]);
@@ -698,25 +1104,14 @@ export function useNavigationPaneData({
      * Combine shortcut, folder, and tag items based on display order settings
      */
     // Combine all navigation items in the correct order with spacers
-    const items = useMemo(() => {
+    const { items, sectionSpacerMap, firstSectionId } = useMemo(() => {
         const allItems: CombinedNavigationItem[] = [];
+        const sectionSpacerMap = new Map<NavigationSectionId, string>();
+        let firstVisibleSectionId: NavigationSectionId | null = null;
 
-        // Path to the banner file configured in settings
-        const bannerPath = settings.navigationBanner;
-        // Banner appears in main list when not pinning shortcuts or when shortcuts list is empty
-        const shouldIncludeBannerInMainList = Boolean(bannerPath && (!pinShortcuts || shortcutItems.length === 0));
-
-        if (shouldIncludeBannerInMainList && bannerPath) {
-            allItems.push({
-                type: NavigationPaneItemType.TOP_SPACER,
-                key: 'banner-top-spacer'
-            });
-            allItems.push({
-                type: NavigationPaneItemType.BANNER,
-                key: `banner-${bannerPath}`,
-                path: bannerPath
-            });
-        }
+        // Navigation banners are rendered in the pinned chrome stack (above the virtualized list).
+        // Keeping them out of the virtualized items ensures the banner stays in front of the tree rows
+        // and avoids mixing "header chrome" elements into the tree/list semantics.
 
         // Add top spacer for visual separation between pinned content and tree items
         allItems.push({
@@ -725,35 +1120,35 @@ export function useNavigationPaneData({
         });
 
         // Determines which sections should be displayed based on settings and available items
-        const shouldIncludeShortcutsSection = settings.showShortcuts && shortcutItems.length > 0;
-        const shouldIncludeRecentSection = settings.showRecentNotes && recentNotesItems.length > 0;
-        const shouldIncludeNotesSection = folderItems.length > 0;
+        const shouldIncludeShortcutsSection = settings.showShortcuts && shortcutItems.length > 0 && !pinShortcuts;
+        const shouldIncludeRecentSection = settings.showRecentNotes && recentNotesItems.length > 0 && !shouldPinRecentNotes;
+        const shouldIncludeFoldersSection = folderItems.length > 0;
         const shouldIncludeTagsSection = settings.showTags && tagItems.length > 0;
 
         // Builds sections in the user-specified order
-        const orderedSections: CombinedNavigationItem[][] = [];
+        const orderedSections: { id: NavigationSectionId; items: CombinedNavigationItem[] }[] = [];
 
         // Adds sections to the display based on user-specified order and visibility conditions
         normalizedSectionOrder.forEach(identifier => {
             switch (identifier) {
                 case NavigationSectionId.SHORTCUTS:
                     if (shouldIncludeShortcutsSection) {
-                        orderedSections.push(shortcutItems);
+                        orderedSections.push({ id: NavigationSectionId.SHORTCUTS, items: shortcutItems });
                     }
                     break;
                 case NavigationSectionId.RECENT:
                     if (shouldIncludeRecentSection) {
-                        orderedSections.push(recentNotesItems);
+                        orderedSections.push({ id: NavigationSectionId.RECENT, items: recentNotesItems });
                     }
                     break;
-                case NavigationSectionId.NOTES:
-                    if (shouldIncludeNotesSection) {
-                        orderedSections.push(folderItems);
+                case NavigationSectionId.FOLDERS:
+                    if (shouldIncludeFoldersSection) {
+                        orderedSections.push({ id: NavigationSectionId.FOLDERS, items: folderItems });
                     }
                     break;
                 case NavigationSectionId.TAGS:
                     if (shouldIncludeTagsSection) {
-                        orderedSections.push(tagItems);
+                        orderedSections.push({ id: NavigationSectionId.TAGS, items: tagItems });
                     }
                     break;
                 default:
@@ -762,15 +1157,24 @@ export function useNavigationPaneData({
         });
 
         // Filters out empty sections that have no items to display
-        const visibleSections = orderedSections.filter(section => section.length > 0);
+        const visibleSections = orderedSections.filter(section => section.items.length > 0);
+
+        if (visibleSections.length > 0) {
+            firstVisibleSectionId = visibleSections[0].id;
+            // Track the spacer key used for the first section so pinned shortcuts can hide its separator
+            sectionSpacerMap.set(visibleSections[0].id, 'top-spacer');
+        }
 
         // Assembles final item list with spacers between sections
         visibleSections.forEach((section, index) => {
-            allItems.push(...section);
+            allItems.push(...section.items);
             if (index < visibleSections.length - 1) {
+                const nextSection = visibleSections[index + 1];
+                const spacerKey = buildSectionSeparatorKey(nextSection.id);
+                sectionSpacerMap.set(nextSection.id, spacerKey);
                 allItems.push({
                     type: NavigationPaneItemType.LIST_SPACER,
-                    key: `section-spacer-${index}`
+                    key: spacerKey
                 });
             }
         });
@@ -780,7 +1184,7 @@ export function useNavigationPaneData({
             key: 'bottom-spacer'
         });
 
-        return allItems;
+        return { items: allItems, sectionSpacerMap, firstSectionId: firstVisibleSectionId };
     }, [
         folderItems,
         tagItems,
@@ -788,9 +1192,9 @@ export function useNavigationPaneData({
         recentNotesItems,
         normalizedSectionOrder,
         settings.showShortcuts,
+        shouldPinRecentNotes,
         settings.showRecentNotes,
         settings.showTags,
-        settings.navigationBanner,
         pinShortcuts
     ]);
 
@@ -826,91 +1230,190 @@ export function useNavigationPaneData({
             tagIcons: settings.tagIcons || {},
             fileIcons: settings.fileIcons || {},
             fileColors: settings.fileColors || {},
-            inheritFolderColors: settings.inheritFolderColors
+            inheritFolderColors: settings.inheritFolderColors,
+            inheritTagColors: settings.inheritTagColors
         });
         return `${settingsSignature}::${frontmatterMetadataVersion}`;
     }, [settings, frontmatterMetadataVersion]); // Depend on entire settings object to catch mutations
+
+    const [navigationSeparatorVersion, setNavigationSeparatorVersion] = useState(() => metadataService.getNavigationSeparatorsVersion());
+
+    useEffect(() => {
+        return metadataService.subscribeToNavigationSeparatorChanges(version => {
+            setNavigationSeparatorVersion(version);
+        });
+    }, [metadataService]);
+    const navigationSeparatorSnapshot = useMemo(() => {
+        return {
+            version: navigationSeparatorVersion,
+            record: settings.navigationSeparators || {}
+        };
+    }, [navigationSeparatorVersion, settings.navigationSeparators]);
+
+    const parsedNavigationSeparators = useMemo(() => {
+        const separatorRecord = navigationSeparatorSnapshot.record;
+        const folderSeparators = new Set<string>();
+        const tagSeparators = new Set<string>();
+        const sectionSeparatorIds = new Set<NavigationSectionId>();
+        let useSectionSpacerForRootFolder = false;
+
+        Object.entries(separatorRecord || {}).forEach(([key, enabled]) => {
+            if (!enabled) {
+                return;
+            }
+
+            const descriptor = parseNavigationSeparatorKey(key);
+            if (!descriptor) {
+                return;
+            }
+
+            if (descriptor.type === 'section') {
+                if (descriptor.id === NavigationSectionId.TAGS && !settings.showAllTagsFolder) {
+                    return;
+                }
+                sectionSeparatorIds.add(descriptor.id);
+                return;
+            }
+
+            if (descriptor.type === 'folder') {
+                if (descriptor.path === '/') {
+                    useSectionSpacerForRootFolder = settings.showRootFolder;
+                } else {
+                    folderSeparators.add(descriptor.path);
+                }
+                return;
+            }
+
+            if (descriptor.type === 'tag') {
+                tagSeparators.add(descriptor.path);
+            }
+        });
+
+        const hasAnySeparators =
+            folderSeparators.size > 0 || tagSeparators.size > 0 || sectionSeparatorIds.size > 0 || useSectionSpacerForRootFolder;
+
+        return { folderSeparators, tagSeparators, sectionSeparatorIds, useSectionSpacerForRootFolder, hasAnySeparators };
+    }, [navigationSeparatorSnapshot, settings.showRootFolder, settings.showAllTagsFolder]);
+
+    const itemsWithSeparators = useMemo(() => {
+        const { folderSeparators, tagSeparators, sectionSeparatorIds, useSectionSpacerForRootFolder, hasAnySeparators } =
+            parsedNavigationSeparators;
+
+        if (!hasAnySeparators) {
+            return items;
+        }
+
+        const spacerKeysWithSeparators = new Set<string>();
+        const effectiveSectionIds = new Set(sectionSeparatorIds);
+        if (pinShortcuts) {
+            effectiveSectionIds.delete(NavigationSectionId.SHORTCUTS);
+            if (firstSectionId) {
+                // When shortcuts are pinned the first inlined section should never draw its separator line
+                effectiveSectionIds.delete(firstSectionId);
+            }
+        }
+
+        effectiveSectionIds.forEach(sectionId => {
+            const spacerKey = sectionSpacerMap.get(sectionId);
+            if (spacerKey) {
+                spacerKeysWithSeparators.add(spacerKey);
+            }
+        });
+
+        // Include root section separator when:
+        // - Section spacer for root folder is enabled AND
+        // - Either shortcuts are not pinned OR the first section is not NOTES
+        // This ensures proper separation between pinned shortcuts and main navigation sections
+        const shouldIncludeRootSectionSeparator =
+            useSectionSpacerForRootFolder && (!pinShortcuts || firstSectionId !== NavigationSectionId.FOLDERS);
+        if (shouldIncludeRootSectionSeparator) {
+            const spacerKey = sectionSpacerMap.get(NavigationSectionId.FOLDERS);
+            if (spacerKey) {
+                spacerKeysWithSeparators.add(spacerKey);
+            }
+        }
+
+        if (spacerKeysWithSeparators.size === 0 && folderSeparators.size === 0 && tagSeparators.size === 0) {
+            return items;
+        }
+
+        const createCustomSeparator = (key: string): CombinedNavigationItem => ({
+            type: NavigationPaneItemType.LIST_SPACER,
+            key,
+            hasSeparator: true
+        });
+
+        const result: CombinedNavigationItem[] = [];
+
+        items.forEach(item => {
+            if (item.type === NavigationPaneItemType.TOP_SPACER || item.type === NavigationPaneItemType.LIST_SPACER) {
+                if (spacerKeysWithSeparators.has(item.key)) {
+                    result.push({ ...item, hasSeparator: true });
+                } else {
+                    result.push(item);
+                }
+                return;
+            }
+
+            const shouldHideFolderSeparator = item.type === NavigationPaneItemType.FOLDER && item.isExcluded && !showHiddenItems;
+
+            if (item.type === NavigationPaneItemType.FOLDER) {
+                if (!shouldHideFolderSeparator && folderSeparators.has(item.data.path)) {
+                    result.push(createCustomSeparator(buildFolderSeparatorKey(item.data.path)));
+                }
+            } else if (
+                (item.type === NavigationPaneItemType.TAG || item.type === NavigationPaneItemType.UNTAGGED) &&
+                tagSeparators.has(item.data.path)
+            ) {
+                result.push(createCustomSeparator(buildTagSeparatorKey(item.data.path)));
+            }
+
+            result.push(item);
+        });
+
+        return result;
+    }, [firstSectionId, items, parsedNavigationSeparators, sectionSpacerMap, showHiddenItems, pinShortcuts]);
+
+    const decorateItems = useCallback(
+        (sourceItems: CombinedNavigationItem[]) =>
+            decorateNavigationItems(
+                sourceItems,
+                app,
+                settings,
+                fileNameIconNeedles,
+                getFileDisplayName,
+                metadataService,
+                parsedExcludedFolders,
+                metadataVersion
+            ),
+        [app, settings, fileNameIconNeedles, getFileDisplayName, metadataService, parsedExcludedFolders, metadataVersion]
+    );
 
     /**
      * Add metadata (colors, icons) and excluded folders to items
      * This pre-computation avoids calling these functions during render
      */
-    const itemsWithMetadata = useMemo(() => {
-        return items.map(item => {
-            if (item.type === NavigationPaneItemType.FOLDER) {
-                return {
-                    ...item,
-                    color: metadataService.getFolderColor(item.data.path),
-                    backgroundColor: metadataService.getFolderBackgroundColor(item.data.path),
-                    icon: metadataService.getFolderIcon(item.data.path),
-                    parsedExcludedFolders
-                };
-            } else if (item.type === NavigationPaneItemType.TAG || item.type === NavigationPaneItemType.UNTAGGED) {
-                const tagNode = item.data;
-                return {
-                    ...item,
-                    color: metadataService.getTagColor(tagNode.path),
-                    backgroundColor: metadataService.getTagBackgroundColor(tagNode.path),
-                    icon: metadataService.getTagIcon(tagNode.path)
-                };
-            } else if (item.type === NavigationPaneItemType.SHORTCUT_FOLDER) {
-                // Apply custom folder icon to shortcut if available
-                const folderPath = item.folder?.path;
-                const folderColor = folderPath ? metadataService.getFolderColor(folderPath) : undefined;
-                const folderBackground = folderPath ? metadataService.getFolderBackgroundColor(folderPath) : undefined;
-                const customIcon = folderPath ? metadataService.getFolderIcon(folderPath) : undefined;
-                const defaultIcon = folderPath === '/' ? 'vault' : 'lucide-folder';
-                return {
-                    ...item,
-                    icon: customIcon || defaultIcon,
-                    color: folderColor,
-                    backgroundColor: folderBackground
-                };
-            } else if (item.type === NavigationPaneItemType.SHORTCUT_TAG) {
-                // Apply custom tag icon to shortcut if available
-                const tagColor = metadataService.getTagColor(item.tagPath);
-                const tagBackground = metadataService.getTagBackgroundColor(item.tagPath);
-                return {
-                    ...item,
-                    icon: metadataService.getTagIcon(item.tagPath) || 'lucide-tags',
-                    color: tagColor,
-                    backgroundColor: tagBackground
-                };
-            } else if (item.type === NavigationPaneItemType.SHORTCUT_NOTE) {
-                const note = item.note;
-                if (!note) {
-                    return item;
-                }
-                const customIcon = metadataService.getFileIcon(note.path);
-                const color = metadataService.getFileColor(note.path);
-                return {
-                    ...item,
-                    icon: customIcon ?? item.icon,
-                    color
-                };
-            } else if (item.type === NavigationPaneItemType.RECENT_NOTE) {
-                const customIcon = metadataService.getFileIcon(item.note.path);
-                const color = metadataService.getFileColor(item.note.path);
-                return {
-                    ...item,
-                    icon: customIcon ?? item.icon,
-                    color
-                };
-            }
-            return item;
-        });
-        // NOTE TO REVIEWER: Including **metadataVersion** to detect settings mutations
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [items, parsedExcludedFolders, metadataService, metadataVersion]);
+    const itemsWithMetadata = useMemo(() => decorateItems(itemsWithSeparators), [decorateItems, itemsWithSeparators]);
+
+    const decoratedRecentNotes = useMemo(() => itemsWithMetadata.filter(isRecentNavigationItem), [itemsWithMetadata]);
 
     // Extract shortcut items when pinning is enabled for display in pinned area
     const shortcutItemsWithMetadata = useMemo(() => {
         if (!pinShortcuts) {
             return [] as CombinedNavigationItem[];
         }
+        return decorateItems(shortcutItems);
+    }, [decorateItems, pinShortcuts, shortcutItems]);
 
-        return itemsWithMetadata.filter(isShortcutNavigationItem);
-    }, [itemsWithMetadata, pinShortcuts]);
+    const pinnedRecentNotesItems = useMemo(() => {
+        if (!shouldPinRecentNotes) {
+            return [] as CombinedNavigationItem[];
+        }
+        if (decoratedRecentNotes.length > 0) {
+            return decoratedRecentNotes;
+        }
+        return decorateItems(recentNotesItems);
+    }, [decorateItems, decoratedRecentNotes, recentNotesItems, shouldPinRecentNotes]);
 
     /**
      * Filter items based on showHiddenItems setting
@@ -918,7 +1421,15 @@ export function useNavigationPaneData({
      */
     const filteredItems = useMemo(() => {
         // When pinning shortcuts, exclude them from main tree (they're rendered separately)
-        const baseItems = pinShortcuts ? itemsWithMetadata.filter(current => !isShortcutNavigationItem(current)) : itemsWithMetadata;
+        const baseItems = itemsWithMetadata.filter(current => {
+            if (pinShortcuts && isShortcutNavigationItem(current)) {
+                return false;
+            }
+            if (shouldPinRecentNotes && isRecentNavigationItem(current)) {
+                return false;
+            }
+            return true;
+        });
 
         if (showHiddenItems) {
             // Show all items including excluded ones
@@ -931,32 +1442,115 @@ export function useNavigationPaneData({
             }
             return true;
         });
-    }, [itemsWithMetadata, showHiddenItems, pinShortcuts]);
+    }, [itemsWithMetadata, showHiddenItems, pinShortcuts, shouldPinRecentNotes]);
+
+    /**
+     * Find the first folder that appears inline (not in the pinned area) when shortcuts are pinned.
+     *
+     * Special behavior when shortcuts are pinned:
+     * - Shortcuts themselves cannot have separators added/removed (no context menu separator options)
+     * - The first item after pinned shortcuts cannot have separators added/removed
+     * - This maintains clean visual separation between pinned area and main navigation
+     * - Users must disable pinned shortcuts to manage separators on these items
+     */
+    const firstInlineFolderPath = useMemo(() => {
+        if (!pinShortcuts) {
+            return null;
+        }
+
+        // Skip spacer items to find the first actual navigation item
+        let firstInlineItem: CombinedNavigationItem | null = null;
+        for (const item of filteredItems) {
+            if (SPACER_ITEM_TYPES.has(item.type)) {
+                continue;
+            }
+            firstInlineItem = item;
+            break;
+        }
+
+        if (!firstInlineItem) {
+            return null;
+        }
+
+        // Only return path if it's a folder (not a tag or other item type)
+        if (firstInlineItem.type === NavigationPaneItemType.FOLDER) {
+            return firstInlineItem.data.path;
+        }
+
+        return null;
+    }, [filteredItems, pinShortcuts]);
+
+    // Suppress the separator for the first inline folder when shortcuts are pinned
+    // This prevents visual separation between pinned shortcuts and the main navigation list
+    const filteredItemsForDisplay = useMemo(() => {
+        if (!pinShortcuts) {
+            return filteredItems;
+        }
+        if (!firstInlineFolderPath) {
+            return filteredItems;
+        }
+
+        const { folderSeparators } = parsedNavigationSeparators;
+        const hasSeparator = folderSeparators.has(firstInlineFolderPath);
+        if (!hasSeparator) {
+            return filteredItems;
+        }
+
+        // Remove the separator spacer item for the first inline folder
+        const suppressedKey = buildFolderSeparatorKey(firstInlineFolderPath);
+        let matchIndex = -1;
+        for (let i = 0; i < filteredItems.length; i += 1) {
+            const item = filteredItems[i];
+            if (item.type === NavigationPaneItemType.LIST_SPACER && item.key === suppressedKey) {
+                matchIndex = i;
+                break;
+            }
+        }
+
+        if (matchIndex === -1) {
+            return filteredItems;
+        }
+
+        // Create new array without the suppressed separator
+        const nextItems = filteredItems.slice();
+        nextItems.splice(matchIndex, 1);
+        return nextItems;
+    }, [filteredItems, firstInlineFolderPath, parsedNavigationSeparators, pinShortcuts]);
 
     /**
      * Create a map for O(1) item lookups by path
      * Build from filtered items so indices match what's displayed
      */
+    const itemsWithRootSpacing = useMemo(() => {
+        const tagRootLevel = settings.showAllTagsFolder ? 1 : 0;
+        return insertRootSpacing(filteredItemsForDisplay, settings.rootLevelSpacing, {
+            showRootFolder: settings.showRootFolder,
+            tagRootLevel
+        });
+    }, [filteredItemsForDisplay, settings.rootLevelSpacing, settings.showRootFolder, settings.showAllTagsFolder]);
+
     const pathToIndex = useMemo(() => {
         const indexMap = new Map<string, number>();
 
-        filteredItems.forEach((item, index) => {
+        itemsWithRootSpacing.forEach((item, index) => {
             if (item.type === NavigationPaneItemType.FOLDER) {
                 setNavigationIndex(indexMap, ItemType.FOLDER, item.data.path, index);
             } else if (item.type === NavigationPaneItemType.TAG || item.type === NavigationPaneItemType.UNTAGGED) {
                 const tagNode = item.data;
                 setNavigationIndex(indexMap, ItemType.TAG, tagNode.path, index);
+            } else if (item.type === NavigationPaneItemType.VIRTUAL_FOLDER && item.tagCollectionId) {
+                setNavigationIndex(indexMap, ItemType.TAG, item.tagCollectionId, index);
             }
         });
 
         return indexMap;
-    }, [filteredItems]);
+    }, [itemsWithRootSpacing]);
 
     // Build index map for shortcuts to enable scrolling to specific shortcuts
     const shortcutIndex = useMemo(() => {
         const indexMap = new Map<string, number>();
 
-        const source = pinShortcuts ? shortcutItemsWithMetadata : filteredItems;
+        const source = pinShortcuts ? shortcutItemsWithMetadata : itemsWithRootSpacing;
 
         source.forEach((item, index) => {
             if (
@@ -970,16 +1564,27 @@ export function useNavigationPaneData({
         });
 
         return indexMap;
-    }, [filteredItems, pinShortcuts, shortcutItemsWithMetadata]);
+    }, [itemsWithRootSpacing, pinShortcuts, shortcutItemsWithMetadata]);
+
+    const lastTagCountsRef = useRef<Map<string, NoteCountInfo>>(new Map());
+    const lastFolderCountsRef = useRef<Map<string, NoteCountInfo>>(new Map());
 
     /**
      * Pre-compute tag counts to avoid expensive calculations during render
      */
-    const tagCounts = useMemo(() => {
+    const computedTagCounts = useMemo((): Map<string, NoteCountInfo> | null => {
+        // Skip computation if pane is not visible or not showing tags
+        if (!isVisible || !settings.showTags) {
+            return null;
+        }
+
         const counts = new Map<string, NoteCountInfo>();
 
-        // Skip computation if pane is not visible or not showing tags
-        if (!isVisible || !settings.showTags) return counts;
+        counts.set(TAGGED_TAG_ID, {
+            current: visibleTaggedCount,
+            descendants: 0,
+            total: visibleTaggedCount
+        });
 
         // Add untagged count
         if (settings.showUntagged) {
@@ -1010,21 +1615,38 @@ export function useNavigationPaneData({
         });
 
         return counts;
-    }, [itemsWithMetadata, settings.showTags, settings.showUntagged, includeDescendantNotes, untaggedCount, isVisible]);
+    }, [itemsWithMetadata, settings.showTags, settings.showUntagged, includeDescendantNotes, visibleTaggedCount, untaggedCount, isVisible]);
+
+    const tagCounts = useMemo(() => {
+        if (!settings.showTags) {
+            return new Map<string, NoteCountInfo>();
+        }
+        return computedTagCounts ?? lastTagCountsRef.current;
+    }, [computedTagCounts, settings.showTags]);
+
+    useEffect(() => {
+        if (!settings.showTags) {
+            lastTagCountsRef.current = new Map();
+            return;
+        }
+        if (computedTagCounts) {
+            lastTagCountsRef.current = computedTagCounts;
+        }
+    }, [computedTagCounts, settings.showTags]);
 
     /**
      * Pre-compute folder file counts to avoid recursive counting during render
      */
-    const folderCounts = useMemo(() => {
-        const counts = new Map<string, NoteCountInfo>();
-
+    const computedFolderCounts = useMemo((): Map<string, NoteCountInfo> | null => {
         // Skip computation if pane is not visible or not showing note counts
         if (!isVisible || !settings.showNoteCount) {
-            return counts;
+            return null;
         }
 
+        const counts = new Map<string, NoteCountInfo>();
+
         const excludedProperties = effectiveFrontmatterExclusions;
-        const excludedFolderPatterns = settings.excludedFolders;
+        const excludedFolderPatterns = hiddenFolders;
         const folderNoteSettings: FolderNoteDetectionSettings = {
             enableFolderNotes: settings.enableFolderNotes,
             folderNoteName: settings.folderNoteName
@@ -1033,9 +1655,10 @@ export function useNavigationPaneData({
         const showHiddenFolders = showHiddenItems;
         const countOptions = {
             app,
-            fileVisibility: settings.fileVisibility,
+            fileVisibility,
             excludedFiles: excludedProperties,
             excludedFolders: excludedFolderPatterns,
+            fileNameMatcher: folderCountFileNameMatcher,
             includeDescendants,
             showHiddenFolders,
             hideFolderNoteInList: settings.hideFolderNoteInList,
@@ -1058,9 +1681,11 @@ export function useNavigationPaneData({
         settings.showNoteCount,
         includeDescendantNotes,
         effectiveFrontmatterExclusions,
-        settings.excludedFolders,
+        hiddenFolders,
+        hiddenFileNamePatterns,
         showHiddenItems,
-        settings.fileVisibility,
+        folderCountFileNameMatcher,
+        fileVisibility,
         settings.enableFolderNotes,
         settings.folderNoteName,
         settings.hideFolderNoteInList,
@@ -1068,6 +1693,23 @@ export function useNavigationPaneData({
         isVisible,
         fileChangeVersion
     ]);
+
+    const folderCounts = useMemo(() => {
+        if (!settings.showNoteCount) {
+            return new Map<string, NoteCountInfo>();
+        }
+        return computedFolderCounts ?? lastFolderCountsRef.current;
+    }, [computedFolderCounts, settings.showNoteCount]);
+
+    useEffect(() => {
+        if (!settings.showNoteCount) {
+            lastFolderCountsRef.current = new Map();
+            return;
+        }
+        if (computedFolderCounts) {
+            lastFolderCountsRef.current = computedFolderCounts;
+        }
+    }, [computedFolderCounts, settings.showNoteCount]);
 
     // Refresh folder counts when frontmatter changes (e.g., hide/unhide via frontmatter properties)
     useEffect(() => {
@@ -1092,9 +1734,13 @@ export function useNavigationPaneData({
     }, [app]);
 
     return {
-        items: filteredItems,
+        items: itemsWithRootSpacing,
+        firstSectionId,
+        firstInlineFolderPath,
         shortcutItems: shortcutItemsWithMetadata,
-        tagsVirtualFolderHasChildren: hasTagContent,
+        pinnedRecentNotesItems,
+        shouldPinRecentNotes,
+        tagsVirtualFolderHasChildren,
         pathToIndex,
         shortcutIndex,
         tagCounts,
@@ -1105,6 +1751,7 @@ export function useNavigationPaneData({
         rootOrderingTagTree: tagTreeForOrdering,
         rootTagOrderMap,
         missingRootTagPaths,
-        vaultChangeVersion: fileChangeVersion
+        vaultChangeVersion: fileChangeVersion,
+        navigationBannerPath
     };
 }

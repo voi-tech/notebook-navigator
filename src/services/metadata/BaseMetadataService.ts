@@ -22,6 +22,9 @@ import { ItemType } from '../../types';
 import { ISettingsProvider } from '../../interfaces/ISettingsProvider';
 import { FolderAppearance, TagAppearance } from '../../hooks/useListPaneAppearance';
 import type { ShortcutEntry } from '../../types/shortcuts';
+import { mutateVaultProfileShortcuts } from '../../utils/vaultProfiles';
+import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
+import { ensureRecord, isStringRecordValue } from '../../utils/recordUtils';
 
 /**
  * Type helper for metadata fields in settings
@@ -71,12 +74,15 @@ export abstract class BaseMetadataService {
      * Saves settings and triggers UI update
      * Uses a queue to serialize updates and prevent race conditions
      */
-    protected async saveAndUpdate(updater: (settings: NotebookNavigatorSettings) => void): Promise<void> {
+    protected async saveAndUpdate(updater: (settings: NotebookNavigatorSettings) => void | boolean): Promise<void> {
         // Queue this update to run after any pending updates
         this.updateQueue = this.updateQueue
             .then(async () => {
                 // Update settings
-                updater(this.settingsProvider.settings);
+                const result = updater(this.settingsProvider.settings);
+                if (result === false) {
+                    return;
+                }
                 // Save settings
                 await this.settingsProvider.saveSettingsAndUpdate();
             })
@@ -100,32 +106,28 @@ export abstract class BaseMetadataService {
         settings: NotebookNavigatorSettings,
         mutate: (shortcut: ShortcutEntry) => ShortcutEntry | null | undefined
     ): boolean {
-        const shortcuts = settings.shortcuts;
-        if (!Array.isArray(shortcuts) || shortcuts.length === 0) {
-            return false;
-        }
+        // Updates shortcuts across all vault profiles using the mutation function
+        return mutateVaultProfileShortcuts(settings.vaultProfiles, shortcuts => {
+            let changed = false;
+            const next: ShortcutEntry[] = [];
 
-        let changed = false;
-        const next: ShortcutEntry[] = [];
+            for (const shortcut of shortcuts) {
+                const result = mutate(shortcut);
+                // undefined means keep the shortcut unchanged
+                if (result === undefined) {
+                    next.push(shortcut);
+                    continue;
+                }
 
-        for (const shortcut of shortcuts) {
-            const result = mutate(shortcut);
-            if (result === undefined) {
-                next.push(shortcut);
-                continue;
+                changed = true;
+                // null means remove the shortcut, otherwise replace it
+                if (result !== null) {
+                    next.push(result);
+                }
             }
 
-            changed = true;
-            if (result !== null) {
-                next.push(result);
-            }
-        }
-
-        if (changed) {
-            settings.shortcuts = next;
-        }
-
-        return changed;
+            return changed ? next : null;
+        });
     }
 
     /**
@@ -210,10 +212,10 @@ export abstract class BaseMetadataService {
 
     // Ensures a color record exists in settings and returns it
     private ensureColorRecord(settings: NotebookNavigatorSettings, key: ColorRecordKey): Record<string, string> {
-        if (!settings[key]) {
-            settings[key] = {};
-        }
-        return settings[key];
+        // Converts to null prototype and validates all values are strings
+        const record = ensureRecord(settings[key], isStringRecordValue);
+        settings[key] = record;
+        return record;
     }
 
     // Sets a color or background color for an entity after validation
@@ -260,22 +262,27 @@ export abstract class BaseMetadataService {
      * @param iconId - Lucide icon identifier
      */
     protected async setEntityIcon(entityType: EntityType, path: string, iconId: string): Promise<void> {
+        const normalizedIcon = normalizeCanonicalIconId(iconId);
+        if (!normalizedIcon) {
+            return;
+        }
+
         await this.saveAndUpdate(settings => {
             if (entityType === ItemType.FOLDER) {
-                if (!settings.folderIcons) {
-                    settings.folderIcons = {};
-                }
-                settings.folderIcons[path] = iconId;
+                // Ensure null prototype and validate string values before adding icon
+                const icons = ensureRecord(settings.folderIcons, isStringRecordValue);
+                icons[path] = normalizedIcon;
+                settings.folderIcons = icons;
             } else if (entityType === ItemType.TAG) {
-                if (!settings.tagIcons) {
-                    settings.tagIcons = {};
-                }
-                settings.tagIcons[path] = iconId;
+                // Ensure null prototype and validate string values before adding icon
+                const icons = ensureRecord(settings.tagIcons, isStringRecordValue);
+                icons[path] = normalizedIcon;
+                settings.tagIcons = icons;
             } else {
-                if (!settings.fileIcons) {
-                    settings.fileIcons = {};
-                }
-                settings.fileIcons[path] = iconId;
+                // Ensure null prototype and validate string values before adding icon
+                const icons = ensureRecord(settings.fileIcons, isStringRecordValue);
+                icons[path] = normalizedIcon;
+                settings.fileIcons = icons;
             }
         });
     }
@@ -307,6 +314,20 @@ export abstract class BaseMetadataService {
         }
     }
 
+    // Reads an icon entry while ignoring inherited properties and non-string values
+    private readIconRecord(record: Record<string, string> | undefined, path: string): string | undefined {
+        // Check if property exists as own property to prevent reading from prototype chain
+        if (!record || !Object.prototype.hasOwnProperty.call(record, path)) {
+            return undefined;
+        }
+        const icon = record[path];
+        // Validate that stored value is a string to handle corrupted data
+        if (typeof icon !== 'string') {
+            return undefined;
+        }
+        return normalizeCanonicalIconId(icon);
+    }
+
     /**
      * Gets the custom icon for an entity
      * @param entityType - Type of entity ('folder' or 'tag')
@@ -315,12 +336,12 @@ export abstract class BaseMetadataService {
      */
     protected getEntityIcon(entityType: EntityType, path: string): string | undefined {
         if (entityType === ItemType.FOLDER) {
-            return this.settingsProvider.settings.folderIcons?.[path];
+            return this.readIconRecord(this.settingsProvider.settings.folderIcons, path);
         }
         if (entityType === ItemType.TAG) {
-            return this.settingsProvider.settings.tagIcons?.[path];
+            return this.readIconRecord(this.settingsProvider.settings.tagIcons, path);
         }
-        return this.settingsProvider.settings.fileIcons?.[path];
+        return this.readIconRecord(this.settingsProvider.settings.fileIcons, path);
     }
 
     // ========== Generic Sort Override Management ==========
@@ -334,15 +355,15 @@ export abstract class BaseMetadataService {
     protected async setEntitySortOverride(entityType: EntityType, path: string, sortOption: SortOption): Promise<void> {
         await this.saveAndUpdate(settings => {
             if (entityType === ItemType.FOLDER) {
-                if (!settings.folderSortOverrides) {
-                    settings.folderSortOverrides = {};
-                }
-                settings.folderSortOverrides[path] = sortOption;
+                // Ensure null prototype before adding sort override
+                const overrides = ensureRecord(settings.folderSortOverrides);
+                overrides[path] = sortOption;
+                settings.folderSortOverrides = overrides;
             } else {
-                if (!settings.tagSortOverrides) {
-                    settings.tagSortOverrides = {};
-                }
-                settings.tagSortOverrides[path] = sortOption;
+                // Ensure null prototype before adding sort override
+                const overrides = ensureRecord(settings.tagSortOverrides);
+                overrides[path] = sortOption;
+                settings.tagSortOverrides = overrides;
             }
         });
     }
@@ -417,14 +438,19 @@ export abstract class BaseMetadataService {
      * Updates nested paths when a parent is renamed
      * Handles both direct matches and nested children
      */
-    protected updateNestedPaths<T>(metadata: Record<string, T> | undefined, oldPath: string, newPath: string): boolean {
+    protected updateNestedPaths<T>(
+        metadata: Record<string, T> | undefined,
+        oldPath: string,
+        newPath: string,
+        preserveExisting = false
+    ): boolean {
         if (!metadata) return false;
 
         const oldPrefix = `${oldPath}/`;
         const updates: { oldPath: string; newPath: string; value: T }[] = [];
 
         // First, handle direct path match
-        if (oldPath in metadata) {
+        if (Object.prototype.hasOwnProperty.call(metadata, oldPath)) {
             updates.push({
                 oldPath: oldPath,
                 newPath: newPath,
@@ -433,7 +459,8 @@ export abstract class BaseMetadataService {
         }
 
         // Then handle nested paths
-        for (const path in metadata) {
+        const metadataKeys = Object.keys(metadata);
+        for (const path of metadataKeys) {
             if (path.startsWith(oldPrefix)) {
                 const newNestedPath = `${newPath}/${path.slice(oldPrefix.length)}`;
                 updates.push({
@@ -444,13 +471,30 @@ export abstract class BaseMetadataService {
             }
         }
 
+        let changed = false;
+
         // Apply all updates
         for (const update of updates) {
+            if (update.oldPath === update.newPath) {
+                continue;
+            }
+
+            // Check if the new path already has metadata (converts to boolean for clarity)
+            const newPathExists = Boolean(Object.prototype.hasOwnProperty.call(metadata, update.newPath));
+            if (newPathExists && preserveExisting) {
+                if (update.oldPath !== update.newPath) {
+                    delete metadata[update.oldPath];
+                    changed = true;
+                }
+                continue;
+            }
+
             metadata[update.newPath] = update.value;
             delete metadata[update.oldPath];
+            changed = true;
         }
 
-        return updates.length > 0;
+        return changed;
     }
 
     /**

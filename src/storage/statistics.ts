@@ -18,8 +18,9 @@
 
 import type { NotebookNavigatorSettings } from '../settings';
 import { isPathInExcludedFolder } from '../utils/fileFilters';
+import { getActiveHiddenFolders } from '../utils/vaultProfiles';
 import { getDBInstance } from './fileOperations';
-import { METADATA_SENTINEL } from './IndexedDBStorage';
+import { METADATA_SENTINEL, type FileData } from './IndexedDBStorage';
 
 /**
  * Statistics - Cache analytics and monitoring
@@ -61,17 +62,28 @@ export interface CacheStatistics {
     failedModifiedFiles: string[];
 }
 
+function estimateFileDataSizeBytes(fileData: FileData): number {
+    // Exclude blobs from size estimates; the main store keeps featureImage null.
+    const jsonSizeBytes = JSON.stringify({ ...fileData, featureImage: null }).length;
+    return jsonSizeBytes;
+}
+
 /**
  * Calculate statistics from the database.
  * Streams through all files to count items and estimate storage size.
  *
  * @returns Cache statistics or null on error
  */
-export function calculateCacheStatistics(settings: NotebookNavigatorSettings, showHiddenItems: boolean): CacheStatistics | null {
+export async function calculateCacheStatistics(
+    settings: NotebookNavigatorSettings,
+    showHiddenItems: boolean
+): Promise<CacheStatistics | null> {
     try {
         const db = getDBInstance();
 
-        const excludedFolderPatterns = showHiddenItems ? [] : settings.excludedFolders;
+        // Retrieves folders hidden by the active vault profile
+        const hiddenFolders = getActiveHiddenFolders(settings);
+        const excludedFolderPatterns = showHiddenItems ? [] : hiddenFolders;
 
         const stats: CacheStatistics = {
             totalItems: 0,
@@ -93,29 +105,19 @@ export function calculateCacheStatistics(settings: NotebookNavigatorSettings, sh
 
         let totalSize = 0;
 
-        // Get all files from cache
-        const allFiles = db.getAllFiles();
-
-        for (const { path, data: fileData } of allFiles) {
+        db.forEachFile((path, fileData) => {
             if (excludedFolderPatterns.length > 0 && isPathInExcludedFolder(path, excludedFolderPatterns)) {
-                continue;
+                return;
             }
 
             stats.totalItems++;
 
+            // Estimate size including path and serialized metadata.
+            totalSize += path.length + estimateFileDataSizeBytes(fileData);
+
             // Check for tags (not null and not empty array)
             if (fileData.tags !== null && fileData.tags.length > 0) {
                 stats.itemsWithTags++;
-            }
-
-            // Check for preview text (not null and not empty)
-            if (fileData.preview && fileData.preview.length > 0) {
-                stats.itemsWithPreview++;
-            }
-
-            // Check for feature image (not null and not empty)
-            if (fileData.featureImage && fileData.featureImage.length > 0) {
-                stats.itemsWithFeature++;
             }
 
             // Check for metadata (not null and has actual values)
@@ -170,10 +172,37 @@ export function calculateCacheStatistics(settings: NotebookNavigatorSettings, sh
                     }
                 }
             }
+        });
 
-            // Estimate size including path
-            totalSize += path.length + JSON.stringify(fileData).length;
-        }
+        // Stream the blob store for accurate feature image counts and sizes.
+        await db.forEachFeatureImageBlobRecord((path, record) => {
+            if (excludedFolderPatterns.length > 0 && isPathInExcludedFolder(path, excludedFolderPatterns)) {
+                return;
+            }
+
+            const fileData = db.getFile(path);
+            if (!fileData || fileData.featureImageStatus !== 'has' || !fileData.featureImageKey) {
+                return;
+            }
+
+            // Only count blobs that match the current key in the main store.
+            if (fileData.featureImageKey !== record.featureImageKey) {
+                return;
+            }
+
+            stats.itemsWithFeature++;
+            totalSize += record.blob.size;
+        });
+
+        // Stream the preview store for accurate preview counts and sizes.
+        await db.forEachPreviewTextRecord((path, previewText) => {
+            if (excludedFolderPatterns.length > 0 && isPathInExcludedFolder(path, excludedFolderPatterns)) {
+                return;
+            }
+
+            stats.itemsWithPreview++;
+            totalSize += path.length + previewText.length;
+        });
 
         // Calculate cache size in MB
         stats.totalSizeMB = totalSize / 1024 / 1024;

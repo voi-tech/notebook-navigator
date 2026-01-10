@@ -33,24 +33,38 @@ import { TFile, TFolder, debounce } from 'obsidian';
 import { useServices } from '../context/ServicesContext';
 import { OperationType } from '../services/CommandQueueService';
 import { useFileCache } from '../context/StorageContext';
-import { ListPaneItemType, ItemType } from '../types';
+import { ListPaneItemType, ItemType, PINNED_SECTION_HEADER_KEY } from '../types';
 import type { VisibilityPreferences } from '../types';
 import type { ListPaneItem } from '../types/virtualization';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { DateUtils } from '../utils/dateUtils';
 import { getFilesForFolder, getFilesForTag, collectPinnedPaths } from '../utils/fileFinder';
-import { shouldExcludeFile, isFolderInExcludedFolder } from '../utils/fileFilters';
-import { getDateField, getEffectiveSortOption } from '../utils/sortUtils';
+import { shouldExcludeFile, createHiddenFileNameMatcher, isFolderInExcludedFolder } from '../utils/fileFilters';
+import { getDateField, getEffectiveSortOption, naturalCompare } from '../utils/sortUtils';
 import { strings } from '../i18n';
 import { FILE_VISIBILITY } from '../utils/fileTypeUtils';
-import { parseFilterSearchTokens, fileMatchesFilterTokens } from '../utils/filterSearch';
+import {
+    parseFilterSearchTokens,
+    fileMatchesFilterTokens,
+    filterSearchHasActiveCriteria,
+    filterSearchNeedsTagLookup,
+    filterSearchRequiresTagsForEveryMatch
+} from '../utils/filterSearch';
 import type { NotebookNavigatorSettings } from '../settings';
+import type { FilterSearchTokens } from '../utils/filterSearch';
 import type { SearchResultMeta } from '../types/search';
 import { createHiddenTagVisibility, normalizeTagPathValue } from '../utils/tagPrefixMatcher';
+import { resolveListGrouping } from '../utils/listGrouping';
+import { runAsyncAction } from '../utils/async';
+import type { ActiveProfileState } from '../context/SettingsContext';
+import type { SearchProvider } from '../types/search';
+import { PreviewTextUtils } from '../utils/previewTextUtils';
 
 const EMPTY_SEARCH_META = new Map<string, SearchResultMeta>();
 // Shared empty map used when no files are hidden to avoid allocations
 const EMPTY_HIDDEN_STATE = new Map<string, boolean>();
+// Shared sentinel array used when only tag presence is required
+const TAG_PRESENCE_SENTINEL = ['__nn_tag_present__'];
 
 /**
  * Parameters for the useListPaneData hook
@@ -64,8 +78,14 @@ interface UseListPaneDataParams {
     selectedTag: string | null;
     /** Plugin settings */
     settings: NotebookNavigatorSettings;
+    /** Active profile-derived values */
+    activeProfile: ActiveProfileState;
+    /** Active search provider to use for filtering */
+    searchProvider: SearchProvider;
     /** Optional search query to filter files */
     searchQuery?: string;
+    /** Pre-parsed search tokens matching the debounced query */
+    searchTokens?: FilterSearchTokens;
     /** Visibility preferences that control descendant notes and hidden items */
     visibility: VisibilityPreferences;
 }
@@ -78,6 +98,8 @@ interface UseListPaneDataResult {
     listItems: ListPaneItem[];
     /** Ordered array of files (without headers) for multi-selection */
     orderedFiles: TFile[];
+    /** Map from file path to index within orderedFiles array */
+    orderedFileIndexMap: Map<string, number>;
     /** Map from file path to list item index for O(1) lookups */
     filePathToIndex: Map<string, number>;
     /** Map from file path to position in files array for multi-selection */
@@ -100,7 +122,10 @@ export function useListPaneData({
     selectedFolder,
     selectedTag,
     settings,
+    activeProfile,
+    searchProvider,
     searchQuery,
+    searchTokens,
     visibility
 }: UseListPaneDataParams): UseListPaneDataResult {
     const { app, tagTreeService, commandQueue, omnisearchService } = useServices();
@@ -120,7 +145,30 @@ export function useListPaneData({
     const hasSearchQuery = trimmedQuery.length > 0;
     const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
     // Use Omnisearch only when selected, available, and there's a query
-    const useOmnisearch = settings.searchProvider === 'omnisearch' && isOmnisearchAvailable && hasSearchQuery;
+    const useOmnisearch = searchProvider === 'omnisearch' && isOmnisearchAvailable && hasSearchQuery;
+    const { hiddenFolders, hiddenFiles, hiddenFileNamePatterns, hiddenTags, fileVisibility } = activeProfile;
+    const listConfig = useMemo(
+        () => ({
+            pinnedNotes: settings.pinnedNotes,
+            filterPinnedByFolder: settings.filterPinnedByFolder,
+            showPinnedGroupHeader: settings.showPinnedGroupHeader ?? true,
+            showTags: settings.showTags,
+            showFileTags: settings.showFileTags,
+            noteGrouping: settings.noteGrouping,
+            folderAppearances: settings.folderAppearances,
+            tagAppearances: settings.tagAppearances
+        }),
+        [
+            settings.filterPinnedByFolder,
+            settings.folderAppearances,
+            settings.noteGrouping,
+            settings.pinnedNotes,
+            settings.showFileTags,
+            settings.showPinnedGroupHeader,
+            settings.showTags,
+            settings.tagAppearances
+        ]
+    );
 
     const sortOption = useMemo(() => {
         if (selectionType === ItemType.TAG && selectedTag) {
@@ -146,7 +194,35 @@ export function useListPaneData({
         // NOTE: Excluding getFilesForFolder/getFilesForTag - static imports
         // updateKey triggers re-computation on storage updates
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectionType, selectedFolder, selectedTag, settings, includeDescendantNotes, showHiddenItems, app, tagTreeService, updateKey]);
+    }, [
+        selectionType,
+        selectedFolder,
+        selectedTag,
+        activeProfile.profile.id,
+        activeProfile.hiddenFolders,
+        activeProfile.hiddenFiles,
+        activeProfile.hiddenFileNamePatterns,
+        activeProfile.hiddenTags,
+        activeProfile.fileVisibility,
+        settings.enableFolderNotes,
+        settings.hideFolderNoteInList,
+        settings.folderNoteName,
+        settings.useFrontmatterMetadata,
+        settings.frontmatterNameField,
+        settings.frontmatterCreatedField,
+        settings.frontmatterModifiedField,
+        settings.frontmatterDateFormat,
+        settings.filterPinnedByFolder,
+        settings.pinnedNotes,
+        settings.defaultFolderSort,
+        settings.folderSortOverrides,
+        settings.tagSortOverrides,
+        includeDescendantNotes,
+        showHiddenItems,
+        app,
+        tagTreeService,
+        updateKey
+    ]);
 
     // Set of file paths for the current view scope
     const basePathSet = useMemo(() => new Set(baseFiles.map(file => file.path)), [baseFiles]);
@@ -178,7 +254,8 @@ export function useListPaneData({
         const token = ++searchTokenRef.current;
         let disposed = false;
 
-        (async () => {
+        // Execute omnisearch
+        runAsyncAction(async () => {
             try {
                 const hits = await omnisearchService.search(trimmedQuery);
                 // Ignore stale results
@@ -206,12 +283,17 @@ export function useListPaneData({
                         }));
 
                     const terms = hit.foundWords.filter(word => typeof word === 'string' && word.length > 0);
+                    // Omnisearch excerpts are normalized on every search update; keep this cheap.
+                    // HTML stripping is intentionally disabled regardless of stripHtmlInPreview to avoid
+                    // additional per-keystroke processing on large excerpts.
+                    const excerpt =
+                        typeof hit.excerpt === 'string' ? PreviewTextUtils.normalizeExcerpt(hit.excerpt, { stripHtml: false }) : undefined;
 
                     meta.set(hit.path, {
                         score: hit.score,
                         terms,
                         matches,
-                        excerpt: hit.excerpt
+                        excerpt
                     });
                 }
 
@@ -221,7 +303,7 @@ export function useListPaneData({
                     setOmnisearchResult({ query: trimmedQuery, files: [], meta: new Map() });
                 }
             }
-        })();
+        });
 
         return () => {
             disposed = true;
@@ -285,65 +367,67 @@ export function useListPaneData({
         }
 
         // Parse the search query into filter tokens
-        const tokens = parseFilterSearchTokens(trimmedQuery);
+        const tokens = searchTokens ?? parseFilterSearchTokens(trimmedQuery);
 
-        // Check if any meaningful tokens exist (inclusions or exclusions)
-        const hasTokens =
-            tokens.nameTokens.length > 0 ||
-            tokens.tagTokens.length > 0 ||
-            tokens.requireTagged ||
-            tokens.excludeNameTokens.length > 0 ||
-            tokens.excludeTagTokens.length > 0 ||
-            tokens.excludeTagged;
-
-        // Skip filtering if no tokens (e.g., query was only connector words)
-        if (!hasTokens) {
+        // Skip filtering if query contains no meaningful criteria
+        if (!filterSearchHasActiveCriteria(tokens)) {
             return baseFiles;
         }
 
-        // Get database instance for tag lookups
+        // Check if we need to access tag metadata for any file
+        const needsTagLookup = filterSearchNeedsTagLookup(tokens);
+        // Check if all inclusion clauses require files to have tags
+        const requireTaggedMatches = filterSearchRequiresTagsForEveryMatch(tokens);
+        const requiresNormalizedTagValues = tokens.mode === 'tag' || tokens.tagTokens.length > 0 || tokens.excludeTagTokens.length > 0;
+
         const db = getDB();
 
-        // Local cache for lowercase tags to avoid repeated transformations
-        const lowercaseTagCache = new Map<string, string[]>();
+        // Cache normalized tag arrays to avoid repeated string transformations
+        const normalizedTagCache = new Map<string, string[]>();
+        const emptyTags: string[] = [];
+
+        // Get or compute normalized tags for a file path
+        const resolveNormalizedTags = (path: string, rawTags: string[]): string[] => {
+            const cached = normalizedTagCache.get(path);
+            if (cached !== undefined) {
+                return cached;
+            }
+            const normalized = rawTags.map(tag => normalizeTagPathValue(tag)).filter((value): value is string => value.length > 0);
+            normalizedTagCache.set(path, normalized);
+            return normalized;
+        };
 
         const filteredByFilterSearch = baseFiles.filter(file => {
-            const name = searchableNames.get(file.path) || '';
+            const lowercaseName = searchableNames.get(file.path) || '';
 
-            // Performance optimization: Only access the tag cache when the query actually
-            // references tags (either for inclusion or exclusion). This avoids expensive
-            // tag lookups for simple name-only searches.
-            const needsTags =
-                tokens.requireTagged || tokens.tagTokens.length > 0 || tokens.excludeTagged || tokens.excludeTagTokens.length > 0;
-
-            let lowercaseTags: string[] = [];
-            if (needsTags) {
-                const tags = db.getCachedTags(file.path);
-                if (tags.length === 0) {
-                    // File has no tags - fail if we require tags for inclusion
-                    if (tokens.requireTagged || tokens.tagTokens.length > 0) {
-                        return false;
-                    }
-                    // Otherwise, continue with empty tag array for exclusion checks
-                    lowercaseTags = [];
-                } else {
-                    // Performance optimization: Cache lowercase tag arrays to avoid repeated
-                    // toLowerCase() calls when checking multiple files
-                    let cached = lowercaseTagCache.get(file.path);
-                    if (!cached) {
-                        cached = tags.map(tag => normalizeTagPathValue(tag)).filter((value): value is string => value.length > 0);
-                        lowercaseTagCache.set(file.path, cached);
-                    }
-                    lowercaseTags = cached;
-                }
+            // Skip tag lookup if tokens do not reference tags
+            if (!needsTagLookup) {
+                return fileMatchesFilterTokens(lowercaseName, emptyTags, tokens);
             }
 
-            return fileMatchesFilterTokens(name, lowercaseTags, tokens);
+            const rawTags = db.getCachedTags(file.path);
+            const hasTags = rawTags.length > 0;
+
+            // Early return if file must have tags but has none
+            if (requireTaggedMatches && !hasTags) {
+                return false;
+            }
+
+            let lowercaseTags: string[];
+            if (!hasTags) {
+                lowercaseTags = emptyTags;
+            } else if (requiresNormalizedTagValues) {
+                lowercaseTags = resolveNormalizedTags(file.path, rawTags);
+            } else {
+                lowercaseTags = TAG_PRESENCE_SENTINEL;
+            }
+
+            return fileMatchesFilterTokens(lowercaseName, lowercaseTags, tokens);
         });
 
         // Return the filtered results from the internal filter search
         return filteredByFilterSearch;
-    }, [useOmnisearch, trimmedQuery, baseFiles, searchableNames, omnisearchResult, getDB]);
+    }, [useOmnisearch, trimmedQuery, baseFiles, searchableNames, omnisearchResult, getDB, searchTokens]);
 
     // Builds map of file paths that are normally hidden but shown via "show hidden items"
     const hiddenFileState = useMemo(() => {
@@ -353,8 +437,10 @@ export function useListPaneData({
 
         const db = getDB();
         const records = db.getFiles(files.map(file => file.path));
-        const shouldCheckFolders = settings.excludedFolders.length > 0;
-        const shouldCheckFrontmatter = settings.excludedFiles.length > 0;
+        const shouldCheckFolders = hiddenFolders.length > 0;
+        const shouldCheckFrontmatter = hiddenFiles.length > 0;
+        const shouldCheckFileNames = hiddenFileNamePatterns.length > 0;
+        const fileNameMatcher = shouldCheckFileNames ? createHiddenFileNameMatcher(hiddenFileNamePatterns) : null;
         const folderHiddenCache = shouldCheckFolders ? new Map<string, boolean>() : null;
         const result = new Map<string, boolean>();
 
@@ -366,7 +452,7 @@ export function useListPaneData({
             if (folderHiddenCache.has(folder.path)) {
                 return folderHiddenCache.get(folder.path) ?? false;
             }
-            const hidden = isFolderInExcludedFolder(folder, settings.excludedFolders);
+            const hidden = isFolderInExcludedFolder(folder, hiddenFolders);
             folderHiddenCache.set(folder.path, hidden);
             return hidden;
         };
@@ -376,19 +462,20 @@ export function useListPaneData({
             let hiddenByFrontmatter = false;
             if (shouldCheckFrontmatter && file.extension === 'md') {
                 if (record?.metadata?.hidden === undefined) {
-                    hiddenByFrontmatter = shouldExcludeFile(file, settings.excludedFiles, app);
+                    hiddenByFrontmatter = shouldExcludeFile(file, hiddenFiles, app);
                 } else {
                     hiddenByFrontmatter = Boolean(record.metadata?.hidden);
                 }
             }
+            const hiddenByFileName = fileNameMatcher ? fileNameMatcher.matches(file) : false;
             const hiddenByFolder = shouldCheckFolders ? resolveFolderHidden(file.parent ?? null) : false;
-            if (hiddenByFrontmatter || hiddenByFolder) {
+            if (hiddenByFrontmatter || hiddenByFileName || hiddenByFolder) {
                 result.set(file.path, true);
             }
         });
 
         return result;
-    }, [files, getDB, settings.excludedFolders, settings.excludedFiles, showHiddenItems, app]);
+    }, [files, getDB, hiddenFolders, hiddenFiles, hiddenFileNamePatterns, showHiddenItems, app]);
 
     /**
      * Build the complete list of items for rendering, including:
@@ -418,7 +505,13 @@ export function useListPaneData({
         // selectionType can be FOLDER, TAG, FILE, or null - we only use FOLDER and TAG for pinned context
         const contextFilter =
             selectionType === ItemType.TAG ? ItemType.TAG : selectionType === ItemType.FOLDER ? ItemType.FOLDER : undefined;
-        const pinnedPaths = collectPinnedPaths(settings.pinnedNotes, contextFilter);
+        const restrictToFolderPath =
+            listConfig.filterPinnedByFolder && selectionType === ItemType.FOLDER && selectedFolder ? selectedFolder.path : undefined;
+        const pinnedPaths = collectPinnedPaths(
+            listConfig.pinnedNotes,
+            contextFilter,
+            restrictToFolderPath !== undefined ? { restrictToFolderPath } : undefined
+        );
 
         // Separate pinned and unpinned files
         const pinnedFiles = files.filter(f => pinnedPaths.has(f.path));
@@ -426,8 +519,8 @@ export function useListPaneData({
 
         // Check if file has tags for height optimization
         const db = getDB();
-        const shouldDetectTags = settings.showTags && settings.showFileTags;
-        const hiddenTagVisibility = shouldDetectTags ? createHiddenTagVisibility(settings.hiddenTags, showHiddenItems) : null;
+        const shouldDetectTags = listConfig.showTags && listConfig.showFileTags;
+        const hiddenTagVisibility = shouldDetectTags ? createHiddenTagVisibility(hiddenTags, showHiddenItems) : null;
         const fileHasTags = shouldDetectTags
             ? (file: TFile) => {
                   const tags = db.getCachedTags(file.path);
@@ -460,32 +553,45 @@ export function useListPaneData({
             items.push({ ...baseItem, ...overrides });
         };
 
+        // Controls whether to show header above pinned notes section
+        const showPinnedGroupHeader = listConfig.showPinnedGroupHeader;
+
         // Add pinned files
         if (pinnedFiles.length > 0) {
-            items.push({
-                type: ListPaneItemType.HEADER,
-                data: strings.listPane.pinnedSection,
-                key: `header-pinned`
-            });
+            if (showPinnedGroupHeader) {
+                items.push({
+                    type: ListPaneItemType.HEADER,
+                    data: strings.listPane.pinnedSection,
+                    key: PINNED_SECTION_HEADER_KEY
+                });
+            }
             pinnedFiles.forEach(file => {
                 pushFileItem(file, { isPinned: true });
             });
         }
 
-        // Add unpinned files using the configured grouping mode
-        const groupingMode = settings.noteGrouping ?? 'none';
+        // Resolve effective grouping mode (handles global default + per-folder/tag overrides)
+        const groupingInfo = resolveListGrouping({
+            settings: {
+                noteGrouping: listConfig.noteGrouping,
+                folderAppearances: listConfig.folderAppearances,
+                tagAppearances: listConfig.tagAppearances
+            },
+            selectionType: selectionType ?? undefined,
+            folderPath: selectedFolder ? selectedFolder.path : null,
+            tag: selectedTag ?? null
+        });
+        const groupingMode = groupingInfo.effectiveGrouping;
         const isTitleSort = sortOption.startsWith('title');
         // Date grouping is only applied when sorting by date
-        const shouldGroupByDate =
-            (groupingMode === 'date' || (groupingMode === 'folder' && selectionType === ItemType.TAG)) && !isTitleSort;
+        const shouldGroupByDate = groupingMode === 'date' && !isTitleSort;
         const shouldGroupByFolder = groupingMode === 'folder' && selectionType === ItemType.FOLDER;
 
         if (!shouldGroupByDate && !shouldGroupByFolder) {
             // No grouping
-            // If we showed a pinned section and have regular items, insert a split header
+            // If pinned notes exist and there are regular items, insert a header before regular notes
             if (pinnedFiles.length > 0 && unpinnedFiles.length > 0) {
-                const label =
-                    settings.fileVisibility === FILE_VISIBILITY.DOCUMENTS ? strings.listPane.notesSection : strings.listPane.filesSection;
+                const label = fileVisibility === FILE_VISIBILITY.DOCUMENTS ? strings.listPane.notesSection : strings.listPane.filesSection;
                 items.push({
                     type: ListPaneItemType.HEADER,
                     data: label,
@@ -592,17 +698,29 @@ export function useListPaneData({
             const orderedGroups = Array.from(folderGroups.entries())
                 .map(([key, group]) => ({ key, ...group }))
                 .sort((a, b) => {
-                    if (a.sortKey === b.sortKey) {
-                        return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+                    const sortKeyCompare = naturalCompare(a.sortKey, b.sortKey);
+                    if (sortKeyCompare !== 0) {
+                        return sortKeyCompare;
                     }
-                    return a.sortKey.localeCompare(b.sortKey, undefined, { sensitivity: 'base' });
+
+                    const labelCompare = naturalCompare(a.label, b.label);
+                    if (labelCompare !== 0) {
+                        return labelCompare;
+                    }
+
+                    if (a.key === b.key) {
+                        return 0;
+                    }
+                    return a.key < b.key ? -1 : 1;
                 });
 
             // Add groups and their files to the items list
             orderedGroups.forEach(group => {
-                // Skip header for current folder if there are no pinned notes
-                const shouldSkipHeader = group.isCurrentFolder && pinnedFiles.length === 0;
-                if (!shouldSkipHeader) {
+                if (group.files.length === 0) {
+                    return;
+                }
+
+                if (!group.isCurrentFolder || pinnedFiles.length > 0) {
                     items.push({
                         type: ListPaneItemType.HEADER,
                         data: group.label,
@@ -627,16 +745,19 @@ export function useListPaneData({
         return items;
     }, [
         files,
-        settings,
+        listConfig,
         selectionType,
         selectedFolder,
+        selectedTag,
         getFileCreatedTime,
         getFileModifiedTime,
         searchMetaMap,
         sortOption,
         getDB,
         hiddenFileState,
-        showHiddenItems
+        showHiddenItems,
+        fileVisibility,
+        hiddenTags
     ]);
 
     /**
@@ -671,16 +792,20 @@ export function useListPaneData({
      * Build an ordered array of files (excluding headers and spacers).
      * Used for Shift+Click range selection functionality.
      */
-    const orderedFiles = useMemo(() => {
+    const { orderedFiles, orderedFileIndexMap } = useMemo<{
+        orderedFiles: TFile[];
+        orderedFileIndexMap: Map<string, number>;
+    }>(() => {
         const files: TFile[] = [];
+        const indexMap = new Map<string, number>();
         listItems.forEach(item => {
-            if (item.type === ListPaneItemType.FILE) {
-                if (item.data instanceof TFile) {
-                    files.push(item.data);
-                }
+            if (item.type === ListPaneItemType.FILE && item.data instanceof TFile) {
+                // Store the index before pushing to maintain correct mapping
+                indexMap.set(item.data.path, files.length);
+                files.push(item.data);
             }
         });
-        return files;
+        return { orderedFiles: files, orderedFileIndexMap: indexMap };
     }, [listItems]);
 
     /**
@@ -802,11 +927,11 @@ export function useListPaneData({
             }
 
             // Check if file's hidden state changed (frontmatter property added/removed) to trigger rebuild
-            if (settings.excludedFiles.length > 0 && file.extension === 'md') {
+            if (hiddenFiles.length > 0 && file.extension === 'md') {
                 const db = getDB();
                 const record = db.getFile(file.path);
                 const wasExcluded = Boolean(record?.metadata?.hidden);
-                const isCurrentlyExcluded = shouldExcludeFile(file, settings.excludedFiles, app);
+                const isCurrentlyExcluded = shouldExcludeFile(file, hiddenFiles, app);
 
                 if (isCurrentlyExcluded === wasExcluded) {
                     return;
@@ -841,7 +966,7 @@ export function useListPaneData({
             }
 
             // React to metadata changes that may update hidden-state styling
-            if (!shouldRefresh && settings.excludedFiles.length > 0 && showHiddenItems) {
+            if (!shouldRefresh && hiddenFiles.length > 0 && showHiddenItems) {
                 const metadataPaths = changes.filter(change => change.changes.metadata !== undefined).map(change => change.path);
                 if (metadataPaths.length > 0) {
                     shouldRefresh = metadataPaths.some(path => basePathSet.has(path));
@@ -873,8 +998,8 @@ export function useListPaneData({
         selectedTag,
         selectedFolder,
         includeDescendantNotes,
-        settings.excludedFiles,
-        settings.excludedFolders,
+        hiddenFiles,
+        hiddenFolders,
         showHiddenItems,
         getDB,
         commandQueue,
@@ -885,6 +1010,7 @@ export function useListPaneData({
     return {
         listItems,
         orderedFiles,
+        orderedFileIndexMap,
         filePathToIndex,
         fileIndexMap,
         files,

@@ -18,35 +18,37 @@
 
 // src/components/NotebookNavigatorComponent.tsx
 import React, { useEffect, useImperativeHandle, forwardRef, useRef, useState, useCallback, useLayoutEffect } from 'react';
-import { TFile, TFolder, Notice } from 'obsidian';
+import { TFile, TFolder } from 'obsidian';
 import { useSelectionState, useSelectionDispatch } from '../context/SelectionContext';
 import { useServices } from '../context/ServicesContext';
-import { useSettingsState, useSettingsUpdate } from '../context/SettingsContext';
+import { useSettingsState } from '../context/SettingsContext';
 import { useUIState, useUIDispatch } from '../context/UIStateContext';
 import { useShortcuts } from '../context/ShortcutsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useDragNavigationPaneActivation } from '../hooks/useDragNavigationPaneActivation';
-import { useNavigatorReveal, type RevealFileOptions } from '../hooks/useNavigatorReveal';
+import { useNavigatorReveal, type RevealFileOptions, type NavigateToFolderOptions } from '../hooks/useNavigatorReveal';
 import { useNavigatorEventHandlers } from '../hooks/useNavigatorEventHandlers';
 import { useResizablePane } from '../hooks/useResizablePane';
 import { useNavigationActions } from '../hooks/useNavigationActions';
 import { useMobileSwipeNavigation } from '../hooks/useSwipeGesture';
-import { useTagNavigation } from '../hooks/useTagNavigation';
 import { useFileCache } from '../context/StorageContext';
 import { strings } from '../i18n';
+import { runAsyncAction } from '../utils/async';
 import { useUpdateNotice } from '../hooks/useUpdateNotice';
 import { FolderSuggestModal } from '../modals/FolderSuggestModal';
 import { TagSuggestModal } from '../modals/TagSuggestModal';
-import { RemoveTagModal } from '../modals/RemoveTagModal';
-import { ConfirmModal } from '../modals/ConfirmModal';
 import { FILE_PANE_DIMENSIONS, ItemType, NAVPANE_MEASUREMENTS, type BackgroundMode, type DualPaneOrientation } from '../types';
 import { getSelectedPath, getFilesForSelection } from '../utils/selectionUtils';
 import { normalizeNavigationPath } from '../utils/navigationIndex';
 import { deleteSelectedFiles, deleteSelectedFolder } from '../utils/deleteOperations';
 import { localStorage } from '../utils/localStorage';
+import { calculateCompactListMetrics } from '../utils/listPaneMetrics';
 import { getNavigationPaneSizing } from '../utils/paneSizing';
+import { getAndroidFontScale } from '../utils/androidFontScale';
 import { getBackgroundClasses } from '../utils/paneLayout';
+import { confirmRemoveAllTagsFromFiles, openAddTagToFilesModal, removeTagFromFilesWithPrompt } from '../utils/tagModalHelpers';
+import { getTemplaterCreateNewNoteFromTemplate } from '../utils/templaterIntegration';
 import { useNavigatorScale } from '../hooks/useNavigatorScale';
 import { ListPane } from './ListPane';
 import type { ListPaneHandle } from './ListPane';
@@ -55,6 +57,25 @@ import type { NavigationPaneHandle } from './NavigationPane';
 import type { SearchShortcut } from '../types/shortcuts';
 import { UpdateNoticeBanner } from './UpdateNoticeBanner';
 import { UpdateNoticeIndicator } from './UpdateNoticeIndicator';
+import { showNotice } from '../utils/noticeUtils';
+import { EMPTY_SEARCH_TAG_FILTER_STATE, type SearchTagFilterState } from '../types/search';
+import { getListPaneMeasurements } from '../utils/listPaneMeasurements';
+
+// Checks if two string arrays have identical content in the same order
+const arraysEqual = (a: string[], b: string[]): boolean => {
+    if (a === b) {
+        return true;
+    }
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (let index = 0; index < a.length; index += 1) {
+        if (a[index] !== b[index]) {
+            return false;
+        }
+    }
+    return true;
+};
 
 export interface NotebookNavigatorHandle {
     // Navigates to a file by revealing it in its actual parent folder
@@ -62,12 +83,14 @@ export interface NotebookNavigatorHandle {
     // Reveals a file while preserving the current navigation context when possible
     revealFileInNearestFolder: (file: TFile, options?: RevealFileOptions) => void;
     focusVisiblePane: () => void;
-    refresh: () => void;
+    focusNavigationPane: () => void;
     deleteActiveFile: () => void;
     createNoteInSelectedFolder: () => Promise<void>;
+    createNoteFromTemplateInSelectedFolder: () => Promise<void>;
     moveSelectedFiles: () => Promise<void>;
     addShortcutForCurrentSelection: () => Promise<void>;
-    navigateToFolder: (folderPath: string) => void;
+    navigateToFolder: (folder: TFolder, options?: NavigateToFolderOptions) => void;
+    navigateToTag: (tagPath: string) => void;
     navigateToFolderWithModal: () => void;
     navigateToTagWithModal: () => void;
     addTagToSelectedFiles: () => Promise<void>;
@@ -77,6 +100,9 @@ export interface NotebookNavigatorHandle {
     triggerCollapse: () => void;
     stopContentProcessing: () => void;
     rebuildCache: () => Promise<void>;
+    selectNextFile: () => Promise<boolean>;
+    selectPreviousFile: () => Promise<boolean>;
+    openShortcutByNumber: (shortcutNumber: number) => Promise<boolean>;
 }
 
 /**
@@ -100,9 +126,8 @@ export const NotebookNavigatorComponent = React.memo(
         }, [uxPreferences]);
         // Get active orientation from settings
         const orientation: DualPaneOrientation = settings.dualPaneOrientation;
-        // Get background modes for desktop and mobile layouts
+        // Get background mode for desktop layout
         const desktopBackground: BackgroundMode = settings.desktopBackground ?? 'separate';
-        const mobileBackground: BackgroundMode = settings.mobileBackground ?? 'primary';
         const {
             scale: uiScale,
             style: scaleWrapperStyle,
@@ -124,7 +149,7 @@ export const NotebookNavigatorComponent = React.memo(
         const uiDispatch = useUIDispatch();
         const { addFolderShortcut, addNoteShortcut, addTagShortcut } = useShortcuts();
         const { stopAllProcessing, rebuildCache } = useFileCache();
-        const { notice: updateNotice, markAsDisplayed } = useUpdateNotice();
+        const { bannerNotice, updateAvailableVersion, markAsDisplayed } = useUpdateNotice();
         // Keep stable references to avoid stale closures in imperative handles
         const stopProcessingRef = useRef(stopAllProcessing);
         useEffect(() => {
@@ -142,8 +167,36 @@ export const NotebookNavigatorComponent = React.memo(
         const containerRef = useRef<HTMLDivElement>(null);
 
         const [isNavigatorFocused, setIsNavigatorFocused] = useState(false);
+        // Tracks tag-related search tokens for highlighting tags in navigation pane
+        const [searchTagFilters, setSearchTagFilters] = useState<SearchTagFilterState>(EMPTY_SEARCH_TAG_FILTER_STATE);
+        const [isPaneTransitioning, setIsPaneTransitioning] = useState(false);
         const navigationPaneRef = useRef<NavigationPaneHandle>(null);
         const listPaneRef = useRef<ListPaneHandle>(null);
+
+        // Updates search tag filters only when values actually change to avoid unnecessary re-renders
+        const handleSearchTokensChange = useCallback((next: SearchTagFilterState) => {
+            setSearchTagFilters(prev => {
+                // Skip update if all values match
+                if (
+                    prev.excludeTagged === next.excludeTagged &&
+                    prev.includeUntagged === next.includeUntagged &&
+                    prev.requireTagged === next.requireTagged &&
+                    arraysEqual(prev.include, next.include) &&
+                    arraysEqual(prev.exclude, next.exclude)
+                ) {
+                    return prev;
+                }
+
+                // Create new state with cloned arrays to prevent mutation
+                return {
+                    include: next.include.slice(),
+                    exclude: next.exclude.slice(),
+                    excludeTagged: next.excludeTagged,
+                    includeUntagged: next.includeUntagged,
+                    requireTagged: next.requireTagged
+                };
+            });
+        }, []);
 
         // Executes a search shortcut by delegating to the list pane component
         const handleSearchShortcutExecution = useCallback(async (_shortcutKey: string, searchShortcut: SearchShortcut) => {
@@ -162,27 +215,6 @@ export const NotebookNavigatorComponent = React.memo(
             storageKey: navigationPaneStorageKey,
             scale: uiScale
         });
-
-        // Use navigator reveal logic
-        const { revealFileInActualFolder, revealFileInNearestFolder, navigateToFolder, revealTag } = useNavigatorReveal({
-            app,
-            navigationPaneRef,
-            listPaneRef
-        });
-
-        // Use tag navigation logic
-        const { navigateToTag } = useTagNavigation();
-
-        // Handles file reveal from shortcuts, using nearest folder navigation
-        const handleShortcutNoteReveal = useCallback(
-            (file: TFile) => {
-                revealFileInNearestFolder(file, { source: 'shortcut' });
-            },
-            [revealFileInNearestFolder]
-        );
-
-        // Get updateSettings from SettingsContext for refresh
-        const updateSettings = useSettingsUpdate();
 
         // Tracks whether initial dual/single pane check has been performed
         const hasCheckedInitialVisibility = useRef(false);
@@ -248,6 +280,22 @@ export const NotebookNavigatorComponent = React.memo(
             uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: preferredView });
             uiDispatch({ type: 'SET_FOCUSED_PANE', pane: preferredView });
         }, [isMobile, uiDispatch, uiState.dualPane]);
+
+        useEffect(() => {
+            if (!uiState.singlePane) {
+                setIsPaneTransitioning(false);
+                return;
+            }
+
+            setIsPaneTransitioning(true);
+            const timer = window.setTimeout(() => {
+                setIsPaneTransitioning(false);
+            }, settings.paneTransitionDuration + 20);
+
+            return () => {
+                window.clearTimeout(timer);
+            };
+        }, [settings.paneTransitionDuration, uiState.currentSinglePaneView, uiState.singlePane]);
 
         // Enable drag and drop only on desktop
         useDragAndDrop(containerRef);
@@ -340,6 +388,59 @@ export const NotebookNavigatorComponent = React.memo(
         // Get navigation actions
         const { handleExpandCollapseAll } = useNavigationActions();
 
+        const focusPane = useCallback(
+            (pane: 'files' | 'navigation', options?: { updateSinglePaneView?: boolean }) => {
+                const isOpeningVersionHistory = commandQueue?.isOpeningVersionHistory() || false;
+                const isOpeningInNewContext = commandQueue?.isOpeningInNewContext() || false;
+
+                if (uiState.singlePane && options?.updateSinglePaneView && uiState.currentSinglePaneView !== pane) {
+                    uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: pane });
+                }
+
+                if (uiState.focusedPane !== pane) {
+                    uiDispatch({ type: 'SET_FOCUSED_PANE', pane });
+                }
+
+                if (!isOpeningVersionHistory && !isOpeningInNewContext) {
+                    containerRef.current?.focus();
+                }
+            },
+            [commandQueue, uiDispatch, uiState.singlePane, uiState.currentSinglePaneView, uiState.focusedPane]
+        );
+
+        const focusNavigationPaneCallback = useCallback(
+            (options?: { updateSinglePaneView?: boolean }) => {
+                const updateSinglePaneView = options?.updateSinglePaneView ?? uiState.singlePane;
+                focusPane('navigation', { updateSinglePaneView });
+            },
+            [focusPane, uiState.singlePane]
+        );
+
+        const focusFilesPaneCallback = useCallback(
+            (options?: { updateSinglePaneView?: boolean }) => {
+                const updateSinglePaneView = options?.updateSinglePaneView ?? uiState.singlePane;
+                focusPane('files', { updateSinglePaneView });
+            },
+            [focusPane, uiState.singlePane]
+        );
+
+        // Use navigator reveal logic
+        const { revealFileInActualFolder, revealFileInNearestFolder, navigateToFolder, navigateToTag, revealTag } = useNavigatorReveal({
+            app,
+            navigationPaneRef,
+            listPaneRef,
+            focusNavigationPane: focusNavigationPaneCallback,
+            focusFilesPane: focusFilesPaneCallback
+        });
+
+        // Handles file reveal from shortcuts, using nearest folder navigation
+        const handleShortcutNoteReveal = useCallback(
+            (file: TFile) => {
+                revealFileInNearestFolder(file, { source: 'shortcut' });
+            },
+            [revealFileInNearestFolder]
+        );
+
         // Expose methods via ref
         useImperativeHandle(ref, () => {
             // Retrieves currently selected files or falls back to single selected file
@@ -359,6 +460,15 @@ export const NotebookNavigatorComponent = React.memo(
                 return selectedFiles;
             };
 
+            // Routes adjacent file selection requests through the list pane reference
+            const navigateToAdjacentFile = (direction: 'next' | 'previous'): boolean => {
+                const listHandle = listPaneRef.current;
+                if (!listHandle) {
+                    return false;
+                }
+                return listHandle.selectAdjacentFile(direction);
+            };
+
             return {
                 // Forward to the manual reveal implementation
                 navigateToFile: (file: TFile, options?: RevealFileOptions) => {
@@ -369,19 +479,13 @@ export const NotebookNavigatorComponent = React.memo(
                     revealFileInNearestFolder(file, options);
                 },
                 focusVisiblePane: () => {
-                    const isOpeningVersionHistory = commandQueue?.isOpeningVersionHistory() || false;
-                    const isOpeningInNewContext = commandQueue?.isOpeningInNewContext() || false;
-
                     if (uiState.singlePane) {
-                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: uiState.currentSinglePaneView });
+                        focusPane(uiState.currentSinglePaneView);
                     } else {
-                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
-                    }
-
-                    if (!isOpeningVersionHistory && !isOpeningInNewContext) {
-                        containerRef.current?.focus();
+                        focusPane('files');
                     }
                 },
+                focusNavigationPane: focusNavigationPaneCallback,
                 stopContentProcessing: () => {
                     try {
                         stopProcessingRef.current?.();
@@ -393,58 +497,84 @@ export const NotebookNavigatorComponent = React.memo(
                     // Trigger complete cache rebuild from storage context
                     await rebuildCacheRef.current?.();
                 },
-                refresh: () => {
-                    // A no-op update will increment the version and force a re-render
-                    updateSettings(() => {});
-                },
-                deleteActiveFile: () => {
-                    // Determine which delete operation to perform based on focus
-                    if (uiState.focusedPane === 'files' && (selectionState.selectedFile || selectionState.selectedFiles.size > 0)) {
-                        deleteSelectedFiles({
-                            app,
-                            fileSystemOps,
-                            settings,
-                            visibility: {
-                                includeDescendantNotes: uxRef.current.includeDescendantNotes,
-                                showHiddenItems: uxRef.current.showHiddenItems
-                            },
-                            selectionState,
-                            selectionDispatch,
-                            tagTreeService
-                        });
-                    } else if (
-                        uiState.focusedPane === 'navigation' &&
-                        selectionState.selectionType === ItemType.FOLDER &&
-                        selectionState.selectedFolder
-                    ) {
-                        deleteSelectedFolder({
-                            app,
-                            fileSystemOps,
-                            settings,
-                            visibility: {
-                                includeDescendantNotes: uxRef.current.includeDescendantNotes,
-                                showHiddenItems: uxRef.current.showHiddenItems
-                            },
-                            selectionState,
-                            selectionDispatch
-                        });
+                // Select adjacent files via command palette actions
+                selectNextFile: async () => navigateToAdjacentFile('next'),
+                selectPreviousFile: async () => navigateToAdjacentFile('previous'),
+                openShortcutByNumber: (shortcutNumber: number) => {
+                    const navHandle = navigationPaneRef.current;
+                    if (!navHandle) {
+                        return Promise.resolve(false);
                     }
+                    return navHandle.openShortcutByNumber(shortcutNumber);
+                },
+                // Delete focused file based on current pane (files or navigation)
+                deleteActiveFile: () => {
+                    runAsyncAction(async () => {
+                        // Delete files from list pane
+                        if (uiState.focusedPane === 'files' && (selectionState.selectedFile || selectionState.selectedFiles.size > 0)) {
+                            await deleteSelectedFiles({
+                                app,
+                                fileSystemOps,
+                                settings,
+                                visibility: {
+                                    includeDescendantNotes: uxRef.current.includeDescendantNotes,
+                                    showHiddenItems: uxRef.current.showHiddenItems
+                                },
+                                selectionState,
+                                selectionDispatch,
+                                tagTreeService
+                            });
+                            return;
+                        }
+
+                        // Delete folder from navigation pane
+                        if (
+                            uiState.focusedPane === 'navigation' &&
+                            selectionState.selectionType === ItemType.FOLDER &&
+                            selectionState.selectedFolder
+                        ) {
+                            await deleteSelectedFolder({
+                                app,
+                                fileSystemOps,
+                                settings,
+                                visibility: {
+                                    includeDescendantNotes: uxRef.current.includeDescendantNotes,
+                                    showHiddenItems: uxRef.current.showHiddenItems
+                                },
+                                selectionState,
+                                selectionDispatch
+                            });
+                        }
+                    });
                 },
                 createNoteInSelectedFolder: async () => {
                     if (!selectionState.selectedFolder) {
-                        new Notice(strings.fileSystem.errors.noFolderSelected);
+                        showNotice(strings.fileSystem.errors.noFolderSelected, { variant: 'warning' });
                         return;
                     }
 
                     // Use the same logic as the context menu
                     await fileSystemOps.createNewFile(selectionState.selectedFolder);
                 },
+                createNoteFromTemplateInSelectedFolder: async () => {
+                    if (!selectionState.selectedFolder) {
+                        showNotice(strings.fileSystem.errors.noFolderSelected, { variant: 'warning' });
+                        return;
+                    }
+
+                    const createNewNoteFromTemplate = getTemplaterCreateNewNoteFromTemplate(app);
+                    if (!createNewNoteFromTemplate) {
+                        return;
+                    }
+
+                    await createNewNoteFromTemplate(selectionState.selectedFolder);
+                },
                 moveSelectedFiles: async () => {
                     // Get selected files
                     const selectedFiles = getSelectedFiles();
 
                     if (selectedFiles.length === 0) {
-                        new Notice(strings.fileSystem.errors.noFileSelected);
+                        showNotice(strings.fileSystem.errors.noFileSelected, { variant: 'warning' });
                         return;
                     }
 
@@ -495,16 +625,17 @@ export const NotebookNavigatorComponent = React.memo(
                     }
 
                     // Show error if nothing is selected
-                    new Notice(strings.common.noSelection);
+                    showNotice(strings.common.noSelection, { variant: 'warning' });
                 },
                 navigateToFolder,
+                navigateToTag,
                 navigateToFolderWithModal: () => {
                     // Show the folder selection modal for navigation
                     const modal = new FolderSuggestModal(
                         app,
                         (targetFolder: TFolder) => {
                             // Navigate to the selected folder
-                            navigateToFolder(targetFolder.path);
+                            navigateToFolder(targetFolder, { preserveNavigationFocus: true });
                         },
                         strings.modals.folderSuggest.navigatePlaceholder,
                         strings.modals.folderSuggest.instructions.select,
@@ -523,139 +654,69 @@ export const NotebookNavigatorComponent = React.memo(
                         },
                         strings.modals.tagSuggest.navigatePlaceholder,
                         strings.modals.tagSuggest.instructions.select,
-                        true // Include untagged option
+                        true, // Include untagged option
+                        false // Do not allow creating tags for navigation
                     );
                     modal.open();
                 },
                 addTagToSelectedFiles: async () => {
                     if (!tagOperations) {
-                        new Notice(strings.fileSystem.notifications.tagOperationsNotAvailable);
+                        showNotice(strings.fileSystem.notifications.tagOperationsNotAvailable, { variant: 'warning' });
                         return;
                     }
 
                     // Get selected files
                     const selectedFiles = getSelectedFiles();
                     if (selectedFiles.length === 0) {
-                        new Notice(strings.fileSystem.notifications.noFilesSelected);
-                        return;
-                    }
-
-                    // Verify all selected files are markdown (tags only work with markdown)
-                    if (!selectedFiles.every(item => item.extension === 'md')) {
-                        new Notice(strings.fileSystem.notifications.tagsRequireMarkdown);
+                        showNotice(strings.fileSystem.notifications.noFilesSelected, { variant: 'warning' });
                         return;
                     }
 
                     // Show tag selection modal
-                    const modal = new TagSuggestModal(
+                    openAddTagToFilesModal({
                         app,
                         plugin,
-                        async (tag: string) => {
-                            const result = await tagOperations.addTagToFiles(tag, selectedFiles);
-                            const message =
-                                result.added === 1
-                                    ? strings.fileSystem.notifications.tagAddedToNote
-                                    : strings.fileSystem.notifications.tagAddedToNotes.replace('{count}', result.added.toString());
-                            new Notice(message);
-                        },
-                        strings.modals.tagSuggest.addPlaceholder,
-                        strings.modals.tagSuggest.instructions.add,
-                        false // Don't include untagged
-                    );
-                    modal.open();
+                        tagOperations,
+                        files: selectedFiles
+                    });
                 },
                 removeTagFromSelectedFiles: async () => {
                     if (!tagOperations) {
-                        new Notice(strings.fileSystem.notifications.tagOperationsNotAvailable);
+                        showNotice(strings.fileSystem.notifications.tagOperationsNotAvailable, { variant: 'warning' });
                         return;
                     }
 
                     // Get selected files
                     const selectedFiles = getSelectedFiles();
                     if (selectedFiles.length === 0) {
-                        new Notice(strings.fileSystem.notifications.noFilesSelected);
+                        showNotice(strings.fileSystem.notifications.noFilesSelected, { variant: 'warning' });
                         return;
                     }
 
-                    // Verify all selected files are markdown (tags only work with markdown)
-                    if (!selectedFiles.every(item => item.extension === 'md')) {
-                        new Notice(strings.fileSystem.notifications.tagsRequireMarkdown);
-                        return;
-                    }
-
-                    // Get tags from selected files
-                    const existingTags = tagOperations.getTagsFromFiles(selectedFiles);
-                    if (existingTags.length === 0) {
-                        new Notice(strings.fileSystem.notifications.noTagsToRemove);
-                        return;
-                    }
-
-                    // If only one tag exists, remove it directly without showing modal
-                    if (existingTags.length === 1) {
-                        const result = await tagOperations.removeTagFromFiles(existingTags[0], selectedFiles);
-                        const message =
-                            result === 1
-                                ? strings.fileSystem.notifications.tagRemovedFromNote
-                                : strings.fileSystem.notifications.tagRemovedFromNotes.replace('{count}', result.toString());
-                        new Notice(message);
-                        return;
-                    }
-
-                    // Show modal to select which tag to remove
-                    const modal = new RemoveTagModal(app, existingTags, async (tag: string) => {
-                        const result = await tagOperations.removeTagFromFiles(tag, selectedFiles);
-                        const message =
-                            result === 1
-                                ? strings.fileSystem.notifications.tagRemovedFromNote
-                                : strings.fileSystem.notifications.tagRemovedFromNotes.replace('{count}', result.toString());
-                        new Notice(message);
+                    await removeTagFromFilesWithPrompt({
+                        app,
+                        tagOperations,
+                        files: selectedFiles
                     });
-                    modal.open();
                 },
                 removeAllTagsFromSelectedFiles: async () => {
                     if (!tagOperations) {
-                        new Notice(strings.fileSystem.notifications.tagOperationsNotAvailable);
+                        showNotice(strings.fileSystem.notifications.tagOperationsNotAvailable, { variant: 'warning' });
                         return;
                     }
 
                     // Get selected files
                     const selectedFiles = getSelectedFiles();
                     if (selectedFiles.length === 0) {
-                        new Notice(strings.fileSystem.notifications.noFilesSelected);
+                        showNotice(strings.fileSystem.notifications.noFilesSelected, { variant: 'warning' });
                         return;
                     }
 
-                    // Verify all selected files are markdown (tags only work with markdown)
-                    if (!selectedFiles.every(item => item.extension === 'md')) {
-                        new Notice(strings.fileSystem.notifications.tagsRequireMarkdown);
-                        return;
-                    }
-
-                    // Check if files have tags
-                    const existingTags = tagOperations.getTagsFromFiles(selectedFiles);
-                    if (existingTags.length === 0) {
-                        new Notice(strings.fileSystem.notifications.noTagsToRemove);
-                        return;
-                    }
-
-                    // Show confirmation dialog
-                    const confirmModal = new ConfirmModal(
+                    confirmRemoveAllTagsFromFiles({
                         app,
-                        strings.modals.fileSystem.removeAllTagsTitle,
-                        selectedFiles.length === 1
-                            ? strings.modals.fileSystem.removeAllTagsFromNote
-                            : strings.modals.fileSystem.removeAllTagsFromNotes.replace('{count}', selectedFiles.length.toString()),
-                        async () => {
-                            const result = await tagOperations.clearAllTagsFromFiles(selectedFiles);
-                            const message =
-                                result === 1
-                                    ? strings.fileSystem.notifications.tagsClearedFromNote
-                                    : strings.fileSystem.notifications.tagsClearedFromNotes.replace('{count}', result.toString());
-                            new Notice(message);
-                        },
-                        strings.common.remove
-                    );
-                    confirmModal.open();
+                        tagOperations,
+                        files: selectedFiles
+                    });
                 },
                 toggleSearch: () => {
                     listPaneRef.current?.toggleSearch();
@@ -679,8 +740,6 @@ export const NotebookNavigatorComponent = React.memo(
         }, [
             revealFileInActualFolder,
             revealFileInNearestFolder,
-            uiDispatch,
-            updateSettings,
             selectionState,
             fileSystemOps,
             selectionDispatch,
@@ -693,7 +752,8 @@ export const NotebookNavigatorComponent = React.memo(
             settings,
             plugin,
             tagTreeService,
-            commandQueue,
+            focusPane,
+            focusNavigationPaneCallback,
             tagOperations,
             handleExpandCollapseAll,
             navigationPaneRef,
@@ -705,8 +765,6 @@ export const NotebookNavigatorComponent = React.memo(
         // Add platform class and background mode classes
         if (isMobile) {
             containerClasses.push('nn-mobile');
-            // Apply mobile background mode (separate, primary, or secondary)
-            containerClasses.push(...getBackgroundClasses(mobileBackground));
         } else {
             containerClasses.push('nn-desktop');
             // Apply desktop background mode (separate, primary, or secondary)
@@ -721,6 +779,9 @@ export const NotebookNavigatorComponent = React.memo(
             containerClasses.push('nn-dual-pane');
             containerClasses.push(`nn-orientation-${orientation}`);
         }
+        if (uiState.singlePane && isPaneTransitioning) {
+            containerClasses.push('nn-pane-transitioning');
+        }
         if (isResizing) {
             containerClasses.push('nn-resizing');
         }
@@ -732,6 +793,10 @@ export const NotebookNavigatorComponent = React.memo(
                 const defaultHeight = NAVPANE_MEASUREMENTS.defaultItemHeight;
                 const defaultFontSize = NAVPANE_MEASUREMENTS.defaultFontSize;
                 const scaleTextWithHeight = settings.navItemHeightScaleText;
+
+                // Get Android font scale for compensation (1 if not on Android or no scaling)
+                const navigatorContainer = containerRef.current.closest('.notebook-navigator');
+                const androidFontScale = getAndroidFontScale(navigatorContainer);
 
                 // Calculate font sizes based on item height (default 28px)
                 // Desktop: default 13px, 12px if height ≤24, 11px if height ≤22
@@ -750,6 +815,10 @@ export const NotebookNavigatorComponent = React.memo(
                 const mobileNavItemHeight = navItemHeight + NAVPANE_MEASUREMENTS.mobileHeightIncrement;
                 const mobileFontSize = fontSize + NAVPANE_MEASUREMENTS.mobileFontSizeIncrement;
 
+                // Apply Android font scale compensation to font sizes
+                const compensatedFontSize = fontSize / androidFontScale;
+                const compensatedMobileFontSize = mobileFontSize / androidFontScale;
+
                 // Calculate padding: (total height - line height) / 2
                 // Line height is fixed at 18px in CSS (--nn-nav-line-height)
                 const desktopPadding = Math.floor((navItemHeight - NAVPANE_MEASUREMENTS.lineHeight) / 2);
@@ -759,11 +828,45 @@ export const NotebookNavigatorComponent = React.memo(
                 containerRef.current.style.setProperty('--nn-setting-nav-item-height-mobile', `${mobileNavItemHeight}px`);
                 containerRef.current.style.setProperty('--nn-setting-nav-padding-vertical', `${desktopPadding}px`);
                 containerRef.current.style.setProperty('--nn-setting-nav-padding-vertical-mobile', `${mobilePadding}px`);
-                containerRef.current.style.setProperty('--nn-setting-nav-font-size', `${fontSize}px`);
-                containerRef.current.style.setProperty('--nn-setting-nav-font-size-mobile', `${mobileFontSize}px`);
+                containerRef.current.style.setProperty('--nn-setting-nav-font-size', `${compensatedFontSize}px`);
+                containerRef.current.style.setProperty('--nn-setting-nav-font-size-mobile', `${compensatedMobileFontSize}px`);
                 containerRef.current.style.setProperty('--nn-setting-nav-indent', `${settings.navIndent}px`);
+                containerRef.current.style.setProperty('--nn-nav-root-spacing', `${settings.rootLevelSpacing}px`);
+
+                // Calculate compact list padding and font sizes based on configured item height
+                const { titleLineHeight } = getListPaneMeasurements(isMobile);
+                const compactMetrics = calculateCompactListMetrics({
+                    compactItemHeight: settings.compactItemHeight,
+                    scaleText: settings.compactItemHeightScaleText,
+                    titleLineHeight
+                });
+
+                // Apply Android font scale compensation to compact font sizes
+                const compensatedCompactFontSize = compactMetrics.fontSize / androidFontScale;
+                const compensatedCompactMobileFontSize = compactMetrics.mobileFontSize / androidFontScale;
+
+                // Apply compact list metrics to CSS custom properties
+                containerRef.current.style.setProperty('--nn-file-padding-vertical-compact', `${compactMetrics.desktopPadding}px`);
+                containerRef.current.style.setProperty('--nn-file-padding-vertical-compact-mobile', `${compactMetrics.mobilePadding}px`);
+                containerRef.current.style.setProperty('--nn-compact-font-size', `${compensatedCompactFontSize}px`);
+                containerRef.current.style.setProperty('--nn-compact-font-size-mobile', `${compensatedCompactMobileFontSize}px`);
             }
-        }, [settings.navItemHeight, settings.navItemHeightScaleText, settings.navIndent]);
+        }, [
+            settings.navItemHeight,
+            settings.navItemHeightScaleText,
+            settings.navIndent,
+            settings.rootLevelSpacing,
+            settings.compactItemHeight,
+            settings.compactItemHeightScaleText,
+            isMobile
+        ]);
+
+        useEffect(() => {
+            if (!containerRef.current) {
+                return;
+            }
+            containerRef.current.style.setProperty('--nn-pane-transition-duration', `${settings.paneTransitionDuration}ms`);
+        }, [containerRef, settings.paneTransitionDuration]);
 
         // Compute navigation pane style based on orientation and single pane mode
         const navigationPaneStyle = uiState.singlePane
@@ -787,9 +890,9 @@ export const NotebookNavigatorComponent = React.memo(
                         // The actual keyboard handling is done in NavigationPane and ListPane
                     }}
                 >
-                    <UpdateNoticeBanner notice={updateNotice} onDismiss={markAsDisplayed} />
+                    {settings.checkForUpdatesOnStart && <UpdateNoticeBanner notice={bannerNotice} onDismiss={markAsDisplayed} />}
                     {/* Floating indicator button that appears when a new version is available */}
-                    <UpdateNoticeIndicator notice={updateNotice} isEnabled={settings.checkForUpdatesOnStart} />
+                    <UpdateNoticeIndicator updateVersion={updateAvailableVersion} isEnabled={settings.checkForUpdatesOnStart} />
                     {/* KEYBOARD EVENT FLOW:
                 1. Both NavigationPane and ListPane receive the same containerRef
                 2. Each pane sets up keyboard listeners on this shared container
@@ -800,17 +903,22 @@ export const NotebookNavigatorComponent = React.memo(
                     <NavigationPane
                         ref={navigationPaneRef}
                         style={navigationPaneStyle}
+                        uiScale={uiScale}
                         rootContainerRef={containerRef}
+                        searchTagFilters={searchTagFilters}
                         onExecuteSearchShortcut={handleSearchShortcutExecution}
                         onNavigateToFolder={navigateToFolder}
                         onRevealTag={revealTag}
                         onRevealFile={revealFileInNearestFolder}
                         onRevealShortcutFile={handleShortcutNoteReveal}
+                        onModifySearchWithTag={(tag, operator) => {
+                            listPaneRef.current?.modifySearchWithTag(tag, operator);
+                        }}
                     />
                     <ListPane
                         ref={listPaneRef}
                         rootContainerRef={containerRef}
-                        orientation={orientation}
+                        onSearchTokensChange={handleSearchTokensChange}
                         resizeHandleProps={!uiState.singlePane ? resizeHandleProps : undefined}
                     />
                 </div>

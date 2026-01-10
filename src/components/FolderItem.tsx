@@ -42,7 +42,7 @@
  *
  * 6. Icon rendering optimization:
  *    - Icons rendered via useEffect to avoid blocking main render
- *    - Conditional rendering based on settings.showIcons
+ *    - Conditional rendering based on settings.showFolderIcons
  *
  * 7. Tooltip optimization:
  *    - Tooltip only created on desktop (mobile skipped)
@@ -50,20 +50,23 @@
  */
 
 import React, { useRef, useEffect, useMemo, useCallback } from 'react';
-import { TFolder, TFile, setTooltip, setIcon } from 'obsidian';
+import { TFolder, TFile, setTooltip } from 'obsidian';
 import { useServices } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
-import { useContextMenu } from '../hooks/useContextMenu';
+import { useContextMenu, hideNavigatorContextMenu } from '../hooks/useContextMenu';
 import { strings } from '../i18n';
 import { getIconService, useIconServiceVersion } from '../services/icons';
 import { ItemType } from '../types';
+import { getTooltipPlacement } from '../utils/domUtils';
 import { getFolderNote } from '../utils/folderNotes';
 import { hasSubfolders, shouldExcludeFolder, shouldExcludeFile } from '../utils/fileFilters';
 import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
 import { shouldDisplayFile } from '../utils/fileTypeUtils';
 import type { NoteCountInfo } from '../types/noteCounts';
 import { buildNoteCountDisplay } from '../utils/noteCountFormatting';
+import { useActiveProfile } from '../context/SettingsContext';
+import { resolveUXIcon } from '../utils/uxIcons';
 
 interface FolderItemProps {
     folder: TFolder;
@@ -74,6 +77,7 @@ interface FolderItemProps {
     onToggle: () => void;
     onClick: () => void;
     onNameClick?: (event: React.MouseEvent<HTMLSpanElement>) => void;
+    onNameMouseDown?: (event: React.MouseEvent<HTMLSpanElement>) => void;
     onToggleAllSiblings?: () => void;
     icon?: string;
     color?: string;
@@ -81,6 +85,8 @@ interface FolderItemProps {
     countInfo?: NoteCountInfo;
     excludedFolders: string[];
     vaultChangeVersion: number;
+    disableContextMenu?: boolean;
+    disableNavigationSeparatorActions?: boolean;
 }
 
 /**
@@ -106,16 +112,20 @@ export const FolderItem = React.memo(function FolderItem({
     onToggle,
     onClick,
     onNameClick,
+    onNameMouseDown,
     onToggleAllSiblings,
     icon,
     color,
     backgroundColor,
     countInfo,
     excludedFolders,
-    vaultChangeVersion
+    vaultChangeVersion,
+    disableContextMenu,
+    disableNavigationSeparatorActions
 }: FolderItemProps) {
     const { app, isMobile } = useServices();
     const settings = useSettingsState();
+    const { fileVisibility } = useActiveProfile();
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
@@ -139,7 +149,7 @@ export const FolderItem = React.memo(function FolderItem({
         let fileCount = 0;
         for (const child of folder.children) {
             if (child instanceof TFile) {
-                if (shouldDisplayFile(child, settings.fileVisibility, app)) {
+                if (shouldDisplayFile(child, fileVisibility, app)) {
                     if (!shouldExcludeFile(child, effectiveExcludedFiles, app)) {
                         fileCount++;
                     }
@@ -160,16 +170,7 @@ export const FolderItem = React.memo(function FolderItem({
         }
 
         return { fileCount, folderCount };
-    }, [
-        folder.children,
-        isMobile,
-        settings.showTooltips,
-        showHiddenItems,
-        settings.fileVisibility,
-        effectiveExcludedFiles,
-        excludedFolders,
-        app
-    ]);
+    }, [folder.children, isMobile, settings.showTooltips, showHiddenItems, fileVisibility, effectiveExcludedFiles, excludedFolders, app]);
 
     // Merge provided count info with default values to ensure all properties are present
     const noteCounts: NoteCountInfo = countInfo ?? { current: 0, descendants: 0, total: 0 };
@@ -189,19 +190,6 @@ export const FolderItem = React.memo(function FolderItem({
     const customColor = color;
     // Determine whether to apply color to the folder name instead of the icon
     const applyColorToName = Boolean(customColor) && !settings.colorIconOnly;
-    const dragIconId = useMemo(() => {
-        if (icon) {
-            return icon;
-        }
-        if (folder.path === '/') {
-            return hasChildren && isExpanded ? 'open-vault' : 'vault';
-        }
-        if (hasChildren && isExpanded) {
-            return 'lucide-folder-open';
-        }
-        return 'lucide-folder-closed';
-    }, [icon, folder.path, hasChildren, isExpanded]);
-    const customBackground = backgroundColor;
 
     const hasFolderNote = useMemo(() => {
         if (!settings.enableFolderNotes) return false;
@@ -212,12 +200,28 @@ export const FolderItem = React.memo(function FolderItem({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [folder, settings, noteCounts.current, vaultChangeVersion]);
 
+    const dragIconId = useMemo(() => {
+        if (icon) {
+            return icon;
+        }
+        if (folder.path === '/') {
+            return hasChildren && isExpanded ? 'open-vault' : 'vault';
+        }
+        if (hasFolderNote) {
+            return resolveUXIcon(settings.interfaceIcons, 'nav-folder-note');
+        }
+        return hasChildren && isExpanded
+            ? resolveUXIcon(settings.interfaceIcons, 'nav-folder-open')
+            : resolveUXIcon(settings.interfaceIcons, 'nav-folder-closed');
+    }, [folder.path, hasChildren, icon, isExpanded, settings.interfaceIcons, hasFolderNote]);
+    const customBackground = backgroundColor;
+
     // Memoize className to avoid string concatenation on every render
     const className = useMemo(() => {
         const classes = ['nn-navitem', 'nn-folder'];
         if (isSelected) classes.push('nn-selected');
         if (isExcluded) classes.push('nn-excluded');
-        if (customBackground && !isSelected) classes.push('nn-has-custom-background');
+        if (customBackground) classes.push('nn-has-custom-background');
         return classes.join(' ');
     }, [customBackground, isSelected, isExcluded]);
 
@@ -264,6 +268,17 @@ export const FolderItem = React.memo(function FolderItem({
         [onNameClick]
     );
 
+    const handleNameMouseDown = useCallback(
+        (e: React.MouseEvent<HTMLSpanElement>) => {
+            hideNavigatorContextMenu();
+            if (onNameMouseDown) {
+                e.stopPropagation();
+                onNameMouseDown(e);
+            }
+        },
+        [onNameMouseDown]
+    );
+
     // Add Obsidian tooltip
     useEffect(() => {
         if (!folderRef.current) return;
@@ -288,27 +303,24 @@ export const FolderItem = React.memo(function FolderItem({
                 : `${folderStats.folderCount} ${strings.tooltips.folders}`;
         const statsTooltip = `${fileText}, ${folderText}`;
 
-        // Always include folder name at the top
-        const tooltip = `${folder.name}\n\n${statsTooltip}`;
+        const tooltip = folder.path === '/' ? statsTooltip : `${folder.name}\n\n${statsTooltip}`;
 
-        // Check if RTL mode is active
-        const isRTL = document.body.classList.contains('mod-rtl');
-
-        // Set placement to the right (left in RTL)
         setTooltip(folderRef.current, tooltip, {
-            placement: isRTL ? 'left' : 'right'
+            placement: getTooltipPlacement()
         });
-    }, [folderStats.fileCount, folderStats.folderCount, folder.name, settings, isMobile]);
+    }, [folder.path, folder.name, folderStats.fileCount, folderStats.folderCount, settings, isMobile]);
 
     useEffect(() => {
         if (chevronRef.current) {
-            setIcon(chevronRef.current, isExpanded ? 'lucide-chevron-down' : 'lucide-chevron-right');
+            const iconService = getIconService();
+            const iconId = resolveUXIcon(settings.interfaceIcons, isExpanded ? 'nav-tree-collapse' : 'nav-tree-expand');
+            iconService.renderIcon(chevronRef.current, iconId);
         }
-    }, [isExpanded]);
+    }, [iconVersion, isExpanded, settings.interfaceIcons]);
 
     // Add this useEffect for the folder icon
     useEffect(() => {
-        if (iconRef.current && settings.showIcons) {
+        if (iconRef.current && settings.showFolderIcons) {
             const iconService = getIconService();
 
             if (icon) {
@@ -318,16 +330,31 @@ export const FolderItem = React.memo(function FolderItem({
                 // Root folder - use vault icon (open/closed based on expansion state)
                 const vaultIconName = hasChildren && isExpanded ? 'open-vault' : 'vault';
                 iconService.renderIcon(iconRef.current, vaultIconName);
+            } else if (hasFolderNote) {
+                // Folder note - show folder note icon
+                const folderNoteIconName = resolveUXIcon(settings.interfaceIcons, 'nav-folder-note');
+                iconService.renderIcon(iconRef.current, folderNoteIconName);
             } else {
                 // Default icon - show open folder only if has children AND is expanded
-                const iconName = hasChildren && isExpanded ? 'lucide-folder-open' : 'lucide-folder-closed';
+                const iconName =
+                    hasChildren && isExpanded
+                        ? resolveUXIcon(settings.interfaceIcons, 'nav-folder-open')
+                        : resolveUXIcon(settings.interfaceIcons, 'nav-folder-closed');
                 iconService.renderIcon(iconRef.current, iconName);
             }
         }
-    }, [isExpanded, icon, hasChildren, settings.showIcons, folder.path, iconVersion]);
+    }, [hasChildren, icon, iconVersion, isExpanded, folder.path, settings.showFolderIcons, settings.interfaceIcons, hasFolderNote]);
 
     // Enable context menu
-    useContextMenu(folderRef, { type: ItemType.FOLDER, item: folder });
+    const folderMenuConfig = disableContextMenu
+        ? null
+        : {
+              type: ItemType.FOLDER,
+              item: folder,
+              options: disableNavigationSeparatorActions ? { disableNavigationSeparatorActions: true } : undefined
+          };
+
+    useContextMenu(folderRef, folderMenuConfig);
 
     // Don't allow dragging the root vault folder
     const isRootFolder = folder.path === '/';
@@ -360,7 +387,7 @@ export const FolderItem = React.memo(function FolderItem({
             style={
                 {
                     '--level': level,
-                    ...(customBackground && !isSelected ? { '--nn-navitem-custom-bg-color': customBackground } : {})
+                    ...(customBackground ? { '--nn-navitem-custom-bg-color': customBackground } : {})
                 } as React.CSSProperties
             }
             role="treeitem"
@@ -375,13 +402,14 @@ export const FolderItem = React.memo(function FolderItem({
                     onDoubleClick={handleChevronDoubleClick}
                     tabIndex={-1}
                 />
-                {settings.showIcons && (
+                {settings.showFolderIcons && (
                     <span className="nn-navitem-icon" ref={iconRef} style={customColor ? { color: customColor } : undefined}></span>
                 )}
                 <span
                     className={folderNameClassName}
                     style={applyColorToName ? { color: customColor } : undefined}
                     onClick={handleNameClick}
+                    onMouseDown={handleNameMouseDown}
                 >
                     {folder.path === '/' ? settings.customVaultName || app.vault.getName() : folder.name}
                 </span>

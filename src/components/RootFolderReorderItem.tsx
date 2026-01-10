@@ -1,6 +1,26 @@
-import React, { ReactNode } from 'react';
-import type { ListReorderHandlers } from '../hooks/useListReorder';
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import React, { ReactNode, useMemo } from 'react';
+import type { DraggableSyntheticListeners } from '@dnd-kit/core';
+import type { ListReorderHandlers } from '../types/listReorder';
 import { NavigationListRow, type DragHandleConfig } from './NavigationListRow';
+import { useSettingsState } from '../context/SettingsContext';
 
 /**
  * Props for a root folder item in reorder mode
@@ -10,17 +30,21 @@ interface RootFolderReorderItemProps {
     label: string;
     level: number;
     dragHandlers?: ListReorderHandlers;
-    showDropIndicatorBefore?: boolean;
-    showDropIndicatorAfter?: boolean;
     isDragSource?: boolean;
-    dragHandleLabel: string;
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
     chevronIcon?: string;
     isMissing?: boolean;
-    actions?: ReactNode;
     color?: string;
     itemType?: 'folder' | 'tag' | 'section'; // Type of navigation item (folder, tag, or section header)
     className?: string; // Additional CSS classes to apply to the item
+    dragHandleConfig?: DragHandleConfig;
+    trailingAccessory?: ReactNode;
+    dragRef?: (node: HTMLDivElement | null) => void;
+    dragHandleRef?: (node: HTMLSpanElement | null) => void;
+    dragAttributes?: React.HTMLAttributes<HTMLElement>;
+    dragListeners?: DraggableSyntheticListeners;
+    dragStyle?: React.CSSProperties;
+    isSorting?: boolean;
 }
 
 /**
@@ -32,18 +56,23 @@ export function RootFolderReorderItem({
     label,
     level,
     dragHandlers,
-    showDropIndicatorBefore,
-    showDropIndicatorAfter,
     isDragSource,
-    dragHandleLabel,
     onClick,
     chevronIcon,
     isMissing,
-    actions,
     color,
     itemType = 'folder',
-    className
+    className,
+    dragHandleConfig,
+    trailingAccessory,
+    dragRef,
+    dragHandleRef,
+    dragAttributes,
+    dragListeners,
+    dragStyle,
+    isSorting
 }: RootFolderReorderItemProps) {
+    const settings = useSettingsState();
     // Prevents event bubbling for reorder item clicks to avoid triggering parent handlers
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -55,13 +84,14 @@ export function RootFolderReorderItem({
 
     // Configures the drag handle appearance when drag handlers are available
     // Shows a grip icon that allows users to reorder the root folder
-    const handleConfig: DragHandleConfig | undefined = dragHandlers
-        ? {
-              label: dragHandleLabel,
-              visible: true,
-              icon: 'lucide-grip-horizontal'
-          }
-        : undefined;
+    const handleConfig =
+        dragHandleConfig ??
+        (dragHandlers
+            ? {
+                  visible: true,
+                  icon: 'lucide-grip-horizontal'
+              }
+            : undefined);
 
     // Builds the CSS class names for the reorder item, combining base class with optional modifiers
     const rowClassName = (() => {
@@ -82,6 +112,20 @@ export function RootFolderReorderItem({
         return classes.join(' ');
     })();
 
+    // Determines icon visibility based on section icons setting and item-specific icon settings
+    const showIcon = useMemo(() => {
+        if (!settings.showSectionIcons) {
+            return false;
+        }
+        if (itemType === 'folder') {
+            return settings.showFolderIcons;
+        }
+        if (itemType === 'tag') {
+            return settings.showTagIcons;
+        }
+        return true;
+    }, [itemType, settings.showFolderIcons, settings.showSectionIcons, settings.showTagIcons]);
+
     return (
         <NavigationListRow
             icon={icon}
@@ -92,16 +136,20 @@ export function RootFolderReorderItem({
             role="listitem"
             onClick={handleClick}
             dragHandlers={dragHandlers}
-            showDropIndicatorBefore={showDropIndicatorBefore}
-            showDropIndicatorAfter={showDropIndicatorAfter}
             isDragSource={isDragSource}
             showCount={false}
             className={rowClassName}
             tabIndex={-1}
-            ariaGrabbed={isDragSource}
             dragHandleConfig={handleConfig}
             chevronIcon={chevronIcon}
-            actions={actions}
+            trailingAccessory={trailingAccessory}
+            showIcon={showIcon}
+            dragRef={dragRef}
+            dragHandleRef={dragHandleRef}
+            dragAttributes={dragAttributes}
+            dragListeners={dragListeners}
+            dragStyle={dragStyle}
+            isSorting={isSorting}
         />
     );
 }

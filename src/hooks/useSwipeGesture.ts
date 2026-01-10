@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useUIState, useUIDispatch } from '../context/UIStateContext';
 
 interface UseSwipeGestureOptions {
@@ -25,6 +25,8 @@ interface UseSwipeGestureOptions {
     threshold?: number;
     edgeThreshold?: number;
     enabled?: boolean;
+    allowAnywhereSwipe?: boolean;
+    isRTL?: boolean;
 }
 
 function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, options: UseSwipeGestureOptions) {
@@ -33,11 +35,11 @@ function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, opti
         onSwipeLeft,
         threshold = 50,
         edgeThreshold = 25, // Start swipe must be within this many pixels of edge (iOS uses ~20-25px)
-        enabled = true
+        enabled = true,
+        allowAnywhereSwipe = false,
+        isRTL: optionsIsRTL
     } = options;
-
-    // Check if RTL mode is active
-    const isRTL = document.body.classList.contains('mod-rtl');
+    const isRTL = optionsIsRTL ?? false;
 
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
@@ -55,11 +57,13 @@ function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, opti
 
             // Check if touch started near the edge for edge swipe
             // In RTL mode, check right edge; in LTR mode, check left edge
-            if (isRTL) {
-                isValidSwipe.current = touch.clientX >= window.innerWidth - edgeThreshold;
-            } else {
-                isValidSwipe.current = touch.clientX <= edgeThreshold;
-            }
+            const didStartAtAllowedEdge = allowAnywhereSwipe
+                ? true
+                : isRTL
+                  ? touch.clientX >= window.innerWidth - edgeThreshold
+                  : touch.clientX <= edgeThreshold;
+
+            isValidSwipe.current = didStartAtAllowedEdge;
         };
 
         const handleTouchMove = (e: TouchEvent) => {
@@ -81,6 +85,12 @@ function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, opti
 
         const handleTouchEnd = (e: TouchEvent) => {
             if (touchStartX.current === null || touchStartY.current === null) return;
+            if (!isValidSwipe.current) {
+                touchStartX.current = null;
+                touchStartY.current = null;
+                isValidSwipe.current = false;
+                return;
+            }
 
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;
@@ -91,23 +101,9 @@ function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, opti
             // Check if horizontal swipe is more significant than vertical
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
                 if (deltaX > 0 && onSwipeRight) {
-                    // For right swipe, check if it started from correct edge based on RTL
-                    const isEdgeSwipe = isRTL
-                        ? touchStartX.current >= window.innerWidth - edgeThreshold
-                        : touchStartX.current <= edgeThreshold;
-
-                    if (isValidSwipe.current || isEdgeSwipe) {
-                        onSwipeRight();
-                    }
+                    onSwipeRight();
                 } else if (deltaX < 0 && onSwipeLeft) {
-                    // For left swipe, check if it started from correct edge based on RTL
-                    const isEdgeSwipe = isRTL
-                        ? touchStartX.current <= edgeThreshold
-                        : touchStartX.current >= window.innerWidth - edgeThreshold;
-
-                    if (isValidSwipe.current || isEdgeSwipe) {
-                        onSwipeLeft();
-                    }
+                    onSwipeLeft();
                 }
             }
 
@@ -125,7 +121,7 @@ function useSwipeGesture(containerRef: React.RefObject<HTMLElement | null>, opti
             container.removeEventListener('touchmove', handleTouchMove);
             container.removeEventListener('touchend', handleTouchEnd);
         };
-    }, [containerRef, onSwipeRight, onSwipeLeft, threshold, edgeThreshold, enabled, isRTL]);
+    }, [allowAnywhereSwipe, containerRef, onSwipeRight, onSwipeLeft, threshold, edgeThreshold, enabled, isRTL]);
 }
 
 /**
@@ -139,25 +135,29 @@ export function useMobileSwipeNavigation(containerRef: React.RefObject<HTMLEleme
 
     // Check if RTL mode is active
     const isRTL = document.body.classList.contains('mod-rtl');
+    const allowAnywhereSwipe = true;
+
+    const handleSwipeRight = useCallback(() => {
+        if (!isRTL) {
+            uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'navigation' });
+            uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+        }
+    }, [isRTL, uiDispatch]);
+
+    const handleSwipeLeft = useCallback(() => {
+        if (isRTL) {
+            uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'navigation' });
+            uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+        }
+    }, [isRTL, uiDispatch]);
+
+    const isSwipeEnabled = isMobile && uiState.singlePane && uiState.currentSinglePaneView === 'files';
 
     useSwipeGesture(containerRef, {
-        onSwipeRight: () => {
-            if (isMobile && uiState.currentSinglePaneView === 'files') {
-                // In RTL mode, swipe right goes forward (to files view)
-                // In LTR mode, swipe right goes back (to navigation view)
-                if (!isRTL) {
-                    uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'navigation' });
-                }
-            }
-        },
-        onSwipeLeft: () => {
-            if (isMobile && uiState.currentSinglePaneView === 'files') {
-                // In RTL mode, swipe left goes back (to navigation view)
-                if (isRTL) {
-                    uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'navigation' });
-                }
-            }
-        },
-        enabled: isMobile
+        onSwipeRight: handleSwipeRight,
+        onSwipeLeft: handleSwipeLeft,
+        enabled: isSwipeEnabled,
+        allowAnywhereSwipe,
+        isRTL
     });
 }

@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { extractFirstEmoji } from './emojiUtils';
+
 /**
  * Base mapping between icon providers and their pack names
  */
@@ -24,6 +26,16 @@ interface IconizeMapping {
     packName: string;
     isDefaultProvider?: boolean;
     prefix: string;
+}
+
+const LUCIDE_PROVIDER_ID = 'lucide';
+const LUCIDE_ICON_PREFIX = 'lucide-';
+
+type CanonicalDelimiter = 'kebab' | 'snake';
+
+interface IdentifierNormalizationRule {
+    redundantPrefixes?: string[];
+    canonicalDelimiter?: CanonicalDelimiter;
 }
 
 /**
@@ -35,7 +47,7 @@ const ICONIZE_MAPPINGS: IconizeMapping[] = [
     { providerId: 'fontawesome-solid', packName: 'font-awesome-regular', prefix: generateIconizePrefix('font-awesome-regular') },
     { providerId: 'fontawesome-brands', packName: 'font-awesome-brands', prefix: generateIconizePrefix('font-awesome-brands') },
     // Iconize built-in packs
-    { providerId: 'lucide', packName: 'lucide-icons', prefix: generateIconizePrefix('lucide-icons'), isDefaultProvider: true },
+    { providerId: LUCIDE_PROVIDER_ID, packName: 'lucide-icons', prefix: generateIconizePrefix('lucide-icons'), isDefaultProvider: true },
     { providerId: 'remix-icons', packName: 'remix-icons', prefix: generateIconizePrefix('remix-icons') },
     { providerId: 'icon-brew', packName: 'icon-brew', prefix: generateIconizePrefix('icon-brew') },
     { providerId: 'simple-icons', packName: 'simple-icons', prefix: generateIconizePrefix('simple-icons') },
@@ -102,6 +114,96 @@ const PREFIX_SORTED_MAPPINGS = [...ICONIZE_MAPPINGS].sort((a, b) => b.prefix.len
 PREFIX_SORTED_MAPPINGS.forEach(mapping => {
     PREFIX_TO_MAPPING.set(mapping.prefix, mapping);
 });
+
+const IDENTIFIER_NORMALIZATION_RULES = new Map<string, IdentifierNormalizationRule>([
+    [
+        LUCIDE_PROVIDER_ID,
+        {
+            redundantPrefixes: [LUCIDE_ICON_PREFIX]
+        }
+    ],
+    [
+        'phosphor',
+        {
+            redundantPrefixes: ['ph-']
+        }
+    ],
+    [
+        'rpg-awesome',
+        {
+            redundantPrefixes: ['ra-']
+        }
+    ],
+    [
+        'material-icons',
+        {
+            redundantPrefixes: [],
+            canonicalDelimiter: 'snake'
+        }
+    ]
+]);
+
+function stripProviderPrefixForIconize(identifier: string, providerId: string): string {
+    const rule = IDENTIFIER_NORMALIZATION_RULES.get(providerId);
+    if (!rule) {
+        return identifier;
+    }
+    return stripAllLeadingPrefixes(identifier, rule.redundantPrefixes ?? []);
+}
+
+function stripAllLeadingPrefixes(identifier: string, prefixes: string[]): string {
+    let normalized = identifier;
+    if (normalized.length === 0 || prefixes.length === 0) {
+        return normalized;
+    }
+
+    const loweredPrefixes = prefixes.map(prefix => prefix.toLowerCase());
+
+    let removed = true;
+    while (removed && normalized.length > 0) {
+        removed = false;
+        for (let i = 0; i < prefixes.length; i++) {
+            const prefix = prefixes[i];
+            if (!prefix) {
+                continue;
+            }
+            const loweredPrefix = loweredPrefixes[i];
+            if (normalized.toLowerCase().startsWith(loweredPrefix)) {
+                normalized = normalized.substring(prefix.length);
+                removed = true;
+                break;
+            }
+        }
+    }
+
+    return normalized;
+}
+
+function normalizeIdentifierFromIconize(identifier: string, providerId: string): string {
+    const rule = IDENTIFIER_NORMALIZATION_RULES.get(providerId);
+    if (!rule) {
+        return identifier;
+    }
+
+    const normalized = stripAllLeadingPrefixes(identifier, rule.redundantPrefixes ?? []);
+    if (!rule.canonicalDelimiter) {
+        return normalized;
+    }
+
+    if (rule.canonicalDelimiter === 'snake') {
+        return normalized.replace(/-/g, '_');
+    }
+
+    if (rule.canonicalDelimiter === 'kebab') {
+        return normalized.replace(/_/g, '-');
+    }
+
+    return normalized;
+}
+
+function normalizeIdentifierForProvider(identifier: string, providerId: string): string {
+    return normalizeIdentifierFromIconize(identifier, providerId);
+}
 
 /**
  * Determines the prefix length in an Iconize identifier using Iconize's original logic.
@@ -179,6 +281,9 @@ function kebabToPascal(value: string): string {
  *
  * Examples:
  * - "LiHome" -> "home" (lucide is default)
+ * - "LiLucideUser" -> "user" (removes redundant lucide prefix)
+ * - "PhPhAppleLogo" -> "phosphor:apple-logo" (collapses duplicate phosphor prefix)
+ * - "RaRaHarpoonTrident" -> "rpg-awesome:harpoon-trident"
  * - "FasUser" -> "fontawesome-solid:user"
  * - "SiGithub" -> "simple-icons:github"
  * - "invalid" -> null (no matching prefix)
@@ -207,11 +312,16 @@ export function convertIconizeToIconId(value: string): string | null {
         return null;
     }
 
-    if (mapping.isDefaultProvider) {
-        return identifier;
+    const normalizedIdentifier = normalizeIdentifierFromIconize(identifier, mapping.providerId);
+    if (!normalizedIdentifier) {
+        return null;
     }
 
-    return `${mapping.providerId}:${identifier}`;
+    if (mapping.isDefaultProvider) {
+        return normalizedIdentifier;
+    }
+
+    return `${mapping.providerId}:${normalizedIdentifier}`;
 }
 
 /**
@@ -219,7 +329,8 @@ export function convertIconizeToIconId(value: string): string | null {
  * Returns null when no Iconize mapping exists for the provider.
  *
  * Examples:
- * - "home" -> "LiHome" (assumes lucide as default)
+ * - "lucide-home" -> "LiHome" (legacy default identifiers)
+ * - "home" -> "LiHome" (legacy identifiers without prefix)
  * - "fontawesome-solid:user" -> "FasUser"
  * - "simple-icons:github" -> "SiGithub"
  * - "unknown-provider:icon" -> null (no mapping for provider)
@@ -232,7 +343,7 @@ export function convertIconIdToIconize(iconId: string): string | null {
 
     // Parse provider and icon identifier
     const colonIndex = trimmed.indexOf(':');
-    const providerId = colonIndex === -1 ? 'lucide' : trimmed.substring(0, colonIndex);
+    const providerId = colonIndex === -1 ? LUCIDE_PROVIDER_ID : trimmed.substring(0, colonIndex);
     const identifier = colonIndex === -1 ? trimmed : trimmed.substring(colonIndex + 1);
 
     if (identifier.length === 0) {
@@ -250,11 +361,297 @@ export function convertIconIdToIconize(iconId: string): string | null {
     }
 
     // Convert kebab-case to PascalCase
-    const pascalName = kebabToPascal(identifier);
+    const normalizedIdentifier = stripProviderPrefixForIconize(identifier, providerId);
+
+    if (normalizedIdentifier.length === 0) {
+        return null;
+    }
+
+    const pascalName = kebabToPascal(normalizedIdentifier);
     if (!pascalName) {
         return null;
     }
 
     // Combine prefix and icon name
     return `${mapping.prefix}${pascalName}`;
+}
+
+/**
+ * Normalizes canonical icon identifiers to remove redundant provider prefixes.
+ * Ensures phosphor/rpg-awesome icons use slug-only identifiers and lucide icons
+ * drop the `lucide-` prefix when stored in canonical form.
+ */
+export function normalizeCanonicalIconId(iconId: string): string {
+    const trimmed = iconId.trim();
+    if (!trimmed) {
+        return trimmed;
+    }
+
+    const colonIndex = trimmed.indexOf(':');
+    if (colonIndex === -1) {
+        const normalized = normalizeIdentifierForProvider(trimmed, LUCIDE_PROVIDER_ID);
+        return normalized && normalized.length > 0 ? normalized : trimmed;
+    }
+
+    const providerId = trimmed.substring(0, colonIndex);
+    const identifier = trimmed.substring(colonIndex + 1);
+    const normalized = normalizeIdentifierForProvider(identifier, providerId);
+
+    if (!normalized || normalized.length === 0 || normalized === identifier) {
+        return trimmed;
+    }
+
+    return `${providerId}:${normalized}`;
+}
+
+/** Normalizes a file type icon map key, removing quotes, leading dots, and converting to lowercase */
+export function normalizeFileTypeIconMapKey(input: string): string {
+    const trimmed = input.trim();
+    const unquoted = tryUnquoteSingleQuotedText(trimmed);
+    const value = unquoted ?? trimmed;
+    return value.trim().replace(/^\./, '').toLowerCase();
+}
+
+/**
+ * Normalizes a file name icon map key, preserving intentional whitespace.
+ * Supports single-quoted values (e.g., 'ai ') to allow keys with leading/trailing spaces.
+ */
+export function normalizeFileNameIconMapKey(input: string): string {
+    if (!input || input.trim().length === 0) {
+        return '';
+    }
+
+    // Check if the input is a single-quoted string and extract its content
+    const trimmedForQuote = input.trim();
+    const unquoted = tryUnquoteSingleQuotedText(trimmedForQuote);
+    if (unquoted !== null) {
+        if (unquoted.trim().length === 0) {
+            return '';
+        }
+        // Return the unquoted value as-is, preserving internal whitespace
+        return unquoted.toLowerCase();
+    }
+
+    // Preserve whitespace if the raw input has leading or trailing spaces
+    if (/^\s|\s$/.test(input)) {
+        return input.toLowerCase();
+    }
+
+    return input.trim().toLowerCase();
+}
+
+interface NormalizedIconMapEntry {
+    key: string;
+    iconId: string;
+}
+
+export interface IconMapParseResult {
+    map: Record<string, string>;
+    invalidLines: string[];
+}
+
+export function normalizeIconMapEntry(key: string, iconId: string, normalizeKey: (input: string) => string): NormalizedIconMapEntry | null {
+    const normalizedKey = normalizeKey(key);
+    if (!normalizedKey) {
+        return null;
+    }
+
+    const normalizedIconValue = normalizeIconMapIconValue(iconId);
+    if (!normalizedIconValue) {
+        return null;
+    }
+
+    return { key: normalizedKey, iconId: normalizedIconValue };
+}
+
+/**
+ * Normalizes an icon value from icon map input to match the value stored in frontmatter.
+ * Returns null for invalid or unrecognized identifiers.
+ */
+function normalizeIconMapIconValue(iconId: string): string | null {
+    const trimmed = iconId.trim();
+    if (!trimmed) {
+        return null;
+    }
+
+    // Preserve plain emoji values as-is (matches frontmatter storage).
+    const emojiOnly = extractFirstEmoji(trimmed);
+    if (emojiOnly && emojiOnly === trimmed) {
+        return emojiOnly;
+    }
+
+    // Heuristic: treat unknown Iconize-style identifiers as invalid rather than lucide names.
+    // Example: "Si" should not be interpreted as a lucide icon.
+    const converted = convertIconizeToIconId(trimmed);
+    if (!converted && !trimmed.includes(':') && /[A-Z]/.test(trimmed) && !/[-_]/.test(trimmed)) {
+        return null;
+    }
+
+    const canonical = deserializeIconFromFrontmatter(trimmed);
+    if (!canonical) {
+        return null;
+    }
+
+    const serialized = serializeIconForFrontmatter(canonical);
+    return serialized && serialized.length > 0 ? serialized : null;
+}
+
+export function normalizeIconMapRecord(record: Record<string, string>, normalizeKey: (input: string) => string): Record<string, string> {
+    const normalized = Object.create(null) as Record<string, string>;
+
+    Object.entries(record).forEach(([key, value]) => {
+        if (typeof value !== 'string') {
+            return;
+        }
+
+        const normalizedEntry = normalizeIconMapEntry(key, value, normalizeKey);
+        if (!normalizedEntry) {
+            return;
+        }
+
+        normalized[normalizedEntry.key] = normalizedEntry.iconId;
+    });
+
+    return normalized;
+}
+
+export function serializeIconMapRecord(map: Record<string, string>): string {
+    const entries = Object.entries(map)
+        .filter(([key, iconId]) => Boolean(key) && Boolean(iconId))
+        .sort(([a], [b]) => a.localeCompare(b));
+
+    return entries
+        .map(([key, iconId]) => {
+            // Wrap keys containing whitespace or starting with '#' in single quotes
+            const serializedKey = shouldQuoteIconMapKey(key) ? `'${escapeSingleQuotedText(key)}'` : key;
+            return `${serializedKey}=${iconId}`;
+        })
+        .join('\n');
+}
+
+export function parseIconMapText(value: string, normalizeKey: (input: string) => string): IconMapParseResult {
+    const map = Object.create(null) as Record<string, string>;
+    const invalidLines: string[] = [];
+
+    const lines = value.replace(/\r\n/g, '\n').split('\n');
+    for (let i = 0; i < lines.length; i++) {
+        const rawLine = lines[i];
+        const trimmed = rawLine.trim();
+
+        if (!trimmed || trimmed.startsWith('#')) {
+            continue;
+        }
+
+        const separatorIndex = trimmed.indexOf('=');
+        const altSeparatorIndex = trimmed.indexOf(':');
+        const hasEquals = separatorIndex !== -1;
+        const hasColon = altSeparatorIndex !== -1;
+
+        const splitIndex = hasEquals ? separatorIndex : hasColon ? altSeparatorIndex : -1;
+        if (splitIndex === -1) {
+            invalidLines.push(trimmed);
+            continue;
+        }
+
+        const rawKey = trimmed.substring(0, splitIndex).trim();
+        const rawIconId = trimmed.substring(splitIndex + 1).trim();
+
+        const normalizedEntry = normalizeIconMapEntry(rawKey, rawIconId, normalizeKey);
+        if (!normalizedEntry) {
+            invalidLines.push(trimmed);
+            continue;
+        }
+
+        map[normalizedEntry.key] = normalizedEntry.iconId;
+    }
+
+    return { map, invalidLines };
+}
+
+/** Returns true if the key needs to be wrapped in single quotes for serialization */
+function shouldQuoteIconMapKey(key: string): boolean {
+    return /\s/.test(key) || key.startsWith('#');
+}
+
+/** Escapes backslashes and single quotes for embedding in a single-quoted string */
+function escapeSingleQuotedText(value: string): string {
+    return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+/** Extracts the content from a single-quoted string, or returns null if not quoted */
+function tryUnquoteSingleQuotedText(value: string): string | null {
+    if (value.length < 2 || !value.startsWith("'") || !value.endsWith("'")) {
+        return null;
+    }
+
+    return unescapeSingleQuotedText(value.slice(1, -1));
+}
+
+/** Unescapes backslashes and single quotes in a single-quoted string's content */
+function unescapeSingleQuotedText(value: string): string {
+    let result = '';
+    for (let i = 0; i < value.length; i++) {
+        const ch = value[i];
+        // Handle escape sequences: \' and \\
+        if (ch === '\\' && i + 1 < value.length) {
+            const next = value[i + 1];
+            if (next === "'" || next === '\\') {
+                result += next;
+                i += 1;
+                continue;
+            }
+        }
+        result += ch;
+    }
+    return result;
+}
+
+/**
+ * Serializes a canonical icon identifier to the value stored in frontmatter.
+ * Returns null when the icon cannot be normalized.
+ */
+export function serializeIconForFrontmatter(iconId: string): string | null {
+    const canonical = normalizeCanonicalIconId(iconId);
+    if (!canonical) {
+        return null;
+    }
+
+    const trimmed = canonical.trim();
+    if (!trimmed) {
+        return null;
+    }
+
+    const emojiPrefix = 'emoji:';
+    const emojiCandidate = trimmed.startsWith(emojiPrefix) ? trimmed.substring(emojiPrefix.length).trim() : trimmed;
+    const emojiOnly = extractFirstEmoji(emojiCandidate);
+
+    if (emojiOnly && emojiCandidate === emojiOnly) {
+        return emojiOnly;
+    }
+
+    return convertIconIdToIconize(trimmed) ?? trimmed;
+}
+
+/**
+ * Deserializes an icon value from frontmatter back into canonical format.
+ * Supports Iconize identifiers, emojis, and legacy provider-prefixed strings.
+ */
+export function deserializeIconFromFrontmatter(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) {
+        return null;
+    }
+
+    const converted = convertIconizeToIconId(trimmed);
+    if (converted) {
+        return converted;
+    }
+
+    const emojiOnly = extractFirstEmoji(trimmed);
+    if (emojiOnly && emojiOnly === trimmed) {
+        return `emoji:${emojiOnly}`;
+    }
+
+    const normalized = normalizeCanonicalIconId(trimmed);
+    return normalized && normalized.length > 0 ? normalized : null;
 }

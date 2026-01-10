@@ -36,6 +36,12 @@ export const NOTEBOOK_NAVIGATOR_VIEW = 'notebook-navigator';
 export const UNTAGGED_TAG_ID = '__untagged__';
 
 /**
+ * Special tag identifier representing all tagged notes
+ * Mirrors untagged constant to keep virtual collections consistent
+ */
+export const TAGGED_TAG_ID = '__tagged__';
+
+/**
  * Identifies which pane currently has keyboard focus
  * Used for keyboard navigation between folder tree and file list
  */
@@ -68,6 +74,11 @@ export const ListPaneItemType = {
 export type ListPaneItemType = (typeof ListPaneItemType)[keyof typeof ListPaneItemType];
 
 /**
+ * Key used for identifying the pinned notes header in list data
+ */
+export const PINNED_SECTION_HEADER_KEY = 'header-pinned';
+
+/**
  * Navigator context type for context-aware features like pinning
  * Represents different browsing contexts in the navigator
  */
@@ -94,10 +105,10 @@ export const NavigationPaneItemType = {
     SHORTCUT_SEARCH: 'shortcut-search',
     SHORTCUT_TAG: 'shortcut-tag',
     RECENT_NOTE: 'recent-note',
-    BANNER: 'banner',
     TOP_SPACER: 'top-spacer',
     BOTTOM_SPACER: 'bottom-spacer',
-    LIST_SPACER: 'list-spacer'
+    LIST_SPACER: 'list-spacer',
+    ROOT_SPACER: 'root-spacer'
 } as const;
 
 /**
@@ -111,7 +122,7 @@ export type NavigationPaneItemType = (typeof NavigationPaneItemType)[keyof typeo
 export const NavigationSectionId = {
     SHORTCUTS: 'shortcuts',
     RECENT: 'recent',
-    NOTES: 'notes',
+    FOLDERS: 'folders',
     TAGS: 'tags'
 } as const;
 
@@ -126,7 +137,7 @@ export type NavigationSectionId = (typeof NavigationSectionId)[keyof typeof Navi
 export const DEFAULT_NAVIGATION_SECTION_ORDER: NavigationSectionId[] = [
     NavigationSectionId.SHORTCUTS,
     NavigationSectionId.RECENT,
-    NavigationSectionId.NOTES,
+    NavigationSectionId.FOLDERS,
     NavigationSectionId.TAGS
 ];
 
@@ -165,24 +176,20 @@ export const OVERSCAN = 10;
  * Used by ListPane component for calculating item heights
  */
 export const LISTPANE_MEASUREMENTS = {
-    // Date group headers
-    firstHeader: 35, // var(--nn-date-header-height)
-    subsequentHeader: 50, // var(--nn-date-header-height-subsequent)
-
-    // File item components
-    basePadding: 16, // var(--nn-file-padding-total) = var(--nn-file-padding-vertical) * 2
-    slimPadding: 10, // var(--nn-file-padding-vertical-slim) * 2
-    slimPaddingMobile: 16, // var(--nn-file-padding-vertical-slim-mobile) * 2
-    titleLineHeight: 20, // var(--nn-file-title-line-height)
-    singleTextLineHeight: 19, // var(--nn-file-single-text-line-height)
-    multilineTextLineHeight: 18, // var(--nn-file-multiline-text-line-height)
-    tagRowHeight: 26, // Height of tag row (20px container + 4px margin-top)
-    featureImageHeight: 42, // var(--nn-feature-image-min-size)
-
-    // Spacers
-    bottomSpacer: 20,
-    topSpacer: 8
+    // Default compact mode metrics
+    defaultCompactItemHeight: 28, // Desktop compact item height
+    defaultCompactFontSize: 13, // Desktop compact mode font size
+    mobileHeightIncrement: 8, // Mobile compact item height is desktop + 8px
+    mobileFontSizeIncrement: 2, // Mobile compact font size is desktop + 2px
+    minCompactPaddingVerticalMobile: 6 // Minimum mobile padding per side
 };
+
+/**
+ * Pane transition duration limits for single-pane view animations (milliseconds)
+ */
+export const MIN_PANE_TRANSITION_DURATION_MS = 50;
+export const MAX_PANE_TRANSITION_DURATION_MS = 350;
+export const PANE_TRANSITION_DURATION_STEP_MS = 10;
 
 /**
  * Type representing all possible item types
@@ -212,16 +219,25 @@ export interface LocalStorageKeys {
     navigationPaneHeightKey: string;
     dualPaneOrientationKey: string;
     dualPaneKey: string;
+    uiScaleKey: string;
     shortcutsExpandedKey: string;
     recentNotesExpandedKey: string;
     recentNotesKey: string;
     recentIconsKey: string;
     navigationSectionOrderKey: string;
+    pinnedShortcutsMaxHeightKey: string;
     uxPreferencesKey: string;
     fileCacheKey: string;
     databaseSchemaVersionKey: string;
     databaseContentVersionKey: string;
+    cacheRebuildNoticeKey: string;
     localStorageVersionKey: string;
+    vaultProfileKey: string;
+    releaseCheckTimestampKey: string;
+    latestKnownReleaseKey: string;
+    searchProviderKey: string;
+    tagSortOrderKey: string;
+    recentColorsKey: string;
 }
 
 /**
@@ -240,16 +256,25 @@ export const STORAGE_KEYS: LocalStorageKeys = {
     navigationPaneHeightKey: 'notebook-navigator-navigation-pane-height',
     dualPaneOrientationKey: 'notebook-navigator-dual-pane-orientation',
     dualPaneKey: 'notebook-navigator-dual-pane',
+    uiScaleKey: 'notebook-navigator-ui-scale',
     shortcutsExpandedKey: 'notebook-navigator-shortcuts-expanded',
     recentNotesExpandedKey: 'notebook-navigator-recent-notes-expanded',
     recentNotesKey: 'notebook-navigator-recent-notes',
     recentIconsKey: 'notebook-navigator-recent-icons',
     navigationSectionOrderKey: 'notebook-navigator-section-order',
+    pinnedShortcutsMaxHeightKey: 'notebook-navigator-pinned-shortcuts-max-height',
     uxPreferencesKey: 'notebook-navigator-ux-preferences',
     fileCacheKey: 'notebook-navigator-file-cache',
     databaseSchemaVersionKey: 'notebook-navigator-db-schema-version',
     databaseContentVersionKey: 'notebook-navigator-db-content-version',
-    localStorageVersionKey: 'notebook-navigator-localstorage-version'
+    cacheRebuildNoticeKey: 'notebook-navigator-cache-rebuild-notice',
+    localStorageVersionKey: 'notebook-navigator-localstorage-version',
+    vaultProfileKey: 'notebook-navigator-vault-profile',
+    releaseCheckTimestampKey: 'notebook-navigator-release-check-timestamp',
+    latestKnownReleaseKey: 'notebook-navigator-latest-known-release',
+    searchProviderKey: 'notebook-navigator-search-provider',
+    tagSortOrderKey: 'notebook-navigator-tag-sort-order',
+    recentColorsKey: 'notebook-navigator-recent-colors'
 };
 
 export interface UXPreferences {
@@ -264,7 +289,7 @@ export type VisibilityPreferences = Pick<UXPreferences, 'includeDescendantNotes'
 /** Orientation options for dual-pane layout */
 export type DualPaneOrientation = 'horizontal' | 'vertical';
 
-/** Background color mode for navigation/list panes on desktop and mobile */
+/** Background color mode for navigation/list panes on desktop */
 export type BackgroundMode = 'separate' | 'primary' | 'secondary';
 
 /**
@@ -272,10 +297,11 @@ export type BackgroundMode = 'separate' | 'primary' | 'secondary';
  * These values are used when no saved state exists
  */
 export const NAVIGATION_PANE_DIMENSIONS = {
-    defaultWidth: 300,
+    defaultWidth: 200, // Obsidian left panel default width is 300
     minWidth: 150,
     defaultHeight: 260,
-    minHeight: 160
+    minHeight: 160,
+    pinnedShortcutsMinHeight: 80
 };
 
 /**
@@ -283,7 +309,7 @@ export const NAVIGATION_PANE_DIMENSIONS = {
  * The file pane uses flex: 1 so it doesn't have a defaultWidth or maxWidth
  */
 export const FILE_PANE_DIMENSIONS = {
-    minWidth: 250
+    minWidth: 150
 };
 
 /**

@@ -23,11 +23,14 @@ import { BaseMetadataService } from './BaseMetadataService';
 import type { CleanupValidators } from '../MetadataService';
 import { getFolderNote, type FolderNoteDetectionSettings } from '../../utils/folderNotes';
 import { getDBInstance } from '../../storage/fileOperations';
+import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
 
 /**
  * Service for managing folder-specific metadata operations
  * Handles folder colors, icons, sort overrides, and cleanup operations
  */
+type SettingsMutation = (settings: NotebookNavigatorSettings) => boolean;
+
 export class FolderMetadataService extends BaseMetadataService {
     /**
      * Validates that a folder exists in the vault
@@ -191,16 +194,17 @@ export class FolderMetadataService extends BaseMetadataService {
      * @param oldPath - Previous folder path
      * @param newPath - New folder path
      */
-    async handleFolderRename(oldPath: string, newPath: string): Promise<void> {
+    async handleFolderRename(oldPath: string, newPath: string, extraMutation?: SettingsMutation): Promise<void> {
         await this.saveAndUpdate(settings => {
-            // Update all metadata types
-            this.updateNestedPaths(settings.folderColors, oldPath, newPath);
-            this.updateNestedPaths(settings.folderBackgroundColors, oldPath, newPath);
-            this.updateNestedPaths(settings.folderIcons, oldPath, newPath);
-            this.updateNestedPaths(settings.folderSortOverrides, oldPath, newPath);
-            this.updateNestedPaths(settings.folderAppearances, oldPath, newPath);
+            let changed = false;
 
-            this.updateShortcuts(settings, shortcut => {
+            changed = this.updateNestedPaths(settings.folderColors, oldPath, newPath) || changed;
+            changed = this.updateNestedPaths(settings.folderBackgroundColors, oldPath, newPath) || changed;
+            changed = this.updateNestedPaths(settings.folderIcons, oldPath, newPath) || changed;
+            changed = this.updateNestedPaths(settings.folderSortOverrides, oldPath, newPath) || changed;
+            changed = this.updateNestedPaths(settings.folderAppearances, oldPath, newPath) || changed;
+
+            const shortcutsChanged = this.updateShortcuts(settings, shortcut => {
                 if (!isFolderShortcut(shortcut) || shortcut.path !== oldPath) {
                     return undefined;
                 }
@@ -210,6 +214,13 @@ export class FolderMetadataService extends BaseMetadataService {
                     path: newPath
                 };
             });
+            changed = shortcutsChanged || changed;
+
+            if (extraMutation) {
+                changed = extraMutation(settings) || changed;
+            }
+
+            return changed;
         });
     }
 
@@ -217,20 +228,29 @@ export class FolderMetadataService extends BaseMetadataService {
      * Handles folder deletion by removing all associated metadata
      * @param folderPath - Path of the deleted folder
      */
-    async handleFolderDelete(folderPath: string): Promise<void> {
+    async handleFolderDelete(folderPath: string, extraMutation?: SettingsMutation): Promise<void> {
         await this.saveAndUpdate(settings => {
-            this.deleteNestedPaths(settings.folderColors, folderPath);
-            this.deleteNestedPaths(settings.folderBackgroundColors, folderPath);
-            this.deleteNestedPaths(settings.folderIcons, folderPath);
-            this.deleteNestedPaths(settings.folderSortOverrides, folderPath);
-            this.deleteNestedPaths(settings.folderAppearances, folderPath);
+            let changed = false;
 
-            this.updateShortcuts(settings, shortcut => {
+            changed = this.deleteNestedPaths(settings.folderColors, folderPath) || changed;
+            changed = this.deleteNestedPaths(settings.folderBackgroundColors, folderPath) || changed;
+            changed = this.deleteNestedPaths(settings.folderIcons, folderPath) || changed;
+            changed = this.deleteNestedPaths(settings.folderSortOverrides, folderPath) || changed;
+            changed = this.deleteNestedPaths(settings.folderAppearances, folderPath) || changed;
+
+            const shortcutsChanged = this.updateShortcuts(settings, shortcut => {
                 if (!isFolderShortcut(shortcut)) {
                     return undefined;
                 }
                 return shortcut.path === folderPath ? null : undefined;
             });
+            changed = shortcutsChanged || changed;
+
+            if (extraMutation) {
+                changed = extraMutation(settings) || changed;
+            }
+
+            return changed;
         });
     }
 
@@ -321,7 +341,7 @@ export class FolderMetadataService extends BaseMetadataService {
             return null;
         }
 
-        const iconValue = typeof fileData.metadata.icon === 'string' ? fileData.metadata.icon.trim() : undefined;
+        const iconValue = typeof fileData.metadata.icon === 'string' ? normalizeCanonicalIconId(fileData.metadata.icon.trim()) : undefined;
         const colorValue = typeof fileData.metadata.color === 'string' ? fileData.metadata.color.trim() : undefined;
 
         if (!iconValue && !colorValue) {

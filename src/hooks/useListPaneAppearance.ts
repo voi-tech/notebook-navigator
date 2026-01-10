@@ -1,17 +1,75 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { useMemo } from 'react';
 import { useSettingsState } from '../context/SettingsContext';
 import { useSelectionState } from '../context/SelectionContext';
+import type { ListDisplayMode, ListNoteGroupingOption } from '../settings/types';
+import type { NotebookNavigatorSettings } from '../settings';
 import { ItemType } from '../types';
+import { resolveListGrouping } from '../utils/listGrouping';
 
 export interface FolderAppearance {
+    mode?: ListDisplayMode;
     titleRows?: number;
     previewRows?: number;
-    showDate?: boolean;
-    showPreview?: boolean;
-    showImage?: boolean;
+    groupBy?: ListNoteGroupingOption;
 }
 
 export type TagAppearance = FolderAppearance;
+
+export function getDefaultListMode(settings: NotebookNavigatorSettings): ListDisplayMode {
+    return settings.defaultListMode === 'compact' ? 'compact' : 'standard';
+}
+
+/**
+ * Resolve the effective list mode for a folder/tag appearance.
+ */
+export function resolveListMode({
+    appearance,
+    defaultMode
+}: {
+    appearance?: FolderAppearance;
+    defaultMode: ListDisplayMode;
+}): ListDisplayMode {
+    if (appearance?.mode === 'compact' || appearance?.mode === 'standard') {
+        return appearance.mode;
+    }
+
+    return defaultMode;
+}
+
+/** Return visibility flags for a given list mode */
+function getVisibilityForMode(mode: ListDisplayMode, settings: NotebookNavigatorSettings) {
+    if (mode === 'compact') {
+        return {
+            showDate: false,
+            showPreview: false,
+            showImage: false
+        };
+    }
+
+    return {
+        showDate: settings.showFileDate,
+        showPreview: settings.showFilePreview,
+        showImage: settings.showFeatureImage
+    };
+}
 
 /**
  * Hook to get effective appearance settings for the current selection (folder or tag)
@@ -22,40 +80,66 @@ export function useListPaneAppearance() {
     const { selectedFolder, selectedTag, selectionType } = useSelectionState();
 
     return useMemo(() => {
+        const defaultMode = getDefaultListMode(settings);
+
+        const buildAppearance = (appearance: FolderAppearance | undefined) => {
+            const mode = resolveListMode({ appearance, defaultMode });
+            const visibility = getVisibilityForMode(mode, settings);
+
+            return {
+                mode,
+                titleRows: appearance?.titleRows ?? settings.fileNameRows,
+                previewRows: appearance?.previewRows ?? settings.previewRows,
+                showDate: visibility.showDate,
+                showPreview: visibility.showPreview,
+                showImage: visibility.showImage
+            };
+        };
+
         // For folders
         if (selectionType === ItemType.FOLDER && selectedFolder) {
             const folderPath = selectedFolder.path;
-            const folderAppearance = settings.folderAppearances?.[folderPath] || {};
+            const folderAppearance = settings.folderAppearances?.[folderPath];
+            // Resolve effective grouping mode for this folder
+            const grouping = resolveListGrouping({
+                settings,
+                selectionType,
+                folderPath
+            });
+
+            const appearance = buildAppearance(folderAppearance);
 
             return {
-                titleRows: folderAppearance.titleRows ?? settings.fileNameRows,
-                previewRows: folderAppearance.previewRows ?? settings.previewRows,
-                showDate: folderAppearance.showDate ?? settings.showFileDate,
-                showPreview: folderAppearance.showPreview ?? settings.showFilePreview,
-                showImage: folderAppearance.showImage ?? settings.showFeatureImage
+                ...appearance,
+                groupBy: grouping.effectiveGrouping
             };
         }
 
         // For tags
         if (selectionType === ItemType.TAG && selectedTag) {
-            const tagAppearance = settings.tagAppearances?.[selectedTag] || {};
+            const tagAppearance = settings.tagAppearances?.[selectedTag];
+            // Resolve effective grouping mode for this tag
+            const grouping = resolveListGrouping({
+                settings,
+                selectionType,
+                tag: selectedTag
+            });
+
+            const appearance = buildAppearance(tagAppearance);
 
             return {
-                titleRows: tagAppearance.titleRows ?? settings.fileNameRows,
-                previewRows: tagAppearance.previewRows ?? settings.previewRows,
-                showDate: tagAppearance.showDate ?? settings.showFileDate,
-                showPreview: tagAppearance.showPreview ?? settings.showFilePreview,
-                showImage: tagAppearance.showImage ?? settings.showFeatureImage
+                ...appearance,
+                groupBy: grouping.effectiveGrouping
             };
         }
 
         // Default (no selection or other selection types)
+        // Resolve default grouping mode when no folder or tag is selected
+        const grouping = resolveListGrouping({ settings });
+        const appearance = buildAppearance(undefined);
         return {
-            titleRows: settings.fileNameRows,
-            previewRows: settings.previewRows,
-            showDate: settings.showFileDate,
-            showPreview: settings.showFilePreview,
-            showImage: settings.showFeatureImage
+            ...appearance,
+            groupBy: grouping.effectiveGrouping
         };
     }, [settings, selectedFolder, selectedTag, selectionType]);
 }

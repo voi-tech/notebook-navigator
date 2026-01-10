@@ -1,3 +1,21 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import React from 'react';
 import { Root, createRoot } from 'react-dom/client';
 /*
@@ -19,10 +37,10 @@ import { Root, createRoot } from 'react-dom/client';
  */
 
 // src/view/NotebookNavigatorView.tsx
-import { ItemView, WorkspaceLeaf, TFile, Platform } from 'obsidian';
+import { ItemView, WorkspaceLeaf, TFile, Platform, TFolder, requireApiVersion } from 'obsidian';
 import { NotebookNavigatorContainer } from '../components/NotebookNavigatorContainer';
 import type { NotebookNavigatorHandle } from '../components/NotebookNavigatorComponent';
-import type { RevealFileOptions } from '../hooks/useNavigatorReveal';
+import type { RevealFileOptions, NavigateToFolderOptions } from '../hooks/useNavigatorReveal';
 import { ExpansionProvider } from '../context/ExpansionContext';
 import { SelectionProvider } from '../context/SelectionContext';
 import { ServicesProvider } from '../context/ServicesContext';
@@ -33,8 +51,15 @@ import { ShortcutsProvider } from '../context/ShortcutsContext';
 import { RecentDataProvider } from '../context/RecentDataContext';
 import { strings } from '../i18n';
 import NotebookNavigatorPlugin from '../main';
+import { NOTEBOOK_NAVIGATOR_ICON_ID } from '../constants/notebookNavigatorIcon';
 import { NOTEBOOK_NAVIGATOR_VIEW } from '../types';
 import { UXPreferencesProvider } from '../context/UXPreferencesContext';
+import {
+    applyAndroidFontCompensation,
+    clearAndroidFontCompensation,
+    propagateAndroidFontCompensationToMobileRoot
+} from '../utils/androidFontScale';
+import { ensureNotebookNavigatorSvgFilters } from '../utils/svgFilters';
 
 /**
  * Custom Obsidian view that hosts the React-based Notebook Navigator interface
@@ -77,7 +102,7 @@ export class NotebookNavigatorView extends ItemView {
      * @returns The Obsidian icon name to display in tabs and headers
      */
     getIcon() {
-        return 'notebook';
+        return NOTEBOOK_NAVIGATOR_ICON_ID;
     }
 
     /**
@@ -87,6 +112,9 @@ export class NotebookNavigatorView extends ItemView {
      */
     async onOpen() {
         const container = this.containerEl.children[1];
+        if (!(container instanceof HTMLElement)) {
+            return;
+        }
         container.empty(); // Clear previous content
         container.classList.add('notebook-navigator');
 
@@ -98,10 +126,18 @@ export class NotebookNavigatorView extends ItemView {
             // Add platform-specific classes
             if (Platform.isAndroidApp) {
                 container.classList.add('notebook-navigator-android');
+                // Detect and compensate for Android textZoom BEFORE React renders
+                applyAndroidFontCompensation(container);
             } else if (Platform.isIosApp) {
                 container.classList.add('notebook-navigator-ios');
+
+                if (requireApiVersion('1.11.0')) {
+                    container.classList.add('notebook-navigator-obsidian-1-11-plus-ios');
+                }
             }
         }
+
+        ensureNotebookNavigatorSvgFilters();
 
         this.root = createRoot(container);
         this.root.render(
@@ -117,8 +153,11 @@ export class NotebookNavigatorView extends ItemView {
                                                 app={this.plugin.app}
                                                 api={this.plugin.api}
                                                 tagTreeService={this.plugin.tagTreeService}
-                                                onFileRename={this.plugin.registerFileRenameListener.bind(this.plugin)}
-                                                onFileRenameUnsubscribe={this.plugin.unregisterFileRenameListener.bind(this.plugin)}
+                                                // Wrap bound methods in arrow functions to maintain proper this context and satisfy eslint @typescript-eslint/unbound-method
+                                                onFileRename={(listenerId, callback) =>
+                                                    this.plugin.registerFileRenameListener(listenerId, callback)
+                                                }
+                                                onFileRenameUnsubscribe={listenerId => this.plugin.unregisterFileRenameListener(listenerId)}
                                                 isMobile={isMobile}
                                             >
                                                 <UIStateProvider isMobile={isMobile}>
@@ -134,6 +173,63 @@ export class NotebookNavigatorView extends ItemView {
                 </SettingsProvider>
             </React.StrictMode>
         );
+
+        // Propagate font compensation to the mobile root element after React renders.
+        // Uses multiple timing strategies since React render timing varies on Android.
+        if (Platform.isAndroidApp) {
+            // Attempts to find and apply compensation to the mobile root element
+            const applyToMobileRoot = () => {
+                const mobileRoot = container.querySelector('.nn-split-container.nn-mobile');
+                if (!(mobileRoot instanceof HTMLElement)) {
+                    return false;
+                }
+                propagateAndroidFontCompensationToMobileRoot(container);
+                return true;
+            };
+
+            const attemptPropagation = () => {
+                if (applyToMobileRoot()) {
+                    return true;
+                }
+                return false;
+            };
+
+            // If mobile root doesn't exist yet, wait for React to render it
+            if (!attemptPropagation()) {
+                // Watch for DOM changes in case React renders asynchronously
+                const observer = new MutationObserver(() => {
+                    if (attemptPropagation()) {
+                        observer.disconnect();
+                    }
+                });
+                observer.observe(container, { childList: true, subtree: true });
+                // Try after next paint in case React batches synchronously
+                window.requestAnimationFrame(() => {
+                    if (attemptPropagation()) {
+                        observer.disconnect();
+                    }
+                });
+                // Fallback timeouts at 100ms, 200ms, and 500ms for slow renders
+                window.setTimeout(() => {
+                    if (attemptPropagation()) {
+                        observer.disconnect();
+                        return;
+                    }
+                    window.setTimeout(() => {
+                        if (attemptPropagation()) {
+                            observer.disconnect();
+                            return;
+                        }
+                        window.setTimeout(() => {
+                            attemptPropagation();
+                            observer.disconnect();
+                        }, 500);
+                    }, 200);
+                }, 100);
+                // Ensure observer is cleaned up after max wait time
+                window.setTimeout(() => observer.disconnect(), 500);
+            }
+        }
     }
 
     /**
@@ -144,6 +240,10 @@ export class NotebookNavigatorView extends ItemView {
     async onClose() {
         // Unmount the React app when the view is closed to prevent memory leaks
         const container = this.containerEl.children[1];
+        if (!(container instanceof HTMLElement)) {
+            return;
+        }
+        clearAndroidFontCompensation(container);
         container.classList.remove('notebook-navigator');
         // Also remove mobile/platform-specific classes added on open
         container.classList.remove('notebook-navigator-mobile');
@@ -183,6 +283,20 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
+     * Navigates directly to the provided folder path
+     */
+    navigateToFolder(folder: TFolder, options?: NavigateToFolderOptions) {
+        this.componentRef.current?.navigateToFolder(folder, options);
+    }
+
+    /**
+     * Navigates directly to the provided tag path
+     */
+    navigateToTag(tagPath: string) {
+        this.componentRef.current?.navigateToTag(tagPath);
+    }
+
+    /**
      * Reveals a file while attempting to preserve the current navigation context
      */
     revealFileInNearestFolder(file: TFile, options?: RevealFileOptions) {
@@ -197,14 +311,14 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
-     * Refreshes the UI by triggering a settings version update
+     * Moves focus to the navigation pane explicitly
      */
-    refresh() {
-        this.componentRef.current?.refresh();
+    focusNavigationPane() {
+        this.componentRef.current?.focusNavigationPane();
     }
 
     /**
-     * Deletes the currently active file using smart selection
+     * Refreshes the UI by triggering a settings version update
      */
     deleteActiveFile() {
         this.componentRef.current?.deleteActiveFile();
@@ -218,6 +332,13 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
+     * Creates a new note from a template in the currently selected folder
+     */
+    async createNoteFromTemplateInSelectedFolder(): Promise<void> {
+        await this.componentRef.current?.createNoteFromTemplateInSelectedFolder();
+    }
+
+    /**
      * Moves selected files to another folder using the folder suggest modal
      */
     async moveSelectedFiles(): Promise<void> {
@@ -225,10 +346,31 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
+     * Selects the next file in the current navigator view
+     */
+    async selectNextFileInCurrentView(): Promise<boolean> {
+        return (await this.componentRef.current?.selectNextFile()) ?? false;
+    }
+
+    /**
+     * Selects the previous file in the current navigator view
+     */
+    async selectPreviousFileInCurrentView(): Promise<boolean> {
+        return (await this.componentRef.current?.selectPreviousFile()) ?? false;
+    }
+
+    /**
      * Adds the current navigator selection or active file to shortcuts
      */
     async addShortcutForCurrentSelection(): Promise<void> {
         await this.componentRef.current?.addShortcutForCurrentSelection();
+    }
+
+    /**
+     * Opens the shortcut at the given 1-based position in the shortcuts list.
+     */
+    async openShortcutByNumber(shortcutNumber: number): Promise<boolean> {
+        return (await this.componentRef.current?.openShortcutByNumber(shortcutNumber)) ?? false;
     }
 
     /**

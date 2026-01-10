@@ -29,16 +29,24 @@ import { useUXPreferences } from '../context/UXPreferencesContext';
 import { useUIState, useUIDispatch } from '../context/UIStateContext';
 import { useFileCache } from '../context/StorageContext';
 import { useCommandQueue } from '../context/ServicesContext';
-import { determineTagToReveal, findNearestVisibleTagAncestor, resolveCanonicalTagPath } from '../utils/tagUtils';
-import { ItemType, UNTAGGED_TAG_ID } from '../types';
+import { determineTagToReveal, findNearestVisibleTagAncestor } from '../utils/tagUtils';
+import { ItemType } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { normalizeNavigationPath } from '../utils/navigationIndex';
+import { doesFolderContainPath } from '../utils/pathUtils';
 import type { Align } from '../types/scroll';
+import { navigateToTag as navigateToTagInternal, type NavigateToTagOptions } from '../utils/tagNavigation';
+
+interface FocusPaneOptions {
+    updateSinglePaneView?: boolean;
+}
 
 interface UseNavigatorRevealOptions {
     app: App;
     navigationPaneRef: RefObject<NavigationPaneHandle | null>;
     listPaneRef: RefObject<ListPaneHandle | null>;
+    focusNavigationPane: (options?: FocusPaneOptions) => void;
+    focusFilesPane: (options?: FocusPaneOptions) => void;
 }
 
 export interface RevealFileOptions {
@@ -55,6 +63,8 @@ export interface NavigateToFolderOptions {
     skipScroll?: boolean;
     // Marks how this navigation was triggered
     source?: SelectionRevealSource;
+    // When true, keep the navigation pane focused in single pane mode
+    preserveNavigationFocus?: boolean;
 }
 
 export interface RevealTagOptions {
@@ -76,7 +86,13 @@ export interface RevealTagOptions {
  * This hook encapsulates the complex reveal logic that was previously
  * in the NotebookNavigatorComponent, making it reusable and testable.
  */
-export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseNavigatorRevealOptions) {
+export function useNavigatorReveal({
+    app,
+    navigationPaneRef,
+    listPaneRef,
+    focusNavigationPane,
+    focusFilesPane
+}: UseNavigatorRevealOptions) {
     const settings = useSettingsState();
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
@@ -94,6 +110,12 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
     const [isStartupReveal, setIsStartupReveal] = useState<boolean>(false);
     const activeFileRef = useRef<string | null>(null);
     const hasInitializedRef = useRef<boolean>(false);
+    const selectedFilePathRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        // Track the latest selected file path for workspace event handlers without re-registering listeners.
+        selectedFilePathRef.current = selectionState.selectedFile?.path ?? null;
+    }, [selectionState.selectedFile]);
 
     const getRevealTargetFolder = useCallback(
         (folder: TFolder | null): { target: TFolder | null; expandAncestors: boolean } => {
@@ -235,71 +257,37 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
      */
     const revealTag = useCallback(
         (tagPath: string, options?: RevealTagOptions) => {
-            if (!tagPath) {
-                return;
-            }
-
-            const canonicalPath = resolveCanonicalTagPath(tagPath);
+            const preserveNavigationFocus = Boolean(options?.skipSinglePaneSwitch);
+            const canonicalPath = navigateToTagInternal(
+                {
+                    showTags: settings.showTags,
+                    showAllTagsFolder: settings.showAllTagsFolder,
+                    expandedTags: expansionState.expandedTags,
+                    expandedVirtualFolders: expansionState.expandedVirtualFolders,
+                    expansionDispatch,
+                    selectionDispatch,
+                    uiState: {
+                        singlePane: uiState.singlePane,
+                        currentSinglePaneView: uiState.currentSinglePaneView,
+                        focusedPane: uiState.focusedPane
+                    },
+                    uiDispatch,
+                    findTagInTree,
+                    focusNavigationPane,
+                    focusFilesPane,
+                    requestScroll: (path, scrollOptions) => {
+                        navigationPaneRef.current?.requestScroll(path, scrollOptions);
+                    }
+                },
+                tagPath,
+                {
+                    preserveNavigationFocus,
+                    skipScroll: options?.skipScroll,
+                    source: options?.source
+                }
+            );
             if (!canonicalPath) {
                 return;
-            }
-
-            if (canonicalPath !== UNTAGGED_TAG_ID) {
-                const tagNode = findTagInTree(canonicalPath);
-                if (!tagNode) {
-                    return;
-                }
-            }
-
-            // Expand virtual folders if needed
-            const virtualFoldersToExpand: string[] = [];
-
-            // Check if we need to expand virtual folders based on settings
-            if (settings.showTags && settings.showAllTagsFolder) {
-                virtualFoldersToExpand.push('tags-root');
-            }
-
-            // Expand virtual folders if needed
-            const virtualFoldersNeedExpansion = virtualFoldersToExpand.some(id => !expansionState.expandedVirtualFolders.has(id));
-            if (virtualFoldersNeedExpansion) {
-                const newExpanded = new Set(expansionState.expandedVirtualFolders);
-                virtualFoldersToExpand.forEach(id => newExpanded.add(id));
-                expansionDispatch({ type: 'SET_EXPANDED_VIRTUAL_FOLDERS', folders: newExpanded });
-            }
-
-            if (canonicalPath !== UNTAGGED_TAG_ID) {
-                const tagsToExpand: string[] = [];
-                const parts = canonicalPath.split('/');
-
-                for (let i = 1; i < parts.length; i++) {
-                    const parentPath = parts.slice(0, i).join('/');
-                    tagsToExpand.push(parentPath);
-                }
-
-                const needsExpansion = tagsToExpand.some(path => !expansionState.expandedTags.has(path));
-                if (needsExpansion) {
-                    expansionDispatch({ type: 'EXPAND_TAGS', tagPaths: tagsToExpand });
-                }
-            }
-
-            selectionDispatch({ type: 'SET_SELECTED_TAG', tag: canonicalPath, source: options?.source });
-
-            // In single pane mode, switch to list pane view (same as revealFileInActualFolder)
-            const shouldSkipSinglePaneSwitch = options?.skipSinglePaneSwitch ?? false;
-            const shouldSkipScroll = Boolean(options?.skipScroll);
-            if (uiState.singlePane && uiState.currentSinglePaneView === 'navigation' && !shouldSkipSinglePaneSwitch) {
-                uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
-            }
-
-            if (shouldSkipSinglePaneSwitch) {
-                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
-            } else {
-                // Always shift focus to list pane (same as revealFileInActualFolder)
-                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
-            }
-
-            if (!shouldSkipScroll && navigationPaneRef.current) {
-                navigationPaneRef.current.requestScroll(canonicalPath, { align: 'auto', itemType: ItemType.TAG });
             }
 
             // If we have a selected file, trigger a reveal to ensure proper item visibility
@@ -320,12 +308,15 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
             expansionState.expandedVirtualFolders,
             expansionDispatch,
             selectionDispatch,
+            focusFilesPane,
+            focusNavigationPane,
+            findTagInTree,
             uiState,
             uiDispatch,
-            settings,
             selectionState.selectedFile,
-            findTagInTree,
-            navigationPaneRef
+            navigationPaneRef,
+            settings.showAllTagsFolder,
+            settings.showTags
         ]
     );
 
@@ -362,12 +353,24 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
                 const { target, expandAncestors } = getRevealTargetFolder(file.parent);
                 resolvedFolder = target;
 
+                const selectedFolder = selectionState.selectedFolder;
+                // Check if selected folder contains file when including descendants
+                const shouldPreserveSelectedFolder =
+                    includeDescendantNotes &&
+                    selectionState.selectionType === 'folder' &&
+                    selectedFolder !== null &&
+                    doesFolderContainPath(selectedFolder.path, file.parent.path);
+
                 if (target) {
-                    if (selectionState.selectedFolder && selectionState.selectedFolder.path === target.path) {
+                    const isCurrentFolderSelected = selectedFolder && selectedFolder.path === target.path;
+                    if (isCurrentFolderSelected || shouldPreserveSelectedFolder) {
                         preserveFolder = true;
                     } else {
                         targetFolderOverride = target;
                     }
+                } else if (shouldPreserveSelectedFolder) {
+                    // No reveal target but selected folder contains the file
+                    preserveFolder = true;
                 }
 
                 if (expandAncestors) {
@@ -426,6 +429,7 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
         },
         [
             settings,
+            includeDescendantNotes,
             selectionState.selectedFolder,
             selectionState.selectionType,
             selectionState.selectedTag,
@@ -446,12 +450,14 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
      * Navigates to a folder by path, expanding ancestors and selecting it.
      * Used by the "Navigate to folder" command.
      *
-     * @param folderPath - The path of the folder to navigate to
+     * @param folderOrPath - Folder instance or its path
      */
     const navigateToFolder = useCallback(
-        (folderPath: string, options?: NavigateToFolderOptions) => {
-            const folder = app.vault.getFolderByPath(folderPath);
-            if (!folder) return;
+        (folderOrPath: TFolder | string, options?: NavigateToFolderOptions) => {
+            const folder = typeof folderOrPath === 'string' ? app.vault.getFolderByPath(folderOrPath) : folderOrPath;
+            if (!folder) {
+                return;
+            }
 
             // Expand all ancestors to make the folder visible
             const foldersToExpand: string[] = [];
@@ -472,16 +478,14 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
             // Select the folder
             selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder, source: options?.source });
 
-            // In single pane mode, switch to list pane view and focus list pane
             if (uiState.singlePane) {
-                if (uiState.currentSinglePaneView === 'navigation') {
-                    uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
+                if (options?.preserveNavigationFocus) {
+                    focusNavigationPane({ updateSinglePaneView: true });
+                } else {
+                    focusFilesPane({ updateSinglePaneView: true });
                 }
-                // Set focus to list pane when in single pane mode
-                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
             } else {
-                // In dual-pane mode, focus the folders pane
-                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+                focusNavigationPane();
             }
 
             const shouldSkipScroll = Boolean(options?.skipScroll);
@@ -489,7 +493,64 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
                 navigationPaneRef.current.requestScroll(folder.path, { align: 'auto', itemType: ItemType.FOLDER });
             }
         },
-        [app, expansionState.expandedFolders, expansionDispatch, selectionDispatch, uiState, uiDispatch, navigationPaneRef]
+        [
+            app,
+            expansionState.expandedFolders,
+            expansionDispatch,
+            selectionDispatch,
+            uiState,
+            navigationPaneRef,
+            focusNavigationPane,
+            focusFilesPane
+        ]
+    );
+
+    /**
+     * Navigates to a tag by selecting it in the navigation pane.
+     */
+    const navigateToTag = useCallback(
+        (tagPath: string, options?: NavigateToTagOptions) => {
+            navigateToTagInternal(
+                {
+                    showTags: settings.showTags,
+                    showAllTagsFolder: settings.showAllTagsFolder,
+                    expandedTags: expansionState.expandedTags,
+                    expandedVirtualFolders: expansionState.expandedVirtualFolders,
+                    expansionDispatch,
+                    selectionDispatch,
+                    uiState: {
+                        singlePane: uiState.singlePane,
+                        currentSinglePaneView: uiState.currentSinglePaneView,
+                        focusedPane: uiState.focusedPane
+                    },
+                    uiDispatch,
+                    findTagInTree,
+                    focusNavigationPane,
+                    focusFilesPane,
+                    requestScroll: (path, scrollOptions) => {
+                        navigationPaneRef.current?.requestScroll(path, scrollOptions);
+                    }
+                },
+                tagPath,
+                options
+            );
+        },
+        [
+            expansionDispatch,
+            expansionState.expandedTags,
+            expansionState.expandedVirtualFolders,
+            findTagInTree,
+            focusFilesPane,
+            focusNavigationPane,
+            navigationPaneRef,
+            selectionDispatch,
+            settings.showAllTagsFolder,
+            settings.showTags,
+            uiDispatch,
+            uiState.currentSinglePaneView,
+            uiState.focusedPane,
+            uiState.singlePane
+        ]
     );
 
     // Auto-reveal effect: Reset fileToReveal after it's been consumed
@@ -512,24 +573,29 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
          * Detects if the active file has changed and triggers reveal if needed.
          * This is the single entry point for both file-open and active-leaf-change events.
          */
-        const detectActiveFileChange = () => {
+        const detectActiveFileChange = (candidateFile?: TFile | null) => {
             // Get the currently active file view
             const view = app.workspace.getActiveViewOfType(FileView);
-            if (!view?.file || !(view.file instanceof TFile)) {
+            const activeViewFile = view?.file instanceof TFile ? view.file : null;
+            // Prefer the file from the event payload (file-open), falling back to the active view file.
+            // This handles cases where the active view is not updated yet when events fire.
+            const file = candidateFile instanceof TFile ? candidateFile : activeViewFile;
+            if (!file) {
                 return;
             }
-
-            const file = view.file;
 
             // Check if the file was just created; always reveal newly created files
             const isRecentlyCreated = file.stat.ctime === file.stat.mtime && Date.now() - file.stat.ctime < TIMEOUTS.FILE_OPERATION_DELAY;
 
             if (!isRecentlyCreated && settings.autoRevealIgnoreRightSidebar) {
                 // Determine split of the active leaf and skip right-sidebar
-                const activeLeaf = view.leaf;
-                const split = getLeafSplitLocation(app, activeLeaf);
-                if (split === 'right-sidebar') {
-                    return;
+                // Only apply when the file is the active view file; the active leaf split is not meaningful for other candidates.
+                if (activeViewFile?.path === file.path) {
+                    const activeLeaf = view?.leaf ?? null;
+                    const split = getLeafSplitLocation(app, activeLeaf);
+                    if (split === 'right-sidebar') {
+                        return;
+                    }
                 }
             }
 
@@ -551,11 +617,15 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
             const isOpeningVersionHistory = commandQueue && commandQueue.isOpeningVersionHistory();
             const isOpeningInNewContext = commandQueue && commandQueue.isOpeningInNewContext();
 
-            // Don't reveal if navigator has focus (unless we're opening version history or in new context)
+            // Skip auto-reveal when the navigator is focused and it opened the currently selected file.
+            // This prevents auto-reveal from re-dispatching selection changes for navigator-initiated opens.
             const navigatorEl = document.querySelector('.nn-split-container');
             const hasNavigatorFocus = navigatorEl && navigatorEl.contains(document.activeElement);
 
-            if (hasNavigatorFocus && !isOpeningVersionHistory && !isOpeningInNewContext) {
+            const selectedFilePath = selectedFilePathRef.current;
+            const isNavigatorOpeningSelectedFile = selectedFilePath !== null && selectedFilePath === file.path;
+
+            if (hasNavigatorFocus && isNavigatorOpeningSelectedFile && !isOpeningVersionHistory && !isOpeningInNewContext) {
                 return;
             }
 
@@ -570,12 +640,31 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
             setFileToReveal(file);
         };
 
-        const handleActiveLeafChange = () => {
-            detectActiveFileChange();
+        let pendingDetectTimer: number | null = null;
+        let pendingCandidateFile: TFile | null | undefined = undefined;
+
+        const scheduleDetectActiveFileChange = (candidateFile?: TFile | null) => {
+            if (candidateFile !== undefined) {
+                pendingCandidateFile = candidateFile;
+            }
+            if (pendingDetectTimer !== null) {
+                window.clearTimeout(pendingDetectTimer);
+            }
+            // Coalesce rapid file-open + active-leaf-change sequences and yield to let Obsidian update workspace state.
+            pendingDetectTimer = window.setTimeout(() => {
+                pendingDetectTimer = null;
+                const file = pendingCandidateFile;
+                pendingCandidateFile = undefined;
+                detectActiveFileChange(file);
+            }, TIMEOUTS.YIELD_TO_EVENT_LOOP);
         };
 
-        const handleFileOpen = () => {
-            detectActiveFileChange();
+        const handleActiveLeafChange = () => {
+            scheduleDetectActiveFileChange();
+        };
+
+        const handleFileOpen = (file: TFile | null) => {
+            scheduleDetectActiveFileChange(file);
         };
 
         const activeLeafEventRef = app.workspace.on('active-leaf-change', handleActiveLeafChange);
@@ -598,6 +687,9 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
         }
 
         return () => {
+            if (pendingDetectTimer !== null) {
+                window.clearTimeout(pendingDetectTimer);
+            }
             app.workspace.offref(activeLeafEventRef);
             app.workspace.offref(fileOpenEventRef);
         };
@@ -615,16 +707,6 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
                 ) {
                     const skipSinglePaneSwitch = uiState.singlePane && settings.startView === 'navigation';
                     revealTag(selectionState.selectedTag, { skipSinglePaneSwitch });
-
-                    // After expanding the tag, trigger the file reveal
-                    // This ensures proper visibility in the list pane
-                    selectionDispatch({
-                        type: 'REVEAL_FILE',
-                        file: fileToReveal,
-                        preserveFolder: true, // We're in tag view, preserve it
-                        isManualReveal: false, // This is auto-reveal
-                        targetTag: selectionState.selectedTag
-                    });
                     return;
                 }
                 // Use nearest folder for startup - this respects includeDescendantNotes
@@ -643,7 +725,6 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
         selectionState.selectedTag,
         selectionState.selectedFile,
         revealTag,
-        selectionDispatch,
         settings.startView,
         uiState.singlePane
     ]);
@@ -698,6 +779,7 @@ export function useNavigatorReveal({ app, navigationPaneRef, listPaneRef }: UseN
         revealFileInActualFolder,
         revealFileInNearestFolder,
         navigateToFolder,
+        navigateToTag,
         revealTag
     };
 }

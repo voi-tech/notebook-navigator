@@ -20,8 +20,9 @@ import { App, TFile, CachedMetadata } from 'obsidian';
 import { NotebookNavigatorSettings } from '../settings';
 import { METADATA_SENTINEL } from '../storage/IndexedDBStorage';
 import { DateUtils } from './dateUtils';
-import { convertIconizeToIconId } from './iconizeFormat';
-import { extractFirstEmoji } from './emojiUtils';
+import { getCachedCommaSeparatedList } from './commaSeparatedListUtils';
+import { deserializeIconFromFrontmatter } from './iconizeFormat';
+import { isRecord } from './typeGuards';
 
 /**
  * Processed metadata from frontmatter
@@ -60,22 +61,38 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
     }
 
     const result: ProcessedMetadata = {};
+    // Validate frontmatter is a record before accessing properties
+    const frontmatterValue: unknown = frontmatter;
+    if (!isRecord(frontmatterValue)) {
+        return {};
+    }
+    const frontmatterRecord = frontmatterValue;
 
     // Extract name if field is specified
-    if (settings.frontmatterNameField && settings.frontmatterNameField.trim()) {
-        const nameValue = frontmatter[settings.frontmatterNameField];
+    const nameFields = getCachedCommaSeparatedList(settings.frontmatterNameField);
 
-        if (typeof nameValue === 'string') {
-            const trimmedName = nameValue.trim();
-            if (trimmedName) {
-                result.fn = trimmedName;
-            }
-        } else if (Array.isArray(nameValue)) {
-            const firstValue = nameValue[0];
-            if (typeof firstValue === 'string') {
-                const trimmedName = firstValue.trim();
+    if (nameFields.length > 0) {
+        for (const field of nameFields) {
+            const nameValue = frontmatterRecord[field];
+
+            if (typeof nameValue === 'string') {
+                const trimmedName = nameValue.trim();
                 if (trimmedName) {
                     result.fn = trimmedName;
+                    break;
+                }
+            } else if (Array.isArray(nameValue)) {
+                for (const entry of nameValue) {
+                    if (typeof entry === 'string') {
+                        const trimmedName = entry.trim();
+                        if (trimmedName) {
+                            result.fn = trimmedName;
+                            break;
+                        }
+                    }
+                }
+                if (result.fn) {
+                    break;
                 }
             }
         }
@@ -87,7 +104,7 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
     // Extract icon if field is specified
     // Extract icon from frontmatter field
     if (settings.frontmatterIconField && settings.frontmatterIconField.trim()) {
-        const iconValue = frontmatter[settings.frontmatterIconField];
+        const iconValue = frontmatterRecord[settings.frontmatterIconField];
 
         // Helper to extract and convert icon value from Iconize format to canonical format
         const extractIconValue = (value: unknown): string | undefined => {
@@ -98,19 +115,9 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
             if (!trimmed) {
                 return undefined;
             }
-            // Convert from Iconize format (e.g. LiHome) to canonical format (e.g. home)
-            const converted = convertIconizeToIconId(trimmed);
-            if (converted) {
-                return converted;
-            }
 
-            // Normalize plain emoji values (🔭 -> emoji:🔭)
-            const emojiOnly = extractFirstEmoji(trimmed);
-            if (emojiOnly && emojiOnly === trimmed) {
-                return `emoji:${emojiOnly}`;
-            }
-
-            return trimmed;
+            const parsed = deserializeIconFromFrontmatter(trimmed);
+            return parsed ?? undefined;
         };
 
         if (typeof iconValue === 'string') {
@@ -119,8 +126,9 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
                 result.icon = normalizedIcon;
             }
         } else if (Array.isArray(iconValue)) {
+            const iconArray: unknown[] = iconValue;
             // Handle array values - use first valid icon
-            for (const entry of iconValue) {
+            for (const entry of iconArray) {
                 const normalizedIcon = extractIconValue(entry);
                 if (normalizedIcon) {
                     result.icon = normalizedIcon;
@@ -132,7 +140,7 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
 
     // Extract color if field is specified
     if (settings.frontmatterColorField && settings.frontmatterColorField.trim()) {
-        const colorValue = frontmatter[settings.frontmatterColorField];
+        const colorValue = frontmatterRecord[settings.frontmatterColorField];
 
         if (typeof colorValue === 'string') {
             const trimmedColor = colorValue.trim();
@@ -140,7 +148,8 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
                 result.color = trimmedColor;
             }
         } else if (Array.isArray(colorValue)) {
-            const firstValue = colorValue[0];
+            const colorArray: unknown[] = colorValue;
+            const firstValue = colorArray[0];
             if (typeof firstValue === 'string') {
                 const trimmedColor = firstValue.trim();
                 if (trimmedColor) {
@@ -152,7 +161,7 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
 
     // Extract created date if field is specified
     if (settings.frontmatterCreatedField && settings.frontmatterCreatedField.trim()) {
-        const createdValue = frontmatter[settings.frontmatterCreatedField];
+        const createdValue = frontmatterRecord[settings.frontmatterCreatedField];
 
         if (createdValue !== undefined) {
             // Field exists, try to parse it
@@ -171,7 +180,7 @@ export function extractMetadataFromCache(metadata: CachedMetadata | null, settin
 
     // Extract modified date if field is specified
     if (settings.frontmatterModifiedField && settings.frontmatterModifiedField.trim()) {
-        const modifiedValue = frontmatter[settings.frontmatterModifiedField];
+        const modifiedValue = frontmatterRecord[settings.frontmatterModifiedField];
 
         if (modifiedValue !== undefined) {
             // Field exists, try to parse it

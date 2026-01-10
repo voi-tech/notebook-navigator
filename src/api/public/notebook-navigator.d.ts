@@ -1,6 +1,24 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 /**
  * Notebook Navigator Plugin API Type Definitions
- * Version: 1.0.1
+ * Version: 1.1.0
  *
  * Download this file to your Obsidian plugin project to get TypeScript support
  * for the Notebook Navigator API.
@@ -24,10 +42,22 @@ import { TFile, TFolder, EventRef } from 'obsidian';
 // Core types
 
 /**
- * Icon string format for type-safe icon specifications
- * Must be either 'lucide:<icon-name>' or 'emoji:<emoji>'
+ * Icon provider identifiers supported by the public API
  */
-export type IconString = `lucide:${string}` | `emoji:${string}`;
+export type IconProviderId =
+    | 'lucide'
+    | 'bootstrap-icons'
+    | 'fontawesome-solid'
+    | 'material-icons'
+    | 'phosphor'
+    | 'rpg-awesome'
+    | 'simple-icons';
+
+/**
+ * Icon string format for type-safe icon specifications
+ * Must be provider-prefixed (e.g., 'phosphor:folder') or an emoji literal
+ */
+export type IconString = `${IconProviderId}:${string}` | `emoji:${string}`;
 
 /**
  * Metadata associated with a folder
@@ -136,7 +166,7 @@ export interface NotebookNavigatorEvents {
 
 /**
  * Main Notebook Navigator API interface
- * @version 1.0.1
+ * @version 1.1.0
  */
 export interface NotebookNavigatorAPI {
     /** Get the API version string */
@@ -174,6 +204,10 @@ export interface NotebookNavigatorAPI {
     navigation: {
         /** Reveal and select a file in the navigator */
         reveal(file: TFile): Promise<void>;
+        /** Select a folder in the navigator navigation pane */
+        navigateToFolder(folder: TFolder): Promise<void>;
+        /** Select a tag in the navigator navigation pane (e.g. '#work' or 'work'). Requires tag data to be available (`storage-ready`). */
+        navigateToTag(tag: string): Promise<void>;
     };
 
     /** Query current selection state */
@@ -195,6 +229,10 @@ export interface NotebookNavigatorAPI {
 
 /**
  * API Changelog
+ *
+ * Version 1.2.0 (2025-12-22)
+ * - Added navigation.navigateToFolder(folder)
+ * - Added navigation.navigateToTag(tag)
  *
  * Version 1.0.1 (2025-09-16)
  * - Added backgroundColor property to FolderMetadata and TagMetadata interfaces

@@ -38,7 +38,15 @@ export const SHORTCUT_DRAG_MIME = 'application/x-notebook-shortcut';
 /**
  * Shortcut pointing to a folder in the vault
  */
-export interface FolderShortcut {
+interface ShortcutAlias {
+    /**
+     * Optional custom label shown in the shortcuts section.
+     * Does not affect the underlying file, folder, or tag path.
+     */
+    alias?: string;
+}
+
+export interface FolderShortcut extends ShortcutAlias {
     type: typeof ShortcutType.FOLDER;
     path: string;
 }
@@ -46,7 +54,7 @@ export interface FolderShortcut {
 /**
  * Shortcut pointing to a note (file) in the vault
  */
-export interface NoteShortcut {
+export interface NoteShortcut extends ShortcutAlias {
     type: typeof ShortcutType.NOTE;
     path: string;
 }
@@ -64,7 +72,7 @@ export interface SearchShortcut {
 /**
  * Shortcut pointing to a tag
  */
-export interface TagShortcut {
+export interface TagShortcut extends ShortcutAlias {
     type: typeof ShortcutType.TAG;
     tagPath: string;
 }
@@ -124,6 +132,22 @@ export function getShortcutKey(shortcut: ShortcutEntry): string {
     }
 
     // Exhaustive check - ensures compiler warns if new shortcut type is added
-    const exhaustiveCheck: never = shortcut;
-    throw new Error(`Unsupported shortcut type: ${exhaustiveCheck}`);
+    return assertNever(shortcut);
+}
+
+// Safely converts a value to string for error messages, handling JSON serialization failures
+function describeShortcut(value: never): string {
+    if (typeof value === 'object' && value !== null) {
+        try {
+            return JSON.stringify(value);
+        } catch {
+            return '[object Object]';
+        }
+    }
+    return String(value);
+}
+
+// Exhaustive type check helper that throws with descriptive error message
+function assertNever(value: never): never {
+    throw new Error(`Unsupported shortcut type: ${describeShortcut(value)}`);
 }

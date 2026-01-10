@@ -16,12 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App, Notice, TFile, TFolder, normalizePath } from 'obsidian';
+import { App, TFile, TFolder, normalizePath } from 'obsidian';
 import { strings } from '../i18n';
 import { FolderNoteType, FOLDER_NOTE_TYPE_EXTENSIONS, FolderNoteCreationPreference } from '../types/folderNote';
 import { createDatabaseContent } from './fileCreationUtils';
+import { isExcalidrawFile, stripExcalidrawSuffix } from './fileNameUtils';
 import { CommandQueueService } from '../services/CommandQueueService';
 import { promptForFolderNoteType } from '../modals/FolderNoteTypeModal';
+import { showNotice } from './noticeUtils';
 
 /**
  * Settings required for detecting folder notes
@@ -63,6 +65,9 @@ export function getFolderNote(folder: TFolder, settings: FolderNoteDetectionSett
         return null;
     }
 
+    const expectedName = settings.folderNoteName || folder.name;
+    let excalidrawCandidate: TFile | null = null;
+
     for (const child of folder.children) {
         if (!(child instanceof TFile)) {
             continue;
@@ -76,13 +81,18 @@ export function getFolderNote(folder: TFolder, settings: FolderNoteDetectionSett
             continue;
         }
 
-        const expectedName = settings.folderNoteName || folder.name;
         if (child.basename === expectedName) {
+            // Prefer exact basename matches when both regular and Excalidraw notes exist.
             return child;
+        }
+
+        if (!excalidrawCandidate && isExcalidrawFile(child) && stripExcalidrawSuffix(child.basename) === expectedName) {
+            // Keep Excalidraw variant as fallback when no exact match is present.
+            excalidrawCandidate = child;
         }
     }
 
-    return null;
+    return excalidrawCandidate;
 }
 
 /**
@@ -106,7 +116,17 @@ export function isFolderNote(file: TFile, folder: TFolder, settings: FolderNoteD
     }
 
     const expectedName = settings.folderNoteName || folder.name;
-    return file.basename === expectedName;
+    if (file.basename === expectedName) {
+        return true;
+    }
+
+    if (!isExcalidrawFile(file) || stripExcalidrawSuffix(file.basename) !== expectedName) {
+        return false;
+    }
+
+    // Use preferred folder note selection so plain notes win over Excalidraw variants.
+    const preferred = getFolderNote(folder, settings);
+    return preferred?.path === file.path;
 }
 
 /**
@@ -129,7 +149,7 @@ export async function createFolderNote(
     });
 
     if (existingNote) {
-        new Notice(strings.fileSystem.errors.folderNoteAlreadyExists);
+        showNotice(strings.fileSystem.errors.folderNoteAlreadyExists, { variant: 'warning' });
         return null;
     }
 
@@ -151,7 +171,7 @@ export async function createFolderNote(
 
     const conflictingItem = app.vault.getAbstractFileByPath(notePath);
     if (conflictingItem) {
-        new Notice(strings.fileSystem.errors.folderNoteAlreadyExists);
+        showNotice(strings.fileSystem.errors.folderNoteAlreadyExists, { variant: 'warning' });
         return null;
     }
 
@@ -181,7 +201,7 @@ export async function createFolderNote(
         return file;
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        new Notice(strings.fileSystem.errors.createFile.replace('{error}', message));
+        showNotice(strings.fileSystem.errors.createFile.replace('{error}', message), { variant: 'warning' });
     }
     return null;
 }

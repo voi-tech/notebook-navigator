@@ -22,7 +22,7 @@ import { TagTreeNode } from '../types/storage';
 import { getTotalNoteCount } from '../utils/tagTree';
 import { BaseSuggestModal } from './BaseSuggestModal';
 import NotebookNavigatorPlugin from '../main';
-import { naturalCompare } from '../utils/sortUtils';
+import { hasValidTagCharacters } from '../utils/tagUtils';
 
 /**
  * Modal for selecting a tag to navigate to
@@ -30,6 +30,7 @@ import { naturalCompare } from '../utils/sortUtils';
  */
 export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
     private includeUntagged: boolean;
+    private allowTagCreation: boolean;
     private untaggedNode: TagTreeNode;
     private plugin: NotebookNavigatorPlugin;
     private currentInput: string = '';
@@ -43,6 +44,7 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
      * @param placeholderText - Placeholder text for the search input
      * @param actionText - Action text for the enter key instruction
      * @param includeUntagged - Whether to include "Untagged" option
+     * @param allowTagCreation - Whether to show the create-tag option for new inputs
      */
     constructor(
         app: App,
@@ -50,7 +52,8 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
         onChooseTag: (tag: string) => void,
         placeholderText: string,
         actionText: string,
-        includeUntagged: boolean = true
+        includeUntagged: boolean = true,
+        allowTagCreation: boolean = true
     ) {
         // Pass tag node to base, but store the string callback separately
         super(
@@ -75,6 +78,7 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
         );
         this.plugin = plugin;
         this.includeUntagged = includeUntagged;
+        this.allowTagCreation = allowTagCreation;
 
         // Create special untagged node
         this.untaggedNode = {
@@ -87,21 +91,6 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
     }
 
     /**
-     * Validates if a tag name is valid
-     * Allows Unicode letters, numbers, hyphens, underscores, and forward slashes
-     * @param tagName - The tag name to validate
-     * @returns Whether the tag name is valid
-     */
-    private isValidTagName(tagName: string): boolean {
-        if (!tagName || tagName.trim() === '') return false;
-
-        // Check for invalid characters - allow any Unicode letter/number plus -, _, /
-        // \p{L} = any Unicode letter, \p{N} = any Unicode number
-        const validTagRegex = /^[\p{L}\p{N}\-_/]+$/u;
-        return validTagRegex.test(tagName);
-    }
-
-    /**
      * Override getSuggestions to add "Create new tag" option when appropriate
      */
     getSuggestions(query: string): FuzzyMatch<TagTreeNode>[] {
@@ -111,7 +100,7 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
         const suggestions = super.getSuggestions(query);
 
         // If query is empty or invalid, don't show create option
-        if (!this.currentInput || !this.isValidTagName(this.currentInput)) {
+        if (!this.allowTagCreation || !hasValidTagCharacters(this.currentInput)) {
             return suggestions;
         }
 
@@ -148,33 +137,13 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
      * @returns Array of tag nodes available for selection
      */
     getItems(): TagTreeNode[] {
-        const tags: TagTreeNode[] = [];
+        const flattened = this.plugin.tagTreeService?.getFlattenedTagNodes() ?? [];
 
-        // Add untagged option if enabled
         if (this.includeUntagged) {
-            tags.push(this.untaggedNode);
+            return [this.untaggedNode, ...flattened];
         }
 
-        // Get all tag paths from the TagTreeService
-        const allTagPaths = this.plugin.tagTreeService?.getAllTagPaths() || [];
-
-        // Convert paths to nodes
-        for (const tagPath of allTagPaths) {
-            const node = this.plugin.tagTreeService?.findTagNode(tagPath);
-            if (node && !tags.some(t => t.path === node.path)) {
-                tags.push(node);
-            }
-        }
-
-        // Sort tags alphabetically by path using natural comparison
-        tags.sort((a, b) => {
-            // Keep untagged at the top
-            if (a.path === '__untagged__') return -1;
-            if (b.path === '__untagged__') return 1;
-            return naturalCompare(a.path, b.path);
-        });
-
-        return tags;
+        return [...flattened];
     }
 
     /**

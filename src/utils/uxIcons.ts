@@ -1,0 +1,207 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { deserializeIconFromFrontmatter, normalizeCanonicalIconId, serializeIconForFrontmatter } from './iconizeFormat';
+import { sanitizeRecord } from './recordUtils';
+
+export type UXIconId =
+    | 'nav-show-single-pane'
+    | 'nav-show-dual-pane'
+    | 'nav-profile-chevron'
+    | 'nav-shortcuts'
+    | 'nav-expand-all'
+    | 'nav-collapse-all'
+    | 'nav-hidden-items'
+    | 'nav-root-reorder'
+    | 'nav-new-folder'
+    | 'nav-recent-files'
+    | 'nav-tree-expand'
+    | 'nav-tree-collapse'
+    | 'nav-folder-open'
+    | 'nav-folder-closed'
+    | 'nav-folder-note'
+    | 'nav-tag'
+    | 'list-search'
+    | 'list-descendants'
+    | 'list-sort-ascending'
+    | 'list-sort-descending'
+    | 'list-appearance'
+    | 'list-new-note'
+    | 'list-pinned'
+    | 'file-word-count'
+    | 'file-custom-property';
+
+export type UXIconCategory = 'navigationPane' | 'listPane' | 'fileItems';
+
+export interface UXIconDefinition {
+    id: UXIconId;
+    category: UXIconCategory;
+    defaultIconId: string;
+}
+
+export const UX_ICON_DEFINITIONS: UXIconDefinition[] = [
+    { id: 'nav-show-single-pane', category: 'navigationPane', defaultIconId: 'panel-left' },
+    { id: 'nav-show-dual-pane', category: 'navigationPane', defaultIconId: 'panel-left-dashed' },
+    { id: 'nav-profile-chevron', category: 'navigationPane', defaultIconId: 'chevron-down' },
+    { id: 'nav-shortcuts', category: 'navigationPane', defaultIconId: 'star' },
+    { id: 'nav-expand-all', category: 'navigationPane', defaultIconId: 'chevrons-up-down' },
+    { id: 'nav-collapse-all', category: 'navigationPane', defaultIconId: 'chevrons-down-up' },
+    { id: 'nav-hidden-items', category: 'navigationPane', defaultIconId: 'eye' },
+    { id: 'nav-root-reorder', category: 'navigationPane', defaultIconId: 'list-tree' },
+    { id: 'nav-new-folder', category: 'navigationPane', defaultIconId: 'folder-plus' },
+    { id: 'nav-recent-files', category: 'navigationPane', defaultIconId: 'history' },
+    { id: 'nav-tree-expand', category: 'navigationPane', defaultIconId: 'chevron-right' },
+    { id: 'nav-tree-collapse', category: 'navigationPane', defaultIconId: 'chevron-down' },
+    { id: 'nav-folder-open', category: 'navigationPane', defaultIconId: 'folder-open' },
+    { id: 'nav-folder-closed', category: 'navigationPane', defaultIconId: 'folder-closed' },
+    { id: 'nav-folder-note', category: 'navigationPane', defaultIconId: 'file-text' },
+    { id: 'nav-tag', category: 'navigationPane', defaultIconId: 'tags' },
+    { id: 'list-search', category: 'listPane', defaultIconId: 'search' },
+    { id: 'list-descendants', category: 'listPane', defaultIconId: 'layers' },
+    { id: 'list-sort-ascending', category: 'listPane', defaultIconId: 'sort-asc' },
+    { id: 'list-sort-descending', category: 'listPane', defaultIconId: 'sort-desc' },
+    { id: 'list-appearance', category: 'listPane', defaultIconId: 'palette' },
+    { id: 'list-new-note', category: 'listPane', defaultIconId: 'pen-box' },
+    { id: 'list-pinned', category: 'listPane', defaultIconId: 'pin' },
+    { id: 'file-word-count', category: 'fileItems', defaultIconId: 'case-sensitive' },
+    { id: 'file-custom-property', category: 'fileItems', defaultIconId: 'align-left' }
+];
+
+const UX_ICON_ID_SET: ReadonlySet<string> = new Set(UX_ICON_DEFINITIONS.map(definition => definition.id));
+
+const UX_ICON_DEFAULT_CANONICAL: Record<UXIconId, string> = (() => {
+    const defaults = Object.create(null) as Record<UXIconId, string>;
+    UX_ICON_DEFINITIONS.forEach(definition => {
+        defaults[definition.id] = normalizeCanonicalIconId(definition.defaultIconId);
+    });
+    return defaults;
+})();
+
+function isUXIconId(value: string): value is UXIconId {
+    return UX_ICON_ID_SET.has(value);
+}
+
+function normalizeUXIconKey(key: string): UXIconId | null {
+    if (isUXIconId(key)) {
+        return key;
+    }
+
+    switch (key) {
+        case 'folder-open':
+            return 'nav-folder-open';
+        case 'folder-closed':
+            return 'nav-folder-closed';
+        case 'tag':
+            return 'nav-tag';
+        case 'pinned-section':
+            return 'list-pinned';
+        case 'recent-files':
+            return 'nav-recent-files';
+        case 'list-sort':
+            return 'list-sort-ascending';
+        default:
+            return null;
+    }
+}
+
+export function resolveUXIcon(uxIconMap: Record<string, string> | undefined, iconId: UXIconId): string {
+    const stored = uxIconMap?.[iconId];
+    if (stored) {
+        const canonical = deserializeIconFromFrontmatter(stored);
+        if (canonical) {
+            return normalizeCanonicalIconId(canonical);
+        }
+    }
+
+    return UX_ICON_DEFAULT_CANONICAL[iconId];
+}
+
+function tryResolveLucideMenuIconId(iconId: string): string | null {
+    const trimmed = iconId.trim();
+    if (!trimmed) {
+        return null;
+    }
+
+    const colonIndex = trimmed.indexOf(':');
+    if (colonIndex !== -1) {
+        const provider = trimmed.substring(0, colonIndex);
+        if (provider !== 'lucide') {
+            return null;
+        }
+
+        const identifier = trimmed.substring(colonIndex + 1).trim();
+        if (!identifier) {
+            return null;
+        }
+
+        const slug = identifier.startsWith('lucide-') ? identifier.substring('lucide-'.length) : identifier;
+        return slug ? `lucide-${slug}` : null;
+    }
+
+    const slug = trimmed.startsWith('lucide-') ? trimmed.substring('lucide-'.length) : trimmed;
+    return slug ? `lucide-${slug}` : null;
+}
+
+export function resolveUXIconForMenu(
+    uxIconMap: Record<string, string> | undefined,
+    iconId: UXIconId,
+    fallbackLucideMenuIconId: string
+): string {
+    const resolved = resolveUXIcon(uxIconMap, iconId);
+    return tryResolveLucideMenuIconId(resolved) ?? fallbackLucideMenuIconId;
+}
+
+export function normalizeUXIconMapRecord(uxIconMap: Record<string, string> | undefined): Record<string, string> {
+    const normalized = sanitizeRecord<string>(undefined);
+
+    if (!uxIconMap) {
+        return normalized;
+    }
+
+    Object.entries(uxIconMap).forEach(([key, value]) => {
+        const normalizedKey = normalizeUXIconKey(key);
+        if (!normalizedKey || typeof value !== 'string') {
+            return;
+        }
+
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return;
+        }
+
+        const canonical = deserializeIconFromFrontmatter(trimmed);
+        if (!canonical) {
+            return;
+        }
+
+        const normalizedCanonical = normalizeCanonicalIconId(canonical);
+        const defaultCanonical = UX_ICON_DEFAULT_CANONICAL[normalizedKey];
+        if (normalizedCanonical === defaultCanonical) {
+            return;
+        }
+
+        const serialized = serializeIconForFrontmatter(normalizedCanonical);
+        if (!serialized) {
+            return;
+        }
+
+        normalized[normalizedKey] = serialized;
+    });
+
+    return normalized;
+}

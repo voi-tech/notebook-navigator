@@ -16,13 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import type { DraggableSyntheticListeners } from '@dnd-kit/core';
+import { setTooltip } from 'obsidian';
 import { useSettingsState } from '../context/SettingsContext';
+import { useServices } from '../context/ServicesContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
-import type { ListReorderHandlers } from '../hooks/useListReorder';
+import type { ListReorderHandlers } from '../types/listReorder';
 import { NavigationListRow, type DragHandleConfig } from './NavigationListRow';
 import type { NoteCountInfo } from '../types/noteCounts';
 import { buildNoteCountDisplay } from '../utils/noteCountFormatting';
+import { getTooltipPlacement } from '../utils/domUtils';
+import { strings } from '../i18n';
+import { NavItemHoverActionSlot } from './NavItemHoverActionSlot';
 
 /**
  * Props for a shortcut item component that can represent folders, notes, searches, or tags
@@ -38,17 +44,25 @@ interface ShortcutItemProps {
     isMissing?: boolean;
     type: 'folder' | 'note' | 'search' | 'tag';
     countInfo?: NoteCountInfo;
+    badge?: string;
+    forceShowCount?: boolean;
     isExcluded?: boolean;
     onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+    onRemove?: () => void;
     onMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void;
     onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
     dragHandlers?: ListReorderHandlers;
-    showDropIndicatorBefore?: boolean;
-    showDropIndicatorAfter?: boolean;
     isDragSource?: boolean;
     dragHandleConfig?: DragHandleConfig;
     hasFolderNote?: boolean;
     onLabelClick?: (event: React.MouseEvent<HTMLSpanElement>) => void;
+    onLabelMouseDown?: (event: React.MouseEvent<HTMLSpanElement>) => void;
+    dragRef?: (node: HTMLDivElement | null) => void;
+    dragHandleRef?: (node: HTMLSpanElement | null) => void;
+    dragAttributes?: React.HTMLAttributes<HTMLElement>;
+    dragListeners?: DraggableSyntheticListeners;
+    dragStyle?: React.CSSProperties;
+    isSorting?: boolean;
 }
 
 /**
@@ -66,28 +80,43 @@ export const ShortcutItem = React.memo(function ShortcutItem({
     isMissing,
     type,
     countInfo,
+    badge,
+    forceShowCount,
     isExcluded,
     onClick,
+    onRemove,
     onMouseDown,
     onContextMenu,
     dragHandlers,
-    showDropIndicatorBefore,
-    showDropIndicatorAfter,
     isDragSource,
     dragHandleConfig,
     hasFolderNote,
-    onLabelClick
+    onLabelClick,
+    onLabelMouseDown,
+    dragRef,
+    dragHandleRef,
+    dragAttributes,
+    dragListeners,
+    dragStyle,
+    isSorting
 }: ShortcutItemProps) {
+    const { isMobile } = useServices();
     const settings = useSettingsState();
     const uxPreferences = useUXPreferences();
+    const rowRef = useRef<HTMLDivElement | null>(null);
+    const tooltipStateRef = useRef<string>('');
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     // Build formatted display object with label based on note count settings
     const countDisplay = buildNoteCountDisplay(countInfo, includeDescendantNotes, includeDescendantNotes && settings.separateNoteCounts);
     // Check if this item type supports displaying note counts
     const supportsCount = type === 'folder' || type === 'tag';
-    // Determines whether to display count based on settings and item type
-    // Only shows counts for folder and tag types when showNoteCount is enabled
-    const shouldShowCount = settings.showNoteCount && supportsCount && countDisplay.shouldDisplay;
+    const hasBadge = typeof badge === 'string' && badge.length > 0;
+    const hasRemove = Boolean(onRemove);
+    // Determines whether to display the badge/count bubble
+    // Shows a numeric badge when provided, otherwise shows note counts for folder/tag types when enabled
+    const shouldShowCount =
+        hasBadge || (supportsCount && countDisplay.shouldDisplay && (Boolean(forceShowCount) || settings.showNoteCount));
+    const countLabel = hasBadge ? badge : countDisplay.label;
     // Row is disabled when item exists but is disabled (missing items are handled separately)
     const shouldDisableRow = Boolean(isDisabled) && !isMissing;
     // Builds CSS class names for the shortcut item with conditional missing state
@@ -96,8 +125,11 @@ export const ShortcutItem = React.memo(function ShortcutItem({
         if (isMissing) {
             classes.push('nn-shortcut-item--missing');
         }
+        if (hasRemove) {
+            classes.push('nn-shortcut-item--removable');
+        }
         return classes.join(' ');
-    }, [isMissing]);
+    }, [hasRemove, isMissing]);
 
     // Conditionally enables label click handler based on row state
     const labelClickHandler = useMemo(() => {
@@ -107,12 +139,108 @@ export const ShortcutItem = React.memo(function ShortcutItem({
         return onLabelClick;
     }, [isMissing, onLabelClick, shouldDisableRow]);
 
+    const labelMouseDownHandler = useMemo(() => {
+        if (shouldDisableRow || isMissing) {
+            return undefined;
+        }
+        return onLabelMouseDown;
+    }, [isMissing, onLabelMouseDown, shouldDisableRow]);
+
     const rowBackgroundColor = useMemo(() => {
         if (isMissing) {
             return undefined;
         }
         return backgroundColor;
     }, [backgroundColor, isMissing]);
+
+    // Determines icon visibility based on section icons setting and shortcut type
+    const shouldShowIcon = useMemo(() => {
+        if (!settings.showSectionIcons) {
+            return false;
+        }
+        if (type === 'folder') {
+            return settings.showFolderIcons;
+        }
+        if (type === 'tag') {
+            return settings.showTagIcons;
+        }
+        return true;
+    }, [settings.showFolderIcons, settings.showSectionIcons, settings.showTagIcons, type]);
+
+    const countSlot = useMemo(() => {
+        if (!onRemove) {
+            return undefined;
+        }
+
+        return (
+            <NavItemHoverActionSlot
+                label={shouldShowCount ? countLabel : undefined}
+                actionLabel={strings.shortcuts.remove}
+                icon="lucide-x"
+                onClick={onRemove}
+            />
+        );
+    }, [countLabel, onRemove, shouldShowCount]);
+
+    const handleRowRef = useCallback(
+        (node: HTMLDivElement | null) => {
+            rowRef.current = node;
+            dragRef?.(node);
+        },
+        [dragRef]
+    );
+
+    // Add tooltip showing the full shortcut name when the label is truncated (desktop only)
+    useEffect(() => {
+        const rowElement = rowRef.current;
+        if (!rowElement) {
+            return;
+        }
+
+        // Skip tooltips on mobile
+        if (isMobile) {
+            return;
+        }
+
+        const labelElement = rowElement.querySelector('.nn-shortcut-label');
+        if (!(labelElement instanceof HTMLElement)) {
+            return;
+        }
+
+        const updateTooltip = () => {
+            const isTruncated = labelElement.scrollWidth > labelElement.clientWidth;
+            const tooltipText = isTruncated ? label : '';
+
+            if (tooltipStateRef.current === tooltipText) {
+                return;
+            }
+
+            tooltipStateRef.current = tooltipText;
+            if (tooltipText.length === 0) {
+                setTooltip(rowElement, '');
+                return;
+            }
+
+            setTooltip(rowElement, tooltipText, {
+                placement: getTooltipPlacement()
+            });
+        };
+
+        updateTooltip();
+
+        if (typeof ResizeObserver === 'undefined') {
+            return;
+        }
+
+        const observer = new ResizeObserver(() => {
+            updateTooltip();
+        });
+        observer.observe(labelElement);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [isMobile, label]);
 
     return (
         <NavigationListRow
@@ -142,18 +270,24 @@ export const ShortcutItem = React.memo(function ShortcutItem({
             }}
             onContextMenu={onContextMenu}
             dragHandlers={dragHandlers}
-            showDropIndicatorBefore={showDropIndicatorBefore}
-            showDropIndicatorAfter={showDropIndicatorAfter}
             isDragSource={isDragSource}
-            showCount={shouldShowCount}
-            count={countDisplay.label}
+            showCount={shouldShowCount || hasRemove}
+            count={countLabel}
+            countSlot={countSlot}
             className={classNames}
             tabIndex={-1}
             ariaDisabled={shouldDisableRow || isMissing}
-            ariaGrabbed={isDragSource}
             dragHandleConfig={dragHandleConfig}
             labelClassName={hasFolderNote ? 'nn-has-folder-note' : undefined}
             onLabelClick={labelClickHandler}
+            onLabelMouseDown={labelMouseDownHandler}
+            showIcon={shouldShowIcon}
+            dragRef={handleRowRef}
+            dragHandleRef={dragHandleRef}
+            dragAttributes={dragAttributes}
+            dragListeners={dragListeners}
+            dragStyle={dragStyle}
+            isSorting={isSorting}
         />
     );
 });

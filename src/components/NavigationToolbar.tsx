@@ -20,14 +20,14 @@ import { useSelectionState } from '../context/SelectionContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
 import { strings } from '../i18n';
-import { ObsidianIcon } from './ObsidianIcon';
+import { ServiceIcon } from './ServiceIcon';
 import { useNavigationActions } from '../hooks/useNavigationActions';
-import { useUIState } from '../context/UIStateContext';
 import { hasHiddenItemSources } from '../utils/exclusionUtils';
+import { runAsyncAction } from '../utils/async';
+import { resolveUXIcon } from '../utils/uxIcons';
 
 interface NavigationToolbarProps {
     onTreeUpdateComplete?: () => void;
-    onTogglePinnedShortcuts?: () => void;
     onToggleRootFolderReorder?: () => void;
     rootReorderActive?: boolean;
     rootReorderDisabled?: boolean;
@@ -35,7 +35,6 @@ interface NavigationToolbarProps {
 
 export function NavigationToolbar({
     onTreeUpdateComplete,
-    onTogglePinnedShortcuts,
     onToggleRootFolderReorder,
     rootReorderActive,
     rootReorderDisabled
@@ -44,86 +43,109 @@ export function NavigationToolbar({
     const uxPreferences = useUXPreferences();
     const showHiddenItems = uxPreferences.showHiddenItems;
     const selectionState = useSelectionState();
-    const uiState = useUIState();
+    const navigationVisibility = settings.toolbarVisibility.navigation;
 
     // Hook providing shared navigation actions (expand/collapse, folder creation, toggle visibility)
     const { shouldCollapseItems, handleExpandCollapseAll, handleNewFolder, handleToggleShowExcludedFolders } = useNavigationActions();
     // Detects if any hidden folders, tags, or files are configured to determine if toggle should be shown
     const hasHiddenItems = hasHiddenItemSources(settings);
 
+    const showExpandCollapseButton = navigationVisibility.expandCollapse;
+    const showHiddenItemsButton = navigationVisibility.hiddenItems && hasHiddenItems;
+    const showRootReorderButton = navigationVisibility.rootReorder;
+    const showNewFolderButton = navigationVisibility.newFolder;
+
+    const leftButtonCount = [showExpandCollapseButton, showHiddenItemsButton, showRootReorderButton].filter(Boolean).length;
+    const totalButtonCount = leftButtonCount + (showNewFolderButton ? 1 : 0);
+    const leftGroupClassName = leftButtonCount === 1 ? 'nn-mobile-toolbar-circle' : 'nn-mobile-toolbar-pill';
+    const leftButtonBaseClassName =
+        leftButtonCount === 1 ? 'nn-mobile-toolbar-button nn-mobile-toolbar-button-circle' : 'nn-mobile-toolbar-button';
+
+    if (totalButtonCount === 0) {
+        return null;
+    }
+
     return (
         <div className="nn-mobile-toolbar">
-            {settings.showShortcuts ? (
-                <button
-                    className="nn-mobile-toolbar-button"
-                    aria-label={uiState.pinShortcuts ? strings.navigationPane.unpinShortcuts : strings.navigationPane.pinShortcuts}
-                    onClick={() => {
-                        if (onTogglePinnedShortcuts) {
-                            onTogglePinnedShortcuts();
-                        }
-                    }}
-                    tabIndex={-1}
-                >
-                    <ObsidianIcon name={uiState.pinShortcuts ? 'lucide-bookmark-minus' : 'lucide-bookmark'} />
-                </button>
+            <div className="nn-mobile-toolbar-left">
+                {leftButtonCount > 0 ? (
+                    <div className={leftGroupClassName}>
+                        {showExpandCollapseButton ? (
+                            <button
+                                className={leftButtonBaseClassName}
+                                aria-label={
+                                    shouldCollapseItems() ? strings.paneHeader.collapseAllFolders : strings.paneHeader.expandAllFolders
+                                }
+                                onClick={() => {
+                                    handleExpandCollapseAll();
+                                    if (onTreeUpdateComplete) {
+                                        requestAnimationFrame(() => {
+                                            onTreeUpdateComplete();
+                                        });
+                                    }
+                                }}
+                                tabIndex={-1}
+                            >
+                                <ServiceIcon
+                                    iconId={resolveUXIcon(
+                                        settings.interfaceIcons,
+                                        shouldCollapseItems() ? 'nav-collapse-all' : 'nav-expand-all'
+                                    )}
+                                />
+                            </button>
+                        ) : null}
+                        {showHiddenItemsButton ? (
+                            <button
+                                className={`${leftButtonBaseClassName}${showHiddenItems ? ' nn-mobile-toolbar-button-active' : ''}`}
+                                aria-label={showHiddenItems ? strings.paneHeader.hideExcludedItems : strings.paneHeader.showExcludedItems}
+                                onClick={() => {
+                                    handleToggleShowExcludedFolders();
+                                    if (onTreeUpdateComplete) {
+                                        requestAnimationFrame(() => {
+                                            onTreeUpdateComplete();
+                                        });
+                                    }
+                                }}
+                                disabled={!hasHiddenItems}
+                                tabIndex={-1}
+                            >
+                                <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'nav-hidden-items')} />
+                            </button>
+                        ) : null}
+                        {showRootReorderButton ? (
+                            <button
+                                className={`${leftButtonBaseClassName}${rootReorderActive ? ' nn-mobile-toolbar-button-active' : ''}`}
+                                aria-label={
+                                    rootReorderActive ? strings.paneHeader.finishRootFolderReorder : strings.paneHeader.reorderRootFolders
+                                }
+                                onClick={onToggleRootFolderReorder}
+                                disabled={rootReorderDisabled}
+                                tabIndex={-1}
+                            >
+                                <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'nav-root-reorder')} />
+                            </button>
+                        ) : null}
+                    </div>
+                ) : null}
+            </div>
+
+            {showNewFolderButton ? (
+                <div className="nn-mobile-toolbar-right">
+                    <div className="nn-mobile-toolbar-circle">
+                        <button
+                            className="nn-mobile-toolbar-button nn-mobile-toolbar-button-circle"
+                            aria-label={strings.paneHeader.newFolder}
+                            onClick={() => {
+                                runAsyncAction(() => handleNewFolder());
+                            }}
+                            disabled={!selectionState.selectedFolder}
+                            tabIndex={-1}
+                        >
+                            <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'nav-new-folder')} />
+                        </button>
+                    </div>
+                </div>
             ) : null}
-            <button
-                className="nn-mobile-toolbar-button"
-                aria-label={shouldCollapseItems() ? strings.paneHeader.collapseAllFolders : strings.paneHeader.expandAllFolders}
-                onClick={() => {
-                    handleExpandCollapseAll();
-                    if (onTreeUpdateComplete) {
-                        // Defer callback until after DOM updates complete
-                        requestAnimationFrame(() => {
-                            onTreeUpdateComplete();
-                        });
-                    }
-                }}
-                tabIndex={-1}
-            >
-                <ObsidianIcon name={shouldCollapseItems() ? 'lucide-chevrons-down-up' : 'lucide-chevrons-up-down'} />
-            </button>
-            {hasHiddenItems ? (
-                <button
-                    className={`nn-mobile-toolbar-button ${showHiddenItems ? 'nn-mobile-toolbar-button-active' : ''}`}
-                    aria-label={showHiddenItems ? strings.paneHeader.hideExcludedItems : strings.paneHeader.showExcludedItems}
-                    onClick={() => {
-                        handleToggleShowExcludedFolders();
-                        if (onTreeUpdateComplete) {
-                            // Defer callback until after DOM updates complete
-                            requestAnimationFrame(() => {
-                                onTreeUpdateComplete();
-                            });
-                        }
-                    }}
-                    disabled={!hasHiddenItems}
-                    tabIndex={-1}
-                >
-                    <ObsidianIcon name="lucide-eye" />
-                </button>
-            ) : null}
-            <button
-                className={`nn-mobile-toolbar-button ${rootReorderActive ? 'nn-mobile-toolbar-button-active' : ''}`}
-                aria-label={rootReorderActive ? strings.paneHeader.finishRootFolderReorder : strings.paneHeader.reorderRootFolders}
-                onClick={() => {
-                    if (onToggleRootFolderReorder) {
-                        onToggleRootFolderReorder();
-                    }
-                }}
-                disabled={rootReorderDisabled}
-                tabIndex={-1}
-            >
-                <ObsidianIcon name="lucide-list-tree" />
-            </button>
-            <button
-                className="nn-mobile-toolbar-button"
-                aria-label={strings.paneHeader.newFolder}
-                onClick={handleNewFolder}
-                disabled={!selectionState.selectedFolder}
-                tabIndex={-1}
-            >
-                <ObsidianIcon name="lucide-folder-plus" />
-            </button>
         </div>
     );
 }

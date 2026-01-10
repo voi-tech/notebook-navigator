@@ -16,13 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
-import { ObsidianIcon } from './ObsidianIcon';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { ServiceIcon } from './ServiceIcon';
 import { useUIDispatch, useUIState } from '../context/UIStateContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useServices } from '../context/ServicesContext';
 import { strings } from '../i18n';
 import { matchesShortcut, KeyboardShortcutAction } from '../utils/keyboardShortcuts';
+import { runAsyncAction, type MaybePromise } from '../utils/async';
+import { SearchTagInputSuggest } from '../suggest/SearchTagInputSuggest';
+import type { SearchProvider } from '../types/search';
+import { resolveUXIcon } from '../utils/uxIcons';
 
 interface SearchInputProps {
     searchQuery: string;
@@ -33,10 +37,11 @@ interface SearchInputProps {
     onFocusComplete?: () => void;
     /** Root container to scope DOM queries within this navigator instance */
     containerRef?: React.RefObject<HTMLDivElement | null>;
-    onSaveShortcut?: () => void;
-    onRemoveShortcut?: () => void;
+    onSaveShortcut?: () => MaybePromise;
+    onRemoveShortcut?: () => MaybePromise;
     isShortcutSaved?: boolean;
     isShortcutDisabled?: boolean;
+    searchProvider?: SearchProvider;
 }
 
 export function SearchInput({
@@ -50,16 +55,21 @@ export function SearchInput({
     onSaveShortcut,
     onRemoveShortcut,
     isShortcutSaved,
-    isShortcutDisabled
+    isShortcutDisabled,
+    searchProvider
 }: SearchInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { isMobile, omnisearchService } = useServices();
+    const tagSuggestRef = useRef<SearchTagInputSuggest | null>(null);
+    const { isMobile, omnisearchService, app, tagTreeService } = useServices();
     const settings = useSettingsState();
     const uiState = useUIState();
     const uiDispatch = useUIDispatch();
+    const searchIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'list-search'), [settings.interfaceIcons]);
+    const shortcutIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'nav-shortcuts'), [settings.interfaceIcons]);
 
     const placeholderText = useMemo(() => {
-        const isOmnisearchSelected = settings.searchProvider === 'omnisearch';
+        const activeProvider = searchProvider ?? settings.searchProvider ?? 'internal';
+        const isOmnisearchSelected = activeProvider === 'omnisearch';
         const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
 
         if (isOmnisearchSelected && isOmnisearchAvailable) {
@@ -67,7 +77,7 @@ export function SearchInput({
         }
 
         return strings.searchInput.placeholder;
-    }, [settings.searchProvider, omnisearchService]);
+    }, [searchProvider, settings.searchProvider, omnisearchService]);
 
     // Auto-focus input when shouldFocus is true
     useEffect(() => {
@@ -79,6 +89,51 @@ export function SearchInput({
             }
         }
     }, [shouldFocus, onFocusComplete]);
+
+    const applyTagSuggestion = useCallback(
+        (value: string, cursor: number) => {
+            onSearchQueryChange(value);
+            requestAnimationFrame(() => {
+                const input = inputRef.current;
+                if (!input) {
+                    return;
+                }
+                input.focus();
+                input.setSelectionRange(cursor, cursor);
+            });
+        },
+        [onSearchQueryChange]
+    );
+
+    // Initialize Obsidian's tag suggest helper on the search input
+    useEffect(() => {
+        if (!settings.showTags) {
+            return;
+        }
+
+        const inputEl = inputRef.current;
+        if (!inputEl || !tagTreeService) {
+            return;
+        }
+
+        const suggest = new SearchTagInputSuggest(app, inputEl, {
+            getTags: () => tagTreeService.getFlattenedTagNodes() ?? [],
+            onApply: applyTagSuggestion,
+            isMobile
+        });
+        tagSuggestRef.current = suggest;
+        return () => {
+            tagSuggestRef.current = null;
+            suggest.dispose();
+        };
+    }, [app, tagTreeService, settings.showTags, applyTagSuggestion, isMobile]);
+
+    useEffect(() => {
+        if (searchQuery.trim().length > 0) {
+            return;
+        }
+        tagSuggestRef.current?.close();
+    }, [searchQuery]);
 
     /**
      * Focuses the list pane scroll container to enable keyboard navigation.
@@ -97,6 +152,7 @@ export function SearchInput({
     const handleKeyDown = (e: React.KeyboardEvent) => {
         const nativeEvent = e.nativeEvent;
         const shortcuts = settings.keyboardShortcuts;
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- keyCode=229 is still needed for legacy IME detection
         const isImeComposing = nativeEvent.isComposing || nativeEvent.keyCode === 229;
 
         if (isImeComposing) {
@@ -150,7 +206,7 @@ export function SearchInput({
     return (
         <div className="nn-search-input-wrapper">
             <div className="nn-search-input-container">
-                <ObsidianIcon name="lucide-search" className="nn-search-input-icon" />
+                <ServiceIcon iconId={searchIconId} className="nn-search-input-icon" />
                 <input
                     ref={inputRef}
                     type="search"
@@ -177,7 +233,7 @@ export function SearchInput({
                             }
                             const action = isShortcutSaved ? onRemoveShortcut : onSaveShortcut;
                             if (action) {
-                                void action();
+                                runAsyncAction(action);
                             }
                             inputRef.current?.focus();
                         }}
@@ -186,13 +242,13 @@ export function SearchInput({
                                 event.preventDefault();
                                 const action = isShortcutSaved ? onRemoveShortcut : onSaveShortcut;
                                 if (action) {
-                                    void action();
+                                    runAsyncAction(action);
                                 }
                                 inputRef.current?.focus();
                             }
                         }}
                     >
-                        <ObsidianIcon name="lucide-bookmark" />
+                        <ServiceIcon iconId={shortcutIconId} aria-hidden={true} />
                     </div>
                 )}
                 {hasQuery && (
@@ -213,7 +269,7 @@ export function SearchInput({
                             }
                         }}
                     >
-                        <ObsidianIcon name="lucide-circle-x" />
+                        <ServiceIcon iconId="circle-x" aria-hidden={true} />
                     </div>
                 )}
             </div>

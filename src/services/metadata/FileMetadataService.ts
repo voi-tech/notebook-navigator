@@ -23,8 +23,7 @@ import { ItemType, NavigatorContext } from '../../types';
 import { isNoteShortcut } from '../../types/shortcuts';
 import type { NotebookNavigatorSettings } from '../../settings';
 import { getDBInstance } from '../../storage/fileOperations';
-import { convertIconIdToIconize } from '../../utils/iconizeFormat';
-import { extractFirstEmoji } from '../../utils/emojiUtils';
+import { normalizeCanonicalIconId, serializeIconForFrontmatter } from '../../utils/iconizeFormat';
 
 /**
  * Service for managing file-specific metadata operations
@@ -82,39 +81,36 @@ export class FileMetadataService extends BaseMetadataService {
             return { success: false, normalized: null };
         }
 
-        // Store the canonical internal icon format
-        const canonicalValue = value === null ? null : value.trim();
-        const settings = this.settingsProvider.settings;
-        let frontmatterValue = canonicalValue;
+        let canonicalValue: string | null = null;
+        let frontmatterValue: string | null = null;
 
-        // Convert icon to Iconize format if enabled for frontmatter storage
-        if (metadataKey === 'icon' && canonicalValue && settings.iconizeFormat) {
-            const trimmedValue = canonicalValue.trim();
-            const emojiPrefix = 'emoji:';
-            const emojiCandidate = trimmedValue.startsWith(emojiPrefix) ? trimmedValue.substring(emojiPrefix.length).trim() : trimmedValue;
-            const emojiOnly = extractFirstEmoji(emojiCandidate);
-
-            if (emojiOnly && emojiCandidate === emojiOnly) {
-                frontmatterValue = emojiOnly;
-            } else {
-                const iconizeFormat = convertIconIdToIconize(canonicalValue);
-                if (iconizeFormat) {
-                    frontmatterValue = iconizeFormat;
+        if (value !== null) {
+            if (metadataKey === 'icon') {
+                const normalizedIcon = normalizeCanonicalIconId(value.trim());
+                canonicalValue = normalizedIcon && normalizedIcon.length > 0 ? normalizedIcon : null;
+                if (canonicalValue) {
+                    frontmatterValue = serializeIconForFrontmatter(canonicalValue) ?? canonicalValue;
                 }
+            } else {
+                const trimmedColor = value.trim();
+                canonicalValue = trimmedColor.length > 0 ? trimmedColor : null;
+                frontmatterValue = canonicalValue;
             }
         }
 
-        const normalizedValue = frontmatterValue === null ? null : frontmatterValue.trim();
+        const normalizedFrontmatterValue = frontmatterValue === null ? null : frontmatterValue.trim();
 
         try {
             // Update the frontmatter in the file
-            await this.app.fileManager.processFrontMatter(file, frontmatter => {
-                if (normalizedValue && normalizedValue.length > 0) {
-                    frontmatter[trimmedField] = normalizedValue;
-                } else {
-                    if (Object.prototype.hasOwnProperty.call(frontmatter, trimmedField)) {
-                        delete frontmatter[trimmedField];
-                    }
+            await this.app.fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
+                if (normalizedFrontmatterValue && normalizedFrontmatterValue.length > 0) {
+                    frontmatter[trimmedField] = normalizedFrontmatterValue;
+                    return;
+                }
+
+                // Remove the field if it exists and new value is empty
+                if (Reflect.has(frontmatter, trimmedField)) {
+                    delete frontmatter[trimmedField];
                 }
             });
             // Sync the change to IndexedDB cache using canonical format
@@ -127,8 +123,8 @@ export class FileMetadataService extends BaseMetadataService {
                 metadataUpdate.color = canonicalValue && canonicalValue.length > 0 ? canonicalValue : undefined;
             }
             await db.updateFileMetadata(file.path, metadataUpdate);
-            return { success: true, normalized: normalizedValue ?? null };
-        } catch (error) {
+            return { success: true, normalized: normalizedFrontmatterValue ?? null };
+        } catch (error: unknown) {
             console.error('Failed to update frontmatter metadata', {
                 path: file.path,
                 field: trimmedField,
@@ -185,6 +181,50 @@ export class FileMetadataService extends BaseMetadataService {
                 }
             }
         });
+    }
+
+    /**
+     * Pins multiple notes in a single settings update.
+     * @param filePaths - Paths of files to pin
+     * @param context - Context to pin ('folder' or 'tag')
+     * @returns Number of notes newly pinned in the given context
+     */
+    async pinNotes(filePaths: string[], context: NavigatorContext): Promise<number> {
+        const uniquePaths = Array.from(new Set(filePaths)).filter(path => path.length > 0);
+        if (uniquePaths.length === 0) {
+            return 0;
+        }
+
+        let pinnedCount = 0;
+        await this.saveAndUpdate(settings => {
+            if (!settings.pinnedNotes) {
+                settings.pinnedNotes = {};
+            }
+
+            let changed = false;
+            for (const filePath of uniquePaths) {
+                const existing = settings.pinnedNotes[filePath];
+                if (!existing) {
+                    settings.pinnedNotes[filePath] = {
+                        folder: context === 'folder',
+                        tag: context === 'tag'
+                    };
+                    changed = true;
+                    pinnedCount += 1;
+                    continue;
+                }
+
+                if (!existing[context]) {
+                    existing[context] = true;
+                    changed = true;
+                    pinnedCount += 1;
+                }
+            }
+
+            return changed;
+        });
+
+        return pinnedCount;
     }
 
     /**

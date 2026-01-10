@@ -16,51 +16,54 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Setting } from 'obsidian';
 import { strings } from '../../i18n';
 import type { SearchProvider } from '../../types/search';
 import type { SettingsTabContext } from './SettingsTabContext';
+import { createSettingGroupFactory } from '../settingGroups';
 
 /** Renders the search and hotkeys settings tab */
 export function renderHotkeysSearchTab(context: SettingsTabContext): void {
-    const { containerEl, plugin } = context;
+    const { containerEl, plugin, addInfoSetting } = context;
 
-    new Setting(containerEl).setName(strings.settings.sections.search).setHeading();
+    const createGroup = createSettingGroupFactory(containerEl);
+    const searchGroup = createGroup(strings.settings.sections.search);
 
-    new Setting(containerEl)
-        .setName(strings.settings.items.searchProvider.name)
-        .setDesc(strings.settings.items.searchProvider.desc)
-        .addDropdown(dropdown => {
-            const currentProvider = plugin.settings.searchProvider ?? 'internal';
-            dropdown
-                .addOption('internal', strings.settings.items.searchProvider.options.internal)
-                .addOption('omnisearch', strings.settings.items.searchProvider.options.omnisearch)
-                .setValue(currentProvider)
-                .onChange(async value => {
-                    const provider = value as SearchProvider;
-                    plugin.settings.searchProvider = provider;
-                    await plugin.saveSettingsAndUpdate();
-                    updateSearchInfo();
-                });
-        });
+    const isSearchProvider = (value: string): value is SearchProvider => {
+        return value === 'internal' || value === 'omnisearch';
+    };
 
-    const searchInfoContainer = containerEl.createDiv('nn-setting-info-container');
-    const searchInfoEl = searchInfoContainer.createEl('div', {
-        cls: 'setting-item-description'
+    searchGroup.addSetting(setting => {
+        setting
+            .setName(strings.settings.items.searchProvider.name)
+            .setDesc(strings.settings.items.searchProvider.desc)
+            .addDropdown(dropdown => {
+                const currentProvider = plugin.getSearchProvider();
+                dropdown
+                    .addOption('internal', strings.settings.items.searchProvider.options.internal)
+                    .addOption('omnisearch', strings.settings.items.searchProvider.options.omnisearch)
+                    .setValue(currentProvider)
+                    .onChange(value => {
+                        if (!isSearchProvider(value)) {
+                            return;
+                        }
+                        plugin.setSearchProvider(value);
+                        updateSearchInfo();
+                    });
+            });
     });
+
+    const searchInfoSetting = addInfoSetting(searchGroup.addSetting, 'nn-setting-info-container', () => {});
+    const searchInfoEl = searchInfoSetting.descEl;
 
     /** Updates the search provider information display */
     const updateSearchInfo = () => {
-        const provider = plugin.settings.searchProvider;
+        const provider = plugin.getSearchProvider();
         const hasOmnisearch = plugin.omnisearchService?.isAvailable() ?? false;
 
         searchInfoEl.empty();
 
         if (provider === 'omnisearch' && !hasOmnisearch) {
-            const warningDiv = searchInfoEl.createDiv({ cls: 'setting-item-description' });
-            warningDiv.createEl('strong', {
-                text: strings.settings.items.searchProvider.info.omnisearch.warningNotInstalled
-            });
+            searchInfoEl.createEl('strong', { text: strings.settings.items.searchProvider.info.omnisearch.warningNotInstalled });
             searchInfoEl.createEl('br');
         }
 
@@ -102,20 +105,17 @@ export function renderHotkeysSearchTab(context: SettingsTabContext): void {
 
     updateSearchInfo();
 
-    new Setting(containerEl).setName(strings.settings.sections.hotkeys).setHeading();
+    const hotkeysGroup = createGroup(strings.settings.sections.hotkeys);
 
-    const hotkeysInfoContainer = containerEl.createDiv('nn-setting-info-container');
-    const hotkeysInfo = hotkeysInfoContainer.createEl('div', {
-        cls: 'setting-item-description'
+    addInfoSetting(hotkeysGroup.addSetting, 'nn-setting-info-container', descEl => {
+        descEl.createEl('p', { text: strings.settings.items.hotkeys.intro });
+        descEl.createEl('p', { text: strings.settings.items.hotkeys.example });
+
+        const modifierList = descEl.createEl('ul');
+        strings.settings.items.hotkeys.modifierList.forEach(item => {
+            modifierList.createEl('li', { text: item });
+        });
+
+        descEl.createEl('p', { text: strings.settings.items.hotkeys.guidance });
     });
-
-    hotkeysInfo.createEl('p', { text: strings.settings.items.hotkeys.intro });
-    hotkeysInfo.createEl('p', { text: strings.settings.items.hotkeys.example });
-
-    const modifierList = hotkeysInfo.createEl('ul');
-    strings.settings.items.hotkeys.modifierList.forEach(item => {
-        modifierList.createEl('li', { text: item });
-    });
-
-    hotkeysInfo.createEl('p', { text: strings.settings.items.hotkeys.guidance });
 }

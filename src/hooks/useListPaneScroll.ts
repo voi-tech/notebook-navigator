@@ -49,11 +49,13 @@ import { TFile, TFolder } from 'obsidian';
 import { useVirtualizer, Virtualizer } from '@tanstack/react-virtual';
 import { useServices } from '../context/ServicesContext';
 import { useFileCache } from '../context/StorageContext';
-import { ListPaneItemType, LISTPANE_MEASUREMENTS, OVERSCAN } from '../types';
+import { ListPaneItemType, OVERSCAN } from '../types';
 import { Align, ListScrollIntent, getListAlign, rankListPending } from '../types/scroll';
 import type { ListPaneItem } from '../types/virtualization';
 import type { NotebookNavigatorSettings } from '../settings';
 import type { SelectionState } from '../context/SelectionContext';
+import { calculateCompactListMetrics } from '../utils/listPaneMetrics';
+import { getListPaneMeasurements, shouldShowCustomPropertyRow, shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
 
 /**
  * Parameters for the useListPaneScroll hook
@@ -93,6 +95,8 @@ interface UseListPaneScrollParams {
     topSpacerHeight: number;
     /** Whether descendant notes should be shown */
     includeDescendantNotes: boolean;
+    /** Scroll margin used to offset the visible range and scrollToIndex alignment */
+    scrollMargin?: number;
 }
 
 /**
@@ -130,10 +134,25 @@ export function useListPaneScroll({
     searchQuery,
     suppressSearchTopScrollRef,
     topSpacerHeight,
-    includeDescendantNotes
+    includeDescendantNotes,
+    scrollMargin = 0
 }: UseListPaneScrollParams): UseListPaneScrollResult {
     const { isMobile } = useServices();
+    const listMeasurements = getListPaneMeasurements(isMobile);
     const { hasPreview, getDB, isStorageReady } = useFileCache();
+    // The list pane only renders after StorageContext marks storage ready.
+    const db = getDB();
+
+    // Calculate compact list padding for height estimation in virtualization
+    const compactListMetrics = useMemo(
+        () =>
+            calculateCompactListMetrics({
+                compactItemHeight: settings.compactItemHeight,
+                scaleText: settings.compactItemHeightScaleText,
+                titleLineHeight: listMeasurements.titleLineHeight
+            }),
+        [listMeasurements.titleLineHeight, settings.compactItemHeight, settings.compactItemHeightScaleText]
+    );
 
     // Reference to the scroll container DOM element
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -155,7 +174,6 @@ export function useListPaneScroll({
         filePath?: string; // Target file path (for type='file')
         reason?: ScrollReason; // Why this scroll was requested
         minIndexVersion?: number; // Don't execute until indexVersion >= this
-        skipScroll?: boolean; // Suppress execution while still clearing pending entry
     };
     const pendingScrollRef = useRef<PendingScroll | null>(null);
     const [pendingScrollVersion, setPendingScrollVersion] = useState(0); // Triggers effect re-run
@@ -171,13 +189,16 @@ export function useListPaneScroll({
     // Context tracking for index-version based reorder detection within a list context
     const contextIndexVersionRef = useRef<{ key: string; version: number } | null>(null);
 
-    // Check if we're in slim mode
-    const isSlimMode = !folderSettings.showDate && !folderSettings.showPreview && !folderSettings.showImage;
+    // Check if we're in compact mode
+    const isCompactMode = !folderSettings.showDate && !folderSettings.showPreview && !folderSettings.showImage;
+    const revealFileOnListChanges = settings.revealFileOnListChanges;
+    const hasSelectedFile = Boolean(selectedFile);
 
     /**
      * Initialize TanStack Virtual virtualizer with dynamic height calculation.
      * Handles different item types (headers, files, spacers) with appropriate heights.
      */
+    const effectiveScrollMargin = Number.isFinite(scrollMargin) && scrollMargin > 0 ? scrollMargin : 0;
     const rowVirtualizer = useVirtualizer({
         count: listItems.length,
         getScrollElement: () => {
@@ -187,11 +208,13 @@ export function useListPaneScroll({
             }
             return element;
         },
-        scrollMargin: 0,
-        scrollPaddingStart: 0,
+        // Align virtualizer scroll math with the start of the file rows (excluding overlay chrome).
+        scrollMargin: effectiveScrollMargin,
+        // Ensure scrollToIndex aligns items below the overlay chrome instead of under it.
+        scrollPaddingStart: effectiveScrollMargin,
         estimateSize: index => {
             const item = listItems[index];
-            const heights = LISTPANE_MEASUREMENTS;
+            const heights = listMeasurements;
 
             if (item.type === ListPaneItemType.HEADER) {
                 // Date group headers have fixed heights from CSS
@@ -207,23 +230,34 @@ export function useListPaneScroll({
                 return topSpacerHeight;
             }
             if (item.type === ListPaneItemType.BOTTOM_SPACER) {
-                return heights.bottomSpacer;
+                return listMeasurements.bottomSpacer;
             }
 
             // For file items - calculate height including all components
+            const file = item.type === ListPaneItemType.FILE && item.data instanceof TFile ? item.data : null;
 
             // Get actual preview status for accurate height calculation
             let hasPreviewText = false;
             let hasOmnisearchExcerpt = false;
-            if (item.type === ListPaneItemType.FILE && item.data instanceof TFile && folderSettings.showPreview) {
-                if (item.data.extension === 'md') {
+            if (file && folderSettings.showPreview) {
+                if (file.extension === 'md') {
                     // Use synchronous check from cache for markdown preview text
-                    hasPreviewText = hasPreview(item.data.path);
+                    hasPreviewText = hasPreview(file.path);
                 }
                 const excerpt = item.searchMeta?.excerpt;
-                hasOmnisearchExcerpt = typeof excerpt === 'string' && excerpt.trim().length > 0;
+                hasOmnisearchExcerpt = typeof excerpt === 'string' && excerpt.length > 0;
             }
             const hasPreviewContent = hasPreviewText || hasOmnisearchExcerpt;
+
+            // Keep height estimation aligned with FileItem feature image rendering.
+            // getFile reads from the in-memory cache; no IndexedDB reads occur during sizing.
+            const fileRecord = file ? db.getFile(file.path) : null;
+            const featureImageStatus = fileRecord?.featureImageStatus ?? null;
+            const showFeatureImageArea = shouldShowFeatureImageArea({
+                showImage: folderSettings.showImage,
+                file,
+                featureImageStatus
+            });
 
             // Note: Preview rows are calculated differently based on context
 
@@ -235,14 +269,14 @@ export function useListPaneScroll({
             const pinnedItemShouldUseCompactLayout = item.isPinned && heightOptimizationEnabled; // Pinned items get compact treatment only when optimizing
             const shouldUseSingleLineForDateAndPreview = pinnedItemShouldUseCompactLayout || folderSettings.previewRows < 2;
             const shouldUseMultiLinePreviewLayout = !pinnedItemShouldUseCompactLayout && folderSettings.previewRows >= 2;
-            const shouldCollapseEmptyPreviewSpace = heightOptimizationEnabled && !hasPreviewContent; // Optimization: compact layout for empty preview
-            const shouldAlwaysReservePreviewSpace = heightOptimizationDisabled || hasPreviewContent; // Show full layout when not optimizing OR has content
+            const shouldCollapseEmptyPreviewSpace = heightOptimizationEnabled && !hasPreviewContent && !showFeatureImageArea; // Optimization: compact layout for empty preview
+            const shouldAlwaysReservePreviewSpace = heightOptimizationDisabled || hasPreviewContent || showFeatureImageArea; // Show full layout when not optimizing OR has content
 
             // Start with base padding
             let textContentHeight = 0;
 
-            if (isSlimMode) {
-                // Slim mode: only shows file name
+            if (isCompactMode) {
+                // Compact mode: only shows file name
                 textContentHeight = heights.titleLineHeight * (folderSettings.titleRows || 1);
             } else {
                 // Normal mode
@@ -257,7 +291,7 @@ export function useListPaneScroll({
                     }
 
                     // Parent folder gets its own line (not when pinned is in compact layout)
-                    if (!pinnedItemShouldUseCompactLayout && settings.showParentFolderNames) {
+                    if (!pinnedItemShouldUseCompactLayout && settings.showParentFolder) {
                         const file = item.data instanceof TFile ? item.data : null;
                         const isInDescendant = file && item.parentFolder && file.parent && file.parent.path !== item.parentFolder;
                         const showParentFolderLine = selectionState.selectionType === 'tag' || (includeDescendantNotes && isInDescendant);
@@ -272,7 +306,7 @@ export function useListPaneScroll({
                         const file = item.data instanceof TFile ? item.data : null;
                         const isInDescendant = file && item.parentFolder && file.parent && file.parent.path !== item.parentFolder;
                         const showParentFolder =
-                            settings.showParentFolderNames &&
+                            settings.showParentFolder &&
                             !pinnedItemShouldUseCompactLayout &&
                             (selectionState.selectionType === 'tag' || (includeDescendantNotes && isInDescendant));
 
@@ -284,20 +318,20 @@ export function useListPaneScroll({
                         if (folderSettings.showPreview) {
                             // When using full height, always reserve full preview rows even if empty
                             // When optimizing, only show preview if there's content
-                            const previewRows = heightOptimizationDisabled
-                                ? folderSettings.previewRows
-                                : hasPreviewContent
-                                  ? folderSettings.previewRows
-                                  : 0;
+                            const previewRows =
+                                heightOptimizationDisabled || showFeatureImageArea
+                                    ? folderSettings.previewRows
+                                    : hasPreviewContent
+                                      ? folderSettings.previewRows
+                                      : 0;
                             if (previewRows > 0) {
                                 textContentHeight += heights.multilineTextLineHeight * previewRows;
                             }
                         }
                         // Only add metadata line if date is shown OR parent folder is shown
-                        const file = item.data instanceof TFile ? item.data : null;
                         const isInDescendant = file && item.parentFolder && file.parent && file.parent.path !== item.parentFolder;
                         const showParentFolder =
-                            settings.showParentFolderNames &&
+                            settings.showParentFolder &&
                             !pinnedItemShouldUseCompactLayout &&
                             (selectionState.selectionType === 'tag' || (includeDescendantNotes && isInDescendant));
 
@@ -309,20 +343,36 @@ export function useListPaneScroll({
             }
 
             // Add space for tags if file has tags and they are visible in this mode
-            const shouldShowFileTags = settings.showTags && settings.showFileTags && (!isSlimMode || settings.showFileTagsInSlimMode);
+            const shouldShowFileTags = settings.showTags && settings.showFileTags && (!isCompactMode || settings.showFileTagsInCompactMode);
 
             if (shouldShowFileTags && item.type === ListPaneItemType.FILE && item.hasTags) {
                 textContentHeight += heights.tagRowHeight;
             }
 
-            // Apply min-height constraint AFTER including all content (but not in slim mode)
+            const shouldShowCustomProperty = shouldShowCustomPropertyRow({
+                customPropertyType: settings.customPropertyType,
+                showCustomPropertyInCompactMode: settings.showCustomPropertyInCompactMode,
+                isCompactMode,
+                file,
+                customProperty: fileRecord?.customProperty
+            });
+
+            if (shouldShowCustomProperty) {
+                textContentHeight += heights.tagRowHeight;
+            }
+
+            // Apply min-height constraint AFTER including all content (but not in compact mode)
             // This ensures text content aligns with feature image height when shown
-            if (!isSlimMode && textContentHeight < heights.featureImageHeight) {
+            if (!isCompactMode && textContentHeight < heights.featureImageHeight) {
                 textContentHeight = heights.featureImageHeight;
             }
 
-            // Use reduced padding for slim mode (with mobile-specific padding)
-            const padding = isSlimMode ? (isMobile ? heights.slimPaddingMobile : heights.slimPadding) : heights.basePadding;
+            // Use reduced padding for compact mode (with mobile-specific padding)
+            const padding = isCompactMode
+                ? isMobile
+                    ? compactListMetrics.mobilePaddingTotal
+                    : compactListMetrics.desktopPaddingTotal
+                : heights.basePadding;
             return padding + textContentHeight;
         },
         overscan: OVERSCAN,
@@ -450,7 +500,7 @@ export function useListPaneScroll({
      *
      * Priority order (lowest to highest):
      * 0. top - Scroll to top of list
-     * 1. list-config-change - Settings changed
+     * 1. list-structure-change - Settings/layout changes within current context
      * 2. visibility-change - Mobile drawer opened
      * 3. folder-navigation - User changed folders
      * 4. reveal - Show active file command
@@ -473,12 +523,6 @@ export function useListPaneScroll({
 
         const nextRank = rankListPending(next);
         const currentRank = rankListPending(current);
-
-        // Preserve non-skip pending when competing with skip pending of same priority
-        // Ensures actual scrolls take precedence over placeholder/suppression entries
-        if (currentRank === nextRank && !current.skipScroll && next.skipScroll) {
-            return;
-        }
 
         if (nextRank >= currentRank) {
             pendingScrollRef.current = next;
@@ -507,7 +551,8 @@ export function useListPaneScroll({
      * - folder-navigation: center on mobile, auto on desktop
      * - visibility-change: auto (minimal movement)
      * - reveal: auto (show if not visible)
-     * - list-config-change: auto (maintain position)
+     * - list-structure-change: auto (maintain position)
+     * - list-reorder: auto (maintain selection visibility)
      */
     useEffect(() => {
         if (!rowVirtualizer || !pendingScrollRef.current || !isScrollContainerReady) {
@@ -524,14 +569,12 @@ export function useListPaneScroll({
         }
 
         if (pending.type === 'file') {
-            const isListConfig = pending.reason === 'list-config-change';
-            // Clear pending without scrolling when explicitly suppressed
-            if (isListConfig && pending.skipScroll) {
+            const isStructuralChange = pending.reason === 'list-structure-change';
+
+            if (!revealFileOnListChanges && isStructuralChange) {
                 shouldClearPending = true;
             } else if (
-                // Skip stale list-config scrolls from previous file selections
-                // Occurs when selection changes before a pending scroll executes
-                isListConfig &&
+                isStructuralChange &&
                 pending.filePath &&
                 selectedFilePathRef.current &&
                 pending.filePath !== selectedFilePathRef.current
@@ -546,19 +589,17 @@ export function useListPaneScroll({
                     }
                     rowVirtualizer.scrollToIndex(index, { align: alignment });
 
-                    if (isListConfig) {
+                    if (isStructuralChange) {
                         // Stabilization mechanism: Handle rapid consecutive rebuilds
-                        // Config changes can trigger multiple rebuilds. Check if
-                        // the index changed after execution and queue a follow-up if needed.
                         const usedIndex = index;
                         const usedPath = pending.filePath;
                         requestAnimationFrame(() => {
                             const newIndex = usedPath ? getSelectionIndex(usedPath) : -1;
-                            if (usedPath && newIndex >= 0 && newIndex !== usedIndex) {
+                            if (usedPath && newIndex >= 0 && newIndex !== usedIndex && revealFileOnListChanges) {
                                 setPending({
                                     type: 'file',
                                     filePath: usedPath,
-                                    reason: 'list-config-change',
+                                    reason: 'list-structure-change',
                                     minIndexVersion: indexVersionRef.current + 1
                                 });
                             }
@@ -587,6 +628,7 @@ export function useListPaneScroll({
         getSelectionIndex,
         isMobile,
         setPending,
+        revealFileOnListChanges,
         selectionState.revealSource
     ]);
 
@@ -604,8 +646,10 @@ export function useListPaneScroll({
                 // Content changes always need remeasure
                 if (
                     change.changes.preview !== undefined ||
-                    change.changes.featureImage !== undefined ||
-                    change.changes.metadata !== undefined
+                    change.changes.featureImageKey !== undefined ||
+                    change.changes.featureImageStatus !== undefined ||
+                    change.changes.metadata !== undefined ||
+                    change.changes.customProperty !== undefined
                 ) {
                     return true;
                 }
@@ -668,12 +712,17 @@ export function useListPaneScroll({
         settings.showFeatureImage,
         settings.fileNameRows,
         settings.previewRows,
-        settings.showParentFolderNames,
+        settings.customPropertyType,
+        settings.showCustomPropertyInCompactMode,
+        settings.showParentFolder,
         settings.showTags,
         settings.showFileTags,
-        settings.showFileTagsInSlimMode,
+        settings.showFileTagsInCompactMode,
         settings.optimizeNoteHeight,
+        settings.compactItemHeight,
+        settings.compactItemHeightScaleText,
         folderSettings,
+        listMeasurements,
         rowVirtualizer
     ]);
 
@@ -731,18 +780,18 @@ export function useListPaneScroll({
         prevConfigKeyRef.current = configKey;
 
         // Set a pending scroll to maintain position on selected file when config changes
-        if (selectedFile) {
+        if (revealFileOnListChanges && selectedFile) {
             setPending({
                 type: 'file',
                 filePath: selectedFile.path,
-                reason: 'list-config-change',
+                reason: 'list-structure-change',
                 minIndexVersion: indexVersionRef.current + 1
             });
         } else if (wasShowingDescendants && !nowShowingDescendants) {
             // Special case: When disabling descendants and no file selected, scroll to top
             setPending({
                 type: 'top',
-                reason: 'list-config-change',
+                reason: 'list-structure-change',
                 minIndexVersion: indexVersionRef.current + 1
             });
         }
@@ -751,6 +800,7 @@ export function useListPaneScroll({
         rowVirtualizer,
         selectedFile,
         includeDescendantNotes,
+        revealFileOnListChanges,
         settings.optimizeNoteHeight,
         settings.noteGrouping,
         folderSettings,
@@ -780,13 +830,12 @@ export function useListPaneScroll({
 
             // Only queue a file scroll if the selected file exists in the current index
             const inList = !!(selectedFile && filePathToIndex.has(selectedFile.path));
-            if (inList) {
+            if (revealFileOnListChanges && inList && selectedFile) {
                 setPending({
                     type: 'file',
                     filePath: selectedFile.path,
-                    reason: 'list-config-change',
-                    minIndexVersion: indexVersionRef.current,
-                    skipScroll: true
+                    reason: 'list-structure-change',
+                    minIndexVersion: indexVersionRef.current
                 });
             }
         }
@@ -798,7 +847,8 @@ export function useListPaneScroll({
         filePathToIndex,
         filePathToIndex.size,
         selectedFile,
-        setPending
+        setPending,
+        revealFileOnListChanges
     ]);
 
     /**
@@ -828,9 +878,12 @@ export function useListPaneScroll({
         // We scroll in these cases:
         // 1. User navigated to a different folder/tag (isFolderNavigation = true)
         // 2. List context changed (folder/tag change)
-        const shouldScroll = isFolderNavigation || listChanged;
+        const shouldScroll = listChanged || (isFolderNavigation && hasSelectedFile);
 
         if (!shouldScroll) {
+            if (isFolderNavigation) {
+                selectionDispatch({ type: 'SET_FOLDER_NAVIGATION', isFolderNavigation: false });
+            }
             return;
         }
 
@@ -876,16 +929,16 @@ export function useListPaneScroll({
             // Clear the folder navigation flag
             selectionDispatch({ type: 'SET_FOLDER_NAVIGATION', isFolderNavigation: false });
 
-            setPending(
-                selectedFile
-                    ? {
-                          type: 'file',
-                          filePath: selectedFile.path,
-                          reason: 'folder-navigation',
-                          minIndexVersion: indexVersionRef.current
-                      }
-                    : { type: 'top', reason: 'folder-navigation', minIndexVersion: indexVersionRef.current }
-            );
+            const pendingScroll = selectedFile
+                ? {
+                      type: 'file' as const,
+                      filePath: selectedFile.path,
+                      reason: 'folder-navigation' as const,
+                      minIndexVersion: indexVersionRef.current
+                  }
+                : ({ type: 'top', reason: 'folder-navigation', minIndexVersion: indexVersionRef.current } as const);
+
+            setPending(pendingScroll);
         } else {
             // For other cases (initial load), use pending scroll for consistency
             // RAF was getting canceled due to rapid re-renders
@@ -916,7 +969,8 @@ export function useListPaneScroll({
         selectionDispatch,
         listItems.length,
         setPending,
-        clearPending
+        clearPending,
+        hasSelectedFile
     ]);
 
     /**
@@ -949,13 +1003,18 @@ export function useListPaneScroll({
             return;
         }
 
+        if (!selectedFile) {
+            prevSearchQueryRef.current = searchQuery;
+            return;
+        }
+
         if (!isScrollContainerReady || !rowVirtualizer) {
             // Defer handling until visible/ready without consuming the query change
             return;
         }
 
         // Check if selected file exists in the filtered list (based on current index)
-        const selectedFileInList = !!(selectedFile && filePathToIndex.has(selectedFile.path));
+        const selectedFileInList = filePathToIndex.has(selectedFile.path);
 
         const queryChanged = prevSearchQueryRef.current !== searchQuery;
         prevSearchQueryRef.current = searchQuery;
@@ -971,7 +1030,7 @@ export function useListPaneScroll({
                 suppressSearchTopScrollRef.current = false;
                 return;
             }
-            setPending({ type: 'top', reason: 'list-config-change', minIndexVersion: indexVersionRef.current });
+            setPending({ type: 'top', reason: 'list-structure-change', minIndexVersion: indexVersionRef.current });
             return;
         }
 

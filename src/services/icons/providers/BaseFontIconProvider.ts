@@ -1,3 +1,21 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { IconProvider, IconDefinition } from '../types';
 import { IconAssetRecord } from '../external/IconAssetDatabase';
 import { resetIconContainer } from './providerUtils';
@@ -22,12 +40,14 @@ export abstract class BaseFontIconProvider implements IconProvider {
     private readonly fontFamily: string;
     private fontFace: FontFace | null = null;
     private fontLoadPromise: Promise<FontFace> | null = null;
+    private readonly version: string | null;
 
     protected iconDefinitions: IconDefinition[] = [];
     protected iconLookup: Map<string, IconLookupEntry> = new Map();
 
     constructor(options: BaseFontIconProviderOptions) {
         this.fontFamily = options.fontFamily;
+        this.version = options.record?.version ?? null;
         this.parseMetadata(options.record.metadata);
         this.ensureFontLoaded(options.record.data);
     }
@@ -134,6 +154,14 @@ export abstract class BaseFontIconProvider implements IconProvider {
 
     getAll(): IconDefinition[] {
         return this.iconDefinitions;
+    }
+
+    /**
+     * Returns the provider version from the loaded icon pack metadata
+     * @returns Version string or null if no version available
+     */
+    getVersion(): string | null {
+        return this.version;
     }
 
     protected abstract parseMetadata(raw: string): void;

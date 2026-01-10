@@ -20,11 +20,19 @@ import { App, TFolder } from 'obsidian';
 import { SortOption, type NotebookNavigatorSettings } from '../settings';
 import { ISettingsProvider } from '../interfaces/ISettingsProvider';
 import { ITagTreeProvider } from '../interfaces/ITagTreeProvider';
-import { FolderMetadataService, TagMetadataService, FileMetadataService, type FileMetadataMigrationResult } from './metadata';
+import {
+    FolderMetadataService,
+    TagMetadataService,
+    FileMetadataService,
+    NavigationSeparatorService,
+    type TagColorData,
+    type FileMetadataMigrationResult
+} from './metadata';
 import { TagTreeNode } from '../types/storage';
 import { FileData } from '../storage/IndexedDBStorage';
 import { getDBInstance } from '../storage/fileOperations';
 import { NavigatorContext } from '../types';
+import type { NavigationSeparatorTarget } from '../utils/navigationSeparators';
 
 /**
  * Validators object containing all data needed for cleanup operations
@@ -41,6 +49,7 @@ export interface MetadataCleanupSummary {
     tags: number;
     files: number;
     pinnedNotes: number;
+    separators: number;
     total: number;
 }
 
@@ -53,6 +62,7 @@ export class MetadataService {
     private fileService: FileMetadataService;
     private folderService: FolderMetadataService;
     private tagService: TagMetadataService;
+    private navigationSeparatorService: NavigationSeparatorService;
     private settingsProvider: ISettingsProvider;
 
     /**
@@ -67,6 +77,7 @@ export class MetadataService {
         this.folderService = new FolderMetadataService(app, settingsProvider);
         this.tagService = new TagMetadataService(app, settingsProvider, getTagTreeProvider);
         this.fileService = new FileMetadataService(app, settingsProvider);
+        this.navigationSeparatorService = new NavigationSeparatorService(app, settingsProvider, getTagTreeProvider);
     }
 
     /**
@@ -127,11 +138,15 @@ export class MetadataService {
     }
 
     async handleFolderRename(oldPath: string, newPath: string): Promise<void> {
-        return this.folderService.handleFolderRename(oldPath, newPath);
+        await this.folderService.handleFolderRename(oldPath, newPath, settings =>
+            this.navigationSeparatorService.applyFolderRename(settings, oldPath, newPath)
+        );
     }
 
     async handleFolderDelete(folderPath: string): Promise<void> {
-        return this.folderService.handleFolderDelete(folderPath);
+        await this.folderService.handleFolderDelete(folderPath, settings =>
+            this.navigationSeparatorService.applyFolderDelete(settings, folderPath)
+        );
     }
 
     // ========== Tag Methods (delegated to TagMetadataService) ==========
@@ -160,6 +175,11 @@ export class MetadataService {
         return this.tagService.getTagBackgroundColor(tagPath);
     }
 
+    getTagColorData(tagPath: string): TagColorData {
+        // Returns resolved tag color/background, including inherited values when enabled.
+        return this.tagService.getTagColorData(tagPath);
+    }
+
     async setTagIcon(tagPath: string, iconId: string): Promise<void> {
         return this.tagService.setTagIcon(tagPath, iconId);
     }
@@ -170,6 +190,22 @@ export class MetadataService {
 
     getTagIcon(tagPath: string): string | undefined {
         return this.tagService.getTagIcon(tagPath);
+    }
+
+    /**
+     * Updates tag metadata when a tag is renamed, optionally preserving existing overrides at the new path
+     */
+    async handleTagRename(oldPath: string, newPath: string, preserveExisting = false): Promise<void> {
+        await this.tagService.handleTagRename(oldPath, newPath, preserveExisting, settings =>
+            this.navigationSeparatorService.applyTagRename(settings, oldPath, newPath, preserveExisting)
+        );
+    }
+
+    /**
+     * Removes all metadata associated with a tag and its descendants
+     */
+    async handleTagDelete(tagPath: string): Promise<void> {
+        await this.tagService.handleTagDelete(tagPath, settings => this.navigationSeparatorService.applyTagDelete(settings, tagPath));
     }
 
     async setTagSortOverride(tagPath: string, sortOption: SortOption): Promise<void> {
@@ -184,10 +220,40 @@ export class MetadataService {
         return this.tagService.getTagSortOverride(tagPath);
     }
 
+    // ========== Navigation Separator Methods ==========
+
+    getNavigationSeparators(): Record<string, boolean> {
+        return this.navigationSeparatorService.getSeparators();
+    }
+
+    hasNavigationSeparator(target: NavigationSeparatorTarget): boolean {
+        return this.navigationSeparatorService.hasSeparator(target);
+    }
+
+    async addNavigationSeparator(target: NavigationSeparatorTarget): Promise<void> {
+        return this.navigationSeparatorService.setSeparator(target);
+    }
+
+    async removeNavigationSeparator(target: NavigationSeparatorTarget): Promise<void> {
+        return this.navigationSeparatorService.removeSeparator(target);
+    }
+
+    getNavigationSeparatorsVersion(): number {
+        return this.navigationSeparatorService.getVersion();
+    }
+
+    subscribeToNavigationSeparatorChanges(listener: (version: number) => void): () => void {
+        return this.navigationSeparatorService.subscribe(listener);
+    }
+
     // ========== File/Pinned Notes Methods (delegated to FileMetadataService) ==========
 
     async togglePin(filePath: string, context: NavigatorContext): Promise<void> {
         return this.fileService.togglePinnedNote(filePath, context);
+    }
+
+    async pinNotes(filePaths: string[], context: NavigatorContext): Promise<number> {
+        return this.fileService.pinNotes(filePaths, context);
     }
 
     isFilePinned(filePath: string, context?: NavigatorContext): boolean {
@@ -274,13 +340,14 @@ export class MetadataService {
      * @returns True if any changes were made
      */
     async cleanupAllMetadata(targetSettings: NotebookNavigatorSettings = this.settingsProvider.settings): Promise<boolean> {
-        const [folderChanges, tagChanges, fileChanges] = await Promise.all([
+        const [folderChanges, tagChanges, fileChanges, separatorChanges] = await Promise.all([
             this.folderService.cleanupFolderMetadata(targetSettings),
             this.tagService.cleanupTagMetadata(targetSettings),
-            this.fileService.cleanupPinnedNotes(targetSettings)
+            this.fileService.cleanupPinnedNotes(targetSettings),
+            this.navigationSeparatorService.cleanupSeparators(targetSettings)
         ]);
 
-        return folderChanges || tagChanges || fileChanges;
+        return folderChanges || tagChanges || fileChanges || separatorChanges;
     }
 
     /**
@@ -304,13 +371,14 @@ export class MetadataService {
         validators: CleanupValidators,
         targetSettings: NotebookNavigatorSettings = this.settingsProvider.settings
     ): Promise<boolean> {
-        const [folderChanges, tagChanges, fileChanges] = await Promise.all([
+        const [folderChanges, tagChanges, fileChanges, separatorChanges] = await Promise.all([
             this.folderService.cleanupWithValidators(validators, targetSettings),
             this.tagService.cleanupWithValidators(validators, targetSettings),
-            this.fileService.cleanupWithValidators(validators, targetSettings)
+            this.fileService.cleanupWithValidators(validators, targetSettings),
+            this.navigationSeparatorService.cleanupWithValidators(validators, targetSettings)
         ]);
 
-        return folderChanges || tagChanges || fileChanges;
+        return folderChanges || tagChanges || fileChanges || separatorChanges;
     }
 
     async getCleanupSummary(): Promise<MetadataCleanupSummary> {
@@ -323,9 +391,10 @@ export class MetadataService {
         const tags = Math.max(0, before.tags - after.tags);
         const files = Math.max(0, before.files - after.files);
         const pinnedNotes = Math.max(0, before.pinnedNotes - after.pinnedNotes);
-        const total = folders + tags + files + pinnedNotes;
+        const separators = Math.max(0, before.separators - after.separators);
+        const total = folders + tags + files + pinnedNotes + separators;
 
-        return { folders, tags, files, pinnedNotes, total };
+        return { folders, tags, files, pinnedNotes, separators, total };
     }
 
     private static cloneSettings(settings: NotebookNavigatorSettings): NotebookNavigatorSettings {
@@ -353,11 +422,14 @@ export class MetadataService {
 
         const pinnedNotes = settings.pinnedNotes ? Object.keys(settings.pinnedNotes).length : 0;
 
+        const separators = settings.navigationSeparators ? Object.keys(settings.navigationSeparators).length : 0;
+
         return {
             folders: folderKeys.size,
             tags: tagKeys.size,
             files: fileKeys.size,
-            pinnedNotes
+            pinnedNotes,
+            separators
         };
     }
 

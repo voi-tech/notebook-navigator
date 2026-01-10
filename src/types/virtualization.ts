@@ -21,6 +21,7 @@ import { ListPaneItemType, NavigationPaneItemType, VirtualFolder } from '../type
 import type { SearchResultMeta } from './search';
 import { TagTreeNode } from '../types/storage';
 import type { SearchShortcut, ShortcutEntry } from '../types/shortcuts';
+import type { NoteCountInfo } from '../types/noteCounts';
 
 export interface VirtualItem<T> {
     type: string;
@@ -85,6 +86,15 @@ export interface VirtualFolderItem {
     data: VirtualFolder;
     level: number;
     key: string;
+    isSelectable?: boolean;
+    isSelected?: boolean;
+    tagCollectionId?: string;
+    // Pre-computed child presence flag used for rendering the expander chevron and for keyboard expand/collapse decisions.
+    // Some virtual folders are backed by dynamic data (e.g. recent notes, shortcuts), where the source list can contain
+    // entries that do not render (deleted/missing items). This flag reflects whether expansion would render any children.
+    hasChildren?: boolean;
+    showFileCount?: boolean;
+    noteCount?: NoteCountInfo;
 }
 
 interface ShortcutNavigationBase {
@@ -136,10 +146,27 @@ export interface ShortcutTagNavItem extends ShortcutNavigationBase {
     displayName: string;
 }
 
-export interface NavigationBannerItem {
-    type: typeof NavigationPaneItemType.BANNER;
+export interface RootSpacerItem {
+    type: typeof NavigationPaneItemType.ROOT_SPACER;
     key: string;
-    path: string;
+    spacing: number;
+}
+
+export interface TopSpacerItem {
+    type: typeof NavigationPaneItemType.TOP_SPACER;
+    key: string;
+    hasSeparator?: boolean;
+}
+
+export interface BottomSpacerItem {
+    type: typeof NavigationPaneItemType.BOTTOM_SPACER;
+    key: string;
+}
+
+export interface ListSpacerItem {
+    type: typeof NavigationPaneItemType.LIST_SPACER;
+    key: string;
+    hasSeparator?: boolean;
 }
 
 export type CombinedNavigationItem =
@@ -153,7 +180,7 @@ export type CombinedNavigationItem =
     | RecentNoteNavItem
     | ShortcutSearchNavItem
     | ShortcutTagNavItem
-    | NavigationBannerItem
-    | { type: typeof NavigationPaneItemType.TOP_SPACER; key: string }
-    | { type: typeof NavigationPaneItemType.BOTTOM_SPACER; key: string }
-    | { type: typeof NavigationPaneItemType.LIST_SPACER; key: string };
+    | RootSpacerItem
+    | TopSpacerItem
+    | BottomSpacerItem
+    | ListSpacerItem;

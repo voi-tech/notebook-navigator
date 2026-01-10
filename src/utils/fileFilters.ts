@@ -18,10 +18,21 @@
 
 import { TFile, TFolder, App } from 'obsidian';
 import type { NotebookNavigatorSettings } from '../settings';
-import { shouldDisplayFile } from './fileTypeUtils';
+import { isPdfFile, shouldDisplayFile } from './fileTypeUtils';
+import {
+    getActiveFileVisibility,
+    getActiveHiddenFileNamePatterns,
+    getActiveHiddenFiles,
+    getActiveHiddenFolders,
+    getHiddenFolderMatcher
+} from './vaultProfiles';
 
 interface FileFilterOptions {
     showHiddenItems?: boolean;
+}
+
+export interface HiddenFileNameMatcher {
+    matches: (file: TFile) => boolean;
 }
 
 /**
@@ -29,6 +40,194 @@ interface FileFilterOptions {
  * Set to false to index all files regardless of exclusion settings
  */
 const SKIP_EXCLUDED_FOLDERS_IN_INDEX = false;
+
+const hiddenFileNameMatcherCache = new Map<string, HiddenFileNameMatcher>();
+
+export function clearHiddenFileNameMatcherCache(): void {
+    hiddenFileNameMatcherCache.clear();
+}
+
+function normalizeHiddenFileNamePatterns(patterns: string[]): string[] {
+    return Array.from(new Set(patterns.map(pattern => pattern.trim().toLowerCase()).filter(pattern => pattern.length > 0))).sort();
+}
+
+interface CompiledGlob {
+    glob: string;
+    parts: string[];
+    requiresPrefixMatch: boolean;
+    requiresSuffixMatch: boolean;
+    matchAll: boolean;
+}
+
+function isPathPattern(pattern: string): boolean {
+    return pattern.includes('/');
+}
+
+function normalizeVaultPath(value: string): string {
+    const normalized = value.trim().toLowerCase();
+    if (normalized.length === 0) {
+        return '';
+    }
+    return normalized.startsWith('/') ? normalized : `/${normalized}`;
+}
+
+function isExtensionLiteral(pattern: string): boolean {
+    if (!pattern.startsWith('.')) {
+        return false;
+    }
+    if (pattern.includes('/') || pattern.includes('*')) {
+        return false;
+    }
+    return pattern.length > 1;
+}
+
+function compileGlobPattern(glob: string): CompiledGlob {
+    if (glob === '*') {
+        return {
+            glob,
+            parts: [],
+            requiresPrefixMatch: false,
+            requiresSuffixMatch: false,
+            matchAll: true
+        };
+    }
+
+    const parts = glob.split('*').filter(part => part.length > 0);
+    return {
+        glob,
+        parts,
+        requiresPrefixMatch: !glob.startsWith('*'),
+        requiresSuffixMatch: !glob.endsWith('*'),
+        matchAll: false
+    };
+}
+
+function matchesCompiledGlobPattern(value: string, compiled: CompiledGlob): boolean {
+    if (compiled.matchAll) {
+        return true;
+    }
+
+    const { parts, requiresPrefixMatch, requiresSuffixMatch } = compiled;
+    if (parts.length === 0) {
+        return true;
+    }
+
+    let searchIndex = 0;
+    let partIndex = 0;
+
+    if (requiresPrefixMatch) {
+        const prefix = parts[0];
+        if (!value.startsWith(prefix)) {
+            return false;
+        }
+        searchIndex = prefix.length;
+        partIndex = 1;
+    }
+
+    const lastPartIndex = parts.length - 1;
+    const endIndex = requiresSuffixMatch ? lastPartIndex : parts.length;
+
+    for (; partIndex < endIndex; partIndex += 1) {
+        const part = parts[partIndex];
+        const foundIndex = value.indexOf(part, searchIndex);
+        if (foundIndex === -1) {
+            return false;
+        }
+        searchIndex = foundIndex + part.length;
+    }
+
+    if (requiresSuffixMatch) {
+        const suffix = parts[lastPartIndex];
+        const suffixIndex = value.lastIndexOf(suffix);
+        if (suffixIndex === -1) {
+            return false;
+        }
+        if (suffixIndex < searchIndex) {
+            return false;
+        }
+        return suffixIndex + suffix.length === value.length;
+    }
+
+    return true;
+}
+
+export function createHiddenFileNameMatcher(patterns: string[]): HiddenFileNameMatcher {
+    const normalized = normalizeHiddenFileNamePatterns(patterns);
+    const cacheKey = normalized.join('\u0000');
+    const cached = hiddenFileNameMatcherCache.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
+
+    const literalNames = new Set<string>();
+    const literalPaths = new Set<string>();
+    const literalExtensions = new Set<string>();
+    const nameGlobs: CompiledGlob[] = [];
+    const pathGlobs: CompiledGlob[] = [];
+    normalized.forEach(pattern => {
+        if (!pattern.includes('*')) {
+            if (isPathPattern(pattern)) {
+                literalPaths.add(normalizeVaultPath(pattern));
+                return;
+            }
+
+            if (isExtensionLiteral(pattern)) {
+                literalExtensions.add(pattern);
+                return;
+            }
+
+            literalNames.add(pattern);
+            return;
+        }
+
+        if (isPathPattern(pattern)) {
+            pathGlobs.push(compileGlobPattern(normalizeVaultPath(pattern)));
+            return;
+        }
+
+        nameGlobs.push(compileGlobPattern(pattern));
+    });
+
+    const matcher: HiddenFileNameMatcher = {
+        matches: (file: TFile) => {
+            const name = file.name.toLowerCase();
+            const basename = file.basename.toLowerCase();
+            const path = normalizeVaultPath(file.path);
+            const extension = file.extension ? `.${file.extension.toLowerCase()}` : '';
+
+            if (literalNames.has(name) || literalPaths.has(path) || (extension.length > 0 && literalExtensions.has(extension))) {
+                return true;
+            }
+
+            if (nameGlobs.some(glob => matchesCompiledGlobPattern(name, glob) || matchesCompiledGlobPattern(basename, glob))) {
+                return true;
+            }
+
+            if (pathGlobs.some(glob => matchesCompiledGlobPattern(path, glob))) {
+                return true;
+            }
+
+            return extension.length > 0 && nameGlobs.some(glob => matchesCompiledGlobPattern(extension, glob));
+        }
+    };
+
+    hiddenFileNameMatcherCache.set(cacheKey, matcher);
+    return matcher;
+}
+
+export function createHiddenFileNameMatcherForVisibility(patterns: string[], showHiddenItems: boolean): HiddenFileNameMatcher | null {
+    if (showHiddenItems || patterns.length === 0) {
+        return null;
+    }
+    return createHiddenFileNameMatcher(patterns);
+}
+
+export function shouldExcludeFileName(file: TFile, patterns: string[]): boolean {
+    if (patterns.length === 0) {
+        return false;
+    }
+    return createHiddenFileNameMatcher(patterns).matches(file);
+}
 
 /**
  * Checks if a file should be excluded based on its frontmatter properties
@@ -79,33 +278,6 @@ function matchesFolderPattern(folderName: string, pattern: string): boolean {
 }
 
 /**
- * Checks if a path matches a pattern with wildcard support
- * @param path - The path to check (e.g., "folder/subfolder")
- * @param pattern - The pattern to match against (e.g., "/folder/*" or "/folder/sub*")
- * @returns true if the path matches the pattern
- */
-function matchesPathPattern(path: string, pattern: string): boolean {
-    // Remove leading slash from both for consistent comparison
-    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-    const cleanPattern = pattern.startsWith('/') ? pattern.slice(1) : pattern;
-
-    // No wildcards - exact match required
-    if (!cleanPattern.includes('*')) {
-        return cleanPath === cleanPattern;
-    }
-
-    // Convert wildcard pattern to regex
-    // First escape all special regex characters except *
-    const regexPattern = cleanPattern
-        .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // Escape special regex chars
-        .replace(/\*/g, '.*'); // Then replace * with .* for wildcard matching
-
-    // Test if path matches the pattern
-    const regex = new RegExp(`^${regexPattern}$`);
-    return regex.test(cleanPath);
-}
-
-/**
  * Checks if a folder should be excluded based on the patterns
  * Supports both name-based patterns and path-based patterns (starting with /)
  * @param folderName - The folder name to check (e.g., "archive")
@@ -114,19 +286,19 @@ function matchesPathPattern(path: string, pattern: string): boolean {
  * @returns true if the folder should be excluded
  */
 export function shouldExcludeFolder(folderName: string, patterns: string[], folderPath?: string): boolean {
-    return patterns.some(pattern => {
-        // Path-based pattern (starts with /)
-        if (pattern.startsWith('/')) {
-            // Path-based patterns require the full path to match
-            if (!folderPath) return false;
+    const pathMatcher = getHiddenFolderMatcher(patterns).matches;
+    const hasNamePattern = patterns.some(pattern => !pattern.startsWith('/') && matchesFolderPattern(folderName, pattern));
 
-            // Use wildcard matching for path patterns
-            return matchesPathPattern(folderPath, pattern);
-        }
+    if (hasNamePattern) {
+        return true;
+    }
 
-        // Name-based pattern - matches folder name anywhere in the vault
-        return matchesFolderPattern(folderName, pattern);
-    });
+    if (!folderPath) {
+        return false;
+    }
+
+    const normalizedPath = folderPath.startsWith('/') ? folderPath : `/${folderPath}`;
+    return pathMatcher(normalizedPath);
 }
 
 /**
@@ -135,10 +307,14 @@ export function shouldExcludeFolder(folderName: string, patterns: string[], fold
 function isFileInExcludedFolder(file: TFile, excludedFolderPatterns: string[]): boolean {
     if (!file || excludedFolderPatterns.length === 0) return false;
 
+    const pathMatcher = getHiddenFolderMatcher(excludedFolderPatterns).matches;
+    const namePatterns = excludedFolderPatterns.filter(pattern => !pattern.startsWith('/'));
+    const matchesNamePattern = (name: string) => namePatterns.some(pattern => matchesFolderPattern(name, pattern));
+
     let currentFolder: TFolder | null = file.parent;
     while (currentFolder) {
-        // Pass both folder name and path for proper pattern matching
-        if (shouldExcludeFolder(currentFolder.name, excludedFolderPatterns, currentFolder.path)) {
+        const normalizedPath = currentFolder.path.startsWith('/') ? currentFolder.path : `/${currentFolder.path}`;
+        if (matchesNamePattern(currentFolder.name) || pathMatcher(normalizedPath)) {
             return true;
         }
         currentFolder = currentFolder.parent;
@@ -154,36 +330,19 @@ function isFileInExcludedFolder(file: TFile, excludedFolderPatterns: string[]): 
 export function isFolderInExcludedFolder(folder: TFolder, excludedFolderPatterns: string[]): boolean {
     if (!folder || excludedFolderPatterns.length === 0) return false;
 
-    // Check if this folder itself is excluded
-    if (shouldExcludeFolder(folder.name, excludedFolderPatterns, folder.path)) {
+    const pathMatcher = getHiddenFolderMatcher(excludedFolderPatterns).matches;
+    const namePatterns = excludedFolderPatterns.filter(pattern => !pattern.startsWith('/'));
+    const matchesNamePattern = (name: string) => namePatterns.some(pattern => matchesFolderPattern(name, pattern));
+
+    const normalizedFolderPath = folder.path.startsWith('/') ? folder.path : `/${folder.path}`;
+    if (pathMatcher(normalizedFolderPath) || matchesNamePattern(folder.name)) {
         return true;
     }
 
-    // For wildcard patterns, we need to check if any parent path would match
-    // For example, if pattern is "/_*" and folder is "_folder/subfolder/deep",
-    // we need to check if "_folder" matches the pattern
-    for (const pattern of excludedFolderPatterns) {
-        if (pattern.startsWith('/') && pattern.includes('*')) {
-            // This is a path-based wildcard pattern
-            // Check each level of the path to see if it would be excluded
-            const pathParts = folder.path.split('/');
-            let currentPath = '';
-
-            for (const part of pathParts) {
-                currentPath = currentPath ? `${currentPath}/${part}` : part;
-                if (matchesPathPattern(currentPath, pattern)) {
-                    // This level of the path matches the exclusion pattern
-                    return true;
-                }
-            }
-        }
-    }
-
-    // Check all parent folders for exact matches
     let currentFolder: TFolder | null = folder.parent;
     while (currentFolder) {
-        // Pass both folder name and path for proper pattern matching
-        if (shouldExcludeFolder(currentFolder.name, excludedFolderPatterns, currentFolder.path)) {
+        const normalizedPath = currentFolder.path.startsWith('/') ? currentFolder.path : `/${currentFolder.path}`;
+        if (pathMatcher(normalizedPath) || matchesNamePattern(currentFolder.name)) {
             return true;
         }
         currentFolder = currentFolder.parent;
@@ -206,6 +365,8 @@ export function cleanupExclusionPatterns(existingPatterns: string[], newPattern:
         return [...existingPatterns, newPattern];
     }
 
+    const matcher = getHiddenFolderMatcher([newPattern]).matches;
+
     // Filter out patterns that would be made redundant by the new pattern
     const cleanedPatterns = existingPatterns.filter(existing => {
         // Keep name-based patterns (they work differently)
@@ -213,23 +374,8 @@ export function cleanupExclusionPatterns(existingPatterns: string[], newPattern:
             return true;
         }
 
-        // Remove leading slashes for comparison
-        const cleanNew = newPattern.startsWith('/') ? newPattern.slice(1) : newPattern;
-        const cleanExisting = existing.startsWith('/') ? existing.slice(1) : existing;
-
-        // If new pattern has no wildcards, check if existing is a child path
-        if (!cleanNew.includes('*')) {
-            // Check two cases:
-            // 1. Exact match: new="/folder" removes existing="/folder"
-            // 2. Child path: new="/folder" removes existing="/folder/subfolder"
-            const newWithSlash = cleanNew.endsWith('/') ? cleanNew : `${cleanNew}/`;
-            const isChildPath = cleanExisting.startsWith(newWithSlash) || cleanExisting === cleanNew;
-            return !isChildPath; // Keep pattern if it's NOT a child
-        }
-
-        // If new pattern has wildcards, check if it matches the existing pattern
-        // Example: new="/folder/*" removes existing="/folder/subfolder"
-        return !matchesPathPattern(existing, newPattern);
+        const normalizedExisting = existing.startsWith('/') ? existing : `/${existing}`;
+        return !matcher(normalizedExisting);
     });
 
     // Add the new pattern
@@ -302,21 +448,43 @@ export function hasSubfolders(folder: TFolder, excludePatterns: string[], showHi
 /**
  * Returns true if a file passes exclusion rules based on settings
  * - Excludes markdown files with matching frontmatter properties
+ * - Excludes files with matching filename patterns
  * - Optionally excludes files in excluded folders when indexing is configured to skip them
  */
-function passesExclusionFilters(file: TFile, settings: NotebookNavigatorSettings, app: App, options?: FileFilterOptions): boolean {
-    const excludedProperties = settings.excludedFiles;
-    const excludedFolderPatterns = settings.excludedFolders;
-    // Skip frontmatter-based exclusion when showHiddenItems override is provided from options
-    const includeHiddenFiles = options?.showHiddenItems ?? false;
+interface ExclusionFilterState {
+    excludedProperties: string[];
+    excludedFolderPatterns: string[];
+    includeHiddenItems: boolean;
+    fileNameMatcher: HiddenFileNameMatcher | null;
+}
+
+function createExclusionFilterState(settings: NotebookNavigatorSettings, options?: FileFilterOptions): ExclusionFilterState {
+    const includeHiddenItems = options?.showHiddenItems ?? false;
+    const excludedFileNamePatterns = getActiveHiddenFileNamePatterns(settings);
+    const fileNameMatcher = createHiddenFileNameMatcherForVisibility(excludedFileNamePatterns, includeHiddenItems);
+
+    return {
+        excludedProperties: getActiveHiddenFiles(settings),
+        excludedFolderPatterns: getActiveHiddenFolders(settings),
+        includeHiddenItems,
+        fileNameMatcher
+    };
+}
+
+function passesExclusionFilters(file: TFile, state: ExclusionFilterState, app: App): boolean {
+    const { excludedProperties, excludedFolderPatterns, includeHiddenItems, fileNameMatcher } = state;
 
     // Frontmatter based exclusion (markdown only)
     if (
-        !includeHiddenFiles &&
+        !includeHiddenItems &&
         file.extension === 'md' &&
         excludedProperties.length > 0 &&
         shouldExcludeFile(file, excludedProperties, app)
     ) {
+        return false;
+    }
+
+    if (fileNameMatcher && fileNameMatcher.matches(file)) {
         return false;
     }
 
@@ -336,7 +504,42 @@ function passesExclusionFilters(file: TFile, settings: NotebookNavigatorSettings
 export function getFilteredMarkdownFiles(app: App, settings: NotebookNavigatorSettings, options?: FileFilterOptions): TFile[] {
     if (!app || !settings) return [];
 
-    return app.vault.getMarkdownFiles().filter(file => passesExclusionFilters(file, settings, app, options));
+    const filterState = createExclusionFilterState(settings, options);
+    return app.vault.getMarkdownFiles().filter(file => passesExclusionFilters(file, filterState, app));
+}
+
+/**
+ * Gets filtered indexable files from the vault (markdown + PDF).
+ */
+export function getFilteredMarkdownAndPdfFiles(app: App, settings: NotebookNavigatorSettings, options?: FileFilterOptions): TFile[] {
+    if (!app || !settings) return [];
+
+    const fileVisibility = getActiveFileVisibility(settings);
+    const filterState = createExclusionFilterState(settings, options);
+    const result: TFile[] = [];
+
+    for (const file of app.vault.getFiles()) {
+        if (file.extension === 'md') {
+            if (passesExclusionFilters(file, filterState, app)) {
+                result.push(file);
+            }
+            continue;
+        }
+
+        if (!isPdfFile(file)) {
+            continue;
+        }
+
+        if (!shouldDisplayFile(file, fileVisibility, app)) {
+            continue;
+        }
+
+        if (passesExclusionFilters(file, filterState, app)) {
+            result.push(file);
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -347,12 +550,13 @@ export function getFilteredMarkdownFiles(app: App, settings: NotebookNavigatorSe
 export function getFilteredDocumentFiles(app: App, settings: NotebookNavigatorSettings, options?: FileFilterOptions): TFile[] {
     if (!app || !settings) return [];
 
+    const filterState = createExclusionFilterState(settings, options);
     return app.vault.getFiles().filter(file => {
         // Only include document files (md, canvas, base)
         const isDocument = file.extension === 'md' || file.extension === 'canvas' || file.extension === 'base';
         if (!isDocument) return false;
 
-        return passesExclusionFilters(file, settings, app, options);
+        return passesExclusionFilters(file, filterState, app);
     });
 }
 
@@ -365,12 +569,15 @@ export function getFilteredDocumentFiles(app: App, settings: NotebookNavigatorSe
 export function getFilteredFiles(app: App, settings: NotebookNavigatorSettings, options?: FileFilterOptions): TFile[] {
     if (!app || !settings) return [];
 
+    const fileVisibility = getActiveFileVisibility(settings);
+    const filterState = createExclusionFilterState(settings, options);
+
     return app.vault.getFiles().filter(file => {
         // Filter by visibility settings
-        if (!shouldDisplayFile(file, settings.fileVisibility, app)) {
+        if (!shouldDisplayFile(file, fileVisibility, app)) {
             return false;
         }
 
-        return passesExclusionFilters(file, settings, app, options);
+        return passesExclusionFilters(file, filterState, app);
     });
 }

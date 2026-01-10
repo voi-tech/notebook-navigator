@@ -16,59 +16,130 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Setting } from 'obsidian';
+import { Platform, Setting } from 'obsidian';
 import { strings } from '../../i18n';
 import { isFolderNoteCreationPreference } from '../../types/folderNote';
 import { isTagSortOrder } from '../types';
-import { normalizeTagPath } from '../../utils/tagUtils';
 import type { SettingsTabContext } from './SettingsTabContext';
-import { resetHiddenToggleIfNoSources } from '../../utils/exclusionUtils';
+import { createSettingGroupFactory } from '../settingGroups';
+import { setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
 
 /** Renders the folders and tags settings tab */
 export function renderFoldersTagsTab(context: SettingsTabContext): void {
-    const {
-        containerEl,
-        plugin,
-        createDebouncedTextSetting,
-        createDebouncedTextAreaSetting,
-        notifyShowTagsVisibility,
-        registerShowTagsListener
-    } = context;
+    const { containerEl, plugin, addToggleSetting } = context;
+    const createGroup = createSettingGroupFactory(containerEl);
 
-    new Setting(containerEl).setName(strings.settings.sections.folders).setHeading();
+    const topGroup = createGroup(undefined);
 
-    new Setting(containerEl)
-        .setName(strings.settings.items.showRootFolder.name)
-        .setDesc(strings.settings.items.showRootFolder.desc)
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.showRootFolder).onChange(async value => {
-                plugin.settings.showRootFolder = value;
+    if (!Platform.isMobile) {
+        addToggleSetting(
+            topGroup.addSetting,
+            strings.settings.items.autoSelectFirstFileOnFocusChange.name,
+            strings.settings.items.autoSelectFirstFileOnFocusChange.desc,
+            () => plugin.settings.autoSelectFirstFileOnFocusChange,
+            value => {
+                plugin.settings.autoSelectFirstFileOnFocusChange = value;
+            }
+        );
+    }
+
+    addToggleSetting(
+        topGroup.addSetting,
+        strings.settings.items.autoExpandFoldersTags.name,
+        strings.settings.items.autoExpandFoldersTags.desc,
+        () => plugin.settings.autoExpandFoldersTags,
+        value => {
+            plugin.settings.autoExpandFoldersTags = value;
+        }
+    );
+
+    if (!Platform.isMobile) {
+        const springLoadedFoldersSetting = topGroup.addSetting(setting => {
+            setting.setName(strings.settings.items.springLoadedFolders.name).setDesc(strings.settings.items.springLoadedFolders.desc);
+        });
+        const springLoadedFoldersSubSettings = wireToggleSettingWithSubSettings(
+            springLoadedFoldersSetting,
+            () => plugin.settings.springLoadedFolders,
+            async value => {
+                plugin.settings.springLoadedFolders = value;
                 await plugin.saveSettingsAndUpdate();
-            })
+            }
         );
 
-    new Setting(containerEl)
-        .setName(strings.settings.items.inheritFolderColors.name)
-        .setDesc(strings.settings.items.inheritFolderColors.desc)
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.inheritFolderColors).onChange(async value => {
-                plugin.settings.inheritFolderColors = value;
-                await plugin.saveSettingsAndUpdate();
-            })
-        );
+        new Setting(springLoadedFoldersSubSettings)
+            .setName(strings.settings.items.springLoadedFoldersInitialDelay.name)
+            .setDesc(strings.settings.items.springLoadedFoldersInitialDelay.desc)
+            .addSlider(slider =>
+                slider
+                    .setLimits(0.1, 2, 0.1)
+                    .setValue(plugin.settings.springLoadedFoldersInitialDelay)
+                    .setInstant(false)
+                    .setDynamicTooltip()
+                    .onChange(async value => {
+                        plugin.settings.springLoadedFoldersInitialDelay = Math.round(value * 10) / 10;
+                        await plugin.saveSettingsAndUpdate();
+                    })
+            );
 
-    new Setting(containerEl)
-        .setName(strings.settings.items.enableFolderNotes.name)
-        .setDesc(strings.settings.items.enableFolderNotes.desc)
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.enableFolderNotes).onChange(async value => {
-                plugin.settings.enableFolderNotes = value;
-                await plugin.saveSettingsAndUpdate();
-                folderNotesSettingsEl.toggle(value);
-            })
-        );
+        new Setting(springLoadedFoldersSubSettings)
+            .setName(strings.settings.items.springLoadedFoldersSubsequentDelay.name)
+            .setDesc(strings.settings.items.springLoadedFoldersSubsequentDelay.desc)
+            .addSlider(slider =>
+                slider
+                    .setLimits(0.1, 2, 0.1)
+                    .setValue(plugin.settings.springLoadedFoldersSubsequentDelay)
+                    .setInstant(false)
+                    .setDynamicTooltip()
+                    .onChange(async value => {
+                        plugin.settings.springLoadedFoldersSubsequentDelay = Math.round(value * 10) / 10;
+                        await plugin.saveSettingsAndUpdate();
+                    })
+            );
+    }
 
-    const folderNotesSettingsEl = containerEl.createDiv('nn-sub-settings');
+    const foldersGroup = createGroup(strings.settings.sections.folders);
+
+    addToggleSetting(
+        foldersGroup.addSetting,
+        strings.settings.items.showFolderIcons.name,
+        strings.settings.items.showFolderIcons.desc,
+        () => plugin.settings.showFolderIcons,
+        value => {
+            plugin.settings.showFolderIcons = value;
+        }
+    );
+
+    addToggleSetting(
+        foldersGroup.addSetting,
+        strings.settings.items.showRootFolder.name,
+        strings.settings.items.showRootFolder.desc,
+        () => plugin.settings.showRootFolder,
+        value => {
+            plugin.settings.showRootFolder = value;
+        }
+    );
+
+    addToggleSetting(
+        foldersGroup.addSetting,
+        strings.settings.items.inheritFolderColors.name,
+        strings.settings.items.inheritFolderColors.desc,
+        () => plugin.settings.inheritFolderColors,
+        value => {
+            plugin.settings.inheritFolderColors = value;
+        }
+    );
+
+    const enableFolderNotesSetting = foldersGroup.addSetting(setting => {
+        setting.setName(strings.settings.items.enableFolderNotes.name).setDesc(strings.settings.items.enableFolderNotes.desc);
+    });
+    const folderNotesSettingsEl = wireToggleSettingWithSubSettings(
+        enableFolderNotesSetting,
+        () => plugin.settings.enableFolderNotes,
+        async value => {
+            plugin.settings.enableFolderNotes = value;
+            await plugin.saveSettingsAndUpdate();
+        }
+    );
 
     new Setting(folderNotesSettingsEl)
         .setName(strings.settings.items.folderNoteType.name)
@@ -89,7 +160,8 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
                 });
         });
 
-    createDebouncedTextSetting(
+    // Use context directly to satisfy eslint exhaustive-deps requirements
+    context.createDebouncedTextSetting(
         folderNotesSettingsEl,
         strings.settings.items.folderNoteName.name,
         strings.settings.items.folderNoteName.desc,
@@ -100,7 +172,7 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
         }
     );
 
-    const folderNotePropertiesSetting = createDebouncedTextAreaSetting(
+    const folderNotePropertiesSetting = context.createDebouncedTextAreaSetting(
         folderNotesSettingsEl,
         strings.settings.items.folderNoteProperties.name,
         strings.settings.items.folderNoteProperties.desc,
@@ -118,8 +190,6 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
     );
     folderNotePropertiesSetting.controlEl.addClass('nn-setting-wide-input');
 
-    let pinCreatedFolderNoteSetting: Setting | null = null;
-
     new Setting(folderNotesSettingsEl)
         .setName(strings.settings.items.hideFolderNoteInList.name)
         .setDesc(strings.settings.items.hideFolderNoteInList.desc)
@@ -127,13 +197,10 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
             toggle.setValue(plugin.settings.hideFolderNoteInList).onChange(async value => {
                 plugin.settings.hideFolderNoteInList = value;
                 await plugin.saveSettingsAndUpdate();
-                if (pinCreatedFolderNoteSetting) {
-                    pinCreatedFolderNoteSetting.settingEl.toggleClass('nn-setting-hidden', value);
-                }
             })
         );
 
-    pinCreatedFolderNoteSetting = new Setting(folderNotesSettingsEl)
+    new Setting(folderNotesSettingsEl)
         .setName(strings.settings.items.pinCreatedFolderNote.name)
         .setDesc(strings.settings.items.pinCreatedFolderNote.desc)
         .addToggle(toggle =>
@@ -143,23 +210,40 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
             })
         );
 
-    pinCreatedFolderNoteSetting.settingEl.toggleClass('nn-setting-hidden', plugin.settings.hideFolderNoteInList);
+    const tagsGroup = createGroup(strings.settings.sections.tags);
 
-    new Setting(containerEl).setName(strings.settings.sections.tags).setHeading();
+    const showTagsSetting = tagsGroup.addSetting(setting => {
+        setting.setName(strings.settings.items.showTags.name).setDesc(strings.settings.items.showTags.desc);
+    });
+    const tagSubSettingsEl = wireToggleSettingWithSubSettings(
+        showTagsSetting,
+        () => plugin.settings.showTags,
+        async value => {
+            plugin.settings.showTags = value;
+            await plugin.saveSettingsAndUpdate();
+            context.notifyShowTagsVisibility(value);
+        }
+    );
 
-    new Setting(containerEl)
-        .setName(strings.settings.items.showTags.name)
-        .setDesc(strings.settings.items.showTags.desc)
+    new Setting(tagSubSettingsEl)
+        .setName(strings.settings.items.showTagIcons.name)
+        .setDesc(strings.settings.items.showTagIcons.desc)
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.showTags).onChange(async value => {
-                plugin.settings.showTags = value;
+            toggle.setValue(plugin.settings.showTagIcons).onChange(async value => {
+                plugin.settings.showTagIcons = value;
                 await plugin.saveSettingsAndUpdate();
-                tagSubSettingsEl.toggle(value);
-                notifyShowTagsVisibility(value);
             })
         );
 
-    const tagSubSettingsEl = containerEl.createDiv('nn-sub-settings');
+    new Setting(tagSubSettingsEl)
+        .setName(strings.settings.items.inheritTagColors.name)
+        .setDesc(strings.settings.items.inheritTagColors.desc)
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.inheritTagColors).onChange(async value => {
+                plugin.settings.inheritTagColors = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
 
     /** Setting for choosing tag sort order in the navigation pane */
     new Setting(tagSubSettingsEl)
@@ -171,13 +255,12 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
                 .addOption('alpha-desc', strings.settings.items.tagSortOrder.options.alphaDesc)
                 .addOption('frequency-asc', strings.settings.items.tagSortOrder.options.frequencyAsc)
                 .addOption('frequency-desc', strings.settings.items.tagSortOrder.options.frequencyDesc)
-                .setValue(plugin.settings.tagSortOrder)
-                .onChange(async value => {
+                .setValue(plugin.getTagSortOrder())
+                .onChange(value => {
                     if (!isTagSortOrder(value)) {
                         return;
                     }
-                    plugin.settings.tagSortOrder = value;
-                    await plugin.saveSettingsAndUpdate();
+                    plugin.setTagSortOrder(value);
                 });
         });
 
@@ -211,34 +294,7 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
             })
         );
 
-    const hiddenTagsSetting = createDebouncedTextSetting(
-        tagSubSettingsEl,
-        strings.settings.items.hiddenTags.name,
-        strings.settings.items.hiddenTags.desc,
-        strings.settings.items.hiddenTags.placeholder,
-        () => plugin.settings.hiddenTags.join(', '),
-        value => {
-            const normalizedHiddenTags = value
-                .split(',')
-                .map(entry => normalizeTagPath(entry))
-                .filter((entry): entry is string => entry !== null);
-
-            plugin.settings.hiddenTags = Array.from(new Set(normalizedHiddenTags));
-            resetHiddenToggleIfNoSources({
-                settings: plugin.settings,
-                showHiddenItems: plugin.getUXPreferences().showHiddenItems,
-                setShowHiddenItems: value => plugin.setShowHiddenItems(value)
-            });
-        }
-    );
-    hiddenTagsSetting.controlEl.addClass('nn-setting-wide-input');
-
-    /** Toggles visibility of tag sub-settings based on show tags setting */
-    const updateTagSection = (visible: boolean) => {
-        tagSubSettingsEl.toggle(visible);
-    };
-
-    registerShowTagsListener(updateTagSection);
-    updateTagSection(plugin.settings.showTags);
-    folderNotesSettingsEl.toggle(plugin.settings.enableFolderNotes);
+    context.registerShowTagsListener(visible => {
+        setElementVisible(tagSubSettingsEl, visible);
+    });
 }

@@ -1,6 +1,30 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import { describe, it, expect } from 'vitest';
-import { buildTagTreeFromDatabase, findTagNode } from '../../src/utils/tagTree';
-import { normalizeTagPathValue } from '../../src/utils/tagPrefixMatcher';
+import {
+    buildTagTreeFromDatabase,
+    findTagNode,
+    collectTagFilePaths,
+    collectAllTagPaths,
+    getTotalNoteCount,
+    excludeFromTagTree
+} from '../../src/utils/tagTree';
+import { createHiddenTagMatcher, normalizeTagPathValue } from '../../src/utils/tagPrefixMatcher';
 import type { IndexedDBStorage, FileData } from '../../src/storage/IndexedDBStorage';
 import type { TagTreeNode } from '../../src/types/storage';
 
@@ -16,16 +40,26 @@ function createMockDb(files: MockFile[]): IndexedDBStorage {
     }));
 
     return {
-        getAllFiles: () => payload
+        getAllFiles: () => payload,
+        forEachFile: (callback: (path: string, data: FileData) => void) => {
+            payload.forEach(({ path, data }) => callback(path, data));
+        }
     } as unknown as IndexedDBStorage;
 }
 
 function createFileData(tags: string[] | null): FileData {
     return {
         mtime: 0,
+        markdownPipelineMtime: 0,
+        tagsMtime: 0,
+        metadataMtime: 0,
+        fileThumbnailsMtime: 0,
         tags,
-        preview: null,
+        customProperty: null,
+        previewStatus: 'unprocessed',
         featureImage: null,
+        featureImageStatus: 'unprocessed',
+        featureImageKey: null,
         metadata: null
     };
 }
@@ -146,5 +180,76 @@ describe('tag tree hardening', () => {
         const tree = new Map<string, TagTreeNode>([['root', root]]);
         expect(findTagNode(tree, 'root')).toBe(root);
         expect(findTagNode(tree, 'missing')).toBeNull();
+    });
+
+    it('guards traversal helpers against malformed cycles introduced by invalid tags', () => {
+        const root: TagTreeNode = {
+            name: 'root',
+            path: 'root',
+            displayPath: 'root',
+            children: new Map(),
+            notesWithTag: new Set(['root.md'])
+        };
+        const child: TagTreeNode = {
+            name: 'child',
+            path: 'root//child',
+            displayPath: 'root//child',
+            children: new Map(),
+            notesWithTag: new Set(['child.md'])
+        };
+
+        // Simulate a corrupted structure where the child references the parent.
+        root.children.set(child.path, child);
+        child.children.set(root.path, root);
+
+        const files = collectTagFilePaths(root);
+        expect(files).toEqual(new Set(['root.md', 'child.md']));
+
+        const paths = Array.from(collectAllTagPaths(root)).sort();
+        expect(paths).toEqual(['root', 'root//child']);
+
+        expect(getTotalNoteCount(root)).toBe(2);
+    });
+});
+
+describe('tagged count visibility', () => {
+    it('excludes files with only hidden tags when hidden tags are filtered', () => {
+        const db = createMockDb([
+            { path: 'visible.md', tags: ['projects/work'] },
+            { path: 'hidden.md', tags: ['archive/secret'] }
+        ]);
+
+        const filtered = buildTagTreeFromDatabase(db, undefined, undefined, ['archive'], false);
+        expect(filtered.tagged).toBe(1);
+
+        const unfiltered = buildTagTreeFromDatabase(db, undefined, undefined, ['archive'], true);
+        expect(unfiltered.tagged).toBe(2);
+    });
+});
+
+describe('excludeFromTagTree', () => {
+    it('filters trailing wildcard tag patterns', () => {
+        const child: TagTreeNode = {
+            name: 'client',
+            path: 'projects/client',
+            displayPath: 'projects/client',
+            children: new Map(),
+            notesWithTag: new Set(['child.md'])
+        };
+        const root: TagTreeNode = {
+            name: 'projects',
+            path: 'projects',
+            displayPath: 'projects',
+            children: new Map([[child.path, child]]),
+            notesWithTag: new Set(['root.md'])
+        };
+
+        const tree = new Map<string, TagTreeNode>([[root.path, root]]);
+        const matcher = createHiddenTagMatcher(['projects/*']);
+        const filtered = excludeFromTagTree(tree, matcher);
+
+        expect(filtered.has(root.path)).toBe(true);
+        const filteredRoot = filtered.get(root.path);
+        expect(filteredRoot?.children.size).toBe(0);
     });
 });

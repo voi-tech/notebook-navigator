@@ -1,3 +1,21 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { useMemo } from 'react';
 import { useServices, useMetadataService } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
@@ -6,8 +24,10 @@ import { useSelectionState } from '../context/SelectionContext';
 import { useFileCache } from '../context/StorageContext';
 import { useExpansionState } from '../context/ExpansionContext';
 import { strings } from '../i18n';
-import { ItemType, UNTAGGED_TAG_ID } from '../types';
+import { ItemType, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import { hasSubfolders } from '../utils/fileFilters';
+import { getVirtualTagCollection, VIRTUAL_TAG_COLLECTION_IDS } from '../utils/virtualTagCollections';
+import { getActiveHiddenFolders } from '../utils/vaultProfiles';
 
 export type BreadcrumbTargetType = 'folder' | 'tag' | 'none';
 
@@ -31,24 +51,26 @@ export function useListPaneTitle(): UseListPaneTitleResult {
     const settings = useSettingsState();
     const uxPreferences = useUXPreferences();
     const showHiddenItems = uxPreferences.showHiddenItems;
+    // Memoized list of folders hidden by the active vault profile
+    const hiddenFolders = useMemo(() => getActiveHiddenFolders(settings), [settings]);
     const selectionState = useSelectionState();
     const { getTagDisplayPath } = useFileCache();
     const expansionState = useExpansionState();
     const metadataService = useMetadataService();
 
+    // Determines the icon to display in the list pane header based on selection type and icon settings
     const iconName = useMemo(() => {
-        if (!settings.showIcons) {
-            return '';
-        }
-
         if (selectionState.selectionType === ItemType.FOLDER && selectionState.selectedFolder) {
+            if (!settings.showFolderIcons) {
+                return '';
+            }
             const folder = selectionState.selectedFolder;
             const customIcon = metadataService.getFolderIcon(folder.path);
             if (customIcon) {
                 return customIcon;
             }
 
-            const excludedFolders = settings.excludedFolders;
+            const excludedFolders = hiddenFolders;
             const showHiddenFolders = showHiddenItems;
             const hasChildren = hasSubfolders(folder, excludedFolders, showHiddenFolders);
             const isExpanded = expansionState.expandedFolders.has(folder.path);
@@ -56,6 +78,9 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         }
 
         if (selectionState.selectionType === ItemType.TAG && selectionState.selectedTag) {
+            if (!settings.showTagIcons) {
+                return '';
+            }
             return metadataService.getTagIcon(selectionState.selectedTag) || 'lucide-tags';
         }
 
@@ -66,9 +91,10 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         selectionState.selectedFolder,
         selectionState.selectedTag,
         selectionState.selectionType,
-        settings.excludedFolders,
+        hiddenFolders,
         showHiddenItems,
-        settings.showIcons
+        settings.showFolderIcons,
+        settings.showTagIcons
     ]);
 
     const { desktopTitle, breadcrumbSegments } = useMemo(() => {
@@ -109,6 +135,22 @@ export function useListPaneTitle(): UseListPaneTitleResult {
 
         if (selectionState.selectionType === ItemType.TAG && selectionState.selectedTag) {
             const tag = selectionState.selectedTag;
+
+            // Handle virtual tag collection showing all tagged notes
+            if (tag === TAGGED_TAG_ID) {
+                const taggedLabel = getVirtualTagCollection(VIRTUAL_TAG_COLLECTION_IDS.TAGGED).getLabel();
+                const taggedBreadcrumb: BreadcrumbSegment[] = [
+                    {
+                        label: taggedLabel,
+                        targetType: 'none',
+                        isLast: true
+                    }
+                ];
+                return {
+                    desktopTitle: taggedLabel,
+                    breadcrumbSegments: taggedBreadcrumb
+                };
+            }
 
             if (tag === UNTAGGED_TAG_ID) {
                 const untaggedBreadcrumb: BreadcrumbSegment[] = [
@@ -167,7 +209,9 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         desktopTitle,
         breadcrumbSegments,
         iconName,
-        showIcon: settings.showIcons && iconName.length > 0,
+        showIcon:
+            (selectionState.selectionType === ItemType.FOLDER && settings.showFolderIcons && iconName.length > 0) ||
+            (selectionState.selectionType === ItemType.TAG && settings.showTagIcons && iconName.length > 0),
         selectionType: selectionState.selectionType
     };
 }

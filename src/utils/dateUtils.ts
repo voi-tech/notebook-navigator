@@ -1,3 +1,21 @@
+/*
+ * Notebook Navigator - Plugin for Obsidian
+ * Copyright (c) 2025 Johan Sanneblad
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { TFile } from 'obsidian';
 /*
  * Notebook Navigator - Plugin for Obsidian
@@ -46,11 +64,23 @@ export class DateUtils {
         en: 'enUS', // English defaults to US
         'en-gb': 'enGB', // English (GB)
         zh: 'zhCN', // Chinese defaults to Simplified
-        'zh-tw': 'zhTW', // Chinese Traditional
+        'zh-cn': 'zhCN', // Chinese Simplified variants
+        'zh-tw': 'zhTW', // Chinese Traditional variants
         pt: 'pt', // Portuguese (Portugal)
         'pt-br': 'ptBR', // Portuguese (Brazil)
         no: 'nb' // Norwegian (Bokmål) - date-fns uses 'nb' for Norwegian
     };
+
+    /**
+     * Normalizes language codes for consistent lookups.
+     */
+    private static normalizeLanguageCode(language: string): string {
+        if (!language) {
+            return 'en';
+        }
+
+        return language.replace(/_/g, '-').toLowerCase();
+    }
 
     /**
      * Languages that use lowercase month names by default in date-fns
@@ -84,18 +114,43 @@ export class DateUtils {
     }
 
     /**
+     * Get the current Obsidian language setting normalized for lookups
+     */
+    private static getNormalizedLanguage(): string {
+        return DateUtils.normalizeLanguageCode(DateUtils.getObsidianLanguage());
+    }
+
+    /**
      * Get the appropriate date-fns locale for the current Obsidian language
      * @returns date-fns locale object
      */
-    private static getDateFnsLocale(): Locale {
-        const obsidianLang = DateUtils.getObsidianLanguage();
+    private static getDateFnsLocale(normalizedLanguage?: string): Locale {
+        const normalizedLang = normalizedLanguage ?? DateUtils.getNormalizedLanguage();
 
         // Check if this language has a different locale name in date-fns
-        const localeName = DateUtils.localeExceptions[obsidianLang] || obsidianLang;
+        const localeName = DateUtils.localeExceptions[normalizedLang] || normalizedLang;
 
         // Safely access the locale from the imported locales object
         const localesMap = locales as LocalesMap;
         return localesMap[localeName] || locales.enUS;
+    }
+
+    private static formatWithFallback(
+        date: Date,
+        formatString: string,
+        fallbackFormat: string,
+        locale: Locale,
+        formatType: 'date' | 'time'
+    ): string {
+        try {
+            return format(date, formatString, { locale });
+        } catch {
+            try {
+                return format(date, fallbackFormat, { locale });
+            } catch {
+                return formatType === 'time' ? date.toLocaleTimeString() : date.toLocaleDateString();
+            }
+        }
     }
 
     /**
@@ -109,17 +164,7 @@ export class DateUtils {
         const date = new Date(timestamp);
         const locale = DateUtils.getDateFnsLocale();
 
-        try {
-            return format(date, dateFormat, { locale });
-        } catch {
-            // If invalid format string, fall back to a default format
-            try {
-                return format(date, 'PPP', { locale }); // localized date format
-            } catch {
-                // Last resort fallback
-                return date.toLocaleDateString();
-            }
-        }
+        return DateUtils.formatWithFallback(date, dateFormat, 'PPP', locale, 'date');
     }
 
     /**
@@ -130,6 +175,18 @@ export class DateUtils {
     private static capitalizeFirst(str: string): string {
         if (!str) return str;
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    /**
+     * Inserts a space between Chinese meridiem markers and the time portion.
+     * date-fns expects a space before the hour token when parsing zh formats.
+     */
+    private static normalizeMeridiemSpacing(value: string, normalizedLanguage: string): string {
+        if (!normalizedLanguage.startsWith('zh')) {
+            return value;
+        }
+
+        return value.replace(/(上午|下午|中午|凌晨|晚上)(\d)/g, '$1 $2');
     }
 
     /**
@@ -162,12 +219,12 @@ export class DateUtils {
             return strings.dateGroups.previous30Days;
         } else if (date.getFullYear() === now.getFullYear()) {
             // Same year - show month name
-            const locale = DateUtils.getDateFnsLocale();
+            const normalizedLanguage = DateUtils.getNormalizedLanguage();
+            const locale = DateUtils.getDateFnsLocale(normalizedLanguage);
             let monthName = format(date, 'MMMM', { locale });
 
             // Capitalize month name for languages that use lowercase
-            const obsidianLang = DateUtils.getObsidianLanguage();
-            if (DateUtils.lowercaseMonthLanguages.has(obsidianLang)) {
+            if (DateUtils.lowercaseMonthLanguages.has(normalizedLanguage)) {
                 monthName = DateUtils.capitalizeFirst(monthName);
             }
 
@@ -191,7 +248,7 @@ export class DateUtils {
 
         // Today and Yesterday groups - show time only
         if (group === strings.dateGroups.today || group === strings.dateGroups.yesterday) {
-            return format(date, timeFormat, { locale });
+            return DateUtils.formatWithFallback(date, timeFormat, 'p', locale, 'time');
         }
 
         // Previous 7 days - show weekday name
@@ -257,7 +314,11 @@ export class DateUtils {
             if (typeof value === 'string') {
                 // Use ISO format if dateFormat is empty
                 const formatToUse = dateFormat || ISO_DATE_FORMAT;
-                const parsedDate = parse(value, formatToUse, new Date());
+                const trimmedValue = value.trim();
+                const normalizedLanguage = DateUtils.getNormalizedLanguage();
+                const normalizedValue = DateUtils.normalizeMeridiemSpacing(trimmedValue, normalizedLanguage);
+                const locale = DateUtils.getDateFnsLocale(normalizedLanguage);
+                const parsedDate = parse(normalizedValue, formatToUse, new Date(), { locale });
 
                 // Check if parsing succeeded
                 if (!isNaN(parsedDate.getTime())) {

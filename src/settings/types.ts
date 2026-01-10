@@ -27,6 +27,14 @@ import type { SearchProvider } from '../types/search';
 /** Available sort options for file listing */
 export type SortOption = 'modified-desc' | 'modified-asc' | 'created-desc' | 'created-asc' | 'title-asc' | 'title-desc';
 
+/** Ordered list of sort options for validation and UI choices */
+export const SORT_OPTIONS: SortOption[] = ['modified-desc', 'modified-asc', 'created-desc', 'created-asc', 'title-asc', 'title-desc'];
+
+/** Type guard for validating sort option values */
+export function isSortOption(value: unknown): value is SortOption {
+    return typeof value === 'string' && SORT_OPTIONS.includes(value as SortOption);
+}
+
 /** Available orderings for tags in the navigation pane */
 export type TagSortOrder = 'alpha-asc' | 'alpha-desc' | 'frequency-asc' | 'frequency-desc';
 
@@ -41,8 +49,17 @@ export type ItemScope = 'all' | 'folders-only' | 'tags-only';
 /** Modifier key used for multi-select operations */
 export type MultiSelectModifier = 'cmdCtrl' | 'optionAlt';
 
+/** Display options for vault title */
+export type VaultTitleOption = 'header' | 'navigation';
+
 /** Display options for list pane title */
 export type ListPaneTitleOption = 'header' | 'list' | 'hidden';
+
+/** Display options for shortcut row badges in the navigation pane */
+export type ShortcutBadgeDisplayMode = 'index' | 'count' | 'none';
+
+/** Default display modes for list items */
+export type ListDisplayMode = 'standard' | 'compact';
 
 /** Grouping options for list pane notes */
 export type ListNoteGroupingOption = 'none' | 'date' | 'folder';
@@ -50,22 +67,57 @@ export type ListNoteGroupingOption = 'none' | 'date' | 'folder';
 /** Date source to display when alphabetical sorting is active */
 export type AlphabeticalDateMode = 'created' | 'modified';
 
+/** Available custom property types displayed in file items */
+export type CustomPropertyType = 'none' | 'frontmatter' | 'wordCount';
+
+/** Type guard for validating custom property type values */
+export function isCustomPropertyType(value: string): value is CustomPropertyType {
+    return value === 'none' || value === 'frontmatter' || value === 'wordCount';
+}
+
+/** Buttons available in the navigation toolbar */
+export type NavigationToolbarButtonId = 'expandCollapse' | 'hiddenItems' | 'rootReorder' | 'newFolder';
+
+/** Buttons available in the list toolbar */
+export type ListToolbarButtonId = 'search' | 'descendants' | 'sort' | 'appearance' | 'newNote';
+
+/** Visibility toggles for toolbar buttons */
+export interface ToolbarVisibilitySettings {
+    navigation: Record<NavigationToolbarButtonId, boolean>;
+    list: Record<ListToolbarButtonId, boolean>;
+}
+
+/** Vault profile storing hidden folder, tag, and note patterns */
+export interface VaultProfile {
+    id: string;
+    name: string;
+    fileVisibility: FileVisibility;
+    hiddenFolders: string[];
+    hiddenTags: string[];
+    hiddenFiles: string[];
+    hiddenFileNamePatterns: string[];
+    navigationBanner: string | null;
+    shortcuts: ShortcutEntry[];
+}
+
 /**
  * Plugin settings interface defining all configurable options
  * Settings are organized by tab for easier maintenance
  */
 export interface NotebookNavigatorSettings {
-    // General tab - Filtering
-    fileVisibility: FileVisibility;
-    excludedFolders: string[];
-    excludedFiles: string[];
+    vaultProfiles: VaultProfile[];
+    vaultProfile: string;
+    vaultTitle: VaultTitleOption;
 
     // General tab - Behavior
     autoRevealActiveFile: boolean;
     autoRevealIgnoreRightSidebar: boolean;
+    multiSelectModifier: MultiSelectModifier;
+    paneTransitionDuration: number;
 
     // General tab - View
     startView: 'navigation' | 'files';
+    interfaceIcons: Record<string, string>;
 
     // General tab - Homepage
     homepage: string | null;
@@ -77,36 +129,45 @@ export interface NotebookNavigatorSettings {
     showTooltipPath: boolean;
     desktopBackground: BackgroundMode;
     desktopScale: number;
-
-    // General tab - Mobile appearance
-    mobileBackground: BackgroundMode;
     mobileScale: number;
 
     // General tab - Formatting
     dateFormat: string;
     timeFormat: string;
 
-    // Navigation pane tab
-    skipAutoScroll: boolean;
-    autoSelectFirstFileOnFocusChange: boolean;
-    navigationBanner: string | null;
-    showShortcuts: boolean;
-    showRecentNotes: boolean;
-    recentNotesCount: number;
-    autoExpandFoldersTags: boolean;
+    // Navigation pane tab - Behavior
+    pinRecentNotesWithShortcuts: boolean;
     collapseBehavior: ItemScope;
     smartCollapse: boolean;
-    showIcons: boolean;
+
+    // Navigation pane tab - Shortcuts & recent items
+    showSectionIcons: boolean;
+    showShortcuts: boolean;
+    shortcutBadgeDisplay: ShortcutBadgeDisplayMode;
+    skipAutoScroll: boolean;
+    showRecentNotes: boolean;
+    recentNotesCount: number;
+
+    // Navigation pane tab - Appearance
     colorIconOnly: boolean;
+    toolbarVisibility: ToolbarVisibilitySettings;
     showNoteCount: boolean;
     separateNoteCounts: boolean;
     navIndent: number;
     navItemHeight: number;
     navItemHeightScaleText: boolean;
+    rootLevelSpacing: number;
 
     // Folders & tags tab
+    autoSelectFirstFileOnFocusChange: boolean;
+    autoExpandFoldersTags: boolean;
+    springLoadedFolders: boolean;
+    springLoadedFoldersInitialDelay: number;
+    springLoadedFoldersSubsequentDelay: number;
+    showFolderIcons: boolean;
     showRootFolder: boolean;
     inheritFolderColors: boolean;
+    inheritTagColors: boolean;
     enableFolderNotes: boolean;
     folderNoteType: FolderNoteCreationPreference;
     folderNoteName: string;
@@ -114,20 +175,28 @@ export interface NotebookNavigatorSettings {
     hideFolderNoteInList: boolean;
     pinCreatedFolderNote: boolean;
     showTags: boolean;
+    showTagIcons: boolean;
     showAllTagsFolder: boolean;
     showUntagged: boolean;
     tagSortOrder: TagSortOrder;
-    hiddenTags: string[];
     keepEmptyTagsProperty: boolean;
 
     // List pane tab
+    defaultListMode: ListDisplayMode;
     defaultFolderSort: SortOption;
+    revealFileOnListChanges: boolean;
     listPaneTitle: ListPaneTitleOption;
-    multiSelectModifier: MultiSelectModifier;
     noteGrouping: ListNoteGroupingOption;
+    filterPinnedByFolder: boolean;
+    showPinnedGroupHeader: boolean;
+    showPinnedIcon: boolean;
     optimizeNoteHeight: boolean;
+    compactItemHeight: number;
+    compactItemHeightScaleText: boolean;
     showQuickActions: boolean;
     quickActionRevealInFolder: boolean;
+    quickActionAddTag: boolean;
+    quickActionAddToShortcuts: boolean;
     quickActionPinNote: boolean;
     quickActionOpenInNewTab: boolean;
 
@@ -140,24 +209,37 @@ export interface NotebookNavigatorSettings {
     frontmatterModifiedField: string;
     frontmatterDateFormat: string;
     saveMetadataToFrontmatter: boolean;
-    iconizeFormat: boolean;
+    showFileIcons: boolean;
+    showFilenameMatchIcons: boolean;
+    fileNameIconMap: Record<string, string>;
+    showCategoryIcons: boolean;
+    fileTypeIconMap: Record<string, string>;
     fileNameRows: number;
-    showFileDate: boolean;
-    alphabeticalDateMode: AlphabeticalDateMode;
-    showFileTags: boolean;
-    showFileTagAncestors: boolean;
-    colorFileTags: boolean;
-    showFileTagsInSlimMode: boolean;
-    showParentFolderNames: boolean;
     showFilePreview: boolean;
     skipHeadingsInPreview: boolean;
     skipCodeBlocksInPreview: boolean;
-    previewProperties: string[];
+    stripHtmlInPreview: boolean;
     previewRows: number;
+    previewProperties: string[];
     showFeatureImage: boolean;
     featureImageProperties: string[];
     forceSquareFeatureImage: boolean;
-    useEmbeddedImageFallback: boolean;
+    downloadExternalFeatureImages: boolean;
+    showFileTags: boolean;
+    colorFileTags: boolean;
+    prioritizeColoredFileTags: boolean;
+    showFileTagAncestors: boolean;
+    showFileTagsInCompactMode: boolean;
+    customPropertyType: CustomPropertyType;
+    customPropertyFields: string;
+    customPropertyColorFields: string;
+    showCustomPropertyInCompactMode: boolean;
+    showFileDate: boolean;
+    alphabeticalDateMode: AlphabeticalDateMode;
+    showParentFolder: boolean;
+    parentFolderClickRevealsFile: boolean;
+    showParentFolderColor: boolean;
+    showParentFolderIcon: boolean;
 
     // Icon packs tab
     externalIconProviders: Record<string, boolean>;
@@ -165,7 +247,6 @@ export interface NotebookNavigatorSettings {
     // Search & hotkeys tab
     searchProvider: SearchProvider | null;
     keyboardShortcuts: KeyboardShortcutConfig;
-    shortcuts: ShortcutEntry[];
 
     // Advanced tab
     checkForUpdatesOnStart: boolean;
@@ -186,11 +267,10 @@ export interface NotebookNavigatorSettings {
     tagBackgroundColors: Record<string, string>;
     tagSortOverrides: Record<string, SortOption>;
     tagAppearances: Record<string, TagAppearance>;
-    recentColors: string[];
+    navigationSeparators: Record<string, boolean>;
+    userColors: string[];
     lastShownVersion: string;
-    latestKnownRelease: string;
     lastAnnouncedRelease: string;
-    lastReleaseCheckAt: number | null;
     rootFolderOrder: string[];
     rootTagOrder: string[];
 }

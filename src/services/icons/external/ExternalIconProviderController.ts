@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { App, Notice, requestUrl } from 'obsidian';
+import { App, requestUrl } from 'obsidian';
 import { IconProvider } from '../types';
 import { IconService } from '../IconService';
 import { ISettingsProvider } from '../../../interfaces/ISettingsProvider';
@@ -32,6 +32,8 @@ import { SimpleIconsProvider } from '../providers/SimpleIconsProvider';
 import { strings } from '../../../i18n';
 import { compareVersions } from '../../../releaseNotes';
 import { BUNDLED_ICON_MANIFESTS } from './bundledManifests';
+import { showNotice } from '../../../utils/noticeUtils';
+import { sanitizeRecord } from '../../../utils/recordUtils';
 
 interface InstallOptions {
     persistSetting?: boolean;
@@ -263,7 +265,7 @@ export class ExternalIconProviderController {
     async syncWithSettings(): Promise<void> {
         await this.ensureInitialized();
         const settings = this.settingsProvider.settings;
-        const map = settings.externalIconProviders || {};
+        const map = sanitizeRecord(settings.externalIconProviders);
         const tasks: Promise<void>[] = [];
         let shouldNotifyAfterLoop = false;
 
@@ -326,10 +328,10 @@ export class ExternalIconProviderController {
      */
     private markProviderSetting(id: ExternalIconProviderId, enabled: boolean): void {
         const { settings } = this.settingsProvider;
-        if (!settings.externalIconProviders) {
-            settings.externalIconProviders = {};
-        }
-        settings.externalIconProviders[id] = enabled;
+        // Rebuild providers map with null prototype to prevent prototype pollution
+        const providers = sanitizeRecord(settings.externalIconProviders);
+        providers[id] = enabled;
+        settings.externalIconProviders = providers;
     }
 
     /**
@@ -591,7 +593,7 @@ export class ExternalIconProviderController {
         }
         this.failedActivationNoticeProviders.add(config.id);
         const message = strings.fileSystem.notifications.iconPackLoadFailed.replace('{provider}', config.name);
-        new Notice(message);
+        showNotice(message, { variant: 'warning' });
     }
 
     /**
@@ -644,7 +646,7 @@ export class ExternalIconProviderController {
      */
     private showDownloadNotice(config: ExternalIconProviderConfig): void {
         const message = strings.fileSystem.notifications.iconPackDownloaded.replace('{provider}', config.name);
-        new Notice(message);
+        showNotice(message, { variant: 'success' });
     }
 
     /**
@@ -656,11 +658,11 @@ export class ExternalIconProviderController {
         }
         this.removalNoticeProviders.add(config.id);
         const message = strings.fileSystem.notifications.iconPackRemoved.replace('{provider}', config.name);
-        new Notice(message);
+        showNotice(message);
     }
 
     private showUpdateNotice(config: ExternalIconProviderConfig, version: string): void {
         const message = strings.fileSystem.notifications.iconPackUpdated.replace('{provider}', config.name).replace('{version}', version);
-        new Notice(message);
+        showNotice(message, { variant: 'success' });
     }
 }

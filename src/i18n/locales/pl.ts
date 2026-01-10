@@ -25,11 +25,11 @@ export const STRINGS_PL = {
     common: {
         cancel: 'Anuluj', // Button text for canceling dialogs and operations (English: Cancel)
         delete: 'Usuń', // Button text for delete operations in dialogs (English: Delete)
+        clear: 'Wyczyść', // Button text for clearing values (English: Clear)
         remove: 'Usuń', // Button text for remove operations in dialogs (English: Remove)
         submit: 'Wyślij', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'Brak wyboru', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Bez tagów', // Label for notes without any tags (English: Untagged)
-        untitled: 'Bez tytułu', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Obraz wyróżniający', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Nieznany błąd', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Aktualizacja Notebook Navigator dostępna',
@@ -41,7 +41,7 @@ export const STRINGS_PL = {
     listPane: {
         emptyStateNoSelection: 'Wybierz folder lub tag aby zobaczyć notatki', // Message shown when no folder or tag is selected (English: Select a folder or tag to view notes)
         emptyStateNoNotes: 'Brak notatek', // Message shown when a folder/tag has no notes (English: No notes)
-        pinnedSection: '📌 Przypięte', // Header for the pinned notes section at the top of file list (English: 📌 Pinned)
+        pinnedSection: 'Przypięte', // Header for the pinned notes section at the top of file list (English: Pinned)
         notesSection: 'Notatki', // Header shown between pinned and regular items when showing documents only (English: Notes)
         filesSection: 'Pliki', // Header shown between pinned and regular items when showing supported or all files (English: Files)
         hiddenItemAriaLabel: '{name} (ukryte)' // Accessibility label applied to list items that are normally hidden
@@ -50,7 +50,6 @@ export const STRINGS_PL = {
     // Tag list
     tagList: {
         untaggedLabel: 'Bez tagów', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Ukryte tagi', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Tagi' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -58,14 +57,18 @@ export const STRINGS_PL = {
         shortcutsHeader: 'Skróty',
         recentNotesHeader: 'Ostatnie notatki',
         recentFilesHeader: 'Ostatnie pliki',
-        reorderRootFoldersTitle: 'Przestaw sekcje nawigacji',
-        reorderRootFoldersHint: 'Przeciągnij nagłówki lub elementy, aby zmienić kolejność',
+        reorderRootFoldersTitle: 'Przestaw nawigację',
+        reorderRootFoldersHint: 'Użyj strzałek lub przeciągnij, aby przestawić',
         vaultRootLabel: 'Magazyn',
         resetRootToAlpha: 'Resetuj do kolejności alfabetycznej',
         resetRootToFrequency: 'Przywróć sortowanie według częstotliwości',
-        dragHandleLabel: 'Przeciągnij aby zmienić kolejność',
         pinShortcuts: 'Przypnij skróty',
-        unpinShortcuts: 'Odepnij skróty'
+        pinShortcutsAndRecentNotes: 'Przypnij skróty i ostatnie notatki',
+        pinShortcutsAndRecentFiles: 'Przypnij skróty i ostatnie pliki',
+        unpinShortcuts: 'Odepnij skróty',
+        unpinShortcutsAndRecentNotes: 'Odepnij skróty i ostatnie notatki',
+        unpinShortcutsAndRecentFiles: 'Odepnij skróty i ostatnie pliki',
+        profileMenuAria: 'Zmień profil sejfu'
     },
 
     shortcuts: {
@@ -76,9 +79,12 @@ export const STRINGS_PL = {
         emptySearchQuery: 'Wprowadź zapytanie wyszukiwania przed zapisaniem',
         emptySearchName: 'Wprowadź nazwę przed zapisaniem wyszukiwania',
         add: 'Dodaj do skrótów',
+        addNotesCount: 'Dodaj {count} notatek do skrótów',
+        addFilesCount: 'Dodaj {count} plików do skrótów',
+        rename: 'Zmień nazwę skrótu',
         remove: 'Usuń ze skrótów',
-        moveUp: 'Przesuń w górę',
-        moveDown: 'Przesuń w dół',
+        removeAll: 'Usuń wszystkie skróty',
+        removeAllConfirm: 'Usunąć wszystkie skróty?',
         folderNotesPinned: 'Przypięto {count} notatek folderu'
     },
 
@@ -86,19 +92,15 @@ export const STRINGS_PL = {
     paneHeader: {
         collapseAllFolders: 'Zwiń elementy', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Rozwiń wszystkie elementy', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Przewiń do góry',
         newFolder: 'Nowy folder', // Tooltip for create new folder button (English: New folder)
         newNote: 'Nowa notatka', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Wróć do nawigacji', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Zmień kolejność sortowania', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Domyślne', // Label for default sorting mode (English: Default)
-        customSort: 'Własne', // Label for custom sorting mode (English: Custom)
         showFolders: 'Pokaż nawigację', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Ukryj nawigację', // Tooltip for button to hide the navigation pane (English: Hide navigation)
-        reorderRootFolders: 'Przestaw foldery główne i tagi',
-        finishRootFolderReorder: 'Zakończ przestawianie',
+        reorderRootFolders: 'Przestaw nawigację',
+        finishRootFolderReorder: 'Gotowe',
         toggleDescendantNotes: 'Pokaż notatki z podfolderów / potomnych', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Automatycznie rozwijaj foldery i tagi', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: 'Pokaż ukryte foldery, tagi i notatki', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Ukryj ukryte foldery, tagi i notatki', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Pokaż podwójne panele', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -114,7 +116,6 @@ export const STRINGS_PL = {
         saveSearchShortcut: 'Zapisz wyszukiwanie w skrótach',
         removeSearchShortcut: 'Usuń wyszukiwanie ze skrótów',
         shortcutModalTitle: 'Zapisz wyszukiwanie',
-        shortcutNameLabel: 'Nazwa skrótu',
         shortcutNamePlaceholder: 'Wprowadź nazwę skrótu'
     },
 
@@ -147,16 +148,18 @@ export const STRINGS_PL = {
             revealInFinder: 'Pokaż w Finderze',
             showInExplorer: 'Pokaż w eksploratorze systemowym',
             copyDeepLink: 'Kopiuj adres URL Obsidian',
-            copyPath: 'Kopiuj ścieżkę',
-            copyRelativePath: 'Kopiuj ścieżkę względną',
+            copyPath: 'Kopiuj ścieżkę systemu plików',
+            copyRelativePath: 'Kopiuj ścieżkę skarbca',
             renameNote: 'Zmień nazwę notatki',
             renameFile: 'Zmień nazwę pliku',
             deleteNote: 'Usuń notatkę',
             deleteFile: 'Usuń plik',
             deleteMultipleNotes: 'Usuń {count} notatek',
             deleteMultipleFiles: 'Usuń {count} plików',
-            moveToFolder: 'Przenieś do...',
-            moveMultipleToFolder: 'Przenieś {count} plików do...',
+            moveNoteToFolder: 'Przenieś notatkę do...',
+            moveFileToFolder: 'Przenieś plik do...',
+            moveMultipleNotesToFolder: 'Przenieś {count} notatek do...',
+            moveMultipleFilesToFolder: 'Przenieś {count} plików do...',
             addTag: 'Dodaj tag',
             removeTag: 'Usuń tag',
             removeAllTags: 'Usuń wszystkie tagi',
@@ -165,20 +168,26 @@ export const STRINGS_PL = {
         },
         folder: {
             newNote: 'Nowa notatka',
+            newNoteFromTemplate: 'Nowa notatka z szablonu',
             newFolder: 'Nowy folder',
             newCanvas: 'Nowa tablica',
             newBase: 'Nowa baza',
             newDrawing: 'Nowy rysunek',
+            newExcalidrawDrawing: 'Nowy rysunek Excalidraw',
+            newTldrawDrawing: 'Nowy rysunek Tldraw',
             duplicateFolder: 'Duplikuj folder',
             searchInFolder: 'Szukaj w folderze',
+            copyPath: 'Kopiuj ścieżkę systemu plików',
+            copyRelativePath: 'Kopiuj ścieżkę skarbca',
             createFolderNote: 'Utwórz notatkę folderu',
+            detachFolderNote: 'Odłącz notatkę folderu',
             deleteFolderNote: 'Usuń notatkę folderu',
             changeIcon: 'Zmień ikonę',
             changeColor: 'Zmień kolor ikony',
             changeBackground: 'Zmień tło',
             excludeFolder: 'Ukryj folder',
             unhideFolder: 'Pokaż folder',
-            moveFolder: 'Przenieś do...',
+            moveFolder: 'Przenieś folder do...',
             renameFolder: 'Zmień nazwę folderu',
             deleteFolder: 'Usuń folder'
         },
@@ -188,18 +197,33 @@ export const STRINGS_PL = {
             changeBackground: 'Zmień tło',
             showTag: 'Pokaż tag',
             hideTag: 'Ukryj tag'
+        },
+        navigation: {
+            addSeparator: 'Dodaj separator',
+            removeSeparator: 'Usuń separator'
+        },
+        style: {
+            title: 'Styl',
+            copy: 'Kopiuj styl',
+            paste: 'Wklej styl',
+            removeIcon: 'Usuń ikonę',
+            removeColor: 'Usuń kolor',
+            removeBackground: 'Usuń tło',
+            clear: 'Wyczyść styl'
         }
     },
 
     // Folder appearance menu
     folderAppearance: {
-        defaultPreset: 'Domyślny wygląd',
-        slimPreset: 'Szczupły (bez daty/podglądu/obrazu)',
+        standardPreset: 'Standard',
+        compactPreset: 'Kompaktowy',
+        defaultSuffix: '(domyślne)',
         titleRows: 'Wiersze tytułu',
         previewRows: 'Wiersze podglądu',
-        defaultOption: (rows: number) => `Domyślne (${rows})`,
+        groupBy: 'Grupuj według',
         defaultTitleOption: (rows: number) => `Domyślne wiersze tytułu (${rows})`,
         defaultPreviewOption: (rows: number) => `Domyślne wiersze podglądu (${rows})`,
+        defaultGroupOption: (groupLabel: string) => `Domyślne grupowanie (${groupLabel})`,
         titleRowOption: (rows: number) =>
             `${rows} ${rows === 1 ? 'wiersz' : rows === 2 || rows === 3 || rows === 4 ? 'wiersze' : 'wierszy'} tytułu`,
         previewRowOption: (rows: number) =>
@@ -215,41 +239,70 @@ export const STRINGS_PL = {
             emptyStateNoResults: 'Nie znaleziono ikon',
             showingResultsInfo: 'Pokazuję 50 z {count} wyników. Wpisz więcej aby zawęzić.',
             emojiInstructions: 'Wpisz lub wklej dowolną emotkę aby użyć jej jako ikony',
-            removeIcon: 'Usuń ikonę'
+            removeIcon: 'Usuń ikonę',
+            allTabLabel: 'Wszystkie'
+        },
+        fileIconRuleEditor: {
+            addRuleAria: 'Dodaj regułę'
+        },
+        interfaceIcons: {
+            title: 'Ikony interfejsu',
+            fileItemsSection: 'Elementy pliku',
+            items: {
+                'nav-shortcuts': 'Skróty',
+                'nav-recent-files': 'Ostatnie pliki',
+                'nav-expand-all': 'Rozwiń wszystkie',
+                'nav-collapse-all': 'Zwiń wszystkie',
+                'nav-tree-expand': 'Strzałka drzewa: rozwiń',
+                'nav-tree-collapse': 'Strzałka drzewa: zwiń',
+                'nav-hidden-items': 'Ukryte elementy',
+                'nav-root-reorder': 'Zmień kolejność folderów głównych',
+                'nav-new-folder': 'Nowy folder',
+                'nav-show-single-pane': 'Pokaż pojedynczy panel',
+                'nav-show-dual-pane': 'Pokaż podwójne panele',
+                'nav-profile-chevron': 'Strzałka menu profilu',
+                'list-search': 'Szukaj',
+                'list-descendants': 'Notatki z podfolderów',
+                'list-sort-ascending': 'Kolejność: rosnąco',
+                'list-sort-descending': 'Kolejność: malejąco',
+                'list-appearance': 'Zmień wygląd',
+                'list-new-note': 'Nowa notatka',
+                'nav-folder-open': 'Folder otwarty',
+                'nav-folder-closed': 'Folder zamknięty',
+                'nav-folder-note': 'Notatka folderu',
+                'nav-tag': 'Tag',
+                'list-pinned': 'Przypięte elementy',
+                'file-word-count': 'Liczba słów',
+                'file-custom-property': 'Właściwość niestandardowa'
+            }
         },
         colorPicker: {
             currentColor: 'Obecny',
             newColor: 'Nowy',
-            presetColors: 'Kolory predefiniowane',
+            paletteDefault: 'Domyślne',
+            paletteCustom: 'Własne',
+            copyColors: 'Kopiuj kolor',
+            colorsCopied: 'Kolor skopiowany do schowka',
+            copyClipboardError: 'Nie można zapisać do schowka',
+            pasteColors: 'Wklej kolor',
+            pasteClipboardError: 'Nie można odczytać schowka',
+            pasteInvalidFormat: 'Oczekiwano wartości koloru hex',
+            colorsPasted: 'Kolor wklejony pomyślnie',
+            resetUserColors: 'Wyczyść własne kolory',
+            clearCustomColorsConfirm: 'Usunąć wszystkie własne kolory?',
+            userColorSlot: 'Kolor {slot}',
             recentColors: 'Ostatnio używane kolory',
             clearRecentColors: 'Wyczyść ostatnie kolory',
             removeRecentColor: 'Usuń kolor',
             removeColor: 'Usuń kolor',
             apply: 'Zastosuj',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Czerwony',
-                orange: 'Pomarańczowy',
-                amber: 'Bursztynowy',
-                yellow: 'Żółty',
-                lime: 'Limonkowy',
-                green: 'Zielony',
-                emerald: 'Szmaragdowy',
-                teal: 'Morski',
-                cyan: 'Cyjan',
-                sky: 'Niebieski',
-                blue: 'Niebieski',
-                indigo: 'Indygo',
-                violet: 'Fioletowy',
-                purple: 'Purpurowy',
-                fuchsia: 'Fuksja',
-                pink: 'Różowy',
-                rose: 'Różany',
-                gray: 'Szary',
-                slate: 'Łupkowy',
-                stone: 'Kamienny'
-            }
+            rgbLabel: 'RGBA'
+        },
+        selectVaultProfile: {
+            title: 'Zmień profil sejfu',
+            currentBadge: 'Aktywny',
+            emptyState: 'Brak dostępnych profili sejfu.'
         },
         tagOperation: {
             renameTitle: 'Zmień nazwę tagu {tag}',
@@ -262,6 +315,10 @@ export const STRINGS_PL = {
             affectedFiles: 'Dotknięte pliki:',
             andMore: '...i {count} więcej',
             confirmRename: 'Zmień nazwę tagu',
+            renameUnchanged: '{tag} bez zmian',
+            renameNoChanges: '{oldTag} → {newTag} ({countLabel})',
+            invalidTagName: 'Wprowadź prawidłową nazwę tagu.',
+            descendantRenameError: 'Nie można przenieść tagu do samego siebie lub potomka.',
             confirmDelete: 'Usuń tag',
             file: 'plik',
             files: 'plików'
@@ -273,6 +330,7 @@ export const STRINGS_PL = {
             deleteFolderTitle: "Usunąć '{name}'?",
             deleteFileTitle: "Usunąć '{name}'?",
             folderNamePrompt: 'Wprowadź nazwę folderu:',
+            hideInOtherVaultProfiles: 'Ukryj w innych profilach skarbca',
             renamePrompt: 'Wprowadź nową nazwę:',
             renameVaultTitle: 'Zmień wyświetlaną nazwę magazynu',
             renameVaultPrompt: 'Wprowadź własną nazwę wyświetlaną (zostaw puste aby użyć domyślnej):',
@@ -287,7 +345,8 @@ export const STRINGS_PL = {
             folderLabel: 'Folder: {name}'
         },
         folderSuggest: {
-            placeholder: 'Przenieś do folderu...',
+            placeholder: (name: string) => `Przenieś ${name} do folderu...`,
+            multipleFilesLabel: (count: number) => `${count} plików`,
             navigatePlaceholder: 'Przejdź do folderu...',
             instructions: {
                 navigate: 'aby nawigować',
@@ -313,7 +372,6 @@ export const STRINGS_PL = {
             }
         },
         tagSuggest: {
-            placeholder: 'Szukaj tagów...',
             navigatePlaceholder: 'Przejdź do tagu...',
             addPlaceholder: 'Szukaj tagu do dodania...',
             removePlaceholder: 'Wybierz tag do usunięcia...',
@@ -325,6 +383,17 @@ export const STRINGS_PL = {
                 add: 'aby dodać tag',
                 remove: 'aby usunąć tag'
             }
+        },
+        welcome: {
+            title: 'Witaj w {pluginName}',
+            introText:
+                'Cześć! Zanim zaczniesz, gorąco polecam obejrzenie pierwszych pięciu minut poniższego filmu, aby zrozumieć, jak działają panele i przełącznik „Pokaż notatki z podfolderów".',
+            continueText:
+                'Jeśli masz kolejne pięć minut, kontynuuj oglądanie filmu, aby zrozumieć kompaktowe tryby wyświetlania i jak prawidłowo skonfigurować skróty i ważne klawisze skrótów.',
+            thanksText: 'Bardzo dziękuję za pobranie i miłego korzystania!',
+            videoAlt: 'Instalacja i opanowanie Notebook Navigator',
+            openVideoButton: 'Odtwórz wideo',
+            closeButton: 'Obejrzę później'
         }
     },
 
@@ -339,8 +408,6 @@ export const STRINGS_PL = {
             deleteFolder: 'Nie udało się usunąć folderu: {error}',
             deleteFile: 'Nie udało się usunąć pliku: {error}',
             duplicateNote: 'Nie udało się zduplikować notatki: {error}',
-            createCanvas: 'Nie udało się utworzyć tablicy: {error}',
-            createDatabase: 'Nie udało się utworzyć bazy danych: {error}',
             duplicateFolder: 'Nie udało się zduplikować folderu: {error}',
             openVersionHistory: 'Nie udało się otworzyć historii wersji: {error}',
             versionHistoryNotFound: 'Nie znaleziono komendy historii wersji. Upewnij się, że Obsidian Sync jest włączony.',
@@ -349,6 +416,7 @@ export const STRINGS_PL = {
             folderAlreadyExists: 'Folder "{name}" już istnieje',
             folderNotesDisabled: 'Włącz notatki folderu w ustawieniach, aby konwertować pliki',
             folderNoteAlreadyLinked: 'Ten plik już działa jako notatka folderu',
+            folderNoteNotFound: 'Brak notatki folderu w wybranym folderze',
             folderNoteUnsupportedExtension: 'Nieobsługiwane rozszerzenie pliku: {extension}',
             folderNoteMoveFailed: 'Nie udało się przenieść pliku podczas konwersji: {error}',
             folderNoteRenameConflict: 'Plik o nazwie "{name}" już istnieje w folderze',
@@ -362,6 +430,11 @@ export const STRINGS_PL = {
             failedToCreateDrawing: 'Nie udało się utworzyć rysunku',
             noFolderSelected: 'Żaden folder nie jest wybrany w Notebook Navigator',
             noFileSelected: 'Żaden plik nie jest wybrany'
+        },
+        warnings: {
+            linkBreakingNameCharacters: 'Ta nazwa zawiera znaki, które psują linki Obsidian: #, |, ^, %%, [[, ]].',
+            forbiddenNameCharactersAllPlatforms: 'Nazwy nie mogą zaczynać się od kropki ani zawierać : lub /.',
+            forbiddenNameCharactersWindows: 'Znaki zastrzeżone w Windows nie są dozwolone: <, >, ", \\, |, ?, *.'
         },
         notices: {
             hideFolder: 'Ukryty folder: {name}',
@@ -396,8 +469,7 @@ export const STRINGS_PL = {
             deleteConfirmation: 'Tej akcji nie można cofnąć.'
         },
         defaultNames: {
-            untitled: 'Bez tytułu',
-            untitledNumber: 'Bez tytułu {number}'
+            untitled: 'Bez tytułu'
         }
     },
 
@@ -414,9 +486,7 @@ export const STRINGS_PL = {
         },
         notifications: {
             filesAlreadyExist: '{count} plików już istnieje w miejscu docelowym',
-            addedTag: 'Dodano tag "{tag}" do {count} plików',
             filesAlreadyHaveTag: '{count} plików już ma ten tag lub bardziej szczegółowy',
-            clearedTags: 'Wyczyszczono wszystkie tagi z {count} plików',
             noTagsToClear: 'Brak tagów do wyczyszczenia',
             fileImported: 'Zaimportowano 1 plik',
             filesImported: 'Zaimportowano {count} plików'
@@ -431,17 +501,6 @@ export const STRINGS_PL = {
         previous30Days: 'Poprzednie 30 dni'
     },
 
-    // Weekdays
-    weekdays: {
-        sunday: 'Niedziela',
-        monday: 'Poniedziałek',
-        tuesday: 'Wtorek',
-        wednesday: 'Środa',
-        thursday: 'Czwartek',
-        friday: 'Piątek',
-        saturday: 'Sobota'
-    },
-
     // Plugin commands
     commands: {
         open: 'Otwórz', // Command palette: Opens the Notebook Navigator view (English: Open)
@@ -449,14 +508,24 @@ export const STRINGS_PL = {
         revealFile: 'Pokaż plik', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Szukaj', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Przełącz układ podwójnego panelu', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        selectVaultProfile: 'Zmień profil sejfu', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)
+        selectVaultProfile1: 'Zmień na profil sejfu 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
+        selectVaultProfile2: 'Zmień na profil sejfu 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)
+        selectVaultProfile3: 'Zmień na profil sejfu 3', // Command palette: Activates the third vault profile without opening the modal (English: Select vault profile 3)
         deleteFile: 'Usuń pliki', // Command palette: Deletes the currently active file (English: Delete file)
         createNewNote: 'Utwórz nową notatkę', // Command palette: Creates a new note in the currently selected folder (English: Create new note)
+        createNewNoteFromTemplate: 'Nowa notatka z szablonu', // Command palette: Creates a new note from a template in the currently selected folder (English: Create new note from template)
         moveFiles: 'Przenieś pliki', // Command palette: Move selected files to another folder (English: Move files)
+        selectNextFile: 'Wybierz następny plik', // Command palette: Selects the next file in the current view (English: Select next file)
+        selectPreviousFile: 'Wybierz poprzedni plik', // Command palette: Selects the previous file in the current view (English: Select previous file)
         convertToFolderNote: 'Konwertuj na notatkę folderu', // Command palette: Converts the active file into a folder note with a new folder (English: Convert to folder note)
+        setAsFolderNote: 'Ustaw jako notatkę folderu', // Command palette: Renames the active file to its folder note name (English: Set as folder note)
+        detachFolderNote: 'Odłącz notatkę folderu', // Command palette: Renames the active folder note to a new name (English: Detach folder note)
         pinAllFolderNotes: 'Przypnij wszystkie notatki folderu', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Przejdź do folderu', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Przejdź do tagu', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
         addShortcut: 'Dodaj do skrótów', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
+        openShortcut: 'Otwórz skrót {number}',
         toggleDescendants: 'Przełącz podfoldery', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)
         toggleHidden: 'Przełącz ukryte foldery, tagi i notatki', // Command palette: Toggles showing hidden items (English: Toggle hidden items)
         toggleTagSort: 'Przełącz sortowanie tagów', // Command palette: Toggles between alphabetical and frequency tag sorting (English: Toggle tag sort order)
@@ -495,8 +564,10 @@ export const STRINGS_PL = {
             navigationPane: 'Panel nawigacji',
             icons: 'Pakiety ikon',
             folders: 'Foldery',
+            foldersAndTags: 'Foldery i tagi',
             tags: 'Tagi',
             search: 'Wyszukiwanie',
+            searchAndHotkeys: 'Wyszukiwanie i skróty',
             listPane: 'Panel listy',
             notes: 'Notatki',
             hotkeys: 'Skróty klawiszowe',
@@ -507,27 +578,34 @@ export const STRINGS_PL = {
                 filtering: 'Filtrowanie',
                 behavior: 'Zachowanie',
                 view: 'Wygląd',
+                icons: 'Ikony',
                 desktopAppearance: 'Wygląd na komputerze',
-                mobileAppearance: 'Wygląd na telefonie',
                 formatting: 'Formatowanie'
             },
             navigation: {
-                behavior: 'Zachowanie',
-                appearance: 'Wygląd'
+                appearance: 'Wygląd',
+                shortcutsAndRecent: 'Skróty i ostatnie elementy'
             },
             list: {
                 display: 'Wygląd',
-                quickActions: 'Szybkie akcje'
+                pinnedNotes: 'Przypięte notatki'
             },
             notes: {
                 frontmatter: 'Frontmatter',
-                display: 'Wygląd'
+                icon: 'Ikona',
+                title: 'Tytuł',
+                previewText: 'Tekst podglądu',
+                featureImage: 'Obraz wyróżniający',
+                tags: 'Tagi',
+                customProperty: 'Właściwość niestandardowa',
+                date: 'Data',
+                parentFolder: 'Folder nadrzędny'
             }
         },
         items: {
             searchProvider: {
                 name: 'Dostawca wyszukiwania',
-                desc: 'Wybierz między szybkim wyszukiwaniem nazwy pliku lub pełnotekstowym wyszukiwaniem z pluginem Omnisearch.',
+                desc: 'Wybierz między szybkim wyszukiwaniem nazwy pliku lub pełnotekstowym wyszukiwaniem z pluginem Omnisearch. (nie synchronizowane)',
                 options: {
                     internal: 'Wyszukiwanie filtrujące',
                     omnisearch: 'Omnisearch (pełnotekstowy)'
@@ -536,7 +614,7 @@ export const STRINGS_PL = {
                     filterSearch: {
                         title: 'Wyszukiwanie filtrujące (domyślne):',
                         description:
-                            'Szybkie, lekkie wyszukiwanie, które filtruje pliki według nazwy i tagów w bieżącym folderze i podfolderach. Obsługuje filtrowanie tagów z prefiksem # (np. #projekt), wykluczanie z prefiksem ! (np. !szkic, !#zarchiwizowane), oraz znajdowanie notatek bez tagów za pomocą !#. Idealne do szybkiej nawigacji w aktualnym kontekście.'
+                            'Filtruje pliki według nazwy i tagów w bieżącym folderze i podfolderach. Tryb filtrowania: mieszany tekst i tagi dopasowują wszystkie terminy (np. "projekt #praca"). Tryb tagów: wyszukiwanie tylko tagami obsługuje operatory AND/OR (np. "#praca AND #pilne", "#projekt OR #osobiste"). Cmd/Ctrl+Kliknięcie na tagi dodaje z AND, Cmd/Ctrl+Shift+Kliknięcie dodaje z OR. Obsługuje wykluczanie z prefiksem ! (np. !szkic, !#zarchiwizowane) oraz znajdowanie notatek bez tagów za pomocą !#.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',
@@ -557,7 +635,7 @@ export const STRINGS_PL = {
                 }
             },
             listPaneTitle: {
-                name: 'Tytuł panelu listy',
+                name: 'Tytuł panelu listy (tylko na komputerze)',
                 desc: 'Wybierz, gdzie ma być wyświetlany tytuł panelu listy.',
                 options: {
                     header: 'Wyświetlaj w nagłówku',
@@ -577,9 +655,17 @@ export const STRINGS_PL = {
                     'title-desc': 'Tytuł (Z na górze)'
                 }
             },
+            revealFileOnListChanges: {
+                name: 'Przewiń do wybranego pliku przy zmianach listy',
+                desc: 'Przewiń do wybranego pliku przy przypinaniu notatek, pokazywaniu notatek potomnych, zmianie wyglądu folderów lub wykonywaniu operacji na plikach.'
+            },
             includeDescendantNotes: {
-                name: 'Pokaż notatki z podfolderów / potomnych',
+                name: 'Pokaż notatki z podfolderów / potomnych (nie synchronizowane)',
                 desc: 'Podczas przeglądania folderu lub tagu uwzględnij notatki z zagnieżdżonych podfolderów i potomnych tagów.'
+            },
+            limitPinnedToCurrentFolder: {
+                name: 'Ogranicz przypięte notatki do ich folderu',
+                desc: 'Przypięte notatki pojawiają się tylko podczas przeglądania folderu lub tagu, w którym zostały przypięte.'
             },
             separateNoteCounts: {
                 name: 'Pokaż bieżące i potomne liczniki osobno',
@@ -594,29 +680,78 @@ export const STRINGS_PL = {
                     folder: 'Grupuj według folderu'
                 }
             },
-            optimizeNoteHeight: {
-                name: 'Optymalizuj wysokość notatek',
-                desc: 'Zmniejsz wysokość dla przypiętych notatek i notatek bez tekstu podglądu.'
+            showPinnedGroupHeader: {
+                name: 'Pokaż nagłówek grupy przypiętych',
+                desc: 'Wyświetla nagłówek sekcji przypiętych notatek.'
             },
-            showParentFolderNames: {
-                name: 'Pokaż nazwy folderów nadrzędnych',
+            showPinnedIcon: {
+                name: 'Pokaż ikonę przypiętych',
+                desc: 'Wyświetl ikonę obok nagłówka sekcji przypiętych.'
+            },
+            defaultListMode: {
+                name: 'Domyślny tryb listy',
+                desc: 'Wybierz domyślny układ listy. Standard pokazuje tytuł, datę, opis i tekst podglądu. Kompaktowy pokazuje tylko tytuł. Wygląd można nadpisać dla każdego folderu.',
+                options: {
+                    standard: 'Standard',
+                    compact: 'Kompaktowy'
+                }
+            },
+            showFileIcons: {
+                name: 'Pokaż ikony plików',
+                desc: 'Wyświetl ikony plików z wyrównaniem do lewej. Wyłączenie usuwa zarówno ikony, jak i wcięcie. Priorytet: niestandardowe > nazwa pliku > typ pliku > domyślne.'
+            },
+            showFilenameMatchIcons: {
+                name: 'Ikony według nazwy pliku',
+                desc: 'Przypisz ikony do plików na podstawie tekstu w ich nazwach.'
+            },
+            fileNameIconMap: {
+                name: 'Mapowanie ikon nazwy pliku',
+                desc: 'Pliki zawierające tekst otrzymują określoną ikonę. Jedno mapowanie na linię: tekst=ikona',
+                placeholder: '# tekst=ikona\nspotkanie=LiCalendar\nfaktura=PhReceipt',
+                editTooltip: 'Edytuj mapowania'
+            },
+            showCategoryIcons: {
+                name: 'Ikony według typu pliku',
+                desc: 'Przypisz ikony do plików na podstawie ich rozszerzenia.'
+            },
+            fileTypeIconMap: {
+                name: 'Mapowanie ikon typu pliku',
+                desc: 'Pliki z rozszerzeniem otrzymują określoną ikonę. Jedno mapowanie na linię: rozszerzenie=ikona',
+                placeholder: '# Extension=icon\ncpp=LiFileCode\npdf=RaBook',
+                editTooltip: 'Edytuj mapowania'
+            },
+            optimizeNoteHeight: {
+                name: 'Zmienna wysokość notatek',
+                desc: 'Użyj kompaktowej wysokości dla przypiętych notatek i notatek bez tekstu podglądu.'
+            },
+            compactItemHeight: {
+                name: 'Wysokość elementów w trybie kompaktowym',
+                desc: 'Ustawia wysokość elementów listy w trybie kompaktowym na komputerze i urządzeniach mobilnych.',
+                resetTooltip: 'Przywróć wartość domyślną (28px)'
+            },
+            compactItemHeightScaleText: {
+                name: 'Skalowanie tekstu z wysokością trybu kompaktowego',
+                desc: 'Skaluje tekst elementów listy w trybie kompaktowym po zmniejszeniu wysokości.'
+            },
+            showParentFolder: {
+                name: 'Pokaż folder nadrzędny',
                 desc: 'Wyświetl nazwę folderu nadrzędnego dla notatek w podfolderach lub tagach.'
+            },
+            parentFolderClickRevealsFile: {
+                name: 'Kliknięcie folderu nadrzędnego otwiera folder',
+                desc: 'Kliknięcie etykiety folderu nadrzędnego otwiera folder w panelu listy.'
+            },
+            showParentFolderColor: {
+                name: 'Pokaż kolor folderu nadrzędnego',
+                desc: 'Używaj kolorów folderów na etykietach folderów nadrzędnych.'
+            },
+            showParentFolderIcon: {
+                name: 'Pokaż ikonę folderu nadrzędnego',
+                desc: 'Pokazuj ikony folderów obok etykiet folderów nadrzędnych.'
             },
             showQuickActions: {
                 name: 'Pokaż szybkie akcje (tylko desktop)',
-                desc: 'Pokaż akcje przy najechaniu na elementy plików.'
-            },
-            quickActionsRevealInFolder: {
-                name: 'Pokaż w folderze',
-                desc: 'Szybka akcja: Pokaż notatkę w jej folderze nadrzędnym. Widoczne tylko podczas przeglądania notatek z podfolderów lub w tagach (nie pokazywane w rzeczywistym folderze notatki).'
-            },
-            quickActionsPinNote: {
-                name: 'Przypnij notatkę',
-                desc: 'Szybka akcja: Przypnij lub odepnij notatkę na górze listy.'
-            },
-            quickActionsOpenInNewTab: {
-                name: 'Otwórz w nowej karcie',
-                desc: 'Szybka akcja: Otwórz notatkę w nowej karcie.'
+                desc: 'Pokaż przyciski akcji przy najechaniu na pliki. Kontrolki przycisków wybierają, które akcje się pojawiają.'
             },
             dualPane: {
                 name: 'Układ podwójnego panelu (nie synchronizowany)',
@@ -640,7 +775,7 @@ export const STRINGS_PL = {
                 }
             },
             appearanceScale: {
-                name: 'Poziom powiększenia',
+                name: 'Poziom powiększenia (nie synchronizowane)',
                 desc: 'Kontroluje ogólny poziom powiększenia w Notebook Navigator.'
             },
             startView: {
@@ -651,6 +786,12 @@ export const STRINGS_PL = {
                     files: 'Panel listy'
                 }
             },
+            toolbarButtons: {
+                name: 'Przyciski paska narzędzi',
+                desc: 'Wybierz, które przyciski mają być wyświetlane na pasku narzędzi. Ukryte przyciski pozostają dostępne przez polecenia i menu.',
+                navigationLabel: 'Pasek nawigacji',
+                listLabel: 'Pasek listy'
+            },
             autoRevealActiveNote: {
                 name: 'Automatycznie odkryj aktywną notatkę',
                 desc: 'Automatycznie odkrywaj notatki po otwarciu z Quick Switcher, linków lub wyszukiwania.'
@@ -658,6 +799,11 @@ export const STRINGS_PL = {
             autoRevealIgnoreRightSidebar: {
                 name: 'Ignoruj zdarzenia z prawego paska bocznego',
                 desc: 'Nie zmieniaj aktywnej notatki przy klikaniu lub zmienianiu notatek w prawym pasku bocznym.'
+            },
+            paneTransitionDuration: {
+                name: 'Animacja pojedynczego panelu',
+                desc: 'Czas trwania przejścia podczas przełączania paneli w trybie pojedynczego panelu (milisekundy).',
+                resetTooltip: 'Przywróć domyślne'
             },
             autoSelectFirstFileOnFocusChange: {
                 name: 'Automatycznie wybierz pierwszą notatkę (tylko desktop)',
@@ -668,19 +814,39 @@ export const STRINGS_PL = {
                 desc: 'Nie przewijaj panelu nawigacji przy klikaniu elementów w skrótach.'
             },
             autoExpandFoldersTags: {
-                name: 'Automatycznie rozwijaj foldery i tagi',
-                desc: 'Automatycznie rozwijaj foldery i tagi gdy są wybrane.'
+                name: 'Rozwiń przy wyborze',
+                desc: 'Rozwiń foldery i tagi po wybraniu. W trybie pojedynczego panelu pierwsze kliknięcie rozwija, drugie pokazuje pliki.'
+            },
+            springLoadedFolders: {
+                name: 'Rozwiń podczas przeciągania (tylko desktop)',
+                desc: 'Rozwiń foldery i tagi przy najechaniu podczas przeciągania.'
+            },
+            springLoadedFoldersInitialDelay: {
+                name: 'Opóźnienie pierwszego rozwinięcia',
+                desc: 'Opóźnienie przed rozwinięciem pierwszego folderu lub tagu podczas przeciągania (sekundy).'
+            },
+            springLoadedFoldersSubsequentDelay: {
+                name: 'Opóźnienie kolejnych rozwinięć',
+                desc: 'Opóźnienie przed rozwijaniem kolejnych folderów lub tagów podczas tego samego przeciągania (sekundy).'
             },
             navigationBanner: {
-                name: 'Baner nawigacji',
-                desc: 'Wyświetl obraz nad panelem nawigacji.',
+                name: 'Baner nawigacji (profil sejfu)',
+                desc: 'Wyświetl obraz nad panelem nawigacji. Zmienia się wraz z wybranym profilem sejfu.',
                 current: 'Aktualny baner: {path}',
-                chooseButton: 'Wybierz obraz',
-                clearButton: 'Wyczyść'
+                chooseButton: 'Wybierz obraz'
             },
             showShortcuts: {
                 name: 'Pokaż skróty',
                 desc: 'Wyświetl sekcję skrótów w panelu nawigacji.'
+            },
+            shortcutBadgeDisplay: {
+                name: 'Plakietka skrótu',
+                desc: "Co wyświetlić obok skrótów. Użyj poleceń 'Otwórz skrót 1-9', aby otwierać skróty bezpośrednio.",
+                options: {
+                    index: 'Pozycja (1-9)',
+                    count: 'Liczba elementów',
+                    none: 'Brak'
+                }
             },
             showRecentNotes: {
                 name: 'Pokaż ostatnie notatki',
@@ -689,6 +855,10 @@ export const STRINGS_PL = {
             recentNotesCount: {
                 name: 'Liczba ostatnich notatek',
                 desc: 'Liczba ostatnich notatek do wyświetlenia.'
+            },
+            pinRecentNotesWithShortcuts: {
+                name: 'Przypnij ostatnie notatki razem ze skrótami',
+                desc: 'Dołącz ostatnie notatki podczas przypinania skrótów.'
             },
             showTooltips: {
                 name: 'Pokaż podpowiedzi',
@@ -705,7 +875,7 @@ export const STRINGS_PL = {
                 notice: 'Pozycja separatora została zresetowana. Uruchom ponownie Obsidian lub otwórz ponownie Notebook Navigator, aby zastosować.'
             },
             multiSelectModifier: {
-                name: 'Modyfikator wielokrotnego wyboru',
+                name: 'Modyfikator wielokrotnego wyboru (tylko desktop)',
                 desc: 'Wybierz, który klawisz modyfikatora przełącza wielokrotny wybór. Gdy wybrano Option/Alt, Cmd/Ctrl klik otwiera notatki w nowej karcie.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl klik',
@@ -713,7 +883,7 @@ export const STRINGS_PL = {
                 }
             },
             fileVisibility: {
-                name: 'Pokaż typy plików',
+                name: 'Pokaż typy plików (profil sejfu)',
                 desc: 'Filtruj które typy plików są pokazywane w nawigatorze. Typy plików nieobsługiwane przez Obsidian mogą otworzyć się w zewnętrznych aplikacjach.',
                 options: {
                     documents: 'Dokumenty (.md, .canvas, .base)',
@@ -727,19 +897,54 @@ export const STRINGS_PL = {
                 current: 'Bieżący: {path}',
                 currentMobile: 'Mobilna: {path}',
                 chooseButton: 'Wybierz plik',
-                clearButton: 'Wyczyść',
+
                 separateMobile: {
                     name: 'Osobna strona główna dla urządzeń mobilnych',
                     desc: 'Użyj innej strony głównej dla urządzeń mobilnych.'
                 }
             },
             excludedNotes: {
-                name: 'Ukryj notatki',
+                name: 'Ukryj notatki (profil sejfu)',
                 desc: 'Lista właściwości frontmatter oddzielonych przecinkami. Notatki zawierające którekolwiek z tych właściwości będą ukryte (np. draft, private, archived).',
                 placeholder: 'draft, private'
             },
+            excludedFileNamePatterns: {
+                name: 'Ukryj pliki (profil sejfu)',
+                desc: 'Lista wzorców nazw plików oddzielonych przecinkami do ukrycia. Obsługuje symbole wieloznaczne * i ścieżki / (np. temp-*, *.png, /assets/*).',
+                placeholder: 'temp-*, *.png, /assets/*'
+            },
+            vaultProfiles: {
+                name: 'Profil sejfu',
+                desc: 'Profile przechowują widoczność typów plików, ukryte pliki, ukryte foldery, ukryte tagi, ukryte notatki, skróty i baner nawigacji. Zmień profil z nagłówka panelu nawigacji.',
+                defaultName: 'Domyślny',
+                addButton: 'Dodaj profil',
+                editProfilesButton: 'Edytuj profile',
+                addProfileOption: 'Dodaj profil...',
+                applyButton: 'Zastosuj',
+                deleteButton: 'Usuń profil',
+                addModalTitle: 'Dodaj profil',
+                editProfilesModalTitle: 'Edytuj profile',
+                addModalPlaceholder: 'Nazwa profilu',
+                deleteModalTitle: 'Usuń {name}',
+                deleteModalMessage:
+                    'Usunąć {name}? Filtry ukrytych plików, folderów, tagów i notatek zapisane w tym profilu zostaną usunięte.',
+                moveUp: 'Przenieś w górę',
+                moveDown: 'Przenieś w dół',
+                errors: {
+                    emptyName: 'Wprowadź nazwę profilu',
+                    duplicateName: 'Nazwa profilu już istnieje'
+                }
+            },
+            vaultTitle: {
+                name: 'Położenie tytułu sejfu (tylko pulpit)',
+                desc: 'Wybierz, gdzie tytuł sejfu jest wyświetlany.',
+                options: {
+                    header: 'Pokaż w nagłówku',
+                    navigation: 'Pokaż w panelu nawigacji'
+                }
+            },
             excludedFolders: {
-                name: 'Ukryj foldery',
+                name: 'Ukryj foldery (profil sejfu)',
                 desc: 'Lista folderów do ukrycia oddzielonych przecinkami. Wzory nazw: assets* (foldery zaczynające się od assets), *_temp (kończące się na _temp). Wzory ścieżek: /archive (tylko archiwum główne), /res* (foldery główne zaczynające się od res), /*/temp (foldery temp jeden poziom w głąb), /projects/* (wszystkie foldery wewnątrz projects).',
                 placeholder: 'templates, assets*, /archive, /res*'
             },
@@ -757,19 +962,46 @@ export const STRINGS_PL = {
             },
             showFileTags: {
                 name: 'Pokaż tagi plików',
-                desc: 'Wyświetl klikalne tagi w elementach plików. Użyj kolorów tagów aby wizualnie odróżnić różne typy tagów.'
+                desc: 'Wyświetl klikalne tagi w elementach plików.'
             },
             showFileTagAncestors: {
-                name: 'Pokaż tagi nadrzędne',
-                desc: 'Wyświetl segmenty nadrzędne przed nazwą tagu.'
+                name: 'Pokaż pełne ścieżki tagów',
+                desc: "Wyświetl pełne ścieżki hierarchii tagów. Włączone: 'ai/openai', 'praca/projekty/2024'. Wyłączone: 'openai', '2024'."
             },
             colorFileTags: {
                 name: 'Koloruj tagi plików',
                 desc: 'Zastosuj kolory tagów do odznak tagów w elementach plików.'
             },
-            showFileTagsInSlimMode: {
+            prioritizeColoredFileTags: {
+                name: 'Wyświetl kolorowe tagi jako pierwsze',
+                desc: 'Sortuje kolorowe tagi przed pozostałymi tagami w elementach plików.'
+            },
+            showFileTagsInCompactMode: {
                 name: 'Pokaż tagi plików w trybie kompaktowym',
                 desc: 'Wyświetl tagi, gdy data, podgląd i obraz są ukryte.'
+            },
+            customPropertyType: {
+                name: 'Typ',
+                desc: 'Wybierz właściwość niestandardową do wyświetlenia w elementach plików.',
+                options: {
+                    frontmatter: 'Właściwość frontmatter',
+                    wordCount: 'Liczba słów',
+                    none: 'Brak'
+                }
+            },
+            customPropertyFields: {
+                name: 'Właściwość do wyświetlenia',
+                desc: 'Lista właściwości frontmatter oddzielonych przecinkami do wyświetlenia jako plakietki. Właściwości z wartościami listowymi wyświetlają jedną plakietkę na wartość. Wartości w formacie [[wikilink]] są wyświetlane jako klikalne linki.',
+                placeholder: 'status, typ, kategoria'
+            },
+            customPropertyColorFields: {
+                name: 'Właściwość dla koloru',
+                desc: 'Lista właściwości frontmatter oddzielonych przecinkami dla kolorów plakietek. Właściwości kolorów są łączone z właściwościami wyświetlania według pozycji. Właściwości z wartościami listowymi łączą kolory według indeksu. Wartości mogą być nazwami tagów lub kolorami CSS.',
+                placeholder: 'statusColor, typeColor, categoryColor'
+            },
+            showCustomPropertyInCompactMode: {
+                name: 'Pokaż właściwość niestandardową w trybie kompaktowym',
+                desc: 'Wyświetl właściwość niestandardową, gdy data, podgląd i obraz są ukryte.'
             },
             dateFormat: {
                 name: 'Format daty',
@@ -796,6 +1028,10 @@ export const STRINGS_PL = {
             skipCodeBlocksInPreview: {
                 name: 'Pomiń bloki kodu w podglądzie',
                 desc: 'Pomija bloki kodu podczas generowania tekstu podglądu.'
+            },
+            stripHtmlInPreview: {
+                name: 'Usuń HTML w podglądach',
+                desc: 'Usuń znaczniki HTML z tekstu podglądu. Może wpływać na wydajność przy dużych notatkach.'
             },
             previewProperties: {
                 name: 'Właściwości podglądu',
@@ -824,7 +1060,7 @@ export const STRINGS_PL = {
             },
             showFeatureImage: {
                 name: 'Pokaż obraz wyróżniający',
-                desc: 'Wyświetl miniaturki obrazów z frontmatter. Wskazówka: Użyj pluginu "Featured Image" aby automatycznie ustawić obrazy wyróżniające dla wszystkich dokumentów.'
+                desc: 'Wyświetla miniaturę pierwszego obrazu znalezionego w notatce.'
             },
             forceSquareFeatureImage: {
                 name: 'Wymuś kwadratowy obraz wyróżniający',
@@ -832,16 +1068,21 @@ export const STRINGS_PL = {
             },
             featureImageProperties: {
                 name: 'Właściwości obrazu',
-                desc: 'Lista właściwości frontmatter oddzielonych przecinkami do sprawdzenia dla miniaturek obrazów. Pierwsza właściwość z obrazem zostanie użyta. Jeśli puste i ustawienie awaryjne jest włączone, pierwszy osadzony obraz zostanie użyty.',
+                desc: 'Lista właściwości frontmatter oddzielonych przecinkami do sprawdzenia dla miniaturek obrazów.',
                 placeholder: 'thumbnail, featureResized, feature'
             },
-            useEmbeddedImageFallback: {
-                name: 'Użyj awaryjnego obrazu osadzonego',
-                desc: 'Użyj pierwszego osadzonego obrazu w dokumencie jako awaryjny gdy nie znaleziono miniatury we właściwościach frontmatter (wymaga Obsidian 1.9.4+). Wyłącz to aby sprawdzić czy miniatury są poprawnie skonfigurowane.'
+
+            downloadExternalFeatureImages: {
+                name: 'Pobierz obrazy zewnętrzne',
+                desc: 'Pobierz zdalne obrazy i miniatury YouTube dla obrazów wyróżniających.'
             },
             showRootFolder: {
                 name: 'Pokaż folder główny',
                 desc: 'Wyświetl nazwę magazynu jako folder główny w drzewie.'
+            },
+            showFolderIcons: {
+                name: 'Pokaż ikony folderów',
+                desc: 'Wyświetl ikony obok folderów w panelu nawigacji.'
             },
             inheritFolderColors: {
                 name: 'Dziedzicz kolory folderów',
@@ -851,9 +1092,14 @@ export const STRINGS_PL = {
                 name: 'Pokaż liczbę notatek',
                 desc: 'Wyświetl liczbę notatek obok każdego folderu i tagu.'
             },
-            showIcons: {
-                name: 'Pokaż ikony',
-                desc: 'Wyświetl ikony dla folderów, tagów i notatek.'
+            showSectionIcons: {
+                name: 'Pokaż ikony skrótów i ostatnich elementów',
+                desc: 'Wyświetl ikony dla sekcji nawigacji takich jak Skróty i Ostatnie pliki.'
+            },
+            interfaceIcons: {
+                name: 'Ikony interfejsu',
+                desc: 'Edytuj ikony paska narzędzi, folderów, tagów, przypiętych elementów, wyszukiwania i sortowania.',
+                buttonText: 'Edytuj ikony'
             },
             showIconsColorOnly: {
                 name: 'Zastosuj kolor tylko do ikon',
@@ -884,13 +1130,25 @@ export const STRINGS_PL = {
                 name: 'Skaluj tekst z wysokością elementu',
                 desc: 'Zmniejsza tekst nawigacji, gdy wysokość elementu jest obniżona.'
             },
+            navRootSpacing: {
+                name: 'Odstęp elementów głównych',
+                desc: 'Odstęp między folderami i tagami na poziomie głównym.'
+            },
             showTags: {
                 name: 'Pokaż tagi',
-                desc: 'Wyświetl sekcję tagów poniżej folderów w nawigatorze.'
+                desc: 'Wyświetl sekcję tagów w nawigatorze.'
+            },
+            showTagIcons: {
+                name: 'Pokaż ikony tagów',
+                desc: 'Wyświetl ikony obok tagów w panelu nawigacji.'
+            },
+            inheritTagColors: {
+                name: 'Dziedzicz kolory tagów',
+                desc: 'Tagi podrzędne dziedziczą kolor od tagów nadrzędnych.'
             },
             tagSortOrder: {
                 name: 'Kolejność sortowania tagów',
-                desc: 'Wybierz sposób sortowania tagów w panelu nawigacji.',
+                desc: 'Wybierz sposób sortowania tagów w panelu nawigacji. (nie synchronizowane)',
                 options: {
                     alphaAsc: 'A do Z',
                     alphaDesc: 'Z do A',
@@ -911,9 +1169,9 @@ export const STRINGS_PL = {
                 desc: 'Zachowuje właściwość tags we frontmatterze, gdy wszystkie tagi są usuwane. Gdy wyłączone, właściwość tags jest usuwana z frontmattera.'
             },
             hiddenTags: {
-                name: 'Ukryte tagi',
-                desc: 'Lista prefiksów tagów lub symboli wieloznacznych nazw oddzielonych przecinkami. Użyj `tag*` lub `*tag`, aby dopasować nazwy tagów. Ukrycie tagu ukrywa też wszystkie jego pod-tagi (np. "archive" ukrywa "archive/2024/docs").',
-                placeholder: 'internal, temp/drafts, archive/2024'
+                name: 'Ukryj tagi (profil sejfu)',
+                desc: 'Lista wzorców tagów oddzielonych przecinkami. Wzorce nazw: tag* (zaczyna się od), *tag (kończy się na). Wzorce ścieżek: archiwum (tag i potomkowie), archiwum/* (tylko potomkowie), projekty/*/szkice (wildcard w środku).',
+                placeholder: 'archiwum*, *szkic, projekty/*/stare'
             },
             enableFolderNotes: {
                 name: 'Włącz notatki folderów',
@@ -958,14 +1216,16 @@ export const STRINGS_PL = {
                 error: 'Czyszczenie ustawień nie powiodło się',
                 loading: 'Sprawdzanie metadanych...',
                 statusClean: 'Brak metadanych do wyczyszczenia',
-                statusCounts: 'Osierocone elementy: {folders} folderów, {tags} tagów, {files} plików, {pinned} przypiętych'
+                statusCounts:
+                    'Osierocone elementy: {folders} folderów, {tags} tagów, {files} plików, {pinned} przypiętych, {separators} separatorów'
             },
             rebuildCache: {
                 name: 'Odbuduj pamięć podręczną',
                 desc: 'Użyj tego, jeśli brakuje tagów, podglądy są nieprawidłowe lub brakuje obrazów. Może się to zdarzyć po konfliktach synchronizacji lub nieoczekiwanych zamknięciach.',
                 buttonText: 'Odbuduj pamięć podręczną',
-                success: 'Pamięć podręczna została odbudowana',
-                error: 'Nie udało się odbudować pamięci podręcznej'
+                error: 'Nie udało się odbudować pamięci podręcznej',
+                indexingTitle: 'Indeksowanie magazynu...',
+                progress: 'Aktualizowanie pamięci podręcznej Notebook Navigator.'
             },
             hotkeys: {
                 intro: 'Edytuj <plugin folder>/notebook-navigator/data.json, aby dostosować skróty Notebook Navigator. Otwórz plik i znajdź sekcję "keyboardShortcuts". Każdy wpis ma następującą strukturę:',
@@ -989,24 +1249,16 @@ export const STRINGS_PL = {
                 downloadFailed: 'Nie udało się pobrać {name}. Sprawdź połączenie i spróbuj ponownie.',
                 removeFailed: 'Nie udało się usunąć {name}.',
                 infoNote:
-                    'Pobrane pakiety ikon synchronizują stan instalacji między urządzeniami. Pakiety ikon pozostają w lokalnej bazie danych na każdym urządzeniu; synchronizacja śledzi tylko czy powinny być pobrane lub usunięte. Pakiety ikon są pobierane z repozytorium Notebook Navigator (https://github.com/johansan/notebook-navigator/tree/main/icon-assets).',
-                providers: {
-                    bootstrapIconsDesc: 'https://icons.getbootstrap.com/',
-                    fontAwesomeDesc: 'https://fontawesome.com/',
-                    materialIconsDesc: 'https://fonts.google.com/icons',
-                    phosphorDesc: 'https://phosphoricons.com/',
-                    rpgAwesomeDesc: 'https://nagoshiashumari.github.io/Rpg-Awesome/',
-                    simpleIconsDesc: 'https://simpleicons.org/'
-                }
+                    'Pobrane pakiety ikon synchronizują stan instalacji między urządzeniami. Pakiety ikon pozostają w lokalnej bazie danych na każdym urządzeniu; synchronizacja śledzi tylko czy powinny być pobrane lub usunięte. Pakiety ikon są pobierane z repozytorium Notebook Navigator (https://github.com/johansan/notebook-navigator/tree/main/icon-assets).'
             },
             useFrontmatterDates: {
-                name: 'Czytaj metadane z frontmatter',
-                desc: 'Czytaj nazwy notatek, znaczniki czasu, ikony i kolory z frontmatter gdy dostępne, w przeciwnym razie używaj wartości systemu plików lub ustawień'
+                name: 'Używaj metadanych frontmatter',
+                desc: 'Używaj frontmatter dla nazwy notatki, znaczników czasu, ikon i kolorów'
             },
             frontmatterNameField: {
-                name: 'Pole nazwy',
-                desc: 'Pole frontmatter do użycia jako wyświetlana nazwa notatki. Zostaw puste aby użyć nazwy pliku.',
-                placeholder: 'title'
+                name: 'Pola nazwy',
+                desc: 'Lista pól frontmatter oddzielonych przecinkami. Używana jest pierwsza niepusta wartość. Powrót do nazwy pliku.',
+                placeholder: 'tytuł, nazwa'
             },
             frontmatterIconField: {
                 name: 'Pole ikony',
@@ -1021,10 +1273,6 @@ export const STRINGS_PL = {
             frontmatterSaveMetadata: {
                 name: 'Zapisz ikony i kolory w frontmatter',
                 desc: 'Automatycznie zapisuje ikony i kolory plików w frontmatter przy użyciu skonfigurowanych powyżej pól.'
-            },
-            frontmatterIconizeFormat: {
-                name: 'Zapisz w formacie Iconize',
-                desc: 'Zapisz ikony używając formatu Iconize (np. LiHome, FasUser, SiGithub) zamiast formatu wtyczki (np. home, fontawesome-solid:user, simple-icons:github).'
             },
             frontmatterMigration: {
                 name: 'Migruj ikony i kolory z ustawień',
@@ -1050,7 +1298,7 @@ export const STRINGS_PL = {
                 name: 'Format znacznika czasu',
                 desc: 'Format używany do parsowania znaczników czasu w frontmatter. Zostaw puste aby użyć formatu ISO 8601',
                 helpTooltip: 'Zobacz dokumentację formatu date-fns',
-                help: "Popularne formaty:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                help: "Popularne formaty:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {
                 name: 'Wspieraj rozwój',
@@ -1061,12 +1309,16 @@ export const STRINGS_PL = {
             updateCheckOnStart: {
                 name: 'Sprawdź nową wersję przy starcie',
                 desc: 'Sprawdza nowe wersje wtyczki podczas uruchamiania i wyświetla powiadomienie, gdy dostępna jest aktualizacja. Każda wersja jest ogłaszana tylko raz, a sprawdzanie odbywa się co najwyżej raz dziennie.',
-                status: 'New version available: {version}'
+                status: 'Dostępna nowa wersja: {version}'
             },
             whatsNew: {
-                name: 'Co nowego',
+                name: 'Co nowego w Notebook Navigator {version}',
                 desc: 'Zobacz ostatnie aktualizacje i ulepszenia',
                 buttonText: 'Zobacz ostatnie aktualizacje'
+            },
+            masteringVideo: {
+                name: 'Opanowanie Notebook Navigator (wideo)',
+                desc: 'Ten film obejmuje wszystko, czego potrzebujesz, aby być produktywnym w Notebook Navigator, w tym skróty klawiszowe, wyszukiwanie, tagi i zaawansowaną personalizację.'
             },
             cacheStatistics: {
                 localCache: 'Lokalna pamięć podręczna',

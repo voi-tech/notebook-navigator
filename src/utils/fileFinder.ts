@@ -19,10 +19,11 @@
 import { TFile, TFolder, App } from 'obsidian';
 import type { NotebookNavigatorSettings } from '../settings';
 import type { NavigatorContext, PinnedNotes, VisibilityPreferences } from '../types';
-import { UNTAGGED_TAG_ID } from '../types';
+import { TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import {
     shouldExcludeFile,
     shouldExcludeFolder,
+    createHiddenFileNameMatcherForVisibility,
     getFilteredDocumentFiles,
     getFilteredFiles,
     isPathInExcludedFolder,
@@ -37,18 +38,51 @@ import { METADATA_SENTINEL } from '../storage/IndexedDBStorage';
 import { getFileDisplayName as getDisplayName } from './fileNameUtils';
 import { isFolderNote } from './folderNotes';
 import { createHiddenTagVisibility, normalizeTagPathValue } from './tagPrefixMatcher';
+import {
+    getActiveFileVisibility,
+    getActiveHiddenFileNamePatterns,
+    getActiveHiddenFiles,
+    getActiveHiddenFolders,
+    getActiveHiddenTags
+} from './vaultProfiles';
+
+interface CollectPinnedPathsOptions {
+    restrictToFolderPath?: string;
+}
+
+function getParentFolderPath(path: string): string {
+    const separatorIndex = path.lastIndexOf('/');
+    if (separatorIndex === -1 || separatorIndex === 0) {
+        return '/';
+    }
+    return path.slice(0, separatorIndex);
+}
 
 /**
  * Collects all pinned note paths from settings
  */
-export function collectPinnedPaths(pinnedNotes: PinnedNotes, contextFilter?: NavigatorContext): Set<string> {
+export function collectPinnedPaths(
+    pinnedNotes: PinnedNotes,
+    contextFilter?: NavigatorContext,
+    options: CollectPinnedPathsOptions = {}
+): Set<string> {
     const allPinnedPaths = new Set<string>();
 
     if (!pinnedNotes || typeof pinnedNotes !== 'object') {
         return allPinnedPaths;
     }
 
+    const restrictToFolderPath = options.restrictToFolderPath;
+    const shouldRestrictFolderContext = contextFilter === 'folder' && restrictToFolderPath !== undefined;
+
     for (const [path, contexts] of Object.entries(pinnedNotes)) {
+        if (shouldRestrictFolderContext) {
+            const parentPath = getParentFolderPath(path);
+            if (parentPath !== restrictToFolderPath) {
+                continue;
+            }
+        }
+
         if (!contextFilter) {
             // Include all pinned notes
             allPinnedPaths.add(path);
@@ -62,8 +96,13 @@ export function collectPinnedPaths(pinnedNotes: PinnedNotes, contextFilter?: Nav
 }
 
 // Reorders files to place pinned files first, preserving relative order within each group
-function applyPinnedOrdering(files: TFile[], settings: NotebookNavigatorSettings, context: NavigatorContext): TFile[] {
-    const pinnedPaths = collectPinnedPaths(settings.pinnedNotes, context);
+function applyPinnedOrdering(
+    files: TFile[],
+    settings: NotebookNavigatorSettings,
+    context: NavigatorContext,
+    options?: CollectPinnedPathsOptions
+): TFile[] {
+    const pinnedPaths = collectPinnedPaths(settings.pinnedNotes, context, options);
     if (pinnedPaths.size === 0) {
         return files;
     }
@@ -97,7 +136,11 @@ export function getFilesForFolder(
     app: App
 ): TFile[] {
     const files: TFile[] = [];
-    const excludedFolderPatterns = settings.excludedFolders;
+    const excludedFolderPatterns = getActiveHiddenFolders(settings);
+    const excludedFileProperties = getActiveHiddenFiles(settings);
+    const excludedFileNamePatterns = getActiveHiddenFileNamePatterns(settings);
+    const fileVisibility = getActiveFileVisibility(settings);
+    const fileNameMatcher = createHiddenFileNameMatcherForVisibility(excludedFileNamePatterns, visibility.showHiddenItems);
 
     // Check if hidden folders should be shown based on UX preference
     const showHiddenFolders = visibility.showHiddenItems;
@@ -111,7 +154,7 @@ export function getFilesForFolder(
         for (const child of f.children) {
             if (child instanceof TFile) {
                 // Check if file should be displayed based on visibility setting
-                if (shouldDisplayFile(child, settings.fileVisibility, app)) {
+                if (shouldDisplayFile(child, fileVisibility, app)) {
                     files.push(child);
                 }
             } else if (visibility.includeDescendantNotes && child instanceof TFolder) {
@@ -131,8 +174,11 @@ export function getFilesForFolder(
 
     collectFiles(folder, folderHiddenInitially);
     let allFiles: TFile[] = files;
-    if (!visibility.showHiddenItems && settings.excludedFiles.length > 0) {
-        allFiles = files.filter(file => file.extension !== 'md' || !shouldExcludeFile(file, settings.excludedFiles, app));
+    if (!visibility.showHiddenItems && excludedFileProperties.length > 0) {
+        allFiles = files.filter(file => file.extension !== 'md' || !shouldExcludeFile(file, excludedFileProperties, app));
+    }
+    if (fileNameMatcher) {
+        allFiles = allFiles.filter(file => !fileNameMatcher.matches(file));
     }
 
     // Filter out folder notes if enabled and set to hide
@@ -193,7 +239,8 @@ export function getFilesForFolder(
         );
     }
 
-    return applyPinnedOrdering(allFiles, settings, 'folder');
+    const pinnedOrderingOptions = settings.filterPinnedByFolder ? { restrictToFolderPath: folder.path } : undefined;
+    return applyPinnedOrdering(allFiles, settings, 'folder', pinnedOrderingOptions);
 }
 
 /**
@@ -213,10 +260,12 @@ export function getFilesForTag(
 ): TFile[] {
     // Get all files based on visibility setting, with proper filtering
     let allFiles: TFile[] = [];
-    const hiddenTagVisibility = createHiddenTagVisibility(settings.hiddenTags, visibility.showHiddenItems);
+    const hiddenTags = getActiveHiddenTags(settings);
+    const fileVisibility = getActiveFileVisibility(settings);
+    const hiddenTagVisibility = createHiddenTagVisibility(hiddenTags, visibility.showHiddenItems);
     const shouldFilterHiddenTags = hiddenTagVisibility.shouldFilterHiddenTags;
 
-    if (settings.fileVisibility === FILE_VISIBILITY.DOCUMENTS) {
+    if (fileVisibility === FILE_VISIBILITY.DOCUMENTS) {
         // Only document files (markdown, canvas, base)
         allFiles = getFilteredDocumentFiles(app, settings, { showHiddenItems: visibility.showHiddenItems });
     } else {
@@ -224,7 +273,7 @@ export function getFilesForTag(
         allFiles = getFilteredFiles(app, settings, { showHiddenItems: visibility.showHiddenItems });
     }
 
-    const excludedFolderPatterns = settings.excludedFolders;
+    const excludedFolderPatterns = getActiveHiddenFolders(settings);
     // For tag views, exclude files in excluded folders only when hidden items are not shown
     // When showing hidden items, include files from excluded folders to match the tag tree
     const baseFiles = visibility.showHiddenItems
@@ -247,6 +296,21 @@ export function getFilesForTag(
             // Check if the markdown file has tags using our cache
             const fileTags = db.getCachedTags(file.path);
             return fileTags.length === 0;
+        });
+    } else if (tag === TAGGED_TAG_ID) {
+        // Include markdown files that have at least one tag, respecting hidden tag visibility
+        const markdownFiles = baseFiles.filter(file => file.extension === 'md');
+        filteredFiles = markdownFiles.filter(file => {
+            const fileTags = db.getCachedTags(file.path);
+            if (fileTags.length === 0) {
+                return false;
+            }
+
+            if (!shouldFilterHiddenTags) {
+                return true;
+            }
+
+            return fileTags.some(tagValue => hiddenTagVisibility.isTagVisible(normalizeTagPathValue(tagValue)));
         });
     } else {
         // For regular tags, only consider markdown files since only they can have tags

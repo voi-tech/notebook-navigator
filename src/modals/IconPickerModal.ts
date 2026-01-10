@@ -20,29 +20,58 @@ import { App, Modal } from 'obsidian';
 import * as emojilib from 'emojilib';
 import { strings } from '../i18n';
 import { getIconService, IconDefinition, IconProvider, RECENT_ICONS_PER_PROVIDER_LIMIT } from '../services/icons';
+import { getProviderCatalogUrl } from '../services/icons/providerCatalogLinks';
 import { MetadataService } from '../services/MetadataService';
 import { ItemType } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { ISettingsProvider } from '../interfaces/ISettingsProvider';
+import { runAsyncAction } from '../utils/async';
+import { addAsyncEventListener } from '../utils/domEventListeners';
 
 // Constants
 const GRID_COLUMNS = 5;
 const MAX_SEARCH_RESULTS = 50;
+const ALL_PROVIDERS_TAB_ID = 'all';
+
+/** Result returned by external icon selection handlers */
+interface IconSelectionHandlerResult {
+    handled: boolean;
+}
+
+/** Configuration options for the icon picker modal */
+interface IconPickerModalOptions {
+    /** Custom title to display in the modal header */
+    titleOverride?: string;
+    /** Pre-selected icon identifier to highlight */
+    currentIconId?: string | null;
+    /** Whether to display the remove icon button (defaults to true) */
+    showRemoveButton?: boolean;
+    /** When true, icon selection does not persist to metadata service */
+    disableMetadataUpdates?: boolean;
+}
+
+// Type guard to validate emoji keywords from emojilib are strings
+function isStringArray(value: unknown): value is string[] {
+    return Array.isArray(value) && value.every(item => typeof item === 'string');
+}
 
 /**
  * Enhanced icon picker modal that supports multiple icon providers
  * Features tabs for different providers (Lucide, Emoji, etc.)
  */
 export class IconPickerModal extends Modal {
-    private currentProvider: string = 'lucide';
+    private currentProvider: string = ALL_PROVIDERS_TAB_ID;
     private static lastUsedProvider: string | null = null; // Shared session default
     private iconService = getIconService();
     private itemPath: string;
     private itemType: typeof ItemType.FOLDER | typeof ItemType.TAG | typeof ItemType.FILE;
     private metadataService: MetadataService;
     private settingsProvider: ISettingsProvider;
+    private titleOverride?: string;
+    private showRemoveButton: boolean;
+    private disableMetadataUpdates: boolean;
     /** Callback function invoked when an icon is selected */
-    public onChooseIcon: (iconId: string | null) => void;
+    public onChooseIcon?: (iconId: string | null) => IconSelectionHandlerResult | Promise<IconSelectionHandlerResult>;
     private resultsContainer: HTMLDivElement;
     private searchDebounceTimer: number | null = null;
     private searchInput: HTMLInputElement;
@@ -52,6 +81,8 @@ export class IconPickerModal extends Modal {
     private providerTabs: HTMLElement[] = [];
     private currentIcon: string | undefined;
     private removeButton: HTMLButtonElement | null = null;
+    private providerLinkContainer: HTMLDivElement | null = null;
+    private providerLinkEl: HTMLAnchorElement | null = null;
 
     public static getLastUsedProvider(): string | null {
         return IconPickerModal.lastUsedProvider;
@@ -61,28 +92,25 @@ export class IconPickerModal extends Modal {
         IconPickerModal.lastUsedProvider = providerId;
     }
 
-    private addDomListener(
-        el: HTMLElement,
-        type: string,
-        handler: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
-    ): void {
-        el.addEventListener(type, handler, options);
-        this.domDisposers.push(() => el.removeEventListener(type, handler, options));
-    }
-
     constructor(
         app: App,
         metadataService: MetadataService,
         itemPath: string,
-        itemType: typeof ItemType.FOLDER | typeof ItemType.TAG | typeof ItemType.FILE = ItemType.FOLDER
+        itemType: typeof ItemType.FOLDER | typeof ItemType.TAG | typeof ItemType.FILE = ItemType.FOLDER,
+        options: IconPickerModalOptions = {}
     ) {
         super(app);
         this.metadataService = metadataService;
         this.settingsProvider = metadataService.getSettingsProvider();
         this.itemPath = itemPath;
         this.itemType = itemType;
-        this.currentIcon = this.getCurrentIconForItem();
+        this.titleOverride = options.titleOverride;
+        this.showRemoveButton = options.showRemoveButton !== false;
+        this.disableMetadataUpdates = options.disableMetadataUpdates === true;
+        this.currentIcon =
+            options.currentIconId === undefined && !this.disableMetadataUpdates
+                ? this.getCurrentIconForItem()
+                : (options.currentIconId ?? undefined);
     }
 
     onOpen() {
@@ -92,7 +120,8 @@ export class IconPickerModal extends Modal {
 
         // Header showing the folder/tag name
         const header = contentEl.createDiv('nn-icon-picker-header');
-        const headerText = this.itemType === ItemType.TAG ? `#${this.itemPath}` : this.itemPath.split('/').pop() || this.itemPath;
+        const headerText =
+            this.titleOverride ?? (this.itemType === ItemType.TAG ? `#${this.itemPath}` : this.itemPath.split('/').pop() || this.itemPath);
         header.createEl('h3', { text: headerText });
 
         // Create tabs for providers
@@ -111,30 +140,34 @@ export class IconPickerModal extends Modal {
 
         // Create results container
         this.resultsContainer = contentEl.createDiv('nn-icon-results-container');
+        this.createProviderLinkRow();
+        this.updateProviderLink(this.currentProvider);
 
-        const buttonContainer = contentEl.createDiv('nn-icon-button-container');
-        const removeButton = buttonContainer.createEl('button');
-        const removeButtonLabel = strings.modals.iconPicker.removeIcon;
-        removeButton.setText(removeButtonLabel);
-        if (removeButton instanceof HTMLButtonElement) {
-            this.removeButton = removeButton;
-            if (!this.currentIcon) {
-                removeButton.disabled = true;
+        if (this.showRemoveButton) {
+            const buttonContainer = contentEl.createDiv('nn-icon-button-container');
+            const removeButton = buttonContainer.createEl('button');
+            const removeButtonLabel = strings.modals.iconPicker.removeIcon;
+            removeButton.setText(removeButtonLabel);
+            if (removeButton instanceof HTMLButtonElement) {
+                this.removeButton = removeButton;
+                if (!this.currentIcon) {
+                    removeButton.disabled = true;
+                }
             }
+            this.domDisposers.push(addAsyncEventListener(removeButton, 'click', () => this.removeIcon()));
         }
-        this.addDomListener(removeButton, 'click', async () => {
-            await this.removeIcon();
-        });
 
-        // Set up search functionality with debouncing
-        this.addDomListener(this.searchInput, 'input', () => {
-            if (this.searchDebounceTimer) {
-                window.clearTimeout(this.searchDebounceTimer);
-            }
-            this.searchDebounceTimer = window.setTimeout(() => {
-                this.updateResults();
-            }, TIMEOUTS.DEBOUNCE_KEYBOARD);
-        });
+        // Search input with debouncing
+        this.domDisposers.push(
+            addAsyncEventListener(this.searchInput, 'input', () => {
+                if (this.searchDebounceTimer) {
+                    window.clearTimeout(this.searchDebounceTimer);
+                }
+                this.searchDebounceTimer = window.setTimeout(() => {
+                    this.updateResults();
+                }, TIMEOUTS.DEBOUNCE_KEYBOARD);
+            })
+        );
 
         // Set up keyboard navigation
         this.setupKeyboardNavigation();
@@ -161,26 +194,49 @@ export class IconPickerModal extends Modal {
         this.currentProvider = resolvedProviderId;
         IconPickerModal.setLastUsedProvider(resolvedProviderId);
 
-        providers.forEach(provider => {
-            const tab = this.tabContainer.createDiv({
-                cls: 'nn-icon-provider-tab',
-                text: provider.name
-            });
-            tab.setAttribute('role', 'tab');
-            tab.setAttribute('tabindex', '-1');
-            tab.dataset.providerId = provider.id;
-            this.providerTabs.push(tab);
+        this.addProviderTab(ALL_PROVIDERS_TAB_ID, strings.modals.iconPicker.allTabLabel);
 
-            this.addDomListener(tab, 'click', () => {
-                this.setActiveProviderTab(provider.id);
-                this.currentProvider = provider.id;
-                IconPickerModal.setLastUsedProvider(provider.id);
-                this.updateResults();
-                this.resetResultsScroll();
-            });
+        providers.forEach(provider => {
+            this.addProviderTab(provider.id, provider.name);
         });
 
         this.setActiveProviderTab(resolvedProviderId);
+    }
+
+    private addProviderTab(providerId: string, label: string): void {
+        if (!this.tabContainer) {
+            return;
+        }
+
+        const tab = this.tabContainer.createDiv({
+            cls: 'nn-icon-provider-tab',
+            text: label
+        });
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('tabindex', '-1');
+        tab.dataset.providerId = providerId;
+        this.providerTabs.push(tab);
+
+        this.domDisposers.push(
+            addAsyncEventListener(tab, 'click', () => {
+                this.setActiveProviderTab(providerId);
+                this.currentProvider = providerId;
+                IconPickerModal.setLastUsedProvider(providerId);
+                this.updateResults();
+                this.resetResultsScroll();
+            })
+        );
+    }
+
+    /**
+     * Creates the provider link row UI elements below the icon tabs
+     */
+    private createProviderLinkRow(): void {
+        this.providerLinkContainer = this.contentEl.createDiv('nn-icon-provider-link-row');
+        this.providerLinkEl = this.providerLinkContainer.createEl('a', { cls: 'nn-icon-provider-link' });
+        this.providerLinkEl.setAttribute('target', '_blank');
+        this.providerLinkEl.setAttribute('rel', 'noopener noreferrer');
+        this.providerLinkContainer.addClass('nn-icon-provider-link-row-hidden');
     }
 
     /**
@@ -190,7 +246,7 @@ export class IconPickerModal extends Modal {
      */
     private sortProvidersForDisplay(providers: IconProvider[]): IconProvider[] {
         // Define providers that should appear first in the UI
-        const pinnedOrder = ['lucide', 'emoji'];
+        const pinnedOrder = ['emoji', 'lucide'];
         return providers.sort((a, b) => {
             const aPinnedIndex = pinnedOrder.indexOf(a.id);
             const bPinnedIndex = pinnedOrder.indexOf(b.id);
@@ -217,30 +273,36 @@ export class IconPickerModal extends Modal {
 
     private resolveInitialProvider(providers: IconProvider[]): string {
         if (!providers.length) {
-            return 'lucide';
+            return ALL_PROVIDERS_TAB_ID;
         }
 
         const providerIds = new Set(providers.map(provider => provider.id));
-        const fallbackProvider = providers.find(provider => provider.id === 'lucide')?.id ?? providers[0].id;
         const candidates = [IconPickerModal.getLastUsedProvider(), this.currentProvider]; // Prefer stored selection
 
         for (const candidate of candidates) {
-            if (candidate && providerIds.has(candidate)) {
+            if (!candidate) {
+                continue;
+            }
+            if (candidate === ALL_PROVIDERS_TAB_ID) {
+                return candidate;
+            }
+            if (providerIds.has(candidate)) {
                 return candidate;
             }
         }
 
-        return fallbackProvider;
+        return ALL_PROVIDERS_TAB_ID;
     }
 
     private updateResults() {
         this.resultsContainer.empty();
 
         const searchTerm = this.searchInput.value.toLowerCase().trim();
-        const provider = this.iconService.getProvider(this.currentProvider);
+        const isAllProvider = this.currentProvider === ALL_PROVIDERS_TAB_ID;
+        const provider = isAllProvider ? undefined : this.iconService.getProvider(this.currentProvider);
 
         if (searchTerm === '') {
-            const hasRecents = this.renderRecentIcons();
+            const hasRecents = isAllProvider ? false : this.renderRecentIcons();
 
             if (!hasRecents) {
                 if (this.currentProvider === 'emoji') {
@@ -253,9 +315,9 @@ export class IconPickerModal extends Modal {
             return;
         }
 
-        const results = this.iconService.search(searchTerm, this.currentProvider);
+        const results = isAllProvider ? this.iconService.search(searchTerm) : this.iconService.search(searchTerm, this.currentProvider);
 
-        if (results.length > 0 && provider) {
+        if (results.length > 0 && (isAllProvider || provider)) {
             const grid = this.resultsContainer.createDiv('nn-icon-grid');
 
             results.slice(0, MAX_SEARCH_RESULTS).forEach(iconDef => {
@@ -302,10 +364,11 @@ export class IconPickerModal extends Modal {
             // Special handling for emoji provider - create icon definition on the fly
             if (provider.id === 'emoji') {
                 let displayName = '';
-                // Look up emoji keywords from emojilib
-                for (const [emoji, keywords] of Object.entries(emojilib)) {
-                    if (emoji === parsed.identifier && Array.isArray(keywords)) {
-                        displayName = keywords[0] || '';
+                // Look up emoji keywords from emojilib with type safety
+                const emojiEntries = Object.entries(emojilib as Record<string, unknown>);
+                for (const [emoji, keywords] of emojiEntries) {
+                    if (emoji === parsed.identifier && isStringArray(keywords)) {
+                        displayName = keywords[0] ?? '';
                         break;
                     }
                 }
@@ -362,9 +425,22 @@ export class IconPickerModal extends Modal {
         emptyMessage.setText(isSearch ? strings.modals.iconPicker.emptyStateNoResults : strings.modals.iconPicker.emptyStateSearch);
     }
 
-    private createIconItem(iconDef: IconDefinition, container: HTMLElement, provider: IconProvider) {
+    private createIconItem(iconDef: IconDefinition, container: HTMLElement, provider?: IconProvider) {
+        let resolvedProvider = provider;
+        let fullIconId = iconDef.id;
+
+        if (resolvedProvider) {
+            fullIconId = this.iconService.formatIconId(resolvedProvider.id, iconDef.id);
+        } else {
+            const parsed = this.iconService.parseIconId(iconDef.id);
+            resolvedProvider = this.iconService.getProvider(parsed.provider);
+            if (!resolvedProvider) {
+                return;
+            }
+            fullIconId = iconDef.id;
+        }
+
         const iconItem = container.createDiv('nn-icon-item');
-        const fullIconId = this.iconService.formatIconId(provider.id, iconDef.id);
         iconItem.setAttribute('data-icon-id', fullIconId);
 
         // Icon preview
@@ -372,7 +448,7 @@ export class IconPickerModal extends Modal {
         this.iconService.renderIcon(iconPreview, fullIconId);
 
         // For emojis, also show the emoji as preview text if available
-        if (provider.id === 'emoji' && iconDef.preview) {
+        if (resolvedProvider.id === 'emoji' && iconDef.preview) {
             iconPreview.addClass('nn-emoji-preview');
         }
 
@@ -380,10 +456,7 @@ export class IconPickerModal extends Modal {
         const iconName = iconItem.createDiv('nn-icon-item-name');
         iconName.setText(iconDef.displayName);
 
-        // Click handler
-        this.addDomListener(iconItem, 'click', () => {
-            this.selectIcon(fullIconId);
-        });
+        this.domDisposers.push(addAsyncEventListener(iconItem, 'click', () => this.selectIcon(fullIconId)));
 
         // Make focusable
         iconItem.setAttribute('tabindex', '0');
@@ -420,9 +493,35 @@ export class IconPickerModal extends Modal {
         this.settingsProvider.setRecentIcons(recentIconsMap);
     }
 
+    /**
+     * Invokes the external handler and returns whether it handled the icon update
+     */
+    private async wasHandledBySelection(iconId: string | null): Promise<boolean> {
+        if (!this.onChooseIcon) {
+            return false;
+        }
+
+        const result = await this.onChooseIcon(iconId);
+        return result?.handled === true;
+    }
+
     private async selectIcon(iconId: string) {
         // Save to recent icons
         this.saveToRecentIcons(iconId);
+
+        // Delegate to caller when a handler is provided to support multi-selection updates
+        if (await this.wasHandledBySelection(iconId)) {
+            this.currentIcon = iconId;
+            this.close();
+            return;
+        }
+
+        // Skip metadata persistence when modal is in standalone mode
+        if (this.disableMetadataUpdates) {
+            this.currentIcon = iconId;
+            this.close();
+            return;
+        }
 
         // Set the icon based on item type
         if (this.itemType === ItemType.TAG) {
@@ -433,12 +532,9 @@ export class IconPickerModal extends Modal {
             await this.metadataService.setFolderIcon(this.itemPath, iconId);
         }
 
-        // Notify callback and close
-        this.onChooseIcon?.(iconId);
         this.currentIcon = iconId;
         this.close();
     }
-
     private getCurrentIconForItem(): string | undefined {
         if (this.itemType === ItemType.TAG) {
             return this.metadataService.getTagIcon(this.itemPath);
@@ -450,21 +546,33 @@ export class IconPickerModal extends Modal {
     }
 
     private async removeIcon(): Promise<void> {
-        const existingIcon = this.getCurrentIconForItem();
+        const existingIcon = this.disableMetadataUpdates ? this.currentIcon : this.getCurrentIconForItem();
         if (!existingIcon) {
             this.close();
             return;
         }
 
-        if (this.itemType === ItemType.TAG) {
-            await this.metadataService.removeTagIcon(this.itemPath);
-        } else if (this.itemType === ItemType.FILE) {
-            await this.metadataService.removeFileIcon(this.itemPath);
-        } else {
-            await this.metadataService.removeFolderIcon(this.itemPath);
-        }
+        // Delegate removal when a handler is provided to support multi-selection updates
+        const handled = await this.wasHandledBySelection(null);
+        if (!handled) {
+            // Clear icon state without metadata persistence in standalone mode
+            if (this.disableMetadataUpdates) {
+                this.currentIcon = undefined;
+                if (this.removeButton) {
+                    this.removeButton.disabled = true;
+                }
+                this.close();
+                return;
+            }
 
-        this.onChooseIcon?.(null);
+            if (this.itemType === ItemType.TAG) {
+                await this.metadataService.removeTagIcon(this.itemPath);
+            } else if (this.itemType === ItemType.FILE) {
+                await this.metadataService.removeFileIcon(this.itemPath);
+            } else {
+                await this.metadataService.removeFolderIcon(this.itemPath);
+            }
+        }
         this.currentIcon = undefined;
         if (this.removeButton) {
             this.removeButton.disabled = true;
@@ -542,7 +650,7 @@ export class IconPickerModal extends Modal {
                 evt.preventDefault();
                 const iconId = currentFocused.getAttribute('data-icon-id');
                 if (iconId) {
-                    this.selectIcon(iconId);
+                    runAsyncAction(() => this.selectIcon(iconId));
                 }
             }
         });
@@ -643,6 +751,88 @@ export class IconPickerModal extends Modal {
                 tab.setAttribute('tabindex', '-1'); // Remove from tab order
             }
         });
+        this.updateProviderLink(providerId);
+    }
+
+    /**
+     * Updates the provider link URL and text for the currently active provider
+     * @param providerId - The ID of the provider to show the link for
+     */
+    private updateProviderLink(providerId: string): void {
+        if (!this.providerLinkContainer || !this.providerLinkEl) {
+            return;
+        }
+
+        const catalogUrl = getProviderCatalogUrl(providerId);
+        if (!catalogUrl) {
+            this.providerLinkContainer.addClass('nn-icon-provider-link-row-hidden');
+            this.providerLinkEl.removeAttribute('href');
+            this.providerLinkEl.setText('');
+            this.providerLinkEl.removeAttribute('title');
+            return;
+        }
+
+        this.providerLinkContainer.removeClass('nn-icon-provider-link-row-hidden');
+        this.providerLinkEl.setAttribute('href', catalogUrl);
+        this.providerLinkEl.setAttribute('title', catalogUrl);
+        const provider = this.iconService.getProvider(providerId);
+        this.providerLinkEl.setText(this.buildProviderLinkLabel(provider, catalogUrl));
+    }
+
+    /**
+     * Formats a catalog URL for display by removing protocol and trailing slash
+     * @param url - The full catalog URL
+     * @returns Formatted URL text without protocol and trailing slash
+     */
+    private formatCatalogLinkText(url: string): string {
+        const trimmed = url.trim();
+        if (!trimmed) {
+            return '';
+        }
+        return trimmed.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    }
+
+    /**
+     * Builds the display label for the provider link, including version if available
+     * @param provider - The icon provider
+     * @param catalogUrl - The catalog URL to format
+     * @returns Display label with optional version prefix
+     */
+    private buildProviderLinkLabel(provider: IconProvider | undefined, catalogUrl: string): string {
+        const version = this.resolveProviderVersion(provider);
+        const linkLabel = this.formatCatalogLinkText(catalogUrl);
+
+        if (version) {
+            return `${version}, ${linkLabel}`;
+        }
+        return linkLabel;
+    }
+
+    /**
+     * Extracts and formats the version string from a provider, adding 'v' prefix if missing
+     * @param provider - The icon provider
+     * @returns Formatted version string with 'v' prefix, or null if no version available
+     */
+    private resolveProviderVersion(provider: IconProvider | undefined): string | null {
+        if (!provider || typeof provider.getVersion !== 'function') {
+            return null;
+        }
+
+        const rawVersion = provider.getVersion();
+        if (!rawVersion) {
+            return null;
+        }
+
+        const trimmed = rawVersion.trim();
+        if (!trimmed) {
+            return null;
+        }
+
+        if (/^v/i.test(trimmed)) {
+            return trimmed;
+        }
+
+        return `v${trimmed}`;
     }
 
     /**
@@ -663,6 +853,8 @@ export class IconPickerModal extends Modal {
         contentEl.empty();
         this.modalEl.removeClass('nn-icon-picker-modal');
         this.removeButton = null;
+        this.providerLinkContainer = null;
+        this.providerLinkEl = null;
         // Cleanup DOM listeners
         if (this.domDisposers.length) {
             this.domDisposers.forEach(dispose => {
@@ -688,7 +880,8 @@ export class IconPickerModal extends Modal {
             this.close();
         };
 
-        this.addDomListener(closeButton, 'click', handleClose);
-        this.addDomListener(closeButton, 'pointerdown', handleClose);
+        // Close modal on click or pointer down
+        this.domDisposers.push(addAsyncEventListener(closeButton, 'click', handleClose));
+        this.domDisposers.push(addAsyncEventListener(closeButton, 'pointerdown', handleClose));
     }
 }

@@ -25,11 +25,11 @@ export const STRINGS_EN = {
     common: {
         cancel: 'Cancel', // Button text for canceling dialogs and operations (English: Cancel)
         delete: 'Delete', // Button text for delete operations in dialogs (English: Delete)
+        clear: 'Clear', // Button text for clearing values (English: Clear)
         remove: 'Remove', // Button text for remove operations in dialogs (English: Remove)
         submit: 'Submit', // Button text for submitting forms and dialogs (English: Submit)
         noSelection: 'No selection', // Placeholder text when no folder or tag is selected (English: No selection)
         untagged: 'Untagged', // Label for notes without any tags (English: Untagged)
-        untitled: 'Untitled', // Default name for notes without a title (English: Untitled)
         featureImageAlt: 'Feature image', // Alt text for thumbnail/preview images (English: Feature image)
         unknownError: 'Unknown error', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator update available',
@@ -41,7 +41,7 @@ export const STRINGS_EN = {
     listPane: {
         emptyStateNoSelection: 'Select a folder or tag to view notes', // Message shown when no folder or tag is selected (English: Select a folder or tag to view notes)
         emptyStateNoNotes: 'No notes', // Message shown when a folder/tag has no notes (English: No notes)
-        pinnedSection: '📌 Pinned', // Header for the pinned notes section at the top of file list (English: 📌 Pinned)
+        pinnedSection: 'Pinned', // Header for the pinned notes section at the top of file list (English: Pinned)
         notesSection: 'Notes', // Header shown between pinned and regular items when showing documents only (English: Notes)
         filesSection: 'Files', // Header shown between pinned and regular items when showing supported or all files (English: Files)
         hiddenItemAriaLabel: '{name} (hidden)' // Accessibility label applied to list items that are normally hidden
@@ -50,7 +50,6 @@ export const STRINGS_EN = {
     // Tag list
     tagList: {
         untaggedLabel: 'Untagged', // Label for the special item showing notes without tags (English: Untagged)
-        hiddenTags: 'Hidden tags', // Label for the hidden tags virtual folder (English: Hidden tags)
         tags: 'Tags' // Label for the tags virtual folder (English: Tags)
     },
 
@@ -59,14 +58,18 @@ export const STRINGS_EN = {
         shortcutsHeader: 'Shortcuts', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Recent notes', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Recent files', // Header label when showing recent non-note files in navigation pane (English: Recent files)
-        reorderRootFoldersTitle: 'Reorder navigation sections',
-        reorderRootFoldersHint: 'Drag headers or items to change order',
+        reorderRootFoldersTitle: 'Reorder navigation',
+        reorderRootFoldersHint: 'Use arrows or drag to reorder',
         vaultRootLabel: 'Vault',
         resetRootToAlpha: 'Reset to alphabetical order',
         resetRootToFrequency: 'Reset to frequency order',
-        dragHandleLabel: 'Drag to reorder',
         pinShortcuts: 'Pin shortcuts',
-        unpinShortcuts: 'Unpin shortcuts'
+        pinShortcutsAndRecentNotes: 'Pin shortcuts and recent notes',
+        pinShortcutsAndRecentFiles: 'Pin shortcuts and recent files',
+        unpinShortcuts: 'Unpin shortcuts',
+        unpinShortcutsAndRecentNotes: 'Unpin shortcuts and recent notes',
+        unpinShortcutsAndRecentFiles: 'Unpin shortcuts and recent files',
+        profileMenuAria: 'Change vault profile'
     },
 
     shortcuts: {
@@ -77,9 +80,12 @@ export const STRINGS_EN = {
         emptySearchQuery: 'Enter a search query before saving it',
         emptySearchName: 'Enter a name before saving the search',
         add: 'Add to shortcuts',
+        addNotesCount: 'Add {count} notes to shortcuts',
+        addFilesCount: 'Add {count} files to shortcuts',
+        rename: 'Rename shortcut',
         remove: 'Remove from shortcuts',
-        moveUp: 'Move up',
-        moveDown: 'Move down',
+        removeAll: 'Remove all shortcuts',
+        removeAllConfirm: 'Remove all shortcuts?',
         folderNotesPinned: 'Pinned {count} folder notes'
     },
 
@@ -87,19 +93,15 @@ export const STRINGS_EN = {
     paneHeader: {
         collapseAllFolders: 'Collapse items', // Tooltip for button that collapses expanded items (English: Collapse items)
         expandAllFolders: 'Expand all items', // Tooltip for button that expands all items (English: Expand all items)
-        scrollToTop: 'Scroll to top',
         newFolder: 'New folder', // Tooltip for create new folder button (English: New folder)
         newNote: 'New note', // Tooltip for create new note button (English: New note)
         mobileBackToNavigation: 'Back to navigation', // Mobile-only back button text to return to navigation pane (English: Back to navigation)
         changeSortOrder: 'Change sort order', // Tooltip for the sort order toggle button (English: Change sort order)
         defaultSort: 'Default', // Label for default sorting mode (English: Default)
-        customSort: 'Custom', // Label for custom sorting mode (English: Custom)
         showFolders: 'Show navigation', // Tooltip for button to show the navigation pane (English: Show navigation)
-        hideFolders: 'Hide navigation', // Tooltip for button to hide the navigation pane (English: Hide navigation)
-        reorderRootFolders: 'Reorder root folders and tags',
-        finishRootFolderReorder: 'Finish root reorder',
+        reorderRootFolders: 'Reorder navigation',
+        finishRootFolderReorder: 'Done reordering',
         toggleDescendantNotes: 'Show notes from subfolders / descendants', // Tooltip: include descendants for folders and tags
-        autoExpandFoldersTags: 'Auto-expand folders and tags', // Tooltip for button to toggle auto-expanding folders and tags when selected (English: Auto-expand folders and tags)
         showExcludedItems: 'Show hidden folders, tags, and notes', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Hide hidden folders, tags, and notes', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Show dual panes', // Tooltip for button to show dual-pane layout (English: Show dual panes)
@@ -115,7 +117,6 @@ export const STRINGS_EN = {
         saveSearchShortcut: 'Save search shortcut',
         removeSearchShortcut: 'Remove search shortcut',
         shortcutModalTitle: 'Save search shortcut',
-        shortcutNameLabel: 'Shortcut name',
         shortcutNamePlaceholder: 'Enter shortcut name'
     },
 
@@ -148,16 +149,18 @@ export const STRINGS_EN = {
             revealInFinder: 'Reveal in Finder',
             showInExplorer: 'Show in system explorer',
             copyDeepLink: 'Copy Obsidian URL',
-            copyPath: 'Copy path',
-            copyRelativePath: 'Copy relative path',
+            copyPath: 'Copy file system path',
+            copyRelativePath: 'Copy vault path',
             renameNote: 'Rename note',
             renameFile: 'Rename file',
             deleteNote: 'Delete note',
             deleteFile: 'Delete file',
             deleteMultipleNotes: 'Delete {count} notes',
             deleteMultipleFiles: 'Delete {count} files',
-            moveToFolder: 'Move to...',
-            moveMultipleToFolder: 'Move {count} files to...',
+            moveNoteToFolder: 'Move note to...',
+            moveFileToFolder: 'Move file to...',
+            moveMultipleNotesToFolder: 'Move {count} notes to...',
+            moveMultipleFilesToFolder: 'Move {count} files to...',
             addTag: 'Add tag',
             removeTag: 'Remove tag',
             removeAllTags: 'Remove all tags',
@@ -166,20 +169,26 @@ export const STRINGS_EN = {
         },
         folder: {
             newNote: 'New note',
+            newNoteFromTemplate: 'New note from template',
             newFolder: 'New folder',
             newCanvas: 'New canvas',
             newBase: 'New base',
             newDrawing: 'New drawing',
+            newExcalidrawDrawing: 'New Excalidraw drawing',
+            newTldrawDrawing: 'New Tldraw drawing',
             duplicateFolder: 'Duplicate folder',
             searchInFolder: 'Search in folder',
+            copyPath: 'Copy file system path',
+            copyRelativePath: 'Copy vault path',
             createFolderNote: 'Create folder note',
+            detachFolderNote: 'Detach folder note',
             deleteFolderNote: 'Delete folder note',
             changeIcon: 'Change icon',
             changeColor: 'Change color',
             changeBackground: 'Change background',
             excludeFolder: 'Hide folder',
             unhideFolder: 'Unhide folder',
-            moveFolder: 'Move to...',
+            moveFolder: 'Move folder to...',
             renameFolder: 'Rename folder',
             deleteFolder: 'Delete folder'
         },
@@ -189,18 +198,33 @@ export const STRINGS_EN = {
             changeBackground: 'Change background',
             showTag: 'Show tag',
             hideTag: 'Hide tag'
+        },
+        navigation: {
+            addSeparator: 'Add separator',
+            removeSeparator: 'Remove separator'
+        },
+        style: {
+            title: 'Style',
+            copy: 'Copy style',
+            paste: 'Paste style',
+            removeIcon: 'Remove icon',
+            removeColor: 'Remove color',
+            removeBackground: 'Remove background',
+            clear: 'Clear style'
         }
     },
 
     // Folder appearance menu
     folderAppearance: {
-        defaultPreset: 'Default appearance',
-        slimPreset: 'Slim (no date/preview/image)',
+        standardPreset: 'Standard',
+        compactPreset: 'Compact',
+        defaultSuffix: '(default)',
         titleRows: 'Title rows',
         previewRows: 'Preview rows',
-        defaultOption: (rows: number) => `Default (${rows})`,
+        groupBy: 'Group by',
         defaultTitleOption: (rows: number) => `Default title rows (${rows})`,
         defaultPreviewOption: (rows: number) => `Default preview rows (${rows})`,
+        defaultGroupOption: (groupLabel: string) => `Default grouping (${groupLabel})`,
         titleRowOption: (rows: number) => `${rows} title row${rows === 1 ? '' : 's'}`,
         previewRowOption: (rows: number) => `${rows} preview row${rows === 1 ? '' : 's'}`
     },
@@ -214,41 +238,70 @@ export const STRINGS_EN = {
             emptyStateNoResults: 'No icons found',
             showingResultsInfo: 'Showing 50 of {count} results. Type more to narrow down.',
             emojiInstructions: 'Type or paste any emoji to use it as an icon',
-            removeIcon: 'Remove icon'
+            removeIcon: 'Remove icon',
+            allTabLabel: 'All'
+        },
+        fileIconRuleEditor: {
+            addRuleAria: 'Add rule'
+        },
+        interfaceIcons: {
+            title: 'Interface icons',
+            fileItemsSection: 'File items',
+            items: {
+                'nav-shortcuts': 'Shortcuts',
+                'nav-recent-files': 'Recent files',
+                'nav-expand-all': 'Expand all',
+                'nav-collapse-all': 'Collapse all',
+                'nav-tree-expand': 'Tree chevron: expand',
+                'nav-tree-collapse': 'Tree chevron: collapse',
+                'nav-hidden-items': 'Hidden items',
+                'nav-root-reorder': 'Reorder root folders',
+                'nav-new-folder': 'New folder',
+                'nav-show-single-pane': 'Show single pane',
+                'nav-show-dual-pane': 'Show dual panes',
+                'nav-profile-chevron': 'Profile menu chevron',
+                'list-search': 'Search',
+                'list-descendants': 'Notes from subfolders',
+                'list-sort-ascending': 'Sort order: ascending',
+                'list-sort-descending': 'Sort order: descending',
+                'list-appearance': 'Change appearance',
+                'list-new-note': 'New note',
+                'nav-folder-open': 'Folder open',
+                'nav-folder-closed': 'Folder closed',
+                'nav-folder-note': 'Folder note',
+                'nav-tag': 'Tag',
+                'list-pinned': 'Pinned items',
+                'file-word-count': 'Word count',
+                'file-custom-property': 'Custom property'
+            }
         },
         colorPicker: {
             currentColor: 'Current',
             newColor: 'New',
-            presetColors: 'Preset colors',
+            paletteDefault: 'Default',
+            paletteCustom: 'Custom',
+            copyColors: 'Copy color',
+            colorsCopied: 'Color copied to clipboard',
+            copyClipboardError: 'Could not write to clipboard',
+            pasteColors: 'Paste color',
+            pasteClipboardError: 'Could not read clipboard',
+            pasteInvalidFormat: 'Expected a hex color value',
+            colorsPasted: 'Color pasted successfully',
+            resetUserColors: 'Clear custom colors',
+            clearCustomColorsConfirm: 'Remove all custom colors?',
+            userColorSlot: 'Color {slot}',
             recentColors: 'Recent colors',
             clearRecentColors: 'Clear recent colors',
             removeRecentColor: 'Remove color',
             removeColor: 'Remove color',
             apply: 'Apply',
             hexLabel: 'HEX',
-            rgbLabel: 'RGBA',
-            colors: {
-                red: 'Red',
-                orange: 'Orange',
-                amber: 'Amber',
-                yellow: 'Yellow',
-                lime: 'Lime',
-                green: 'Green',
-                emerald: 'Emerald',
-                teal: 'Teal',
-                cyan: 'Cyan',
-                sky: 'Sky',
-                blue: 'Blue',
-                indigo: 'Indigo',
-                violet: 'Violet',
-                purple: 'Purple',
-                fuchsia: 'Fuchsia',
-                pink: 'Pink',
-                rose: 'Rose',
-                gray: 'Gray',
-                slate: 'Slate',
-                stone: 'Stone'
-            }
+            rgbLabel: 'RGBA'
+        },
+        selectVaultProfile: {
+            title: 'Select vault profile',
+            currentBadge: 'Active',
+            emptyState: 'No vault profiles available.'
         },
         tagOperation: {
             renameTitle: 'Rename tag {tag}',
@@ -261,6 +314,10 @@ export const STRINGS_EN = {
             affectedFiles: 'Affected files:',
             andMore: '...and {count} more',
             confirmRename: 'Rename tag',
+            renameUnchanged: '{tag} unchanged',
+            renameNoChanges: '{oldTag} → {newTag} ({countLabel})',
+            invalidTagName: 'Enter a valid tag name.',
+            descendantRenameError: 'Cannot move a tag into itself or a descendant.',
             confirmDelete: 'Delete tag',
             file: 'file',
             files: 'files'
@@ -272,6 +329,7 @@ export const STRINGS_EN = {
             deleteFolderTitle: "Delete '{name}'?",
             deleteFileTitle: "Delete '{name}'?",
             folderNamePrompt: 'Enter folder name:',
+            hideInOtherVaultProfiles: 'Hide in other vault profiles',
             renamePrompt: 'Enter new name:',
             renameVaultTitle: 'Change vault display name',
             renameVaultPrompt: 'Enter custom display name (leave empty to use default):',
@@ -286,7 +344,8 @@ export const STRINGS_EN = {
             folderLabel: 'Folder: {name}'
         },
         folderSuggest: {
-            placeholder: 'Move to folder...',
+            placeholder: (name: string) => `Move ${name} to folder...`,
+            multipleFilesLabel: (count: number) => `${count} files`,
             navigatePlaceholder: 'Navigate to folder...',
             instructions: {
                 navigate: 'to navigate',
@@ -312,7 +371,6 @@ export const STRINGS_EN = {
             }
         },
         tagSuggest: {
-            placeholder: 'Search tags...',
             navigatePlaceholder: 'Navigate to tag...',
             addPlaceholder: 'Search for tag to add...',
             removePlaceholder: 'Select tag to remove...',
@@ -324,6 +382,17 @@ export const STRINGS_EN = {
                 add: 'to add tag',
                 remove: 'to remove tag'
             }
+        },
+        welcome: {
+            title: 'Welcome to {pluginName}',
+            introText:
+                'Hi there! Before you start, I highly recommend that you watch the first five minutes of the video below to understand how the panes and the toggle "Show notes from subfolders" works.',
+            continueText:
+                'If you have five more minutes then continue watching the video to understand the compact display modes and how to properly set up shortcuts and important hotkeys.',
+            thanksText: 'Thank you so much for downloading, and enjoy!',
+            videoAlt: 'Installing and mastering Notebook Navigator',
+            openVideoButton: 'Play video',
+            closeButton: "I'll watch it later"
         }
     },
     // File system operations
@@ -337,8 +406,6 @@ export const STRINGS_EN = {
             deleteFolder: 'Failed to delete folder: {error}',
             deleteFile: 'Failed to delete file: {error}',
             duplicateNote: 'Failed to duplicate note: {error}',
-            createCanvas: 'Failed to create canvas: {error}',
-            createDatabase: 'Failed to create database: {error}',
             duplicateFolder: 'Failed to duplicate folder: {error}',
             openVersionHistory: 'Failed to open version history: {error}',
             versionHistoryNotFound: 'Version history command not found. Ensure Obsidian Sync is enabled.',
@@ -347,6 +414,7 @@ export const STRINGS_EN = {
             folderAlreadyExists: 'Folder "{name}" already exists',
             folderNotesDisabled: 'Enable folder notes in settings to convert files',
             folderNoteAlreadyLinked: 'This file already acts as a folder note',
+            folderNoteNotFound: 'No folder note in selected folder',
             folderNoteUnsupportedExtension: 'Unsupported file extension: {extension}',
             folderNoteMoveFailed: 'Failed to move file during conversion: {error}',
             folderNoteRenameConflict: 'A file named "{name}" already exists in the folder',
@@ -360,6 +428,11 @@ export const STRINGS_EN = {
             failedToCreateDrawing: 'Failed to create drawing',
             noFolderSelected: 'No folder is selected in Notebook Navigator',
             noFileSelected: 'No file is selected'
+        },
+        warnings: {
+            linkBreakingNameCharacters: 'This name includes characters that break Obsidian links: #, |, ^, %%, [[, ]].',
+            forbiddenNameCharactersAllPlatforms: 'Names cannot start with a period or include : or /.',
+            forbiddenNameCharactersWindows: 'Windows-reserved characters are not allowed: <, >, ", \\, |, ?, *.'
         },
         notices: {
             hideFolder: 'Folder hidden: {name}',
@@ -394,8 +467,7 @@ export const STRINGS_EN = {
             deleteConfirmation: 'This action cannot be undone.'
         },
         defaultNames: {
-            untitled: 'Untitled',
-            untitledNumber: 'Untitled {number}'
+            untitled: 'Untitled'
         }
     },
 
@@ -412,9 +484,7 @@ export const STRINGS_EN = {
         },
         notifications: {
             filesAlreadyExist: '{count} files already exist in destination',
-            addedTag: 'Added tag "{tag}" to {count} files',
             filesAlreadyHaveTag: '{count} files already have this tag or a more specific one',
-            clearedTags: 'Cleared all tags from {count} files',
             noTagsToClear: 'No tags to clear',
             fileImported: 'Imported 1 file',
             filesImported: 'Imported {count} files'
@@ -429,17 +499,6 @@ export const STRINGS_EN = {
         previous30Days: 'Previous 30 days'
     },
 
-    // Weekdays
-    weekdays: {
-        sunday: 'Sunday',
-        monday: 'Monday',
-        tuesday: 'Tuesday',
-        wednesday: 'Wednesday',
-        thursday: 'Thursday',
-        friday: 'Friday',
-        saturday: 'Saturday'
-    },
-
     // Plugin commands
     commands: {
         open: 'Open', // Command palette: Opens the Notebook Navigator view (English: Open)
@@ -447,14 +506,24 @@ export const STRINGS_EN = {
         revealFile: 'Reveal file', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Search', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Toggle dual pane layout', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        selectVaultProfile: 'Select vault profile', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
+        selectVaultProfile1: 'Select vault profile 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
+        selectVaultProfile2: 'Select vault profile 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)
+        selectVaultProfile3: 'Select vault profile 3', // Command palette: Activates the third vault profile without opening the modal (English: Select vault profile 3)
         deleteFile: 'Delete files', // Command palette: Deletes the currently active file (English: Delete file)
         createNewNote: 'Create new note', // Command palette: Creates a new note in the currently selected folder (English: Create new note)
+        createNewNoteFromTemplate: 'Create new note from template', // Command palette: Creates a new note from a template in the currently selected folder (English: Create new note from template)
         moveFiles: 'Move files', // Command palette: Move selected files to another folder (English: Move files)
+        selectNextFile: 'Select next file', // Command palette: Selects the next file in the current view (English: Select next file)
+        selectPreviousFile: 'Select previous file', // Command palette: Selects the previous file in the current view (English: Select previous file)
         convertToFolderNote: 'Convert to folder note', // Command palette: Converts the active file into a folder note with a new folder (English: Convert to folder note)
+        setAsFolderNote: 'Set as folder note', // Command palette: Renames the active file to its folder note name (English: Set as folder note)
+        detachFolderNote: 'Detach folder note', // Command palette: Renames the active folder note to a new name (English: Detach folder note)
         pinAllFolderNotes: 'Pin all folder notes', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Navigate to folder', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Navigate to tag', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
         addShortcut: 'Add to shortcuts', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
+        openShortcut: 'Open shortcut {number}', // Command palette: Opens a shortcut by its position (English: Open shortcut {number})
         toggleDescendants: 'Toggle descendants', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)
         toggleHidden: 'Toggle hidden folders, tags, and notes', // Command palette: Toggles showing hidden items (English: Toggle hidden items)
         toggleTagSort: 'Toggle tag sort order', // Command palette: Toggles between alphabetical and frequency tag sorting (English: Toggle tag sort order)
@@ -493,8 +562,10 @@ export const STRINGS_EN = {
             navigationPane: 'Navigation pane',
             icons: 'Icon packs',
             folders: 'Folders',
+            foldersAndTags: 'Folders & tags',
             tags: 'Tags',
             search: 'Search',
+            searchAndHotkeys: 'Search & hotkeys',
             listPane: 'List pane',
             notes: 'Notes',
             hotkeys: 'Hotkeys',
@@ -505,27 +576,34 @@ export const STRINGS_EN = {
                 filtering: 'Filtering',
                 behavior: 'Behavior',
                 view: 'Appearance',
+                icons: 'Icons',
                 desktopAppearance: 'Desktop appearance',
-                mobileAppearance: 'Mobile appearance',
                 formatting: 'Formatting'
             },
             navigation: {
-                behavior: 'Behavior',
-                appearance: 'Appearance'
+                appearance: 'Appearance',
+                shortcutsAndRecent: 'Shortcuts & recent items'
             },
             list: {
                 display: 'Appearance',
-                quickActions: 'Quick actions'
+                pinnedNotes: 'Pinned notes'
             },
             notes: {
                 frontmatter: 'Frontmatter',
-                display: 'Appearance'
+                icon: 'Icon',
+                title: 'Title',
+                previewText: 'Preview text',
+                featureImage: 'Feature image',
+                tags: 'Tags',
+                customProperty: 'Custom property',
+                date: 'Date',
+                parentFolder: 'Parent folder'
             }
         },
         items: {
             searchProvider: {
                 name: 'Search provider',
-                desc: 'Choose between quick file name search or full-text search with Omnisearch plugin.',
+                desc: 'Choose between quick file name search or full-text search with Omnisearch plugin. (not synced)',
                 options: {
                     internal: 'Filter search',
                     omnisearch: 'Omnisearch (full-text)'
@@ -534,7 +612,7 @@ export const STRINGS_EN = {
                     filterSearch: {
                         title: 'Filter search (default):',
                         description:
-                            'Fast, lightweight search that filters files by name and tags within the current folder and subfolders. Supports tag filtering with # prefix (e.g., #project), exclusion with ! prefix (e.g., !draft, !#archived), and finding untagged notes with !#. Ideal for quick navigation within your current context.'
+                            'Filters files by name and tags within the current folder and subfolders. Filter mode: mixed text and tags match all terms (e.g., "project #work"). Tag mode: search with only tags supports AND/OR operators (e.g., "#work AND #urgent", "#project OR #personal"). Cmd/Ctrl+Click tags to add with AND, Cmd/Ctrl+Shift+Click to add with OR. Supports exclusion with ! prefix (e.g., !draft, !#archived) and finding untagged notes with !#.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',
@@ -555,7 +633,7 @@ export const STRINGS_EN = {
                 }
             },
             listPaneTitle: {
-                name: 'List pane title',
+                name: 'List pane title (desktop only)',
                 desc: 'Choose where the list pane title is shown.',
                 options: {
                     header: 'Show in header',
@@ -575,9 +653,17 @@ export const STRINGS_EN = {
                     'title-desc': 'Title (Z on top)'
                 }
             },
+            revealFileOnListChanges: {
+                name: 'Scroll to selected file on list changes',
+                desc: 'Scroll to the selected file when pinning notes, showing descendant notes, changing folder appearance, or running file operations.'
+            },
             includeDescendantNotes: {
-                name: 'Show notes from subfolders / descendants',
+                name: 'Show notes from subfolders / descendants (not synced)',
                 desc: 'Include notes from nested subfolders and tag descendants when viewing a folder or tag.'
+            },
+            limitPinnedToCurrentFolder: {
+                name: 'Limit pinned notes to their folder',
+                desc: 'Pinned notes appear only when viewing the folder or tag where they were pinned.'
             },
             separateNoteCounts: {
                 name: 'Show current and descendant counts separately',
@@ -592,29 +678,78 @@ export const STRINGS_EN = {
                     folder: 'Group by folder'
                 }
             },
-            optimizeNoteHeight: {
-                name: 'Optimize note height',
-                desc: 'Reduce height for pinned notes and notes without preview text.'
+            showPinnedGroupHeader: {
+                name: 'Show pinned group header',
+                desc: 'Display the pinned section header above pinned notes.'
             },
-            showParentFolderNames: {
-                name: 'Show parent folder names',
+            showPinnedIcon: {
+                name: 'Show pinned icon',
+                desc: 'Show the icon next to the pinned section header.'
+            },
+            defaultListMode: {
+                name: 'Default list mode',
+                desc: 'Select the default list layout. Standard shows title, date, description, and preview text. Compact shows title only. Override appearance per folder.',
+                options: {
+                    standard: 'Standard',
+                    compact: 'Compact'
+                }
+            },
+            showFileIcons: {
+                name: 'Show file icons',
+                desc: 'Display file icons with left-aligned spacing. Disabling removes both icons and indentation. Priority: custom > file name > file type > default.'
+            },
+            showFilenameMatchIcons: {
+                name: 'Icons by file name',
+                desc: 'Assign icons to files based on text in their names.'
+            },
+            fileNameIconMap: {
+                name: 'File name icon map',
+                desc: 'Files containing the text get the specified icon. One mapping per line: text=icon',
+                placeholder: '# Text=icon\nmeeting=LiCalendar\ninvoice=PhReceipt',
+                editTooltip: 'Edit mappings'
+            },
+            showCategoryIcons: {
+                name: 'Icons by file type',
+                desc: 'Assign icons to files based on their extension.'
+            },
+            fileTypeIconMap: {
+                name: 'File type icon map',
+                desc: 'Files with the extension get the specified icon. One mapping per line: extension=icon',
+                placeholder: '# Extension=icon\ncpp=LiFileCode\npdf=RaBook',
+                editTooltip: 'Edit mappings'
+            },
+            optimizeNoteHeight: {
+                name: 'Variable note height',
+                desc: 'Use compact height for pinned notes and notes without preview text.'
+            },
+            compactItemHeight: {
+                name: 'Compact item height',
+                desc: 'Set the height of compact list items on desktop and mobile.',
+                resetTooltip: 'Restore to default (28px)'
+            },
+            compactItemHeightScaleText: {
+                name: 'Scale text with compact item height',
+                desc: 'Scale compact list text when the item height is reduced.'
+            },
+            showParentFolder: {
+                name: 'Show parent folder',
                 desc: 'Display the parent folder name for notes in subfolders or tags.'
+            },
+            parentFolderClickRevealsFile: {
+                name: 'Click parent folder to go to folder',
+                desc: 'Clicking the parent folder label opens the folder in list pane.'
+            },
+            showParentFolderColor: {
+                name: 'Show parent folder color',
+                desc: 'Use folder colors on parent folder labels.'
+            },
+            showParentFolderIcon: {
+                name: 'Show parent folder icon',
+                desc: 'Show folder icons next to parent folder labels.'
             },
             showQuickActions: {
                 name: 'Show quick actions (desktop only)',
-                desc: 'Show hover actions on file items.'
-            },
-            quickActionsRevealInFolder: {
-                name: 'Reveal in folder',
-                desc: "Quick action: Reveal note in its parent folder. Only visible when viewing notes from subfolders or in tags (not shown in the note's actual folder)."
-            },
-            quickActionsPinNote: {
-                name: 'Pin note',
-                desc: 'Quick action: Pin or unpin note at top of list.'
-            },
-            quickActionsOpenInNewTab: {
-                name: 'Open in new tab',
-                desc: 'Quick action: Open note in new tab.'
+                desc: 'Show action buttons when hovering over files. Button controls select which actions appear.'
             },
             dualPane: {
                 name: 'Dual pane layout (not synced)',
@@ -638,7 +773,7 @@ export const STRINGS_EN = {
                 }
             },
             appearanceScale: {
-                name: 'Zoom level',
+                name: 'Zoom level (not synced)',
                 desc: 'Controls the overall zoom level of Notebook Navigator.'
             },
             startView: {
@@ -649,6 +784,12 @@ export const STRINGS_EN = {
                     files: 'List pane'
                 }
             },
+            toolbarButtons: {
+                name: 'Toolbar buttons',
+                desc: 'Choose which buttons appear in the toolbar. Hidden buttons remain accessible via commands and menus.',
+                navigationLabel: 'Navigation toolbar',
+                listLabel: 'List toolbar'
+            },
             autoRevealActiveNote: {
                 name: 'Auto-reveal active note',
                 desc: 'Automatically reveal notes when opened from Quick Switcher, links, or search.'
@@ -656,6 +797,11 @@ export const STRINGS_EN = {
             autoRevealIgnoreRightSidebar: {
                 name: 'Ignore events from right sidebar',
                 desc: 'Do not change active note when clicking or changing notes in the right sidebar.'
+            },
+            paneTransitionDuration: {
+                name: 'Single pane animation',
+                desc: 'Transition duration when switching panes in single-pane mode (milliseconds).',
+                resetTooltip: 'Reset to default'
             },
             autoSelectFirstFileOnFocusChange: {
                 name: 'Auto-select first note (desktop only)',
@@ -666,19 +812,39 @@ export const STRINGS_EN = {
                 desc: "Don't scroll the navigation pane when clicking items in shortcuts."
             },
             autoExpandFoldersTags: {
-                name: 'Auto-expand folders and tags',
-                desc: 'Automatically expand folders and tags when they are selected.'
+                name: 'Expand on selection',
+                desc: 'Expand folders and tags when selected. In single pane mode, first selection expands, second selection shows files.'
+            },
+            springLoadedFolders: {
+                name: 'Spring-loaded folders (desktop only)',
+                desc: 'Expand folders and tags on hover during drag operations.'
+            },
+            springLoadedFoldersInitialDelay: {
+                name: 'First expand delay',
+                desc: 'Delay before the first folder or tag expands during a drag operation (seconds).'
+            },
+            springLoadedFoldersSubsequentDelay: {
+                name: 'Subsequent expand delay',
+                desc: 'Delay before expanding additional folders or tags during the same drag operation (seconds).'
             },
             navigationBanner: {
-                name: 'Navigation banner',
-                desc: 'Display an image above the navigation pane.',
+                name: 'Navigation banner (vault profile)',
+                desc: 'Display an image above the navigation pane. Changes with the selected vault profile.',
                 current: 'Current banner: {path}',
-                chooseButton: 'Choose image',
-                clearButton: 'Clear'
+                chooseButton: 'Choose image'
             },
             showShortcuts: {
                 name: 'Show shortcuts',
                 desc: 'Display the shortcuts section in the navigation pane.'
+            },
+            shortcutBadgeDisplay: {
+                name: 'Shortcut badge',
+                desc: "What to display next to shortcuts. Use 'Open shortcut 1-9' commands to open shortcuts directly.",
+                options: {
+                    index: 'Position (1-9)',
+                    count: 'Item counts',
+                    none: 'None'
+                }
             },
             showRecentNotes: {
                 name: 'Show recent notes',
@@ -687,6 +853,10 @@ export const STRINGS_EN = {
             recentNotesCount: {
                 name: 'Recent notes count',
                 desc: 'Number of recent notes to display.'
+            },
+            pinRecentNotesWithShortcuts: {
+                name: 'Pin recent notes with shortcuts',
+                desc: 'Include recent notes when shortcuts are pinned.'
             },
             showTooltips: {
                 name: 'Show tooltips',
@@ -703,7 +873,7 @@ export const STRINGS_EN = {
                 notice: 'Separator position reset. Restart Obsidian or reopen Notebook Navigator to apply.'
             },
             multiSelectModifier: {
-                name: 'Multi-select modifier',
+                name: 'Multi-select modifier (desktop only)',
                 desc: 'Choose which modifier key toggles multi-selection. When Option/Alt is selected, Cmd/Ctrl click opens notes in a new tab.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl click',
@@ -711,7 +881,7 @@ export const STRINGS_EN = {
                 }
             },
             fileVisibility: {
-                name: 'Show file types',
+                name: 'Show file types (vault profile)',
                 desc: 'Filter which file types are shown in the navigator. File types not supported by Obsidian may open in external applications.',
                 options: {
                     documents: 'Documents (.md, .canvas, .base)',
@@ -725,19 +895,52 @@ export const STRINGS_EN = {
                 current: 'Current: {path}',
                 currentMobile: 'Mobile: {path}',
                 chooseButton: 'Choose file',
-                clearButton: 'Clear',
                 separateMobile: {
                     name: 'Separate mobile homepage',
                     desc: 'Use a different homepage for mobile devices.'
                 }
             },
             excludedNotes: {
-                name: 'Hide notes',
+                name: 'Hide notes (vault profile)',
                 desc: 'Comma-separated list of frontmatter properties. Notes containing any of these properties will be hidden (e.g., draft, private, archived).',
                 placeholder: 'draft, private'
             },
+            excludedFileNamePatterns: {
+                name: 'Hide files (vault profile)',
+                desc: 'Comma-separated list of filename patterns to hide. Supports * wildcards and / paths (e.g., temp-*, *.png, /assets/*).',
+                placeholder: 'temp-*, *.png, /assets/*'
+            },
+            vaultProfiles: {
+                name: 'Vault profile',
+                desc: 'Profiles store file type visibility, hidden files, hidden folders, hidden tags, hidden notes, shortcuts, and navigation banner. Switch profiles from the navigation pane header.',
+                defaultName: 'Default',
+                addButton: 'Add profile',
+                editProfilesButton: 'Edit profiles',
+                addProfileOption: 'Add profile...',
+                applyButton: 'Apply',
+                deleteButton: 'Delete profile',
+                addModalTitle: 'Add profile',
+                editProfilesModalTitle: 'Edit profiles',
+                addModalPlaceholder: 'Profile name',
+                deleteModalTitle: 'Delete {name}',
+                deleteModalMessage: 'Remove {name}? Hidden file, folder, tag, and note filters saved in this profile will be deleted.',
+                moveUp: 'Move up',
+                moveDown: 'Move down',
+                errors: {
+                    emptyName: 'Enter a profile name',
+                    duplicateName: 'Profile name already exists'
+                }
+            },
+            vaultTitle: {
+                name: 'Vault title placement (desktop only)',
+                desc: 'Choose where the vault title is shown.',
+                options: {
+                    header: 'Show in header',
+                    navigation: 'Show in navigation pane'
+                }
+            },
             excludedFolders: {
-                name: 'Hide folders',
+                name: 'Hide folders (vault profile)',
                 desc: 'Comma-separated list of folders to hide. Name patterns: assets* (folders starting with assets), *_temp (ending with _temp). Path patterns: /archive (root archive only), /res* (root folders starting with res), /*/temp (temp folders one level deep), /projects/* (all folders inside projects).',
                 placeholder: 'templates, assets*, /archive, /res*'
             },
@@ -758,16 +961,43 @@ export const STRINGS_EN = {
                 desc: 'Display clickable tags in file items.'
             },
             showFileTagAncestors: {
-                name: 'Show parent tags',
-                desc: 'Display parent segments before the tag name.'
+                name: 'Show full tag paths',
+                desc: "Display complete tag hierarchy paths. When enabled: 'ai/openai', 'work/projects/2024'. When disabled: 'openai', '2024'."
             },
             colorFileTags: {
                 name: 'Color file tags',
                 desc: 'Apply tag colors to tag badges on file items.'
             },
-            showFileTagsInSlimMode: {
-                name: 'Show file tags in slim mode',
+            prioritizeColoredFileTags: {
+                name: 'Show colored tags first',
+                desc: 'Sort colored tags before other tags on file items.'
+            },
+            showFileTagsInCompactMode: {
+                name: 'Show file tags in compact mode',
                 desc: 'Display tags when date, preview, and image are hidden.'
+            },
+            customPropertyType: {
+                name: 'Type',
+                desc: 'Select the custom property to display in file items.',
+                options: {
+                    frontmatter: 'Frontmatter property',
+                    wordCount: 'Word count',
+                    none: 'None'
+                }
+            },
+            customPropertyFields: {
+                name: 'Property to display',
+                desc: 'Comma-separated list of frontmatter properties to display as badges. List-valued properties render one badge per value. [[wikilink]] values displayed as clickable links.',
+                placeholder: 'status, type, category'
+            },
+            customPropertyColorFields: {
+                name: 'Property for color',
+                desc: 'Comma-separated list of frontmatter properties for badge colors. Color properties pair with display properties by position. List-valued properties pair colors by index. Values can be tag names or CSS colors.',
+                placeholder: 'statusColor, typeColor, categoryColor'
+            },
+            showCustomPropertyInCompactMode: {
+                name: 'Show custom property in compact mode',
+                desc: 'Display the custom property when date, preview, and image are hidden.'
             },
             dateFormat: {
                 name: 'Date format',
@@ -794,6 +1024,10 @@ export const STRINGS_EN = {
             skipCodeBlocksInPreview: {
                 name: 'Skip code blocks in preview',
                 desc: 'Skip code blocks when generating preview text.'
+            },
+            stripHtmlInPreview: {
+                name: 'Strip HTML in previews',
+                desc: 'Remove HTML tags from preview text. May affect performance on large notes.'
             },
             previewProperties: {
                 name: 'Preview properties',
@@ -822,7 +1056,7 @@ export const STRINGS_EN = {
             },
             showFeatureImage: {
                 name: 'Show feature image',
-                desc: 'Display thumbnail images from frontmatter. Tip: Use the "Featured Image" plugin to automatically set feature images for all your documents.'
+                desc: 'Display a thumbnail of the first image found in the note.'
             },
             forceSquareFeatureImage: {
                 name: 'Force square feature image',
@@ -830,16 +1064,20 @@ export const STRINGS_EN = {
             },
             featureImageProperties: {
                 name: 'Image properties',
-                desc: 'Comma-separated list of frontmatter properties to check for thumbnail images. The first property with an image will be used. If empty and the fallback setting is enabled, the first embedded image will be used.',
+                desc: 'Comma-separated list of frontmatter properties to check for thumbnail images.',
                 placeholder: 'thumbnail, featureResized, feature'
             },
-            useEmbeddedImageFallback: {
-                name: 'Use embedded image fallback',
-                desc: 'Use the first embedded image in the document as a fallback when no thumbnail is found in frontmatter properties (requires Obsidian 1.9.4+). Disable this to verify that thumbnails are properly configured.'
+            downloadExternalFeatureImages: {
+                name: 'Download external images',
+                desc: 'Download remote images and YouTube thumbnails for feature images.'
             },
             showRootFolder: {
                 name: 'Show root folder',
                 desc: 'Display the vault name as the root folder in the tree.'
+            },
+            showFolderIcons: {
+                name: 'Show folder icons',
+                desc: 'Display icons next to folders in the navigation pane.'
             },
             inheritFolderColors: {
                 name: 'Inherit folder colors',
@@ -849,9 +1087,14 @@ export const STRINGS_EN = {
                 name: 'Show note count',
                 desc: 'Display the number of notes next to each folder and tag.'
             },
-            showIcons: {
-                name: 'Show icons',
-                desc: 'Display icons for folders, tags and notes.'
+            showSectionIcons: {
+                name: 'Show icons for shortcuts and recent items',
+                desc: 'Display icons for navigation sections like Shortcuts and Recent files.'
+            },
+            interfaceIcons: {
+                name: 'Interface icons',
+                desc: 'Edit toolbar, folder, tag, pinned, search, and sort icons.',
+                buttonText: 'Edit icons'
             },
             showIconsColorOnly: {
                 name: 'Apply color to icons only',
@@ -882,13 +1125,25 @@ export const STRINGS_EN = {
                 name: 'Scale text with item height',
                 desc: 'Reduce navigation text size when item height is decreased.'
             },
+            navRootSpacing: {
+                name: 'Root item spacing',
+                desc: 'Spacing between root-level folders and tags.'
+            },
             showTags: {
                 name: 'Show tags',
-                desc: 'Display tags section below folders in the navigator.'
+                desc: 'Display tags section in the navigator.'
+            },
+            showTagIcons: {
+                name: 'Show tag icons',
+                desc: 'Display icons next to tags in the navigation pane.'
+            },
+            inheritTagColors: {
+                name: 'Inherit tag colors',
+                desc: 'Child tags inherit color from parent tags.'
             },
             tagSortOrder: {
                 name: 'Tag sort order',
-                desc: 'Choose how tags are ordered in the navigation pane.',
+                desc: 'Choose how tags are ordered in the navigation pane. (not synced)',
                 options: {
                     alphaAsc: 'A to Z',
                     alphaDesc: 'Z to A',
@@ -909,9 +1164,9 @@ export const STRINGS_EN = {
                 desc: 'Keep the tags frontmatter property when all tags are removed. When disabled, the tags property is deleted from frontmatter.'
             },
             hiddenTags: {
-                name: 'Hidden tags',
-                desc: 'Comma-separated list of tag prefixes or name wildcards. Use tag* or *tag to match tag names. Hiding a tag also hides all its sub-tags (e.g., "archive" hides "archive/2024/docs").',
-                placeholder: 'internal, temp/drafts, archive/2024'
+                name: 'Hide tags (vault profile)',
+                desc: 'Comma-separated list of tag patterns. Name patterns: tag* (starting with), *tag (ending with). Path patterns: archive (tag and descendants), archive/* (descendants only), projects/*/drafts (mid-segment wildcard).',
+                placeholder: 'archive*, *draft, projects/*/old'
             },
             enableFolderNotes: {
                 name: 'Enable folder notes',
@@ -956,14 +1211,15 @@ export const STRINGS_EN = {
                 error: 'Settings cleanup failed',
                 loading: 'Checking metadata...',
                 statusClean: 'No metadata to clean',
-                statusCounts: 'Orphaned items: {folders} folders, {tags} tags, {files} files, {pinned} pins'
+                statusCounts: 'Orphaned items: {folders} folders, {tags} tags, {files} files, {pinned} pins, {separators} separators'
             },
             rebuildCache: {
                 name: 'Rebuild cache',
                 desc: 'Use this if you experience missing tags, incorrect previews or missing feature images. This can happen after sync conflicts or unexpected closures.',
                 buttonText: 'Rebuild cache',
-                success: 'Cache rebuilt',
-                error: 'Failed to rebuild cache'
+                error: 'Failed to rebuild cache',
+                indexingTitle: 'Indexing vault...',
+                progress: 'Updating Notebook Navigator cache.'
             },
             hotkeys: {
                 intro: 'Edit <plugin folder>/notebook-navigator/data.json to customize Notebook Navigator hotkeys. Open the file and locate the "keyboardShortcuts" section. Each entry uses this structure:',
@@ -987,19 +1243,11 @@ export const STRINGS_EN = {
                 downloadFailed: 'Failed to download {name}. Check your connection and try again.',
                 removeFailed: 'Failed to remove {name}.',
                 infoNote:
-                    'Downloaded icon packs sync installation state across devices. Icon packs stay in the local database on each device; sync only tracks whether to download or remove them. Icon packs download from the Notebook Navigator repository (https://github.com/johansan/notebook-navigator/tree/main/icon-assets).',
-                providers: {
-                    bootstrapIconsDesc: 'https://icons.getbootstrap.com/',
-                    fontAwesomeDesc: 'https://fontawesome.com/',
-                    materialIconsDesc: 'https://fonts.google.com/icons',
-                    phosphorDesc: 'https://phosphoricons.com/',
-                    rpgAwesomeDesc: 'https://nagoshiashumari.github.io/Rpg-Awesome/',
-                    simpleIconsDesc: 'https://simpleicons.org/'
-                }
+                    'Downloaded icon packs sync installation state across devices. Icon packs stay in the local database on each device; sync only tracks whether to download or remove them. Icon packs download from the Notebook Navigator repository (https://github.com/johansan/notebook-navigator/tree/main/icon-assets).'
             },
             useFrontmatterDates: {
-                name: 'Read metadata from frontmatter',
-                desc: 'Read note names, timestamps, icons, and colors from frontmatter when available, falling back to file system values or settings'
+                name: 'Use frontmatter metadata',
+                desc: 'Use frontmatter for note name, timestamps, icons, and colors'
             },
             frontmatterIconField: {
                 name: 'Icon field',
@@ -1015,10 +1263,6 @@ export const STRINGS_EN = {
                 name: 'Save icons and colors to frontmatter',
                 desc: 'Automatically write file icons and colors to frontmatter using the configured fields above.'
             },
-            frontmatterIconizeFormat: {
-                name: 'Save in Iconize format',
-                desc: 'Save icons using Iconize format (e.g. LiHome, FasUser, SiGithub) instead of plugin format (e.g. home, fontawesome-solid:user, simple-icons:github).'
-            },
             frontmatterMigration: {
                 name: 'Migrate icons and colors from settings',
                 desc: 'Stored in settings: {icons} icons, {colors} colors.',
@@ -1030,9 +1274,9 @@ export const STRINGS_EN = {
                 noticeError: 'Migration failed. Check console for details.'
             },
             frontmatterNameField: {
-                name: 'Name field',
-                desc: 'Frontmatter field to use as the note display name. Leave empty to use the file name.',
-                placeholder: 'title'
+                name: 'Name fields',
+                desc: 'Comma-separated list of frontmatter fields. First non-empty value is used. Falls back to file name.',
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Created timestamp field',
@@ -1048,7 +1292,7 @@ export const STRINGS_EN = {
                 name: 'Timestamp format',
                 desc: 'Format used to parse timestamps in frontmatter. Leave empty to use ISO 8601 format',
                 helpTooltip: 'See date-fns format documentation',
-                help: "Common formats:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                help: "Common formats:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {
                 name: 'Support development',
@@ -1062,9 +1306,13 @@ export const STRINGS_EN = {
                 status: 'New version available: {version}'
             },
             whatsNew: {
-                name: "What's new",
+                name: "What's new in Notebook Navigator {version}",
                 desc: 'See recent updates and improvements',
                 buttonText: 'View recent updates'
+            },
+            masteringVideo: {
+                name: 'Mastering Notebook Navigator (video)',
+                desc: 'This video covers everything you need to be productive in Notebook Navigator, including hot keys, search, tags and advanced customization.'
             },
             cacheStatistics: {
                 localCache: 'Local cache',

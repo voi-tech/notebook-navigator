@@ -21,6 +21,14 @@ import { isValidEmoji, extractFirstEmoji } from '../../../utils/emojiUtils';
 import * as emojilib from 'emojilib';
 
 /**
+ * Type guard to check if a value is an array of strings.
+ * Used to validate emoji keyword data from the emojilib library.
+ */
+function isKeywordList(value: unknown): value is string[] {
+    return Array.isArray(value) && value.every(entry => typeof entry === 'string');
+}
+
+/**
  * Icon provider for emoji icons.
  *
  * This provider allows users to use any emoji as an icon for folders and tags.
@@ -35,6 +43,14 @@ import * as emojilib from 'emojilib';
 export class EmojiIconProvider implements IconProvider {
     id = 'emoji';
     name = 'Emoji';
+
+    /**
+     * Emojis have no version information
+     * @returns Always null for emoji provider
+     */
+    getVersion(): string | null {
+        return null;
+    }
 
     /**
      * Checks if the emoji provider is available.
@@ -100,8 +116,10 @@ export class EmojiIconProvider implements IconProvider {
 
         // Search through emojilib
         for (const [emoji, keywords] of Object.entries(emojilib)) {
-            // Skip non-emoji entries (like the _lib key)
-            if (!Array.isArray(keywords)) continue;
+            // Skip non-emoji entries and entries without keywords
+            if (!isKeywordList(keywords) || keywords.length === 0) {
+                continue;
+            }
 
             // Check if any keyword matches the search query
             const matches = keywords.some(keyword => keyword.toLowerCase().includes(searchLower));
