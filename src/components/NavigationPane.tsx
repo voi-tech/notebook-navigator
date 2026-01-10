@@ -96,6 +96,7 @@ import { getTagSearchModifierOperator, resolveCanonicalTagPath } from '../utils/
 import { FolderItem } from './FolderItem';
 import { NavigationPaneHeader } from './NavigationPaneHeader';
 import { NavigationToolbar } from './NavigationToolbar';
+import { NavigationPaneCalendar } from './NavigationPaneCalendar';
 import { TagTreeItem } from './TagTreeItem';
 import { VaultTitleArea } from './VaultTitleArea';
 import { VirtualFolderComponent } from './VirtualFolderItem';
@@ -180,6 +181,8 @@ interface NavigationPaneProps {
     onModifySearchWithTag: (tag: string, operator: InclusionOperator) => void;
 }
 
+type CSSPropertiesWithVars = React.CSSProperties & Record<`--${string}`, string | number>;
+
 // Default note count object used when counts are disabled or unavailable
 const ZERO_NOTE_COUNT: NoteCountInfo = { current: 0, descendants: 0, total: 0 };
 const EMPTY_TAG_TOKENS: string[] = [];
@@ -238,6 +241,14 @@ export const NavigationPane = React.memo(
         const uxPreferences = useUXPreferences();
         const includeDescendantNotes = uxPreferences.includeDescendantNotes;
         const showHiddenItems = uxPreferences.showHiddenItems;
+        // The calendar feature can be disabled in settings, and toggled per-device via UX preferences.
+        const showCalendar = settings.showCalendar && uxPreferences.showCalendar;
+        // The calendar overlay height depends on how many week rows it renders; we expose that number as a CSS var so the
+        // navigation scroller can be padded and the bottom chrome can be positioned correctly (desktop + mobile/iOS).
+        const [calendarWeekCount, setCalendarWeekCount] = useState<number>(() => settings.calendarWeeksToShow);
+        useEffect(() => {
+            setCalendarWeekCount(settings.calendarWeeksToShow);
+        }, [settings.calendarWeeksToShow]);
         const { hiddenFolders, hiddenFileNamePatterns, fileVisibility } = activeProfile;
         // Resolves frontmatter exclusions, returns empty array when hidden items are shown
         const effectiveFrontmatterExclusions = getEffectiveFrontmatterExclusions(settings, showHiddenItems);
@@ -2669,11 +2680,20 @@ export const NavigationPane = React.memo(
             pathToIndex: keyboardPathToIndex
         });
 
+        const navigationPaneStyle = useMemo<CSSPropertiesWithVars>(() => {
+            return {
+                ...(props.style ?? {}),
+                // Used by `src/styles/sections/navigation-calendar.css` to compute `--nn-nav-calendar-height`.
+                '--nn-nav-calendar-week-count': calendarWeekCount
+            };
+        }, [calendarWeekCount, props.style]);
+
         const navigationContent = (
             <div
                 ref={navigationPaneRef}
                 className="nn-navigation-pane"
-                style={props.style}
+                style={navigationPaneStyle}
+                data-calendar={showCalendar ? 'true' : undefined}
                 data-shortcut-sorting={isShortcutSorting ? 'true' : undefined}
                 data-shortcuts-resizing={!isMobile && isPinnedShortcutsResizing ? 'true' : undefined}
             >
@@ -2803,6 +2823,11 @@ export const NavigationPane = React.memo(
                         rootReorderDisabled={!canReorderRootItems}
                     />
                 )}
+                {showCalendar ? (
+                    <div className="nn-navigation-calendar-overlay">
+                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} />
+                    </div>
+                ) : null}
             </div>
         );
 
