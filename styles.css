@@ -6056,7 +6056,7 @@ body.nn-resizing {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: calc(-1 * (var(--nn-ios-pane-bottom-fade-height) - var(--nn-ios-toolbar-height)) + 3px);
+    bottom: calc(-1 * (var(--nn-ios-pane-bottom-fade-height) - var(--nn-ios-toolbar-height)) + 12px);
     height: var(--nn-ios-pane-bottom-fade-height);
     pointer-events: none;
     background: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / var(--nn-ios-pane-bottom-fade-opacity)));
