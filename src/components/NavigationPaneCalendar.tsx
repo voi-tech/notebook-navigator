@@ -468,7 +468,7 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                     <button
                         type="button"
                         className="nn-navigation-calendar-nav-button"
-                        aria-label={strings.navigationCalendar.previousMonthAria}
+                        aria-label={strings.common.previous}
                         onClick={() => handleNavigate(-1)}
                     >
                         <ServiceIcon iconId="lucide-chevron-left" aria-hidden={true} />
@@ -479,7 +479,7 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                     <button
                         type="button"
                         className="nn-navigation-calendar-nav-button"
-                        aria-label={strings.navigationCalendar.nextMonthAria}
+                        aria-label={strings.common.next}
                         onClick={() => handleNavigate(1)}
                     >
                         <ServiceIcon iconId="lucide-chevron-right" aria-hidden={true} />

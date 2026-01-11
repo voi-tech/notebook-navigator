@@ -34,7 +34,9 @@ export const STRINGS_FA = {
         unknownError: 'خطای ناشناخته',
         updateBannerTitle: 'به‌روزرسانی Notebook Navigator موجود است',
         updateBannerInstruction: 'در تنظیمات -> افزونه‌های انجمن به‌روزرسانی کنید',
-        updateIndicatorLabel: 'نسخه جدید موجود است'
+        updateIndicatorLabel: 'نسخه جدید موجود است',
+        previous: 'قبلی', // Generic aria label for previous navigation (English: Previous)
+        next: 'بعدی' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_FA = {
 
     navigationCalendar: {
         ariaLabel: 'تقویم',
-        previousMonthAria: 'ماه قبل',
-        nextMonthAria: 'ماه بعد',
         dailyNotesNotEnabled: 'افزونه یادداشت روزانه فعال نیست.',
         createDailyNote: {
             title: 'یادداشت روزانه جدید',

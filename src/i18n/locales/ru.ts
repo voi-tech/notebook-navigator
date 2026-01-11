@@ -34,7 +34,9 @@ export const STRINGS_RU = {
         unknownError: 'Неизвестная ошибка', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Доступно обновление Notebook Navigator',
         updateBannerInstruction: 'Обновите в Настройки -> Сторонние плагины',
-        updateIndicatorLabel: 'Доступна новая версия'
+        updateIndicatorLabel: 'Доступна новая версия',
+        previous: 'Назад', // Generic aria label for previous navigation (English: Previous)
+        next: 'Вперёд' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_RU = {
 
     navigationCalendar: {
         ariaLabel: 'Календарь',
-        previousMonthAria: 'Предыдущий месяц',
-        nextMonthAria: 'Следующий месяц',
         dailyNotesNotEnabled: 'Плагин ежедневных заметок не включён.',
         createDailyNote: {
             title: 'Новая ежедневная заметка',

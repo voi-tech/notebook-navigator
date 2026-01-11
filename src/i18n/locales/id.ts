@@ -34,7 +34,9 @@ export const STRINGS_ID = {
         unknownError: 'Kesalahan tidak diketahui',
         updateBannerTitle: 'Pembaruan Notebook Navigator tersedia',
         updateBannerInstruction: 'Perbarui di Pengaturan -> Plugin komunitas',
-        updateIndicatorLabel: 'Versi baru tersedia'
+        updateIndicatorLabel: 'Versi baru tersedia',
+        previous: 'Sebelumnya', // Generic aria label for previous navigation (English: Previous)
+        next: 'Berikutnya' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_ID = {
 
     navigationCalendar: {
         ariaLabel: 'Kalender',
-        previousMonthAria: 'Bulan sebelumnya',
-        nextMonthAria: 'Bulan berikutnya',
         dailyNotesNotEnabled: 'Plugin catatan harian tidak diaktifkan.',
         createDailyNote: {
             title: 'Catatan harian baru',

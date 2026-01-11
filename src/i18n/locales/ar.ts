@@ -34,7 +34,9 @@ export const STRINGS_AR = {
         unknownError: 'خطأ غير معروف', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'تحديث متصفح الدفتر متاح',
         updateBannerInstruction: 'قم بالتحديث في الإعدادات -> إضافات المجتمع',
-        updateIndicatorLabel: 'إصدار جديد متاح'
+        updateIndicatorLabel: 'إصدار جديد متاح',
+        previous: 'السابق', // Generic aria label for previous navigation (English: Previous)
+        next: 'التالي' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_AR = {
 
     navigationCalendar: {
         ariaLabel: 'التقويم',
-        previousMonthAria: 'الشهر السابق',
-        nextMonthAria: 'الشهر التالي',
         dailyNotesNotEnabled: 'إضافة الملاحظات اليومية غير مفعلة.',
         createDailyNote: {
             title: 'ملاحظة يومية جديدة',

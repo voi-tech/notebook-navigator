@@ -34,7 +34,9 @@ export const STRINGS_PT_BR = {
         unknownError: 'Erro desconhecido',
         updateBannerTitle: 'Atualização do Notebook Navigator disponível',
         updateBannerInstruction: 'Atualize em Configurações -> Plugins da comunidade',
-        updateIndicatorLabel: 'Nova versão disponível'
+        updateIndicatorLabel: 'Nova versão disponível',
+        previous: 'Anterior', // Generic aria label for previous navigation (English: Previous)
+        next: 'Próximo' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_PT_BR = {
 
     navigationCalendar: {
         ariaLabel: 'Calendário',
-        previousMonthAria: 'Mês anterior',
-        nextMonthAria: 'Próximo mês',
         dailyNotesNotEnabled: 'O plugin de notas diárias não está ativado.',
         createDailyNote: {
             title: 'Nova nota diária',

@@ -34,7 +34,9 @@ export const STRINGS_FR = {
         unknownError: 'Erreur inconnue', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Mise à jour Notebook Navigator disponible',
         updateBannerInstruction: 'Mettre à jour dans Paramètres -> Extensions communautaires',
-        updateIndicatorLabel: 'Nouvelle version disponible'
+        updateIndicatorLabel: 'Nouvelle version disponible',
+        previous: 'Précédent', // Generic aria label for previous navigation (English: Previous)
+        next: 'Suivant' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -73,8 +75,6 @@ export const STRINGS_FR = {
 
     navigationCalendar: {
         ariaLabel: 'Calendrier',
-        previousMonthAria: 'Mois précédent',
-        nextMonthAria: 'Mois suivant',
         dailyNotesNotEnabled: "Le plugin de notes quotidiennes n'est pas activé.",
         createDailyNote: {
             title: 'Nouvelle note quotidienne',

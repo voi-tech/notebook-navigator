@@ -34,7 +34,9 @@ export const STRINGS_ZH_TW = {
         unknownError: '未知錯誤',
         updateBannerTitle: 'Notebook Navigator 有可用更新',
         updateBannerInstruction: '在設定 -> 社群外掛中更新',
-        updateIndicatorLabel: '有新版本可用'
+        updateIndicatorLabel: '有新版本可用',
+        previous: '上一個', // Generic aria label for previous navigation (English: Previous)
+        next: '下一個' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -73,8 +75,6 @@ export const STRINGS_ZH_TW = {
 
     navigationCalendar: {
         ariaLabel: '導覽日曆',
-        previousMonthAria: '上個月',
-        nextMonthAria: '下個月',
         dailyNotesNotEnabled: '未啟用每日筆記。請在 Obsidian 設定 → 核心外掛中啟用每日筆記。',
         createDailyNote: {
             title: '建立每日筆記',

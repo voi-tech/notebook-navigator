@@ -34,7 +34,9 @@ export const STRINGS_JA = {
         unknownError: '不明なエラー', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator の更新があります',
         updateBannerInstruction: '設定 -> コミュニティプラグイン で更新',
-        updateIndicatorLabel: '新しいバージョンがあります'
+        updateIndicatorLabel: '新しいバージョンがあります',
+        previous: '前へ', // Generic aria label for previous navigation (English: Previous)
+        next: '次へ' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -73,8 +75,6 @@ export const STRINGS_JA = {
 
     navigationCalendar: {
         ariaLabel: 'カレンダー',
-        previousMonthAria: '前月',
-        nextMonthAria: '翌月',
         dailyNotesNotEnabled: 'デイリーノートプラグインが有効になっていません。',
         createDailyNote: {
             title: '新規デイリーノート',

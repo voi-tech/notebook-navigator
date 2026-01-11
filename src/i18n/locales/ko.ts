@@ -34,7 +34,9 @@ export const STRINGS_KO = {
         unknownError: '알 수 없는 오류', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator 업데이트 사용 가능',
         updateBannerInstruction: '설정 -> 커뮤니티 플러그인에서 업데이트',
-        updateIndicatorLabel: '새 버전이 있습니다'
+        updateIndicatorLabel: '새 버전이 있습니다',
+        previous: '이전', // Generic aria label for previous navigation (English: Previous)
+        next: '다음' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -73,8 +75,6 @@ export const STRINGS_KO = {
 
     navigationCalendar: {
         ariaLabel: '달력',
-        previousMonthAria: '이전 달',
-        nextMonthAria: '다음 달',
         dailyNotesNotEnabled: '데일리 노트 코어 플러그인이 활성화되어 있지 않습니다.',
         createDailyNote: {
             title: '새 데일리 노트',

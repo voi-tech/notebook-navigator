@@ -34,7 +34,9 @@ export const STRINGS_TR = {
         unknownError: 'Bilinmeyen hata', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Notebook Navigator güncellemesi mevcut',
         updateBannerInstruction: 'Ayarlar -> Topluluk eklentileri bölümünden güncelleyin',
-        updateIndicatorLabel: 'Yeni sürüm mevcut'
+        updateIndicatorLabel: 'Yeni sürüm mevcut',
+        previous: 'Önceki', // Generic aria label for previous navigation (English: Previous)
+        next: 'Sonraki' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_TR = {
 
     navigationCalendar: {
         ariaLabel: 'Takvim',
-        previousMonthAria: 'Önceki ay',
-        nextMonthAria: 'Sonraki ay',
         dailyNotesNotEnabled: 'Günlük notlar eklentisi etkin değil.',
         createDailyNote: {
             title: 'Yeni günlük not',

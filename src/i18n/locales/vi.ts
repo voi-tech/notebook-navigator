@@ -34,7 +34,9 @@ export const STRINGS_VI = {
         unknownError: 'Lỗi không xác định', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Có bản cập nhật Notebook Navigator',
         updateBannerInstruction: 'Cập nhật trong Cài đặt -> Plugin cộng đồng',
-        updateIndicatorLabel: 'Có phiên bản mới'
+        updateIndicatorLabel: 'Có phiên bản mới',
+        previous: 'Trước', // Generic aria label for previous navigation (English: Previous)
+        next: 'Sau' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_VI = {
 
     navigationCalendar: {
         ariaLabel: 'Lịch',
-        previousMonthAria: 'Tháng trước',
-        nextMonthAria: 'Tháng sau',
         dailyNotesNotEnabled: 'Plugin ghi chú hàng ngày chưa được bật.',
         createDailyNote: {
             title: 'Ghi chú hàng ngày mới',

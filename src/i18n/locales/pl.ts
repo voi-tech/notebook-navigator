@@ -34,7 +34,9 @@ export const STRINGS_PL = {
         unknownError: 'Nieznany błąd', // Generic fallback when an error has no message (English: Unknown error)
         updateBannerTitle: 'Aktualizacja Notebook Navigator dostępna',
         updateBannerInstruction: 'Zaktualizuj w Ustawieniach -> Wtyczki społeczności',
-        updateIndicatorLabel: 'Nowa wersja dostępna'
+        updateIndicatorLabel: 'Nowa wersja dostępna',
+        previous: 'Poprzedni', // Generic aria label for previous navigation (English: Previous)
+        next: 'Następny' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -73,8 +75,6 @@ export const STRINGS_PL = {
 
     navigationCalendar: {
         ariaLabel: 'Kalendarz',
-        previousMonthAria: 'Poprzedni miesiąc',
-        nextMonthAria: 'Następny miesiąc',
         dailyNotesNotEnabled: 'Wtyczka dziennych notatek nie jest włączona.',
         createDailyNote: {
             title: 'Nowa dzienna notatka',

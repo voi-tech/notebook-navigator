@@ -34,7 +34,9 @@ export const STRINGS_NL = {
         unknownError: 'Onbekende fout',
         updateBannerTitle: 'Notebook Navigator update beschikbaar',
         updateBannerInstruction: 'Werk bij in Instellingen -> Community plugins',
-        updateIndicatorLabel: 'Nieuwe versie beschikbaar'
+        updateIndicatorLabel: 'Nieuwe versie beschikbaar',
+        previous: 'Vorige', // Generic aria label for previous navigation (English: Previous)
+        next: 'Volgende' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_NL = {
 
     navigationCalendar: {
         ariaLabel: 'Kalender',
-        previousMonthAria: 'Vorige maand',
-        nextMonthAria: 'Volgende maand',
         dailyNotesNotEnabled: 'De dagelijkse notities plugin is niet ingeschakeld.',
         createDailyNote: {
             title: 'Nieuwe dagelijkse notitie',

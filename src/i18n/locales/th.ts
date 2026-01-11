@@ -34,7 +34,9 @@ export const STRINGS_TH = {
         unknownError: 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ',
         updateBannerTitle: 'มีการอัปเดต Notebook Navigator',
         updateBannerInstruction: 'อัปเดตใน การตั้งค่า -> ปลั๊กอินชุมชน',
-        updateIndicatorLabel: 'มีเวอร์ชันใหม่'
+        updateIndicatorLabel: 'มีเวอร์ชันใหม่',
+        previous: 'ก่อนหน้า', // Generic aria label for previous navigation (English: Previous)
+        next: 'ถัดไป' // Generic aria label for next navigation (English: Next)
     },
 
     // List pane
@@ -74,8 +76,6 @@ export const STRINGS_TH = {
 
     navigationCalendar: {
         ariaLabel: 'ปฏิทิน',
-        previousMonthAria: 'เดือนก่อนหน้า',
-        nextMonthAria: 'เดือนถัดไป',
         dailyNotesNotEnabled: 'ปลั๊กอินบันทึกรายวันไม่ได้เปิดใช้งาน',
         createDailyNote: {
             title: 'บันทึกรายวันใหม่',
