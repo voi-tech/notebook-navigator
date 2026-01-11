@@ -189,16 +189,16 @@ body {
     --nn-theme-pinned-shortcut-shadow-color: rgba(0, 0, 0, 0.03);
 
     /* -- Navigation Calendar -- */
-    --nn-theme-nav-calendar-hover-bg: var(--background-modifier-hover);
     --nn-theme-nav-calendar-header-color: var(--text-normal);
     --nn-theme-nav-calendar-week-label-color: var(--text-muted);
     --nn-theme-nav-calendar-day-in-month-color: var(--text-normal);
     --nn-theme-nav-calendar-day-outside-month-color: var(--text-muted);
-    --nn-theme-nav-calendar-day-today-color: var(--nn-theme-nav-calendar-day-has-note-color);
-    --nn-theme-nav-calendar-day-today-bg: var(--color-red);
+    --nn-theme-nav-calendar-hover-bg: var(--background-modifier-hover);
     --nn-theme-nav-calendar-day-has-note-color: white;
     --nn-theme-nav-calendar-day-has-note-bg: var(--text-selection);
     --nn-theme-nav-calendar-day-has-feature-image-color: white;
+    --nn-theme-nav-calendar-day-today-color: var(--nn-theme-nav-calendar-day-has-note-color);
+    --nn-theme-nav-calendar-day-today-bg: var(--color-red);
 
     /* -- Folder & Tag Items -- */
     --nn-theme-navitem-chevron-color: var(--text-muted);
@@ -6474,27 +6474,68 @@ id: notebook-navigator-style-settings
 settings:
     -
     -
-        id: nn-pane-overlay-heading
-        title: Pane overlay stacks
-        description: Customize the overlay stacks rendered above scrolling rows in both panes.
+        id: nn-header-heading
+        title: Headers
+        description: Customize pane header appearance.
         type: heading
         level: 1
         collapsed: true
     -
+        id: nn-header-actions-heading
+        title: Header action buttons
+        type: heading
+        level: 2
+        collapsed: false
     -
-        id: nn-theme-pane-overlay-opacity
-        title: Overlay opacity
-        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
-        type: variable-number-slider
-        default: 85
-        min: 0
-        max: 100
-        step: 1
+    -
+        id: nn-theme-header-button-icon-color
+        title: Button icon color
+        description: Default icon color for header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-header-button-hover-bg
+        title: Button hover background
+        description: Background color when hovering header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-header-button-active-bg
+        title: Button active background
+        description: Background color for active/toggled header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-header-button-active-icon-color
+        title: Button active icon color
+        description: Icon color for active/toggled header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-header-button-disabled-icon-color
+        title: Button disabled icon color
+        description: Icon color for disabled header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
     -
     -
         id: nn-nav-pane-heading
-        title: Navigation pane (folders & tags)
-        description: Customize the background, items, and interactions within the navigation pane.
+        title: Navigation pane (folders, tags, shortcuts)
+        description: Customize the background and items within the navigation pane.
         type: heading
         level: 1
         collapsed: true
@@ -6512,104 +6553,6 @@ settings:
         id: nn-theme-nav-separator-color
         title: Navigation separator color
         description: Line color for separators rendered inside navigation spacers.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-nav-calendar-heading
-        title: Calendar overlay
-        description: Customize the navigation pane calendar overlay.
-        type: heading
-        level: 2
-        collapsed: true
-    -
-    -
-        id: nn-theme-nav-calendar-header-color
-        title: Header text color
-        description: Text color for month/year and header buttons.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-week-label-color
-        title: Week label text color
-        description: Text color for weekday labels and week numbers.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-in-month-color
-        title: Day text color (current month)
-        description: Text color for days within the current month.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-outside-month-color
-        title: Day text color (outside month)
-        description: Text color for days outside the current month.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-today-color
-        title: Day text color (today)
-        description: Text color for today's date.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-today-bg
-        title: Today highlight background
-        description: Background color for the today highlight circle.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-has-note-color
-        title: Daily note text color
-        description: Text color for dates with a daily note.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-has-feature-image-color
-        title: Feature image text color
-        description: Text color for dates with feature images.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-day-has-note-bg
-        title: Daily note background
-        description: Background color for dates with a daily note.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-nav-calendar-hover-bg
-        title: Hover background
-        description: Background color when hovering calendar buttons and days.
         type: variable-themed-color
         format: hex
         default-light: '#'
@@ -6836,7 +6779,6 @@ settings:
     -
         id: nn-navitem-text-styling-heading
         title: Text styling
-        description: Font weight and text decoration for navigation items. Values 100-900 (400 = regular, 600 = bold). Priority - folder notes > custom colors > default.
         type: heading
         level: 2
         collapsed: false
@@ -6929,32 +6871,6 @@ settings:
         id: nn-theme-pinned-shortcut-shadow-color
         title: Pinned shortcut shadow color
         description: Gradient overlay color rendered beneath pinned shortcuts.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-pane-divider-heading
-        title: Pane divider
-        description: Vertical divider between navigation and file list panes.
-        type: heading
-        level: 1
-        collapsed: true
-    -
-    -
-        id: nn-theme-divider-border-color
-        title: Divider border color
-        description: Color of the vertical border between panes.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-    -
-        id: nn-theme-divider-resize-handle-hover-bg
-        title: Resize handle hover background
-        description: Background color when hovering the pane divider to resize.
         type: variable-themed-color
         format: hex
         default-light: '#'
@@ -7433,7 +7349,6 @@ settings:
     -
         id: nn-theme-quick-actions-heading
         title: Quick actions
-        description: Hover toolbar for file actions.
         type: heading
         level: 2
         collapsed: false
@@ -7496,59 +7411,142 @@ settings:
         default-dark: '#'
     -
     -
-        id: nn-header-heading
-        title: Headers
-        description: Customize pane header appearance.
+        id: nn-pane-overlay-heading
+        title: Pane overlay stacks
+        description: Customize the overlay stacks rendered above scrolling rows in both panes.
         type: heading
         level: 1
         collapsed: true
     -
-        id: nn-header-actions-heading
-        title: Header action buttons
+    -
+        id: nn-theme-pane-overlay-opacity
+        title: Overlay opacity
+        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
+        type: variable-number-slider
+        default: 85
+        min: 0
+        max: 100
+        step: 1
+    -
+    -
+        id: nn-theme-pane-divider-heading
+        title: Pane divider
+        description: Vertical divider between navigation and file list panes.
         type: heading
-        level: 2
-        collapsed: false
+        level: 1
+        collapsed: true
     -
     -
-        id: nn-theme-header-button-icon-color
-        title: Button icon color
-        description: Default icon color for header buttons.
+        id: nn-theme-divider-border-color
+        title: Divider border color
+        description: Color of the vertical border between panes.
         type: variable-themed-color
         format: hex
         default-light: '#'
         default-dark: '#'
     -
     -
-        id: nn-theme-header-button-hover-bg
-        title: Button hover background
-        description: Background color when hovering header buttons.
+        id: nn-theme-divider-resize-handle-hover-bg
+        title: Resize handle hover background
+        description: Background color when hovering the pane divider to resize.
         type: variable-themed-color
         format: hex
         default-light: '#'
         default-dark: '#'
     -
     -
-        id: nn-theme-header-button-active-bg
-        title: Button active background
-        description: Background color for active/toggled header buttons.
+        id: nn-nav-calendar-heading
+        title: Calendar overlay
+        description: Customize the navigation pane calendar overlay.
+        type: heading
+        level: 1
+        collapsed: true
+    -
+    -
+        id: nn-theme-nav-calendar-header-color
+        title: Header text color
+        description: Text color for month/year and header buttons.
         type: variable-themed-color
         format: hex
         default-light: '#'
         default-dark: '#'
     -
     -
-        id: nn-theme-header-button-active-icon-color
-        title: Button active icon color
-        description: Icon color for active/toggled header buttons.
+        id: nn-theme-nav-calendar-week-label-color
+        title: Week label text color
+        description: Text color for weekday labels and week numbers.
         type: variable-themed-color
         format: hex
         default-light: '#'
         default-dark: '#'
     -
     -
-        id: nn-theme-header-button-disabled-icon-color
-        title: Button disabled icon color
-        description: Icon color for disabled header buttons.
+        id: nn-theme-nav-calendar-day-in-month-color
+        title: Day text color (current month)
+        description: Text color for days within the current month.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-outside-month-color
+        title: Day text color (outside month)
+        description: Text color for days outside the current month.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-hover-bg
+        title: Hover background
+        description: Background color when hovering calendar buttons and days.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-has-note-color
+        title: Daily note text color
+        description: Text color for dates with a daily note.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-has-note-bg
+        title: Daily note background
+        description: Background color for dates with a daily note.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-has-feature-image-color
+        title: Feature image text color
+        description: Text color for dates with feature images.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-today-color
+        title: Day text color (today)
+        description: Text color for today's date.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+    -
+        id: nn-theme-nav-calendar-day-today-bg
+        title: Today highlight background
+        description: Background color for the today highlight circle.
         type: variable-themed-color
         format: hex
         default-light: '#'
