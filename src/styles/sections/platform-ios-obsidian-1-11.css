@@ -113,7 +113,7 @@
 
 .notebook-navigator-mobile.notebook-navigator-obsidian-1-11-plus-ios .nn-navigation-pane,
 .notebook-navigator-mobile.notebook-navigator-obsidian-1-11-plus-ios .nn-list-pane {
-    --nn-pane-bottom-toolbar-space: 64px;
+    --nn-pane-bottom-toolbar-space: 0px;
 }
 
 .notebook-navigator-obsidian-1-11-plus-ios .nn-pane-bottom-toolbar {
