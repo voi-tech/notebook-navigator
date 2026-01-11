@@ -76,6 +76,7 @@ describe('recordFileChanges rename merge', () => {
             tagsMtime: 150,
             metadataMtime: 150,
             tags: ['destination'],
+            wordCount: 10,
             customProperty: [{ value: 'destination' }],
             previewStatus: 'none',
             featureImageStatus: 'none',
@@ -89,6 +90,7 @@ describe('recordFileChanges rename merge', () => {
             tagsMtime: 0,
             metadataMtime: 0,
             tags: ['source'],
+            wordCount: 42,
             customProperty: [{ value: 'source' }],
             previewStatus: 'has',
             featureImageStatus: 'has',
@@ -111,6 +113,7 @@ describe('recordFileChanges rename merge', () => {
 
         expect(updated.mtime).toBe(200);
         expect(updated.tags).toEqual(['source']);
+        expect(updated.wordCount).toBe(42);
         expect(updated.customProperty).toEqual([{ value: 'source' }]);
         expect(updated.previewStatus).toBe('has');
         expect(updated.featureImageStatus).toBe('has');

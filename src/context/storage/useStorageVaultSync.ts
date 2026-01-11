@@ -292,14 +292,33 @@ export function useStorageVaultSync(params: {
 
                         pendingRenameDataRef.current.set(file.path, seeded);
                         db.seedMemoryFile(file.path, seeded);
+                        if (existing.featureImageStatus === 'has') {
+                            // Prevent `getFeatureImageBlob(newPath)` from returning null before the blob store key moves.
+                            db.beginFeatureImageBlobMove(oldPath, file.path);
+                        }
+                        if (wasMarkdown && isMarkdown) {
+                            // Prevent preview status repairs while the preview store key is moving from oldPath -> newPath.
+                            db.beginPreviewTextMove(oldPath, file.path);
+                        }
                         runAsyncAction(async () => {
                             try {
-                                await db.moveFeatureImageBlob(oldPath, file.path);
+                                const operations: Promise<void>[] = [db.moveFeatureImageBlob(oldPath, file.path)];
+
                                 if (wasMarkdown && isMarkdown) {
-                                    await db.movePreviewText(oldPath, file.path);
+                                    operations.push(db.movePreviewText(oldPath, file.path));
                                 } else if (wasMarkdown) {
-                                    await db.deletePreviewText(oldPath);
+                                    operations.push(
+                                        db.deletePreviewText(oldPath).catch((error: unknown) => {
+                                            console.error('Failed to delete preview text after rename:', {
+                                                oldPath,
+                                                newPath: file.path,
+                                                error
+                                            });
+                                        })
+                                    );
                                 }
+
+                                await Promise.all(operations);
                             } finally {
                                 rebuildFileCache?.();
                             }
