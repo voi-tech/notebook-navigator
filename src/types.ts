@@ -238,6 +238,15 @@ export interface LocalStorageKeys {
     searchProviderKey: string;
     tagSortOrderKey: string;
     recentColorsKey: string;
+    paneTransitionDurationKey: string;
+    toolbarVisibilityKey: string;
+    navIndentKey: string;
+    navItemHeightKey: string;
+    navItemHeightScaleTextKey: string;
+    calendarWeeksToShowKey: string;
+    calendarShowWeekNumberKey: string;
+    compactItemHeightKey: string;
+    compactItemHeightScaleTextKey: string;
 }
 
 /**
@@ -274,7 +283,16 @@ export const STORAGE_KEYS: LocalStorageKeys = {
     latestKnownReleaseKey: 'notebook-navigator-latest-known-release',
     searchProviderKey: 'notebook-navigator-search-provider',
     tagSortOrderKey: 'notebook-navigator-tag-sort-order',
-    recentColorsKey: 'notebook-navigator-recent-colors'
+    recentColorsKey: 'notebook-navigator-recent-colors',
+    paneTransitionDurationKey: 'notebook-navigator-pane-transition-duration',
+    toolbarVisibilityKey: 'notebook-navigator-toolbar-visibility',
+    navIndentKey: 'notebook-navigator-nav-indent',
+    navItemHeightKey: 'notebook-navigator-nav-item-height',
+    navItemHeightScaleTextKey: 'notebook-navigator-nav-item-height-scale-text',
+    calendarWeeksToShowKey: 'notebook-navigator-calendar-weeks-to-show',
+    calendarShowWeekNumberKey: 'notebook-navigator-calendar-show-week-number',
+    compactItemHeightKey: 'notebook-navigator-compact-item-height',
+    compactItemHeightScaleTextKey: 'notebook-navigator-compact-item-height-scale-text'
 };
 
 export interface UXPreferences {

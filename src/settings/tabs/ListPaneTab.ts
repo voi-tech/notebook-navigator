@@ -273,7 +273,7 @@ export function renderListPaneTab(context: SettingsTabContext): void {
     let compactItemHeightSlider: SliderComponent;
     const compactItemHeightSetting = displayGroup.addSetting(setting => {
         setting
-            .setName(strings.settings.items.compactItemHeight.name)
+            .setName(`${strings.settings.items.compactItemHeight.name} (not synced)`)
             .setDesc(strings.settings.items.compactItemHeight.desc)
             .addSlider(slider => {
                 compactItemHeightSlider = slider
@@ -281,9 +281,8 @@ export function renderListPaneTab(context: SettingsTabContext): void {
                     .setValue(plugin.settings.compactItemHeight)
                     .setInstant(false)
                     .setDynamicTooltip()
-                    .onChange(async value => {
-                        plugin.settings.compactItemHeight = value;
-                        await plugin.saveSettingsAndUpdate();
+                    .onChange(value => {
+                        plugin.setCompactItemHeight(value);
                     });
                 return slider;
             })
@@ -293,11 +292,10 @@ export function renderListPaneTab(context: SettingsTabContext): void {
                     .setTooltip(strings.settings.items.compactItemHeight.resetTooltip)
                     .onClick(() => {
                         // Reset item height to default without blocking the UI
-                        runAsyncAction(async () => {
+                        runAsyncAction(() => {
                             const defaultValue = DEFAULT_SETTINGS.compactItemHeight;
                             compactItemHeightSlider.setValue(defaultValue);
-                            plugin.settings.compactItemHeight = defaultValue;
-                            await plugin.saveSettingsAndUpdate();
+                            plugin.setCompactItemHeight(defaultValue);
                         });
                     })
             );
@@ -308,12 +306,11 @@ export function renderListPaneTab(context: SettingsTabContext): void {
 
     // Toggle to scale text proportionally with compact item height
     new Setting(compactItemHeightSettingsEl)
-        .setName(strings.settings.items.compactItemHeightScaleText.name)
+        .setName(`${strings.settings.items.compactItemHeightScaleText.name} (not synced)`)
         .setDesc(strings.settings.items.compactItemHeightScaleText.desc)
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.compactItemHeightScaleText).onChange(async value => {
-                plugin.settings.compactItemHeightScaleText = value;
-                await plugin.saveSettingsAndUpdate();
+            toggle.setValue(plugin.settings.compactItemHeightScaleText).onChange(value => {
+                plugin.setCompactItemHeightScaleText(value);
             })
         );
 }

@@ -89,7 +89,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
 
     // Navigation pane tab - Calendar
     calendarLocale: 'system-default',
-    calendarWeeksToShow: 5,
+    calendarWeeksToShow: 1,
     calendarHighlightToday: true,
     calendarShowWeekNumber: false,
     calendarConfirmBeforeCreate: true,

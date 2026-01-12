@@ -19,6 +19,22 @@
 import { Plugin, TFile, FileView, TFolder, WorkspaceLeaf, Platform, addIcon } from 'obsidian';
 import { NotebookNavigatorSettings, DEFAULT_SETTINGS, NotebookNavigatorSettingTab } from './settings';
 import {
+    migrateRecentColors,
+    migrateReleaseCheckState,
+    migrateUIScales,
+    resolveCalendarShowWeekNumber,
+    resolveCalendarWeeksToShow,
+    resolveCompactItemHeight,
+    resolveCompactItemHeightScaleText,
+    resolveNavIndent,
+    resolveNavItemHeight,
+    resolveNavItemHeightScaleText,
+    resolvePaneTransitionDuration,
+    resolveSearchProvider,
+    resolveTagSortOrder,
+    resolveToolbarVisibility
+} from './settings/migrations/localPreferences';
+import {
     LocalStorageKeys,
     MAX_PANE_TRANSITION_DURATION_MS,
     MIN_PANE_TRANSITION_DURATION_MS,
@@ -71,6 +87,7 @@ import type { RevealFileOptions } from './hooks/useNavigatorReveal';
 import { ShortcutType, type ShortcutEntry } from './types/shortcuts';
 import type { FolderAppearance } from './hooks/useListPaneAppearance';
 import {
+    type CalendarWeeksToShow,
     isCustomPropertyType,
     isSortOption,
     isTagSortOrder,
@@ -80,7 +97,7 @@ import {
 } from './settings/types';
 import { clearHiddenTagPatternCache } from './utils/tagPrefixMatcher';
 import { getPathPatternCacheKey } from './utils/pathPatternMatcher';
-import { DEFAULT_UI_SCALE, sanitizeUIScale } from './utils/uiScale';
+import { sanitizeUIScale } from './utils/uiScale';
 import { MAX_RECENT_COLORS } from './constants/colorPalette';
 import { NOTEBOOK_NAVIGATOR_ICON_ID, NOTEBOOK_NAVIGATOR_ICON_SVG } from './constants/notebookNavigatorIcon';
 
@@ -90,7 +107,7 @@ const DEFAULT_UX_PREFERENCES: UXPreferences = {
     showHiddenItems: false,
     pinShortcuts: true,
     // Per-device toggle for the navigation calendar overlay.
-    showCalendar: true
+    showCalendar: !Platform.isMobile
 };
 
 const UX_PREFERENCE_KEYS: (keyof UXPreferences)[] = [
@@ -107,35 +124,6 @@ interface LegacyVisibilityMigration {
     hiddenTags: string[];
     navigationBanner: string | null;
     shouldApplyToProfiles: boolean;
-}
-
-type ToolbarVisibilitySnapshot = NotebookNavigatorSettings['toolbarVisibility'];
-
-function mergeButtonVisibility<T extends string>(defaults: Record<T, boolean>, stored: unknown): Record<T, boolean> {
-    const next: Record<T, boolean> = { ...defaults };
-    if (!stored || typeof stored !== 'object') {
-        return next;
-    }
-
-    const entries = stored as Partial<Record<T, unknown>>;
-    (Object.keys(defaults) as T[]).forEach(key => {
-        const value = entries[key];
-        if (typeof value === 'boolean') {
-            next[key] = value;
-        }
-    });
-
-    return next;
-}
-
-function mergeToolbarVisibility(stored: unknown): ToolbarVisibilitySnapshot {
-    const defaults = DEFAULT_SETTINGS.toolbarVisibility;
-    const record = stored && typeof stored === 'object' ? (stored as Record<string, unknown>) : undefined;
-
-    return {
-        navigation: mergeButtonVisibility(defaults.navigation, record?.navigation),
-        list: mergeButtonVisibility(defaults.list, record?.list)
-    };
 }
 
 /**
@@ -218,7 +206,8 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.settings = { ...DEFAULT_SETTINGS, ...(storedSettings ?? {}) };
         // Validate and normalize keyboard shortcuts to use standard modifier names
         this.settings.keyboardShortcuts = sanitizeKeyboardShortcuts(this.settings.keyboardShortcuts);
-        this.settings.toolbarVisibility = mergeToolbarVisibility(storedSettings?.toolbarVisibility);
+        const toolbarVisibility = resolveToolbarVisibility({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.toolbarVisibility = toolbarVisibility.value;
 
         // Remove deprecated fields from settings object
         const mutableSettings = this.settings as unknown as Record<string, unknown>;
@@ -355,16 +344,18 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         const legacySlimItemHeight = mutableSettings['slimItemHeight'];
         if (typeof legacySlimItemHeight === 'number' && Number.isFinite(legacySlimItemHeight)) {
-            if (typeof storedData?.['compactItemHeight'] === 'undefined') {
-                this.settings.compactItemHeight = legacySlimItemHeight;
+            const storedLocalCompactItemHeight = localStorage.get<unknown>(this.keys.compactItemHeightKey);
+            if (typeof storedData?.['compactItemHeight'] === 'undefined' && storedLocalCompactItemHeight === null) {
+                localStorage.set(this.keys.compactItemHeightKey, legacySlimItemHeight);
             }
         }
         delete mutableSettings['slimItemHeight'];
 
         const legacySlimItemHeightScaleText = mutableSettings['slimItemHeightScaleText'];
         if (typeof legacySlimItemHeightScaleText === 'boolean') {
-            if (typeof storedData?.['compactItemHeightScaleText'] === 'undefined') {
-                this.settings.compactItemHeightScaleText = legacySlimItemHeightScaleText;
+            const storedLocalCompactItemHeightScaleText = localStorage.get<unknown>(this.keys.compactItemHeightScaleTextKey);
+            if (typeof storedData?.['compactItemHeightScaleText'] === 'undefined' && storedLocalCompactItemHeightScaleText === null) {
+                localStorage.set(this.keys.compactItemHeightScaleTextKey, legacySlimItemHeightScaleText);
             }
         }
         delete mutableSettings['slimItemHeightScaleText'];
@@ -391,14 +382,33 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             this.settings.recentNotesCount = DEFAULT_SETTINGS.recentNotesCount;
         }
 
-        if (
-            typeof this.settings.paneTransitionDuration !== 'number' ||
-            !Number.isFinite(this.settings.paneTransitionDuration) ||
-            this.settings.paneTransitionDuration < MIN_PANE_TRANSITION_DURATION_MS ||
-            this.settings.paneTransitionDuration > MAX_PANE_TRANSITION_DURATION_MS
-        ) {
-            this.settings.paneTransitionDuration = DEFAULT_SETTINGS.paneTransitionDuration;
-        }
+        const paneTransitionDuration = resolvePaneTransitionDuration({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.paneTransitionDuration = paneTransitionDuration.value;
+
+        const navIndent = resolveNavIndent({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.navIndent = navIndent.value;
+
+        const navItemHeight = resolveNavItemHeight({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.navItemHeight = navItemHeight.value;
+
+        const navItemHeightScaleText = resolveNavItemHeightScaleText({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.navItemHeightScaleText = navItemHeightScaleText.value;
+
+        const calendarWeeksToShow = resolveCalendarWeeksToShow({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.calendarWeeksToShow = calendarWeeksToShow.value;
+
+        const calendarShowWeekNumber = resolveCalendarShowWeekNumber({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.calendarShowWeekNumber = calendarShowWeekNumber.value;
+
+        const compactItemHeight = resolveCompactItemHeight({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.compactItemHeight = compactItemHeight.value;
+
+        const compactItemHeightScaleText = resolveCompactItemHeightScaleText({
+            storedData,
+            keys: this.keys,
+            defaultSettings: DEFAULT_SETTINGS
+        });
+        this.settings.compactItemHeightScaleText = compactItemHeightScaleText.value;
 
         if (!Array.isArray(this.settings.rootFolderOrder)) {
             this.settings.rootFolderOrder = [];
@@ -408,12 +418,33 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             this.settings.rootTagOrder = [];
         }
 
-        const migratedReleaseState = this.migrateReleaseCheckState(storedData);
-        const migratedRecentColors = this.migrateRecentColors(storedData);
-        const hadLegacyLocalOnlySettings = Boolean(storedData && ('tagSortOrder' in storedData || 'searchProvider' in storedData));
-        this.settings.tagSortOrder = this.resolveTagSortOrder(storedData);
-        this.settings.searchProvider = this.resolveSearchProvider(storedData);
-        const migratedScales = this.migrateUIScales(storedData);
+        const migratedReleaseState = migrateReleaseCheckState({ settings: this.settings, storedData, keys: this.keys });
+        const migratedRecentColors = migrateRecentColors({ settings: this.settings, storedData, keys: this.keys });
+        const hadLegacyLocalOnlySettings = Boolean(
+            storedData &&
+                ('tagSortOrder' in storedData ||
+                    'searchProvider' in storedData ||
+                    'paneTransitionDuration' in storedData ||
+                    'toolbarVisibility' in storedData ||
+                    'navIndent' in storedData ||
+                    'navItemHeight' in storedData ||
+                    'navItemHeightScaleText' in storedData ||
+                    'calendarWeeksToShow' in storedData ||
+                    'calendarShowWeekNumber' in storedData ||
+                    'compactItemHeight' in storedData ||
+                    'compactItemHeightScaleText' in storedData)
+        );
+        this.settings.tagSortOrder = resolveTagSortOrder({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        this.settings.searchProvider = resolveSearchProvider({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
+        const migratedScales = migrateUIScales({
+            settings: this.settings,
+            storedData,
+            keys: this.keys,
+            shouldPersistDesktopScale: this.shouldPersistDesktopScale,
+            shouldPersistMobileScale: this.shouldPersistMobileScale
+        });
+        this.shouldPersistDesktopScale = migratedScales.shouldPersistDesktopScale;
+        this.shouldPersistMobileScale = migratedScales.shouldPersistMobileScale;
 
         const normalizeFolderNoteBlock = (input: string): string =>
             input
@@ -461,7 +492,20 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         localStorage.set(STORAGE_KEYS.vaultProfileKey, this.settings.vaultProfile);
         this.refreshMatcherCachesIfNeeded();
 
-        const needsPersistedCleanup = migratedReleaseState || migratedRecentColors || hadLegacyLocalOnlySettings || migratedScales;
+        const needsPersistedCleanup =
+            migratedReleaseState ||
+            migratedRecentColors ||
+            hadLegacyLocalOnlySettings ||
+            migratedScales.migrated ||
+            toolbarVisibility.migrated ||
+            paneTransitionDuration.migrated ||
+            navIndent.migrated ||
+            navItemHeight.migrated ||
+            navItemHeightScaleText.migrated ||
+            calendarWeeksToShow.migrated ||
+            calendarShowWeekNumber.migrated ||
+            compactItemHeight.migrated ||
+            compactItemHeightScaleText.migrated;
 
         if (needsPersistedCleanup) {
             await this.saveData(this.getPersistableSettings());
@@ -470,181 +514,17 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         return isFirstLaunch;
     }
 
-    /**
-     * Migrates release check metadata from synced settings to vault-local storage.
-     */
-    private migrateReleaseCheckState(storedData: Record<string, unknown> | null): boolean {
-        const storedTimestamp =
-            typeof storedData?.['lastReleaseCheckAt'] === 'number' && Number.isFinite(storedData.lastReleaseCheckAt)
-                ? storedData.lastReleaseCheckAt
-                : null;
-        const storedKnownRelease = typeof storedData?.['latestKnownRelease'] === 'string' ? storedData.latestKnownRelease : '';
-
-        const localTimestamp = localStorage.get<unknown>(this.keys.releaseCheckTimestampKey);
-        const localKnownRelease = localStorage.get<unknown>(this.keys.latestKnownReleaseKey);
-
-        const resolvedTimestamp =
-            typeof localTimestamp === 'number' && Number.isFinite(localTimestamp) ? localTimestamp : (storedTimestamp ?? null);
-        const resolvedKnownRelease =
-            typeof localKnownRelease === 'string' && localKnownRelease.length > 0 ? localKnownRelease : storedKnownRelease;
-
-        if (resolvedTimestamp && resolvedTimestamp !== localTimestamp) {
-            localStorage.set(this.keys.releaseCheckTimestampKey, resolvedTimestamp);
+    private parseFiniteNumber(value: unknown): number | null {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value;
         }
-
-        if (resolvedKnownRelease && resolvedKnownRelease !== localKnownRelease) {
-            localStorage.set(this.keys.latestKnownReleaseKey, resolvedKnownRelease);
-        }
-
-        delete (this.settings as unknown as Record<string, unknown>).lastReleaseCheckAt;
-        delete (this.settings as unknown as Record<string, unknown>).latestKnownRelease;
-
-        const hadLegacyFields = Boolean(storedData && ('lastReleaseCheckAt' in storedData || 'latestKnownRelease' in storedData));
-        return hadLegacyFields;
-    }
-
-    /**
-     * Migrates recent colors history from synced settings to vault-local storage.
-     */
-    private migrateRecentColors(storedData: Record<string, unknown> | null): boolean {
-        const stored = storedData?.['recentColors'];
-        const storedColors = Array.isArray(stored)
-            ? stored.filter((entry): entry is string => typeof entry === 'string' && entry.trim().length > 0).slice(0, MAX_RECENT_COLORS)
-            : [];
-
-        const localStored = localStorage.get<unknown>(this.keys.recentColorsKey);
-        const localColors = Array.isArray(localStored)
-            ? localStored.filter((entry): entry is string => typeof entry === 'string' && entry.trim().length > 0)
-            : [];
-
-        const resolvedColors = localColors.length > 0 ? localColors : storedColors;
-        if (resolvedColors.length > 0) {
-            const capped = resolvedColors.slice(0, MAX_RECENT_COLORS);
-            const shouldUpdateLocal = localColors.length !== capped.length || capped.some((color, index) => color !== localColors[index]);
-            if (shouldUpdateLocal) {
-                localStorage.set(this.keys.recentColorsKey, capped);
+        if (typeof value === 'string') {
+            const parsed = Number(value);
+            if (Number.isFinite(parsed)) {
+                return parsed;
             }
         }
-
-        delete (this.settings as unknown as Record<string, unknown>).recentColors;
-
-        const hadLegacyField = Boolean(storedData && 'recentColors' in storedData);
-        return hadLegacyField;
-    }
-
-    /**
-     * Resolves the effective tag sort order preference with local overrides.
-     */
-    private resolveTagSortOrder(storedData: Record<string, unknown> | null): TagSortOrder {
-        const storedLocal = localStorage.get<unknown>(this.keys.tagSortOrderKey);
-        const storedLocalValue = typeof storedLocal === 'string' ? storedLocal : null;
-        if (storedLocalValue && isTagSortOrder(storedLocalValue)) {
-            return storedLocalValue;
-        }
-
-        const storedSetting = storedData?.['tagSortOrder'];
-        const storedSettingValue = typeof storedSetting === 'string' ? storedSetting : null;
-        if (storedSettingValue && isTagSortOrder(storedSettingValue)) {
-            localStorage.set(this.keys.tagSortOrderKey, storedSettingValue);
-            return storedSettingValue;
-        }
-
-        localStorage.set(this.keys.tagSortOrderKey, DEFAULT_SETTINGS.tagSortOrder);
-        return DEFAULT_SETTINGS.tagSortOrder;
-    }
-
-    /**
-     * Resolves the effective search provider preference with local overrides.
-     */
-    private resolveSearchProvider(storedData: Record<string, unknown> | null): 'internal' | 'omnisearch' {
-        const storedLocal = localStorage.get<unknown>(this.keys.searchProviderKey);
-        if (storedLocal === 'internal' || storedLocal === 'omnisearch') {
-            return storedLocal;
-        }
-
-        const storedSetting = storedData?.['searchProvider'];
-        if (storedSetting === 'internal' || storedSetting === 'omnisearch') {
-            localStorage.set(this.keys.searchProviderKey, storedSetting);
-            return storedSetting;
-        }
-
-        const fallbackProvider: 'internal' | 'omnisearch' = DEFAULT_SETTINGS.searchProvider === 'omnisearch' ? 'omnisearch' : 'internal';
-        localStorage.set(this.keys.searchProviderKey, fallbackProvider);
-        return fallbackProvider;
-    }
-
-    /**
-     * Migrates desktop and mobile UI scales from synced settings to vault-local storage.
-     */
-    private migrateUIScales(storedData: Record<string, unknown> | null): boolean {
-        const storedDesktopScale = storedData?.['desktopScale'];
-        const storedMobileScale = storedData?.['mobileScale'];
-        const hadLegacyFields = Boolean(storedData && ('desktopScale' in storedData || 'mobileScale' in storedData));
-
-        // Keeps legacy scale values usable without reintroducing removed fields from other devices
-        const sanitizeScale = (value: unknown, fallback: number): number => {
-            if (typeof value === 'number' && Number.isFinite(value)) {
-                return sanitizeUIScale(value);
-            }
-            if (typeof value === 'string') {
-                const parsed = Number(value);
-                if (Number.isFinite(parsed)) {
-                    return sanitizeUIScale(parsed);
-                }
-            }
-            return sanitizeUIScale(fallback);
-        };
-
-        if (Platform.isMobile) {
-            const resolvedMobile = this.resolveUIScaleFromStorage(this.keys.uiScaleKey, storedMobileScale);
-            this.settings.mobileScale = resolvedMobile;
-            this.settings.desktopScale = sanitizeScale(storedDesktopScale, this.settings.desktopScale);
-            if (this.shouldPersistMobileScale) {
-                this.shouldPersistMobileScale = false;
-            }
-        } else {
-            const resolvedDesktop = this.resolveUIScaleFromStorage(this.keys.uiScaleKey, storedDesktopScale);
-            this.settings.desktopScale = resolvedDesktop;
-            this.settings.mobileScale = sanitizeScale(storedMobileScale, this.settings.mobileScale);
-            if (this.shouldPersistDesktopScale) {
-                this.shouldPersistDesktopScale = false;
-            }
-        }
-
-        return hadLegacyFields;
-    }
-
-    /**
-     * Resolves a UI scale value from local storage, falling back to synced settings or default.
-     */
-    private resolveUIScaleFromStorage(storageKey: string, storedSetting: unknown): number {
-        const parseScale = (value: unknown): number | null => {
-            if (typeof value === 'number' && Number.isFinite(value)) {
-                return sanitizeUIScale(value);
-            }
-            if (typeof value === 'string') {
-                const parsed = Number(value);
-                if (Number.isFinite(parsed)) {
-                    return sanitizeUIScale(parsed);
-                }
-            }
-            return null;
-        };
-
-        const storedLocal = localStorage.get<unknown>(storageKey);
-        const localScale = parseScale(storedLocal);
-        if (localScale !== null) {
-            return localScale;
-        }
-
-        const settingScale = parseScale(storedSetting);
-        if (settingScale !== null) {
-            localStorage.set(storageKey, settingScale);
-            return settingScale;
-        }
-
-        localStorage.set(storageKey, DEFAULT_UI_SCALE);
-        return DEFAULT_UI_SCALE;
+        return null;
     }
 
     /**
@@ -851,6 +731,15 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             localStorage.set(this.keys.searchProviderKey, this.settings.searchProvider);
             const initialScale = sanitizeUIScale(Platform.isMobile ? this.settings.mobileScale : this.settings.desktopScale);
             localStorage.set(this.keys.uiScaleKey, initialScale);
+            localStorage.set(this.keys.paneTransitionDurationKey, this.settings.paneTransitionDuration);
+            localStorage.set(this.keys.toolbarVisibilityKey, this.settings.toolbarVisibility);
+            localStorage.set(this.keys.navIndentKey, this.settings.navIndent);
+            localStorage.set(this.keys.navItemHeightKey, this.settings.navItemHeight);
+            localStorage.set(this.keys.navItemHeightScaleTextKey, this.settings.navItemHeightScaleText);
+            localStorage.set(this.keys.calendarWeeksToShowKey, this.settings.calendarWeeksToShow);
+            localStorage.set(this.keys.calendarShowWeekNumberKey, this.settings.calendarShowWeekNumber);
+            localStorage.set(this.keys.compactItemHeightKey, this.settings.compactItemHeight);
+            localStorage.set(this.keys.compactItemHeightScaleTextKey, this.settings.compactItemHeightScaleText);
 
             // Persist the active vault profile for this device
             localStorage.set(this.keys.vaultProfileKey, this.settings.vaultProfile);
@@ -1173,6 +1062,122 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         }
         this.settings.searchProvider = normalized;
         localStorage.set(this.keys.searchProviderKey, normalized);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates the single-pane transition duration and persists to local storage.
+     */
+    public setPaneTransitionDuration(durationMs: number): void {
+        const parsed = this.parseFiniteNumber(durationMs);
+        const next =
+            parsed !== null
+                ? Math.min(MAX_PANE_TRANSITION_DURATION_MS, Math.max(MIN_PANE_TRANSITION_DURATION_MS, parsed))
+                : DEFAULT_SETTINGS.paneTransitionDuration;
+
+        if (this.settings.paneTransitionDuration === next) {
+            return;
+        }
+        this.settings.paneTransitionDuration = next;
+        localStorage.set(this.keys.paneTransitionDurationKey, next);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Persists toolbar button visibility to local storage.
+     */
+    public persistToolbarVisibility(): void {
+        localStorage.set(this.keys.toolbarVisibilityKey, this.settings.toolbarVisibility);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates navigation tree indentation and persists to local storage.
+     */
+    public setNavIndent(indent: number): void {
+        const parsed = this.parseFiniteNumber(indent);
+        const next = parsed !== null ? Math.min(24, Math.max(10, parsed)) : DEFAULT_SETTINGS.navIndent;
+        if (this.settings.navIndent === next) {
+            return;
+        }
+        this.settings.navIndent = next;
+        localStorage.set(this.keys.navIndentKey, next);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates navigation item height and persists to local storage.
+     */
+    public setNavItemHeight(height: number): void {
+        const parsed = this.parseFiniteNumber(height);
+        const next = parsed !== null ? Math.min(28, Math.max(20, parsed)) : DEFAULT_SETTINGS.navItemHeight;
+        if (this.settings.navItemHeight === next) {
+            return;
+        }
+        this.settings.navItemHeight = next;
+        localStorage.set(this.keys.navItemHeightKey, next);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates navigation text scaling with item height and persists to local storage.
+     */
+    public setNavItemHeightScaleText(enabled: boolean): void {
+        if (this.settings.navItemHeightScaleText === enabled) {
+            return;
+        }
+        this.settings.navItemHeightScaleText = enabled;
+        localStorage.set(this.keys.navItemHeightScaleTextKey, enabled);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates calendar weeks to show and persists to local storage.
+     */
+    public setCalendarWeeksToShow(weeks: CalendarWeeksToShow): void {
+        if (this.settings.calendarWeeksToShow === weeks) {
+            return;
+        }
+        this.settings.calendarWeeksToShow = weeks;
+        localStorage.set(this.keys.calendarWeeksToShowKey, weeks);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates calendar week number visibility and persists to local storage.
+     */
+    public setCalendarShowWeekNumber(enabled: boolean): void {
+        if (this.settings.calendarShowWeekNumber === enabled) {
+            return;
+        }
+        this.settings.calendarShowWeekNumber = enabled;
+        localStorage.set(this.keys.calendarShowWeekNumberKey, enabled);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates compact list item height and persists to local storage.
+     */
+    public setCompactItemHeight(height: number): void {
+        const parsed = this.parseFiniteNumber(height);
+        const next = parsed !== null ? Math.min(28, Math.max(20, parsed)) : DEFAULT_SETTINGS.compactItemHeight;
+        if (this.settings.compactItemHeight === next) {
+            return;
+        }
+        this.settings.compactItemHeight = next;
+        localStorage.set(this.keys.compactItemHeightKey, next);
+        this.notifySettingsUpdate();
+    }
+
+    /**
+     * Updates compact list text scaling with item height and persists to local storage.
+     */
+    public setCompactItemHeightScaleText(enabled: boolean): void {
+        if (this.settings.compactItemHeightScaleText === enabled) {
+            return;
+        }
+        this.settings.compactItemHeightScaleText = enabled;
+        localStorage.set(this.keys.compactItemHeightScaleTextKey, enabled);
         this.notifySettingsUpdate();
     }
 
@@ -1860,6 +1865,15 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         delete rest.lastReleaseCheckAt;
         delete rest.latestKnownRelease;
         delete rest.searchProvider;
+        delete rest.paneTransitionDuration;
+        delete rest.toolbarVisibility;
+        delete rest.navIndent;
+        delete rest.navItemHeight;
+        delete rest.navItemHeightScaleText;
+        delete rest.calendarWeeksToShow;
+        delete rest.calendarShowWeekNumber;
+        delete rest.compactItemHeight;
+        delete rest.compactItemHeightScaleText;
         if (!this.shouldPersistDesktopScale) {
             delete rest.desktopScale;
         }

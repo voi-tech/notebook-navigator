@@ -499,7 +499,9 @@ export function renderGeneralTab(context: SettingsTabContext): void {
     }
 
     const paneTransitionSetting = behaviorGroup.addSetting(setting => {
-        setting.setName(strings.settings.items.paneTransitionDuration.name).setDesc(strings.settings.items.paneTransitionDuration.desc);
+        setting
+            .setName(`${strings.settings.items.paneTransitionDuration.name} (not synced)`)
+            .setDesc(strings.settings.items.paneTransitionDuration.desc);
     });
 
     const paneTransitionValueEl = paneTransitionSetting.controlEl.createDiv({ cls: 'nn-slider-value' });
@@ -516,10 +518,9 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                 .setValue(plugin.settings.paneTransitionDuration)
                 .setInstant(false)
                 .setDynamicTooltip()
-                .onChange(async value => {
-                    plugin.settings.paneTransitionDuration = value;
+                .onChange(value => {
+                    plugin.setPaneTransitionDuration(value);
                     updatePaneTransitionLabel(value);
-                    await plugin.saveSettingsAndUpdate();
                 });
             return slider;
         })
@@ -528,12 +529,11 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                 .setIcon('lucide-rotate-ccw')
                 .setTooltip(strings.settings.items.paneTransitionDuration.resetTooltip)
                 .onClick(() => {
-                    runAsyncAction(async () => {
+                    runAsyncAction(() => {
                         const defaultValue = DEFAULT_SETTINGS.paneTransitionDuration;
                         paneTransitionSlider.setValue(defaultValue);
-                        plugin.settings.paneTransitionDuration = defaultValue;
+                        plugin.setPaneTransitionDuration(defaultValue);
                         updatePaneTransitionLabel(defaultValue);
-                        await plugin.saveSettingsAndUpdate();
                     });
                 })
         );
@@ -876,7 +876,7 @@ function renderToolbarVisibilitySetting(
     plugin: NotebookNavigatorPlugin
 ): void {
     const setting = addSetting(setting => {
-        setting.setName(strings.settings.items.toolbarButtons.name).setDesc(strings.settings.items.toolbarButtons.desc);
+        setting.setName(`${strings.settings.items.toolbarButtons.name} (not synced)`).setDesc(strings.settings.items.toolbarButtons.desc);
     });
 
     setting.controlEl.addClass('nn-toolbar-visibility-control');
@@ -888,9 +888,7 @@ function renderToolbarVisibilitySetting(
         buttons: NAVIGATION_TOOLBAR_BUTTONS,
         state: plugin.settings.toolbarVisibility.navigation,
         onToggle: () => {
-            runAsyncAction(async () => {
-                await plugin.saveSettingsAndUpdate();
-            });
+            runAsyncAction(() => plugin.persistToolbarVisibility());
         }
     });
 
@@ -900,9 +898,7 @@ function renderToolbarVisibilitySetting(
         buttons: LIST_TOOLBAR_BUTTONS,
         state: plugin.settings.toolbarVisibility.list,
         onToggle: () => {
-            runAsyncAction(async () => {
-                await plugin.saveSettingsAndUpdate();
-            });
+            runAsyncAction(() => plugin.persistToolbarVisibility());
         }
     });
 }

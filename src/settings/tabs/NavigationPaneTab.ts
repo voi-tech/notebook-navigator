@@ -170,7 +170,7 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
 
     calendarGroup.addSetting(setting => {
         setting
-            .setName(strings.settings.items.showCalendar.name)
+            .setName(`${strings.settings.items.showCalendar.name} (not synced)`)
             .setDesc(strings.settings.items.showCalendar.desc)
             .addToggle(toggle =>
                 toggle.setValue(plugin.getUXPreferences().showCalendar).onChange(value => {
@@ -208,7 +208,9 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
 
     calendarGroup
         .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarWeeksToShow.name).setDesc(strings.settings.items.calendarWeeksToShow.desc);
+            setting
+                .setName(`${strings.settings.items.calendarWeeksToShow.name} (not synced)`)
+                .setDesc(strings.settings.items.calendarWeeksToShow.desc);
         })
         .addDropdown((dropdown: DropdownComponent) => {
             dropdown.addOption('1', strings.settings.items.calendarWeeksToShow.options.oneWeek);
@@ -217,14 +219,13 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
             }
             dropdown.addOption('6', strings.settings.items.calendarWeeksToShow.options.fullMonth);
 
-            dropdown.setValue(String(plugin.settings.calendarWeeksToShow)).onChange(async value => {
+            dropdown.setValue(String(plugin.settings.calendarWeeksToShow)).onChange(value => {
                 const parsed = parseCalendarWeeksToShow(value);
                 if (parsed === null) {
                     return;
                 }
 
-                plugin.settings.calendarWeeksToShow = parsed;
-                await plugin.saveSettingsAndUpdate();
+                plugin.setCalendarWeeksToShow(parsed);
             });
         });
 
@@ -241,12 +242,13 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
 
     calendarGroup
         .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarShowWeekNumber.name).setDesc(strings.settings.items.calendarShowWeekNumber.desc);
+            setting
+                .setName(`${strings.settings.items.calendarShowWeekNumber.name} (not synced)`)
+                .setDesc(strings.settings.items.calendarShowWeekNumber.desc);
         })
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(async value => {
-                plugin.settings.calendarShowWeekNumber = value;
-                await plugin.saveSettingsAndUpdate();
+            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(value => {
+                plugin.setCalendarShowWeekNumber(value);
             })
         );
 
@@ -347,7 +349,7 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
     let indentationSlider: SliderComponent;
     appearanceGroup.addSetting(setting => {
         setting
-            .setName(strings.settings.items.navIndent.name)
+            .setName(`${strings.settings.items.navIndent.name} (not synced)`)
             .setDesc(strings.settings.items.navIndent.desc)
             .addSlider(slider => {
                 indentationSlider = slider
@@ -355,9 +357,8 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                     .setValue(plugin.settings.navIndent)
                     .setInstant(false)
                     .setDynamicTooltip()
-                    .onChange(async value => {
-                        plugin.settings.navIndent = value;
-                        await plugin.saveSettingsAndUpdate();
+                    .onChange(value => {
+                        plugin.setNavIndent(value);
                     });
                 return slider;
             })
@@ -367,11 +368,10 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                     .setTooltip('Restore to default (16px)')
                     .onClick(() => {
                         // Reset indentation to default without blocking the UI
-                        runAsyncAction(async () => {
+                        runAsyncAction(() => {
                             const defaultValue = DEFAULT_SETTINGS.navIndent;
                             indentationSlider.setValue(defaultValue);
-                            plugin.settings.navIndent = defaultValue;
-                            await plugin.saveSettingsAndUpdate();
+                            plugin.setNavIndent(defaultValue);
                         });
                     })
             );
@@ -380,7 +380,7 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
     let lineHeightSlider: SliderComponent;
     const navItemHeightSetting = appearanceGroup.addSetting(setting => {
         setting
-            .setName(strings.settings.items.navItemHeight.name)
+            .setName(`${strings.settings.items.navItemHeight.name} (not synced)`)
             .setDesc(strings.settings.items.navItemHeight.desc)
             .addSlider(slider => {
                 lineHeightSlider = slider
@@ -388,9 +388,8 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                     .setValue(plugin.settings.navItemHeight)
                     .setInstant(false)
                     .setDynamicTooltip()
-                    .onChange(async value => {
-                        plugin.settings.navItemHeight = value;
-                        await plugin.saveSettingsAndUpdate();
+                    .onChange(value => {
+                        plugin.setNavItemHeight(value);
                     });
                 return slider;
             })
@@ -400,11 +399,10 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                     .setTooltip('Restore to default (28px)')
                     .onClick(() => {
                         // Reset line height to default without blocking the UI
-                        runAsyncAction(async () => {
+                        runAsyncAction(() => {
                             const defaultValue = DEFAULT_SETTINGS.navItemHeight;
                             lineHeightSlider.setValue(defaultValue);
-                            plugin.settings.navItemHeight = defaultValue;
-                            await plugin.saveSettingsAndUpdate();
+                            plugin.setNavItemHeight(defaultValue);
                         });
                     })
             );
@@ -413,12 +411,11 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
     const navItemHeightSettingsEl = createSubSettingsContainer(navItemHeightSetting);
 
     new Setting(navItemHeightSettingsEl)
-        .setName(strings.settings.items.navItemHeightScaleText.name)
+        .setName(`${strings.settings.items.navItemHeightScaleText.name} (not synced)`)
         .setDesc(strings.settings.items.navItemHeightScaleText.desc)
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.navItemHeightScaleText).onChange(async value => {
-                plugin.settings.navItemHeightScaleText = value;
-                await plugin.saveSettingsAndUpdate();
+            toggle.setValue(plugin.settings.navItemHeightScaleText).onChange(value => {
+                plugin.setNavItemHeightScaleText(value);
             })
         );
 

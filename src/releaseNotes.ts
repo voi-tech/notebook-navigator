@@ -94,6 +94,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         changed: [
             '==Behavior change==: In single-pane mode, clicking on a file in shortcuts, recent notes, in calendar or changing notes in the editor (with auto reveal enabled) will no longer switch over to list pane automatically. The old behavior was implemented before we had shortcuts and recent notes, and it was time to change it.',
             '==Behavior change==: Hiding icons for shortcuts, recent notes, folders and tags now keeps the **top section icon** to keep the sections visually distinct.',
+            '==Moved several UX settings to local storage== so they are not synced between devices. These are: pane transition duration, toolbar button visibility, navigation indentation, navigation item height, scale navigation text with item height, compact list item height, scale compact list text with item height.',
             'Folder notes no longer default to showing text in bold and underline, instead their icon is now a file icon. This can be changed in Style settings.',
             'Removed the two style setting variables **nn-navigation-pane-transparent** and **nn-list-pane-transparent** since they did not look good with the new overlay transparency. I will investigate best way forward for those who want full window transparency.'
         ],
