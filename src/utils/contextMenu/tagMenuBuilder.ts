@@ -38,88 +38,17 @@ export function buildTagMenu(params: TagMenuBuilderParams): void {
     const { tagPath, menu, services, settings, options } = params;
     const { app, metadataService, plugin, isMobile } = services;
 
-    let hasInitialItems = false;
-
     // Show tag name on mobile
     if (isMobile) {
-        hasInitialItems = true;
         menu.addItem((item: MenuItem) => {
             const label = isVirtualTagCollectionId(tagPath) ? getVirtualTagCollection(tagPath).getLabel() : `#${tagPath}`;
             item.setTitle(label).setIsLabel(true);
         });
+        menu.addSeparator();
     }
 
     // Add rename/delete options only for real tags (not virtual aggregations)
     const isVirtualTag = tagPath === UNTAGGED_TAG_ID || tagPath === TAGGED_TAG_ID;
-
-    if (services.shortcuts) {
-        hasInitialItems = true;
-        const { tagShortcutKeysByPath, addTagShortcut, removeShortcut, renameShortcut, shortcutMap } = services.shortcuts;
-        const normalizedShortcutPath = normalizeTagPath(tagPath);
-        const existingShortcutKey = normalizedShortcutPath ? tagShortcutKeysByPath.get(normalizedShortcutPath) : undefined;
-
-        if (existingShortcutKey) {
-            const existingShortcut = shortcutMap.get(existingShortcutKey);
-            const defaultLabel = isVirtualTagCollectionId(tagPath)
-                ? getVirtualTagCollection(tagPath).getLabel()
-                : resolveDisplayTagPath(tagPath, services.tagTreeService);
-
-            addShortcutRenameMenuItem({
-                app,
-                menu,
-                shortcutKey: existingShortcutKey,
-                defaultLabel,
-                existingShortcut,
-                title: strings.shortcuts.rename,
-                placeholder: strings.searchInput.shortcutNamePlaceholder,
-                renameShortcut
-            });
-        }
-
-        menu.addItem((item: MenuItem) => {
-            if (existingShortcutKey) {
-                setAsyncOnClick(
-                    item
-                        .setTitle(strings.shortcuts.remove)
-                        .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'nav-shortcuts', 'lucide-star-off')),
-                    async () => {
-                        await removeShortcut(existingShortcutKey);
-                    }
-                );
-            } else {
-                setAsyncOnClick(
-                    item
-                        .setTitle(strings.shortcuts.add)
-                        .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'nav-shortcuts', 'lucide-star')),
-                    async () => {
-                        await addTagShortcut(tagPath);
-                    }
-                );
-            }
-        });
-    }
-
-    const disableNavigationSeparatorActions = Boolean(options?.disableNavigationSeparatorActions);
-    if (!disableNavigationSeparatorActions) {
-        hasInitialItems = true;
-        const tagSeparatorTarget = { type: 'tag', path: tagPath } as const;
-        const hasSeparator = metadataService.hasNavigationSeparator(tagSeparatorTarget);
-
-        menu.addItem((item: MenuItem) => {
-            const title = hasSeparator ? strings.contextMenu.navigation.removeSeparator : strings.contextMenu.navigation.addSeparator;
-            setAsyncOnClick(item.setTitle(title).setIcon('lucide-separator-horizontal'), async () => {
-                if (hasSeparator) {
-                    await metadataService.removeNavigationSeparator(tagSeparatorTarget);
-                    return;
-                }
-                await metadataService.addNavigationSeparator(tagSeparatorTarget);
-            });
-        });
-    }
-
-    if (hasInitialItems) {
-        menu.addSeparator();
-    }
 
     // Change icon
     menu.addItem((item: MenuItem) => {
@@ -191,6 +120,75 @@ export function buildTagMenu(params: TagMenuBuilderParams): void {
         removeColor: hasRemovableColor ? async () => metadataService.removeTagColor(tagPath) : undefined,
         removeBackground: hasRemovableBackground ? async () => metadataService.removeTagBackgroundColor(tagPath) : undefined
     });
+
+    const disableNavigationSeparatorActions = Boolean(options?.disableNavigationSeparatorActions);
+    const shouldAddShortcutSectionSeparator = Boolean(services.shortcuts) || !disableNavigationSeparatorActions;
+    if (shouldAddShortcutSectionSeparator) {
+        menu.addSeparator();
+    }
+
+    // Add to shortcuts / Remove from shortcuts
+    if (services.shortcuts) {
+        const { tagShortcutKeysByPath, addTagShortcut, removeShortcut, renameShortcut, shortcutMap } = services.shortcuts;
+        const normalizedShortcutPath = normalizeTagPath(tagPath);
+        const existingShortcutKey = normalizedShortcutPath ? tagShortcutKeysByPath.get(normalizedShortcutPath) : undefined;
+
+        if (existingShortcutKey) {
+            const existingShortcut = shortcutMap.get(existingShortcutKey);
+            const defaultLabel = isVirtualTagCollectionId(tagPath)
+                ? getVirtualTagCollection(tagPath).getLabel()
+                : resolveDisplayTagPath(tagPath, services.tagTreeService);
+
+            addShortcutRenameMenuItem({
+                app,
+                menu,
+                shortcutKey: existingShortcutKey,
+                defaultLabel,
+                existingShortcut,
+                title: strings.shortcuts.rename,
+                placeholder: strings.searchInput.shortcutNamePlaceholder,
+                renameShortcut
+            });
+        }
+
+        menu.addItem((item: MenuItem) => {
+            if (existingShortcutKey) {
+                setAsyncOnClick(
+                    item
+                        .setTitle(strings.shortcuts.remove)
+                        .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'nav-shortcuts', 'lucide-star-off')),
+                    async () => {
+                        await removeShortcut(existingShortcutKey);
+                    }
+                );
+            } else {
+                setAsyncOnClick(
+                    item
+                        .setTitle(strings.shortcuts.add)
+                        .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'nav-shortcuts', 'lucide-star')),
+                    async () => {
+                        await addTagShortcut(tagPath);
+                    }
+                );
+            }
+        });
+    }
+
+    if (!disableNavigationSeparatorActions) {
+        const tagSeparatorTarget = { type: 'tag', path: tagPath } as const;
+        const hasSeparator = metadataService.hasNavigationSeparator(tagSeparatorTarget);
+
+        menu.addItem((item: MenuItem) => {
+            const title = hasSeparator ? strings.contextMenu.navigation.removeSeparator : strings.contextMenu.navigation.addSeparator;
+            setAsyncOnClick(item.setTitle(title).setIcon('lucide-separator-horizontal'), async () => {
+                if (hasSeparator) {
+                    await metadataService.removeNavigationSeparator(tagSeparatorTarget);
+                    return;
+                }
+                await metadataService.addNavigationSeparator(tagSeparatorTarget);
+            });
+        });
+    }
 
     const canHideTag = tagPath !== UNTAGGED_TAG_ID;
     const activeProfile = getActiveVaultProfile(plugin.settings);
