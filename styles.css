@@ -4433,7 +4433,7 @@ body.nn-resizing {
 
 /* What's new scrollable container */
 .nn-whats-new-scroll {
-    max-height: 400px;
+    max-height: min(70vh, 520px);
     overflow-y: auto;
     margin-bottom: 0;
     padding-right: 8px;
@@ -4640,7 +4640,7 @@ body.nn-resizing {
     }
 
     .nn-whats-new-scroll {
-        max-height: 300px;
+        max-height: min(60vh, 360px);
         padding-right: 4px;
     }
 
