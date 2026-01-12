@@ -55,7 +55,7 @@
     padding: var(--nn-nav-calendar-padding) calc(var(--nn-scroller-padding) + var(--nn-nav-calendar-scrollbar-gap))
         calc(var(--nn-nav-calendar-padding) + var(--nn-nav-calendar-safe-area)) var(--nn-scroller-padding);
 
-    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 85) * 1%), transparent);
+    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 87) * 1%), transparent);
     -webkit-backdrop-filter: var(--nn-theme-pane-overlay-filter);
     backdrop-filter: var(--nn-theme-pane-overlay-filter);
 

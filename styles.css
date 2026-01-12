@@ -171,7 +171,7 @@ body {
 
     /* -- Pane Overlay Stacks -- */
     /* Overlay stacks (header/search/title) rendered above scrolling content */
-    --nn-theme-pane-overlay-opacity: 85;
+    --nn-theme-pane-overlay-opacity: 87;
     --nn-theme-pane-overlay-filter: blur(3px) saturate(160%);
 
     /* -- Navigation Pane -- */
@@ -1729,7 +1729,7 @@ body {
      * Render the overlay stack as a translucent surface so tree rows can scroll behind it.
      * The opacity is user-adjustable via Style Settings.
      */
-    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 85) * 1%), transparent);
+    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 87) * 1%), transparent);
     -webkit-backdrop-filter: var(--nn-theme-pane-overlay-filter);
     backdrop-filter: var(--nn-theme-pane-overlay-filter);
     /* The scroller applies horizontal padding for rows; offset it so the overlay aligns to the pane edge. */
@@ -2435,7 +2435,7 @@ body {
     padding: var(--nn-nav-calendar-padding) calc(var(--nn-scroller-padding) + var(--nn-nav-calendar-scrollbar-gap))
         calc(var(--nn-nav-calendar-padding) + var(--nn-nav-calendar-safe-area)) var(--nn-scroller-padding);
 
-    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 85) * 1%), transparent);
+    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 87) * 1%), transparent);
     -webkit-backdrop-filter: var(--nn-theme-pane-overlay-filter);
     backdrop-filter: var(--nn-theme-pane-overlay-filter);
 
@@ -2750,7 +2750,7 @@ body {
     z-index: 4;
     display: flex;
     flex-direction: column;
-    background: color-mix(in srgb, var(--nn-theme-list-bg) calc(var(--nn-theme-pane-overlay-opacity, 85) * 1%), transparent);
+    background: color-mix(in srgb, var(--nn-theme-list-bg) calc(var(--nn-theme-pane-overlay-opacity, 87) * 1%), transparent);
     -webkit-backdrop-filter: var(--nn-theme-pane-overlay-filter);
     backdrop-filter: var(--nn-theme-pane-overlay-filter);
     /* The scroller applies horizontal padding for rows; offset it so the overlay aligns to the pane edge. */
@@ -7490,17 +7490,17 @@ settings:
         type: heading
         level: 1
         collapsed: true
-    -
-    -
-        id: nn-theme-pane-overlay-opacity
-        title: Overlay opacity
-        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
-        type: variable-number-slider
-        default: 85
-        min: 0
-        max: 100
-        step: 1
-    -
+	    -
+	    -
+	        id: nn-theme-pane-overlay-opacity
+	        title: Overlay opacity
+	        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
+	        type: variable-number-slider
+	        default: 87
+	        min: 0
+	        max: 100
+	        step: 1
+	    -
     -
         id: nn-theme-pane-divider-heading
         title: Pane divider

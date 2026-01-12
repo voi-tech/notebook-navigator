@@ -187,7 +187,7 @@
      * Render the overlay stack as a translucent surface so tree rows can scroll behind it.
      * The opacity is user-adjustable via Style Settings.
      */
-    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 85) * 1%), transparent);
+    background: color-mix(in srgb, var(--nn-theme-nav-bg) calc(var(--nn-theme-pane-overlay-opacity, 87) * 1%), transparent);
     -webkit-backdrop-filter: var(--nn-theme-pane-overlay-filter);
     backdrop-filter: var(--nn-theme-pane-overlay-filter);
     /* The scroller applies horizontal padding for rows; offset it so the overlay aligns to the pane edge. */

@@ -144,7 +144,7 @@ body {
 
     /* -- Pane Overlay Stacks -- */
     /* Overlay stacks (header/search/title) rendered above scrolling content */
-    --nn-theme-pane-overlay-opacity: 85;
+    --nn-theme-pane-overlay-opacity: 87;
     --nn-theme-pane-overlay-filter: blur(3px) saturate(160%);
 
     /* -- Navigation Pane -- */
