@@ -99,7 +99,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             '==Behavior change==: Hiding icons for shortcuts, recent notes, folders and tags now keeps the **top section icon** to keep the sections visually distinct.',
             '==Moved several UX settings to local storage== so they are not synced between devices. These are: pane transition duration, toolbar button visibility, navigation indentation, navigation item height, scale navigation text with item height, compact list item height, scale compact list text with item height.',
             'Folder notes no longer default to showing text in bold and underline, instead their icon is now a file icon. This can be changed in Style settings.',
-            'Removed the two style setting variables **nn-navigation-pane-transparent** and **nn-list-pane-transparent** since they did not look good with the new overlay transparency. I will investigate best way forward for those who want full window transparency.'
+            'Removed the two style setting variables **nn-navigation-pane-transparent** and **nn-list-pane-transparent** since they did not look good with the new overlay transparency. I will investigate best way forward for those who want full window transparency.',
+            'Hide files by name, Hide folders by name, Hide note with properties are now case-insensitive.'
         ],
         fixed: [
             'The rebuild cache process dialog now properly reappears after restarting Obsidian.',
