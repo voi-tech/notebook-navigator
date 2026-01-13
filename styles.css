@@ -6121,7 +6121,11 @@ body.nn-resizing {
     /* Covers the toolbar height plus the visual bottom gap so the fade reaches the edge below. */
     height: calc(var(--nn-ios-pane-bottom-fade-height) + var(--nn-ios-toolbar-bottom-offset));
     pointer-events: none;
-    background: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / var(--nn-ios-pane-bottom-fade-opacity)));
+    background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--nn-theme-mobile-bg) 0%, transparent),
+        color-mix(in srgb, var(--nn-theme-mobile-bg) calc(var(--nn-ios-pane-bottom-fade-opacity) * 100%), transparent)
+    );
     z-index: -1;
 }
 /* Source: src/styles/sections/platform-android-obsidian-1-11.css */
