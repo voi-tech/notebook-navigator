@@ -233,6 +233,7 @@ body {
     --nn-theme-navitem-custom-color-name-font-weight: 600;
     --nn-theme-navitem-folder-note-name-font-weight: 400;
     --nn-theme-navitem-folder-note-name-decoration: none;
+    --nn-theme-navitem-folder-note-name-hover-decoration: underline;
 
     /* -- Pane Divider -- */
     --nn-theme-divider-border-color: var(--background-modifier-border);
@@ -2063,6 +2064,7 @@ body {
 /* Folder with folder note - show pointer cursor on hover */
 .nn-navitem-name.nn-has-folder-note:hover {
     cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
 }
 
 /* Spacer element to push count to the end */
@@ -2184,6 +2186,7 @@ body {
 /* Pointer cursor on hover for clickable folder note shortcuts */
 .nn-shortcut-item .nn-navitem-name.nn-has-folder-note:hover .nn-shortcut-label {
     cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
 }
 
 .nn-drag-item .nn-shortcut-description {
@@ -6938,6 +6941,23 @@ settings:
             value: underline dotted
     -
     -
+        id: nn-theme-navitem-folder-note-name-hover-decoration
+        title: Folder note hover decoration
+        description: Text decoration when hovering folders with notes.
+        type: variable-select
+        default: underline
+        options:
+          -
+            label: None
+            value: none
+          -
+            label: Underline
+            value: underline
+          -
+            label: Dotted underline
+            value: underline dotted
+    -
+    -
         id: nn-pinned-shortcuts-heading
         title: Pinned shortcuts
         type: heading
@@ -7494,17 +7514,17 @@ settings:
         type: heading
         level: 1
         collapsed: true
-	    -
-	    -
-	        id: nn-theme-pane-overlay-opacity
-	        title: Overlay opacity
-	        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
-	        type: variable-number-slider
-	        default: 87
-	        min: 0
-	        max: 100
-	        step: 1
-	    -
+    -
+    -
+        id: nn-theme-pane-overlay-opacity
+        title: Overlay opacity
+        description: Opacity (0-100) for the pane overlay stacks rendered above scrolling rows.
+        type: variable-number-slider
+        default: 87
+        min: 0
+        max: 100
+        step: 1
+    -
     -
         id: nn-theme-pane-divider-heading
         title: Pane divider
