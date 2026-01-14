@@ -147,7 +147,7 @@ export function useListPaneData({
     const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
     // Use Omnisearch only when selected, available, and there's a query
     const useOmnisearch = searchProvider === 'omnisearch' && isOmnisearchAvailable && hasSearchQuery;
-    const { hiddenFolders, hiddenFiles, hiddenFileNamePatterns, hiddenTags, hiddenFileTags, fileVisibility } = activeProfile;
+    const { hiddenFolders, hiddenFileProperties, hiddenFileNames, hiddenTags, hiddenFileTags, fileVisibility } = activeProfile;
     const listConfig = useMemo(
         () => ({
             pinnedNotes: settings.pinnedNotes,
@@ -201,8 +201,8 @@ export function useListPaneData({
         selectedTag,
         activeProfile.profile.id,
         activeProfile.hiddenFolders,
-        activeProfile.hiddenFiles,
-        activeProfile.hiddenFileNamePatterns,
+        activeProfile.hiddenFileProperties,
+        activeProfile.hiddenFileNames,
         activeProfile.hiddenTags,
         activeProfile.hiddenFileTags,
         activeProfile.fileVisibility,
@@ -440,10 +440,10 @@ export function useListPaneData({
         const db = getDB();
         const records = db.getFiles(files.map(file => file.path));
         const shouldCheckFolders = hiddenFolders.length > 0;
-        const shouldCheckFrontmatter = hiddenFiles.length > 0;
-        const shouldCheckFileNames = hiddenFileNamePatterns.length > 0;
+        const shouldCheckFrontmatter = hiddenFileProperties.length > 0;
+        const shouldCheckFileNames = hiddenFileNames.length > 0;
         const shouldCheckFileTags = hiddenFileTags.length > 0;
-        const fileNameMatcher = shouldCheckFileNames ? createHiddenFileNameMatcher(hiddenFileNamePatterns) : null;
+        const fileNameMatcher = shouldCheckFileNames ? createHiddenFileNameMatcher(hiddenFileNames) : null;
         const hiddenFileTagVisibility = shouldCheckFileTags ? createHiddenTagVisibility(hiddenFileTags, false) : null;
         const folderHiddenCache = shouldCheckFolders ? new Map<string, boolean>() : null;
         const result = new Map<string, boolean>();
@@ -466,7 +466,7 @@ export function useListPaneData({
             let hiddenByFrontmatter = false;
             if (shouldCheckFrontmatter && file.extension === 'md') {
                 if (record?.metadata?.hidden === undefined) {
-                    hiddenByFrontmatter = shouldExcludeFile(file, hiddenFiles, app);
+                    hiddenByFrontmatter = shouldExcludeFile(file, hiddenFileProperties, app);
                 } else {
                     hiddenByFrontmatter = Boolean(record.metadata?.hidden);
                 }
@@ -487,7 +487,7 @@ export function useListPaneData({
         });
 
         return result;
-    }, [files, getDB, hiddenFolders, hiddenFiles, hiddenFileNamePatterns, hiddenFileTags, showHiddenItems, app]);
+    }, [files, getDB, hiddenFolders, hiddenFileProperties, hiddenFileNames, hiddenFileTags, showHiddenItems, app]);
 
     /**
      * Build the complete list of items for rendering, including:
@@ -940,11 +940,11 @@ export function useListPaneData({
             }
 
             // Check if file's hidden state changed (frontmatter property added/removed) to trigger rebuild
-            if (hiddenFiles.length > 0 && file.extension === 'md') {
+            if (hiddenFileProperties.length > 0 && file.extension === 'md') {
                 const db = getDB();
                 const record = db.getFile(file.path);
                 const wasExcluded = Boolean(record?.metadata?.hidden);
-                const isCurrentlyExcluded = shouldExcludeFile(file, hiddenFiles, app);
+                const isCurrentlyExcluded = shouldExcludeFile(file, hiddenFileProperties, app);
 
                 if (isCurrentlyExcluded === wasExcluded) {
                     return;
@@ -995,7 +995,7 @@ export function useListPaneData({
             }
 
             // React to metadata changes that may update hidden-state styling
-            if (!shouldRefresh && hiddenFiles.length > 0 && showHiddenItems) {
+            if (!shouldRefresh && hiddenFileProperties.length > 0 && showHiddenItems) {
                 const metadataPaths = changes.filter(change => change.changes.metadata !== undefined).map(change => change.path);
                 if (metadataPaths.length > 0) {
                     shouldRefresh = metadataPaths.some(path => basePathSet.has(path));
@@ -1027,7 +1027,7 @@ export function useListPaneData({
         selectedTag,
         selectedFolder,
         includeDescendantNotes,
-        hiddenFiles,
+        hiddenFileProperties,
         hiddenFolders,
         hiddenFileTags,
         showHiddenItems,

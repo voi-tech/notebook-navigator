@@ -94,8 +94,10 @@ function createSettings(): NotebookNavigatorSettings {
             createVaultProfile(profile.name, {
                 id: profile.id,
                 hiddenFolders: profile.hiddenFolders,
-                hiddenFiles: profile.hiddenFiles,
+                hiddenFileProperties: profile.hiddenFileProperties,
+                hiddenFileNames: profile.hiddenFileNames,
                 hiddenTags: profile.hiddenTags,
+                hiddenFileTags: profile.hiddenFileTags,
                 fileVisibility: profile.fileVisibility,
                 navigationBanner: profile.navigationBanner,
                 shortcuts: profile.shortcuts
@@ -108,8 +110,10 @@ function createVaultProfileStub(id: string, shortcuts: ShortcutEntry[]): VaultPr
     return createVaultProfile(id, {
         id,
         hiddenFolders: [],
-        hiddenFiles: [],
+        hiddenFileProperties: [],
+        hiddenFileNames: [],
         hiddenTags: [],
+        hiddenFileTags: [],
         shortcuts
     });
 }

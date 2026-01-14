@@ -97,9 +97,9 @@ export interface VaultProfile {
     fileVisibility: FileVisibility;
     hiddenFolders: string[];
     hiddenTags: string[];
+    hiddenFileNames: string[];
     hiddenFileTags: string[];
-    hiddenFiles: string[];
-    hiddenFileNamePatterns: string[];
+    hiddenFileProperties: string[];
     navigationBanner: string | null;
     shortcuts: ShortcutEntry[];
 }

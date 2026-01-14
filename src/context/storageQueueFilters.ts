@@ -22,7 +22,7 @@ import type { NotebookNavigatorSettings } from '../settings/types';
 import { getDBInstance } from '../storage/fileOperations';
 import { isPdfFile } from '../utils/fileTypeUtils';
 import { hasCustomPropertyFrontmatterFields } from '../utils/customPropertyUtils';
-import { getActiveHiddenFiles } from '../utils/vaultProfiles';
+import { getActiveHiddenFileProperties } from '../utils/vaultProfiles';
 import { getLocalFeatureImageKey } from '../services/content/FeatureImageContentProvider';
 
 type MetadataSourceFilterOptions = {
@@ -49,8 +49,8 @@ export function filterFilesRequiringMetadataSources(
 
     const db = getDBInstance();
     const records = db.getFiles(files.map(file => file.path));
-    const hiddenFiles = getActiveHiddenFiles(settings);
-    const requiresHiddenState = hiddenFiles.length > 0;
+    const hiddenFileProperties = getActiveHiddenFileProperties(settings);
+    const requiresHiddenState = hiddenFileProperties.length > 0;
     const conservativeMetadata = options?.conservativeMetadata ?? false;
     const customPropertyEnabled = hasCustomPropertyFrontmatterFields(settings);
     const needsMarkdownPipeline = types.includes('markdownPipeline');

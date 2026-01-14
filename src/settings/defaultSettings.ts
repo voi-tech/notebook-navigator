@@ -38,9 +38,9 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
             fileVisibility: FILE_VISIBILITY.SUPPORTED,
             hiddenFolders: [],
             hiddenTags: [],
+            hiddenFileNames: [],
             hiddenFileTags: [],
-            hiddenFiles: [],
-            hiddenFileNamePatterns: [],
+            hiddenFileProperties: [],
             navigationBanner: null,
             shortcuts: []
         }

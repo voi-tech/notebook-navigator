@@ -40,9 +40,9 @@ import { isFolderNote } from './folderNotes';
 import { createHiddenTagVisibility, normalizeTagPathValue } from './tagPrefixMatcher';
 import {
     getActiveFileVisibility,
-    getActiveHiddenFileNamePatterns,
+    getActiveHiddenFileNames,
     getActiveHiddenFileTags,
-    getActiveHiddenFiles,
+    getActiveHiddenFileProperties,
     getActiveHiddenFolders,
     getActiveHiddenTags
 } from './vaultProfiles';
@@ -139,8 +139,8 @@ export function getFilesForFolder(
 ): TFile[] {
     const files: TFile[] = [];
     const excludedFolderPatterns = getActiveHiddenFolders(settings);
-    const excludedFileProperties = getActiveHiddenFiles(settings);
-    const excludedFileNamePatterns = getActiveHiddenFileNamePatterns(settings);
+    const excludedFileProperties = getActiveHiddenFileProperties(settings);
+    const excludedFileNamePatterns = getActiveHiddenFileNames(settings);
     const excludedFileTagPatterns = getActiveHiddenFileTags(settings);
     const fileVisibility = getActiveFileVisibility(settings);
     const fileNameMatcher = createHiddenFileNameMatcherForVisibility(excludedFileNamePatterns, visibility.showHiddenItems);

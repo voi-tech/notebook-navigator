@@ -35,8 +35,8 @@ type SettingsStateValue = NotebookNavigatorSettings & { dualPaneOrientation: Dua
 export interface ActiveProfileState {
     profile: VaultProfile;
     hiddenFolders: string[];
-    hiddenFiles: string[];
-    hiddenFileNamePatterns: string[];
+    hiddenFileProperties: string[];
+    hiddenFileNames: string[];
     hiddenTags: string[];
     hiddenFileTags: string[];
     fileVisibility: FileVisibility;
@@ -188,8 +188,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
             nextSettings.vaultProfiles = plugin.settings.vaultProfiles.map(profile => ({
                 ...profile,
                 hiddenFolders: Array.isArray(profile.hiddenFolders) ? [...profile.hiddenFolders] : [],
-                hiddenFiles: Array.isArray(profile.hiddenFiles) ? [...profile.hiddenFiles] : [],
-                hiddenFileNamePatterns: Array.isArray(profile.hiddenFileNamePatterns) ? [...profile.hiddenFileNamePatterns] : [],
+                hiddenFileProperties: Array.isArray(profile.hiddenFileProperties) ? [...profile.hiddenFileProperties] : [],
+                hiddenFileNames: Array.isArray(profile.hiddenFileNames) ? [...profile.hiddenFileNames] : [],
                 hiddenTags: Array.isArray(profile.hiddenTags) ? [...profile.hiddenTags] : [],
                 hiddenFileTags: Array.isArray(profile.hiddenFileTags) ? [...profile.hiddenFileTags] : [],
                 shortcuts: cloneShortcuts(profile.shortcuts)
@@ -227,11 +227,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
         const isSameProfile = previous?.profile.id === profile.id;
 
         const hiddenFoldersEqual = areStringArraysEqual(previous?.profile.hiddenFolders ?? [], profile.hiddenFolders);
-        const hiddenFilesEqual = areStringArraysEqual(previous?.profile.hiddenFiles ?? [], profile.hiddenFiles);
-        const hiddenFileNamePatternsEqual = areStringArraysEqual(
-            previous?.profile.hiddenFileNamePatterns ?? [],
-            profile.hiddenFileNamePatterns
-        );
+        const hiddenFilePropertiesEqual = areStringArraysEqual(previous?.profile.hiddenFileProperties ?? [], profile.hiddenFileProperties);
+        const hiddenFileNamesEqual = areStringArraysEqual(previous?.profile.hiddenFileNames ?? [], profile.hiddenFileNames);
         const hiddenTagsEqual = areStringArraysEqual(previous?.profile.hiddenTags ?? [], profile.hiddenTags);
         const hiddenFileTagsEqual = areStringArraysEqual(previous?.profile.hiddenFileTags ?? [], profile.hiddenFileTags);
         const fileVisibilityEqual = previous?.profile.fileVisibility === profile.fileVisibility;
@@ -243,8 +240,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
         if (
             isSameProfile &&
             hiddenFoldersEqual &&
-            hiddenFilesEqual &&
-            hiddenFileNamePatternsEqual &&
+            hiddenFilePropertiesEqual &&
+            hiddenFileNamesEqual &&
             hiddenTagsEqual &&
             hiddenFileTagsEqual &&
             fileVisibilityEqual &&
@@ -259,8 +256,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
         const nextActiveProfile: ActiveProfileState = {
             profile,
             hiddenFolders: profile.hiddenFolders,
-            hiddenFiles: profile.hiddenFiles,
-            hiddenFileNamePatterns: profile.hiddenFileNamePatterns,
+            hiddenFileProperties: profile.hiddenFileProperties,
+            hiddenFileNames: profile.hiddenFileNames,
             hiddenTags: profile.hiddenTags,
             hiddenFileTags: profile.hiddenFileTags,
             fileVisibility: profile.fileVisibility,

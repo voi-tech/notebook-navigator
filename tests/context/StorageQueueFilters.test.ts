@@ -166,7 +166,7 @@ describe('Storage queue filters', () => {
             vaultProfiles: [
                 {
                     ...settings.vaultProfiles[0],
-                    hiddenFiles: ['hide']
+                    hiddenFileProperties: ['hide']
                 }
             ]
         };

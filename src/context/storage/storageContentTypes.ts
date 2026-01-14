@@ -21,7 +21,7 @@ import { NotebookNavigatorSettings } from '../../settings';
 import type { ContentProviderType, FileContentType } from '../../interfaces/IContentProvider';
 import { hasCustomPropertyFrontmatterFields } from '../../utils/customPropertyUtils';
 import { isMarkdownPath } from '../../utils/fileTypeUtils';
-import { getActiveHiddenFiles } from '../../utils/vaultProfiles';
+import { getActiveHiddenFileProperties } from '../../utils/vaultProfiles';
 
 /**
  * Returns provider types that require Obsidian's metadata cache to be ready.
@@ -35,8 +35,8 @@ export function getMetadataDependentTypes(settings: NotebookNavigatorSettings): 
         types.push('tags');
     }
 
-    const hiddenFiles = getActiveHiddenFiles(settings);
-    if (settings.useFrontmatterMetadata || hiddenFiles.length > 0) {
+    const hiddenFileProperties = getActiveHiddenFileProperties(settings);
+    if (settings.useFrontmatterMetadata || hiddenFileProperties.length > 0) {
         types.push('metadata');
     }
 
@@ -115,7 +115,7 @@ export function resolveMetadataDependentTypes(
             return settings.showTags;
         }
         if (type === 'metadata') {
-            return settings.useFrontmatterMetadata || getActiveHiddenFiles(settings).length > 0;
+            return settings.useFrontmatterMetadata || getActiveHiddenFileProperties(settings).length > 0;
         }
         return false;
     });

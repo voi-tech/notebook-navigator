@@ -27,9 +27,9 @@ import { type FileData as DBFileData } from '../../storage/IndexedDBStorage';
 import { getDBInstance, recordFileChanges, removeFilesFromCache } from '../../storage/fileOperations';
 import { runAsyncAction } from '../../utils/async';
 import {
-    getActiveHiddenFileNamePatterns,
+    getActiveHiddenFileNames,
     getActiveHiddenFileTags,
-    getActiveHiddenFiles,
+    getActiveHiddenFileProperties,
     getActiveHiddenFolders
 } from '../../utils/vaultProfiles';
 import { clearCacheRebuildNoticeState, getCacheRebuildNoticeState, setCacheRebuildNoticeState } from './cacheRebuildNoticeStorage';
@@ -44,7 +44,7 @@ import { getCacheRebuildProgressTypes, getMetadataDependentTypes, haveStringArra
  * It handles two categories of updates:
  * - Content provider settings: forwarded to `ContentProviderRegistry.handleSettingsChange()` and then used to queue
  *   any required regeneration work.
- * - Exclusions (hidden folders/files/patterns): triggers a diff so the database and tag tree reflect the new
+ * - Exclusions (hidden folders/file properties): triggers a diff so the database and tag tree reflect the new
  *   visibility rules.
  */
 export function useStorageSettingsSync(params: {
@@ -52,8 +52,8 @@ export function useStorageSettingsSync(params: {
     stoppedRef: RefObject<boolean>;
     contentRegistryRef: RefObject<ContentProviderRegistry | null>;
     hiddenFolders: string[];
-    hiddenFiles: string[];
-    hiddenFileNamePatterns: string[];
+    hiddenFileProperties: string[];
+    hiddenFileNames: string[];
     hiddenFileTags: string[];
     scheduleTagTreeRebuild: (options?: { flush?: boolean }) => void;
     getIndexableFiles: () => TFile[];
@@ -73,8 +73,8 @@ export function useStorageSettingsSync(params: {
         stoppedRef,
         contentRegistryRef,
         hiddenFolders,
-        hiddenFiles,
-        hiddenFileNamePatterns,
+        hiddenFileProperties,
+        hiddenFileNames,
         hiddenFileTags,
         scheduleTagTreeRebuild,
         getIndexableFiles,
@@ -255,14 +255,14 @@ export function useStorageSettingsSync(params: {
         // rewriting file records.
         const previousHiddenFolders = getActiveHiddenFolders(previousSettings);
         const excludedFoldersChanged = haveStringArraysChanged(previousHiddenFolders, hiddenFolders);
-        const previousHiddenFiles = getActiveHiddenFiles(previousSettings);
-        const excludedFilesChanged = haveStringArraysChanged(previousHiddenFiles, hiddenFiles);
-        const previousHiddenFileNamePatterns = getActiveHiddenFileNamePatterns(previousSettings);
-        const excludedFileNamePatternsChanged = haveStringArraysChanged(previousHiddenFileNamePatterns, hiddenFileNamePatterns);
+        const previousHiddenFileProperties = getActiveHiddenFileProperties(previousSettings);
+        const excludedFilePropertiesChanged = haveStringArraysChanged(previousHiddenFileProperties, hiddenFileProperties);
+        const previousHiddenFileNames = getActiveHiddenFileNames(previousSettings);
+        const excludedFileNamesChanged = haveStringArraysChanged(previousHiddenFileNames, hiddenFileNames);
         const previousHiddenFileTags = getActiveHiddenFileTags(previousSettings);
         const excludedFileTagsChanged = haveStringArraysChanged(previousHiddenFileTags, hiddenFileTags);
 
-        if (excludedFoldersChanged || excludedFilesChanged) {
+        if (excludedFoldersChanged || excludedFilePropertiesChanged) {
             runAsyncAction(async () => {
                 try {
                     const allFiles = getIndexableFiles();
@@ -285,7 +285,7 @@ export function useStorageSettingsSync(params: {
                     console.error('Error resyncing cache after exclusion changes:', error);
                 }
             });
-        } else if (excludedFileNamePatternsChanged || excludedFileTagsChanged) {
+        } else if (excludedFileNamesChanged || excludedFileTagsChanged) {
             if (settings.showTags) {
                 scheduleTagTreeRebuild();
             }
@@ -295,9 +295,9 @@ export function useStorageSettingsSync(params: {
     }, [
         contentRegistryRef,
         getIndexableFiles,
-        hiddenFileNamePatterns,
+        hiddenFileNames,
         hiddenFileTags,
-        hiddenFiles,
+        hiddenFileProperties,
         hiddenFolders,
         pendingRenameDataRef,
         queueIndexableFilesNeedingContentGeneration,

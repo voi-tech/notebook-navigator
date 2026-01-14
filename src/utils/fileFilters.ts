@@ -21,9 +21,9 @@ import type { NotebookNavigatorSettings } from '../settings';
 import { isPdfFile, shouldDisplayFile } from './fileTypeUtils';
 import {
     getActiveFileVisibility,
-    getActiveHiddenFileNamePatterns,
+    getActiveHiddenFileNames,
     getActiveHiddenFileTags,
-    getActiveHiddenFiles,
+    getActiveHiddenFileProperties,
     getActiveHiddenFolders,
     getHiddenFolderMatcher
 } from './vaultProfiles';
@@ -469,9 +469,9 @@ interface ExclusionFilterState {
 
 function createExclusionFilterState(settings: NotebookNavigatorSettings, options?: FileFilterOptions): ExclusionFilterState {
     const includeHiddenItems = options?.showHiddenItems ?? false;
-    const excludedProperties = getActiveHiddenFiles(settings);
+    const excludedProperties = getActiveHiddenFileProperties(settings);
     const excludedPropertyMatcher = createCaseInsensitiveKeyMatcher(excludedProperties);
-    const excludedFileNamePatterns = getActiveHiddenFileNamePatterns(settings);
+    const excludedFileNamePatterns = getActiveHiddenFileNames(settings);
     const fileNameMatcher = createHiddenFileNameMatcherForVisibility(excludedFileNamePatterns, includeHiddenItems);
     const hiddenFileTags = getActiveHiddenFileTags(settings);
     const hiddenFileTagVisibility = hiddenFileTags.length > 0 ? createHiddenTagVisibility(hiddenFileTags, includeHiddenItems) : null;

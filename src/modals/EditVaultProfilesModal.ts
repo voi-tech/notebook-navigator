@@ -487,9 +487,9 @@ export class EditVaultProfilesModal extends Modal {
             name: profile.name ?? '',
             hiddenFolders: Array.isArray(profile.hiddenFolders) ? [...profile.hiddenFolders] : [],
             hiddenTags: Array.isArray(profile.hiddenTags) ? [...profile.hiddenTags] : [],
+            hiddenFileNames: Array.isArray(profile.hiddenFileNames) ? [...profile.hiddenFileNames] : [],
             hiddenFileTags: Array.isArray(profile.hiddenFileTags) ? [...profile.hiddenFileTags] : [],
-            hiddenFiles: Array.isArray(profile.hiddenFiles) ? [...profile.hiddenFiles] : [],
-            hiddenFileNamePatterns: Array.isArray(profile.hiddenFileNamePatterns) ? [...profile.hiddenFileNamePatterns] : [],
+            hiddenFileProperties: Array.isArray(profile.hiddenFileProperties) ? [...profile.hiddenFileProperties] : [],
             navigationBanner: typeof profile.navigationBanner === 'string' ? profile.navigationBanner : null,
             shortcuts: cloneShortcuts(profile.shortcuts)
         }));
@@ -504,9 +504,9 @@ export class EditVaultProfilesModal extends Modal {
                 name: profile.name?.trim() ?? '',
                 hiddenFolders: Array.isArray(profile.hiddenFolders) ? [...profile.hiddenFolders] : [],
                 hiddenTags: Array.isArray(profile.hiddenTags) ? [...profile.hiddenTags] : [],
+                hiddenFileNames: Array.isArray(profile.hiddenFileNames) ? [...profile.hiddenFileNames] : [],
                 hiddenFileTags: Array.isArray(profile.hiddenFileTags) ? [...profile.hiddenFileTags] : [],
-                hiddenFiles: Array.isArray(profile.hiddenFiles) ? [...profile.hiddenFiles] : [],
-                hiddenFileNamePatterns: Array.isArray(profile.hiddenFileNamePatterns) ? [...profile.hiddenFileNamePatterns] : [],
+                hiddenFileProperties: Array.isArray(profile.hiddenFileProperties) ? [...profile.hiddenFileProperties] : [],
                 navigationBanner: profile.navigationBanner ?? null,
                 fileVisibility: profile.fileVisibility,
                 shortcuts: cloneShortcuts(profile.shortcuts)

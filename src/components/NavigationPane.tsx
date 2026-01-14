@@ -259,12 +259,12 @@ export const NavigationPane = React.memo(
                 setCalendarWeekCount(settings.calendarWeeksToShow);
             }
         }, [settings.calendarWeeksToShow]);
-        const { hiddenFolders, hiddenFileNamePatterns, hiddenFileTags, fileVisibility } = activeProfile;
+        const { hiddenFolders, hiddenFileNames, hiddenFileTags, fileVisibility } = activeProfile;
         // Resolves frontmatter exclusions, returns empty array when hidden items are shown
         const effectiveFrontmatterExclusions = getEffectiveFrontmatterExclusions(settings, showHiddenItems);
         const folderCountFileNameMatcher = useMemo(() => {
-            return createHiddenFileNameMatcherForVisibility(hiddenFileNamePatterns, showHiddenItems);
-        }, [hiddenFileNamePatterns, showHiddenItems]);
+            return createHiddenFileNameMatcherForVisibility(hiddenFileNames, showHiddenItems);
+        }, [hiddenFileNames, showHiddenItems]);
         const hiddenFileTagVisibility = useMemo(() => {
             if (showHiddenItems) {
                 return null;

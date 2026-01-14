@@ -60,8 +60,8 @@ function createSettings(): NotebookNavigatorSettings {
         vaultProfiles: DEFAULT_SETTINGS.vaultProfiles.map(profile => ({
             ...profile,
             hiddenFolders: [...profile.hiddenFolders],
-            hiddenFiles: [...profile.hiddenFiles],
-            hiddenFileNamePatterns: [...profile.hiddenFileNamePatterns],
+            hiddenFileProperties: [...profile.hiddenFileProperties],
+            hiddenFileNames: [...profile.hiddenFileNames],
             hiddenTags: [...profile.hiddenTags],
             hiddenFileTags: [...profile.hiddenFileTags],
             shortcuts: [...profile.shortcuts]

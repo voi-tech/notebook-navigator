@@ -120,7 +120,7 @@ const UX_PREFERENCE_KEYS: (keyof UXPreferences)[] = [
 
 interface LegacyVisibilityMigration {
     hiddenFolders: string[];
-    hiddenFiles: string[];
+    hiddenFileProperties: string[];
     hiddenTags: string[];
     navigationBanner: string | null;
     shouldApplyToProfiles: boolean;
@@ -171,7 +171,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     private shouldPersistMobileScale = false;
     private hiddenFolderCacheKey: string | null = null;
     private hiddenTagCacheKey: string | null = null;
-    private hiddenFileNameCacheKey: string | null = null;
+    private hiddenFileNamesCacheKey: string | null = null;
 
     // Keys used for persisting UI state in browser localStorage
     keys: LocalStorageKeys = STORAGE_KEYS;
@@ -1729,7 +1729,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         const mutableSettings = this.settings as unknown as Record<string, unknown>;
         const legacyHiddenFolders = toUniqueStringList(mutableSettings['excludedFolders']);
-        const legacyHiddenFiles = toUniqueStringList(mutableSettings['excludedFiles']);
+        const legacyHiddenFileProperties = toUniqueStringList(mutableSettings['excludedFiles']);
         delete mutableSettings['excludedFolders'];
         delete mutableSettings['excludedFiles'];
 
@@ -1752,7 +1752,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         return {
             hiddenFolders: legacyHiddenFolders,
-            hiddenFiles: legacyHiddenFiles,
+            hiddenFileProperties: legacyHiddenFileProperties,
             hiddenTags: storedHiddenTags,
             navigationBanner,
             shouldApplyToProfiles: !Array.isArray(storedData?.['vaultProfiles'])
@@ -1767,7 +1767,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             !migration.shouldApplyToProfiles ||
             (!hasNavigationBanner &&
                 migration.hiddenFolders.length === 0 &&
-                migration.hiddenFiles.length === 0 &&
+                migration.hiddenFileProperties.length === 0 &&
                 migration.hiddenTags.length === 0)
         ) {
             return;
@@ -1786,8 +1786,8 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             targetProfile.hiddenFolders = [...migration.hiddenFolders];
         }
 
-        if (migration.hiddenFiles.length > 0) {
-            targetProfile.hiddenFiles = [...migration.hiddenFiles];
+        if (migration.hiddenFileProperties.length > 0) {
+            targetProfile.hiddenFileProperties = [...migration.hiddenFileProperties];
         }
 
         if (migration.hiddenTags.length > 0) {
@@ -1903,7 +1903,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         const hiddenTagKey = this.buildPatternCacheKey(profile => profile.hiddenTags);
         const hiddenFileTagKey = this.buildPatternCacheKey(profile => profile.hiddenFileTags);
         const tagKey = `${hiddenTagKey}\u0003${hiddenFileTagKey}`;
-        const fileNameKey = this.buildPatternCacheKey(profile => profile.hiddenFileNamePatterns);
+        const fileNameKey = this.buildPatternCacheKey(profile => profile.hiddenFileNames);
 
         if (folderKey !== this.hiddenFolderCacheKey) {
             clearHiddenFolderMatcherCache();
@@ -1915,9 +1915,9 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             this.hiddenTagCacheKey = tagKey;
         }
 
-        if (fileNameKey !== this.hiddenFileNameCacheKey) {
+        if (fileNameKey !== this.hiddenFileNamesCacheKey) {
             clearHiddenFileNameMatcherCache();
-            this.hiddenFileNameCacheKey = fileNameKey;
+            this.hiddenFileNamesCacheKey = fileNameKey;
         }
     }
 

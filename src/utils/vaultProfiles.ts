@@ -25,6 +25,7 @@ import { showNotice } from './noticeUtils';
 import { stripTrailingSlash } from './pathUtils';
 import { casefold } from './recordUtils';
 import { normalizeTagPath } from './tagUtils';
+import { isRecord } from './typeGuards';
 import { createHiddenTagMatcher, matchesHiddenTagPattern, getHiddenTagPathPatterns, normalizeTagPathValue } from './tagPrefixMatcher';
 import {
     createPathPatternMatcher,
@@ -43,8 +44,8 @@ const FALLBACK_VAULT_PROFILE_NAME = 'Default';
 interface VaultProfileInitOptions {
     id?: string;
     hiddenFolders?: string[];
-    hiddenFiles?: string[];
-    hiddenFileNamePatterns?: string[];
+    hiddenFileProperties?: string[];
+    hiddenFileNames?: string[];
     hiddenTags?: string[];
     hiddenFileTags?: string[];
     fileVisibility?: FileVisibility;
@@ -301,9 +302,9 @@ export function createVaultProfile(name: string, options: VaultProfileInitOption
         fileVisibility: resolveFileVisibility(options.fileVisibility),
         hiddenFolders: clonePatterns(options.hiddenFolders),
         hiddenTags: clonePatterns(options.hiddenTags),
+        hiddenFileNames: clonePatterns(options.hiddenFileNames),
         hiddenFileTags: clonePatterns(options.hiddenFileTags),
-        hiddenFiles: clonePatterns(options.hiddenFiles),
-        hiddenFileNamePatterns: clonePatterns(options.hiddenFileNamePatterns),
+        hiddenFileProperties: clonePatterns(options.hiddenFileProperties),
         navigationBanner:
             typeof options.navigationBanner === 'string' && options.navigationBanner.length > 0 ? options.navigationBanner : null,
         shortcuts: cloneShortcuts(options.shortcuts)
@@ -321,8 +322,8 @@ function createVaultProfileFromTemplate(name: string, template: VaultProfileTemp
     const source = template.sourceProfile ?? null;
     return createVaultProfile(name, {
         hiddenFolders: source?.hiddenFolders,
-        hiddenFiles: source?.hiddenFiles,
-        hiddenFileNamePatterns: source?.hiddenFileNamePatterns,
+        hiddenFileProperties: source?.hiddenFileProperties,
+        hiddenFileNames: source?.hiddenFileNames,
         hiddenTags: source?.hiddenTags ?? template.fallbackHiddenTags,
         hiddenFileTags: source?.hiddenFileTags,
         fileVisibility: source?.fileVisibility ?? template.fallbackFileVisibility,
@@ -448,15 +449,36 @@ export function ensureVaultProfiles(settings: NotebookNavigatorSettings): void {
     }
 
     settings.vaultProfiles.forEach(profile => {
+        const profileRecord = isRecord(profile) ? profile : null;
+        if (profileRecord) {
+            const legacyHiddenFiles = profileRecord['hiddenFiles'];
+            if (!Array.isArray(profileRecord['hiddenFileProperties']) && Array.isArray(legacyHiddenFiles)) {
+                const migrated = legacyHiddenFiles
+                    .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
+                    .filter(entry => entry.length > 0);
+                profile.hiddenFileProperties = migrated;
+            }
+            delete profileRecord['hiddenFiles'];
+
+            const legacyFileNamePatterns = profileRecord['hiddenFileNamePatterns'];
+            if (!Array.isArray(profileRecord['hiddenFileNames']) && Array.isArray(legacyFileNamePatterns)) {
+                const migrated = legacyFileNamePatterns
+                    .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
+                    .filter(entry => entry.length > 0);
+                profile.hiddenFileNames = migrated;
+            }
+            delete profileRecord['hiddenFileNamePatterns'];
+        }
+
         profile.name = resolveProfileName(profile.name);
         profile.fileVisibility = resolveFileVisibility(profile.fileVisibility);
         profile.hiddenFolders = clonePatterns(profile.hiddenFolders);
         const hiddenTagSource = Array.isArray(profile.hiddenTags) ? profile.hiddenTags : [];
         profile.hiddenTags = clonePatterns(hiddenTagSource);
+        profile.hiddenFileNames = clonePatterns(profile.hiddenFileNames);
         const hiddenFileTagSource = Array.isArray(profile.hiddenFileTags) ? profile.hiddenFileTags : [];
         profile.hiddenFileTags = clonePatterns(hiddenFileTagSource);
-        profile.hiddenFiles = clonePatterns(profile.hiddenFiles);
-        profile.hiddenFileNamePatterns = clonePatterns(profile.hiddenFileNamePatterns);
+        profile.hiddenFileProperties = clonePatterns(profile.hiddenFileProperties);
         profile.navigationBanner =
             typeof profile.navigationBanner === 'string' && profile.navigationBanner.length > 0 ? profile.navigationBanner : null;
         profile.shortcuts = cloneShortcuts(profile.shortcuts);
@@ -496,13 +518,8 @@ export function getActiveHiddenFolders(settings: NotebookNavigatorSettings): str
     return getActiveVaultProfile(settings).hiddenFolders;
 }
 
-// Returns the list of hidden file patterns from the active profile
-export function getActiveHiddenFiles(settings: NotebookNavigatorSettings): string[] {
-    return getActiveVaultProfile(settings).hiddenFiles;
-}
-
-export function getActiveHiddenFileNamePatterns(settings: NotebookNavigatorSettings): string[] {
-    return getActiveVaultProfile(settings).hiddenFileNamePatterns;
+export function getActiveHiddenFileNames(settings: NotebookNavigatorSettings): string[] {
+    return getActiveVaultProfile(settings).hiddenFileNames;
 }
 
 export function getActiveHiddenTags(settings: NotebookNavigatorSettings): string[] {
@@ -511,6 +528,10 @@ export function getActiveHiddenTags(settings: NotebookNavigatorSettings): string
 
 export function getActiveHiddenFileTags(settings: NotebookNavigatorSettings): string[] {
     return getActiveVaultProfile(settings).hiddenFileTags;
+}
+
+export function getActiveHiddenFileProperties(settings: NotebookNavigatorSettings): string[] {
+    return getActiveVaultProfile(settings).hiddenFileProperties;
 }
 
 export function getActiveFileVisibility(settings: NotebookNavigatorSettings): FileVisibility {

@@ -166,7 +166,7 @@ export function renderGeneralTab(context: SettingsTabContext): void {
     let hiddenTagsInput: HTMLInputElement | null = null;
     let hiddenFileTagsInput: HTMLInputElement | null = null;
     let excludedFilesInput: HTMLInputElement | null = null;
-    let hiddenFileNamePatternsInput: HTMLInputElement | null = null;
+    let hiddenFileNamesInput: HTMLInputElement | null = null;
     let vaultTitleSetting: Setting | null = null;
 
     // Updates all profile-related UI controls with current settings values
@@ -209,10 +209,10 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             hiddenFileTagsInput.value = activeProfile ? formatCommaSeparatedList(activeProfile.hiddenFileTags) : '';
         }
         if (excludedFilesInput) {
-            excludedFilesInput.value = activeProfile ? formatCommaSeparatedList(activeProfile.hiddenFiles) : '';
+            excludedFilesInput.value = activeProfile ? formatCommaSeparatedList(activeProfile.hiddenFileProperties) : '';
         }
-        if (hiddenFileNamePatternsInput) {
-            hiddenFileNamePatternsInput.value = activeProfile ? formatCommaSeparatedList(activeProfile.hiddenFileNamePatterns) : '';
+        if (hiddenFileNamesInput) {
+            hiddenFileNamesInput.value = activeProfile ? formatCommaSeparatedList(activeProfile.hiddenFileNames) : '';
         }
     };
 
@@ -357,20 +357,20 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             });
     });
 
-    const hiddenFileNamePatternsSetting = filteringGroup.addSetting(setting => {
+    const hiddenFileNamesSetting = filteringGroup.addSetting(setting => {
         configureDebouncedTextSetting(
             setting,
             strings.settings.items.excludedFileNamePatterns.name,
             strings.settings.items.excludedFileNamePatterns.desc,
             strings.settings.items.excludedFileNamePatterns.placeholder,
-            () => formatCommaSeparatedList(getActiveProfile()?.hiddenFileNamePatterns ?? []),
+            () => formatCommaSeparatedList(getActiveProfile()?.hiddenFileNames ?? []),
             value => {
                 const activeProfile = getActiveProfile();
                 if (!activeProfile) {
                     return;
                 }
                 const nextHiddenPatterns = parseCommaSeparatedList(value);
-                activeProfile.hiddenFileNamePatterns = Array.from(new Set(nextHiddenPatterns));
+                activeProfile.hiddenFileNames = Array.from(new Set(nextHiddenPatterns));
                 resetHiddenToggleIfNoSources({
                     settings: plugin.settings,
                     showHiddenItems: plugin.getUXPreferences().showHiddenItems,
@@ -379,8 +379,8 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             }
         );
     });
-    hiddenFileNamePatternsSetting.controlEl.addClass('nn-setting-wide-input');
-    hiddenFileNamePatternsInput = hiddenFileNamePatternsSetting.controlEl.querySelector('input');
+    hiddenFileNamesSetting.controlEl.addClass('nn-setting-wide-input');
+    hiddenFileNamesInput = hiddenFileNamesSetting.controlEl.querySelector('input');
 
     const excludedFoldersSetting = filteringGroup.addSetting(setting => {
         configureDebouncedTextSetting(
@@ -470,14 +470,14 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             strings.settings.items.excludedNotes.name,
             strings.settings.items.excludedNotes.desc,
             strings.settings.items.excludedNotes.placeholder,
-            () => formatCommaSeparatedList(getActiveProfile()?.hiddenFiles ?? []),
+            () => formatCommaSeparatedList(getActiveProfile()?.hiddenFileProperties ?? []),
             value => {
                 const activeProfile = getActiveProfile();
                 if (!activeProfile) {
                     return;
                 }
                 const nextHiddenFiles = parseCommaSeparatedList(value);
-                activeProfile.hiddenFiles = Array.from(new Set(nextHiddenFiles));
+                activeProfile.hiddenFileProperties = Array.from(new Set(nextHiddenFiles));
                 resetHiddenToggleIfNoSources({
                     settings: plugin.settings,
                     showHiddenItems: plugin.getUXPreferences().showHiddenItems,
