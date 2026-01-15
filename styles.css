@@ -308,11 +308,11 @@ body {
     --nn-theme-quick-actions-separator-color: var(--background-modifier-border);
 
     /* -- Header Buttons -- */
-    --nn-theme-header-button-icon-color: var(--nn-theme-foreground-muted);
+    --nn-theme-header-button-icon-color: var(--icon-color);
     --nn-theme-header-button-hover-bg: var(--background-modifier-hover);
     --nn-theme-header-button-active-bg: var(--background-modifier-hover);
-    --nn-theme-header-button-active-icon-color: var(--nn-theme-foreground);
-    --nn-theme-header-button-disabled-icon-color: var(--nn-theme-foreground-muted);
+    --nn-theme-header-button-active-icon-color: var(--text-normal);
+    --nn-theme-header-button-disabled-icon-color: var(--icon-color);
 
     /* -- Mobile Styles -- */
     --nn-theme-mobile-bg: var(--mobile-sidebar-background);
@@ -1417,6 +1417,15 @@ body {
     outline: none !important;
 }
 
+/* Desktop pane header buttons - enforce Obsidian-muted icon color */
+.nn-desktop .nn-pane-header .nn-icon-button {
+    color: var(--nn-theme-header-button-icon-color);
+}
+
+.nn-desktop .nn-pane-header .nn-icon-button svg {
+    stroke: currentColor;
+}
+
 /* Header buttons - match Obsidian's standard dimensions */
 .nn-header-actions button.nn-icon-button {
     padding: 0 8px;
@@ -1482,6 +1491,14 @@ body {
 }
 
 /* Icon styling - consistent size and appearance for all button icons */
+.nn-icon-button > span {
+    color: inherit;
+}
+
+.nn-icon-button > span > svg {
+    color: inherit;
+}
+
 .nn-icon-button svg {
     width: 16px;
     height: 16px;

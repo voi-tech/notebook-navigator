@@ -207,11 +207,11 @@ Tag pills with only a custom text color use the list pane background, and custom
 
 | Variable                                       | Default                            | Description                                        |
 | ---------------------------------------------- | ---------------------------------- | -------------------------------------------------- |
-| `--nn-theme-header-button-icon-color`          | `var(--nn-theme-foreground-muted)` | Default icon color for header buttons              |
+| `--nn-theme-header-button-icon-color`          | `var(--icon-color)`                | Default icon color for header buttons              |
 | `--nn-theme-header-button-hover-bg`            | `var(--background-modifier-hover)` | Background color when hovering header buttons      |
 | `--nn-theme-header-button-active-bg`           | `var(--background-modifier-hover)` | Background color for active/toggled header buttons |
-| `--nn-theme-header-button-active-icon-color`   | `var(--nn-theme-foreground)`       | Icon color for active/toggled header buttons       |
-| `--nn-theme-header-button-disabled-icon-color` | `var(--nn-theme-foreground-muted)` | Icon color for disabled header buttons             |
+| `--nn-theme-header-button-active-icon-color`   | `var(--text-normal)`               | Icon color for active/toggled header buttons       |
+| `--nn-theme-header-button-disabled-icon-color` | `var(--icon-color)`                | Icon color for disabled header buttons             |
 
 ### Mobile styles
 
