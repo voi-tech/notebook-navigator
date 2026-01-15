@@ -896,11 +896,6 @@ body {
     background-color: var(--nn-theme-nav-bg);
 }
 
-/* Add divider to nav header in dual pane mode */
-.nn-split-container.nn-orientation-horizontal:not(.nn-single-pane) .nn-navigation-pane .nn-pane-header {
-    border-right: 1px solid var(--nn-theme-divider-border-color);
-}
-
 /* File list pane header */
 .nn-list-pane .nn-pane-header {
     background-color: var(--nn-theme-list-bg);
@@ -1623,7 +1618,6 @@ body {
 .nn-shortcut-pinned {
     flex: 0 1 auto;
     border-bottom: 1px solid var(--nn-theme-divider-border-color);
-    border-right: 1px solid var(--nn-theme-divider-border-color);
     background-color: var(--nn-theme-nav-bg);
     position: relative;
     z-index: 1;
