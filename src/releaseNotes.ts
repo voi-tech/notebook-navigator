@@ -111,7 +111,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'The rebuild cache process dialog now properly reappears after restarting Obsidian.',
             'Fixed several issues in many of the language translations, such as missing placeholders and incorrect translations due to wrong context.',
             'Fixed Excalidraw feature image generation to better handle large complex images with Latex symbols.',
-            'Fixed an issue where the Notes > Frontmatter error was not appearing until switching tabs.'
+            'Fixed an issue where the Notes > Frontmatter error was not appearing until switching tabs.',
+            'Fixed an issue where images containing single brackets [ and ] were not accepted as valid feature images.'
         ]
     },
     {

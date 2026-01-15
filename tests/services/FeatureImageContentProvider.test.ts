@@ -203,6 +203,24 @@ describe('FeatureImageContentProvider scanning', () => {
         }
     });
 
+    it('resolves wiki embeds that contain brackets in the path', () => {
+        const { app, resolvedFiles } = createApp();
+        const settings = createSettings();
+        const noteFile = createFile('notes/note.md');
+
+        const target = '_resources/[1762422974956].jpg';
+        const imageFile = createFile(`attachments/${target}`);
+        resolvedFiles.set(target, imageFile);
+        resolvedFiles.set(imageFile.path, imageFile);
+
+        const result = resolveReference(app, noteFile, `![[${target}]]`, settings);
+
+        expect(result?.kind).toBe('local');
+        if (result?.kind === 'local') {
+            expect(result.file.path).toBe(imageFile.path);
+        }
+    });
+
     it('resolves extensionless markdown embeds to local images', () => {
         const { app, resolvedFiles } = createApp();
         const settings = createSettings();
