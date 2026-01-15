@@ -730,10 +730,8 @@ export function renderNotesTab(context: SettingsTabContext): void {
 
     updateCustomPropertyFieldsVisibility = () => {
         const isFrontmatter = plugin.settings.customPropertyType === 'frontmatter';
-        const hasCustomProperty = plugin.settings.customPropertyType !== 'none';
         setElementVisible(customPropertyFieldsSetting.settingEl, isFrontmatter);
         setElementVisible(customPropertyColorFieldsSetting.settingEl, isFrontmatter);
-        setElementVisible(showCustomPropertyInCompactModeSetting.settingEl, hasCustomProperty);
     };
     updateCustomPropertyFieldsVisibility();
 
