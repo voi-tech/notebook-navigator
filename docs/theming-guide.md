@@ -124,7 +124,7 @@ Priority order: folder note styles override custom color styles, which override 
 
 | Variable                                    | Default                             | Description                                               |
 | ------------------------------------------- | ----------------------------------- | --------------------------------------------------------- |
-| `--nn-theme-divider-border-color`           | `var(--background-modifier-border)` | Color of the vertical border between panes                |
+| `--nn-theme-divider-border-color`           | `var(--divider-color)`              | Color of the vertical border between panes                |
 | `--nn-theme-divider-resize-handle-hover-bg` | `var(--interactive-accent)`         | Background color when hovering the pane divider to resize |
 
 ### List pane (files)

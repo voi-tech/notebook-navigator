@@ -214,7 +214,7 @@ body {
     --nn-theme-navitem-folder-note-name-hover-decoration: underline;
 
     /* -- Pane Divider -- */
-    --nn-theme-divider-border-color: var(--background-modifier-border);
+    --nn-theme-divider-border-color: var(--divider-color);
     --nn-theme-divider-resize-handle-hover-bg: var(--interactive-accent);
 
     /* -- List Pane (Files) -- */
