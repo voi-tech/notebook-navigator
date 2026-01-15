@@ -75,31 +75,30 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
-        version: '2.0.5',
-        date: '2026-01-12',
+        version: '2.1.0',
+        date: '2026-01-16',
         showOnUpdate: true,
+        youtubeUrl: 'https://www.youtube.com/watch?v=1Kxrq832kfM',
         new: [
-            '==We have a calendar!== Its enabled by default, just disable it with the toolbar button. Click calendar to create or open daily notes for a day. Daily notes with feature images will show them in the calendar!',
-            'Lots of new ==calendar settings==! You find them in Navigation pane > Calendar. Change locale, number of weeks or enable week numbers.',
-            'New settings: ==Notes > Custom property==. You can now show properties or word count in file list! You can show multiple properties, and you can even color each property individually using other properties! You can also override what property to display (none, word count, or specific property) per folder or tag.',
-            'Six new style and theme settings for custom property tag pills - text, background, selected x 2, selected inactive x 2.',
-            '==Three new theme variables==: --nn-theme-foreground, --nn-theme-foreground-muted and --nn-theme-foreground-faded so you easily can adjust the look and feel of all text and images.',
+            '==We have a calendar!== Click days in the calendar to create or open daily notes for a day. Daily notes with images will show feature images in the calendar!',
+            'New setting: ==Notes > Custom property to show custom property or word count==. You can now show properties or word count in file list! You can show multiple properties, and you can even color each property individually using other properties! You can also override what property to display (none, word count, or specific property) per folder or tag.',
             'New setting: ==Notes > Parent folder > Show parent folder icon==. Enable to show parent folder icons in the list pane. New default is disabled.',
             'New setting: ==Notes > Feature image > Exclude notes with properties==. You can now exclude notes with certain frontmatter properties from showing feature images.',
             'New setting: ==General > Filtering > Hide files with tags (vault profile)==. You can now hide files with certain tags in the list pane. This makes it super easy to hide certain files by just dragging them to a tag.',
-            'New setting: ==Advanced > Reset all settings==. Use this to reset all plugin settings to default values.',
             'New setting: ==Folders & tags > Open folder notes in new tab==. Enable to always open folder notes in a new tab instead of the current tab.',
-            'Two new menu commands: Navigate to folder and Navigate to tag. Access them from the root folder or root tag folder context menu.'
+            'New setting: ==Advanced > Reset all settings==. Use this to reset all plugin settings to default values.',
+            'Three new theme variables: --nn-theme-foreground, --nn-theme-foreground-muted and --nn-theme-foreground-faded so you easily can adjust the look and feel of all text and images.',
+            'Six new style and theme settings for custom property tag pills - text, background, selected x 2, selected inactive x 2.',
+            'Two new menu commands: **Navigate to folder** and **Navigate to tag**. Access them from the root folder or root tag folder context menu.'
         ],
         improved: [
-            'Lots of UI polish to this release. Things look cleaner and should be easier on the eyes, especially in dark mode. Remember that you can modify all colors using the Style settings plugin.',
-            'Internal: Improved cache rebuild performance by slowing down tag tree updates during the process.',
-            'Internal: Major rewrite of the metadata processing chain. It is now a single sequential pipeline per file instead of multiple parallel providers. It reads markdown content at most once per file per run and writes just one merged database update per file. This should make the cache system handle vaults of virtually any size without memory spikes.',
-            'You can now also hide the dual-pane button in the top-right corner using Settings > General > Toolbar buttons.'
+            '**Lots of UI polish** in this release. Things look cleaner and should be easier on the eyes, especially in dark mode. Remember that you can modify all colors using the Style settings plugin.',
+            'Internal: **Improved cache rebuild performance** by slowing down tag tree updates during the process.',
+            'Internal: **Major rewrite of the metadata processing chain**. It is now a sequential pipeline instead of multiple providers working in parallel. It reads markdown content at most once per file and writes just one merged database update per file. This should make the cache system handle vaults of virtually any size.',
+            'You can now **hide the dual-pane button in the top-left corner** using Settings > General > Toolbar buttons.'
         ],
         changed: [
             '==Behavior change==: In single-pane mode, clicking on a file in shortcuts, recent notes, in calendar or changing notes in the editor (with auto reveal enabled) will no longer switch over to list pane automatically. The old behavior was implemented before we had shortcuts and recent notes, and it was time to change it.',
-            '==Behavior change==: Hiding icons for shortcuts, recent notes, folders and tags now keeps the **top section icon** to keep the sections visually distinct.',
             '==Moved several UX settings to local storage== so they are not synced between devices. These are: pane transition duration, toolbar button visibility, navigation indentation, navigation item height, scale navigation text with item height, compact list item height, scale compact list text with item height.',
             'Folder notes no longer default to showing text in bold and underline, instead their icon is now a file icon and they show underline on hover. This can be changed in Style settings.',
             'Right-clicking the name of a folder with folder note now shows the file menu for the folder note. To access the folder - right click outside the name.',
@@ -111,7 +110,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'The rebuild cache process dialog now properly reappears after restarting Obsidian.',
             'Fixed several issues in many of the language translations, such as missing placeholders and incorrect translations due to wrong context.',
             'Fixed Excalidraw feature image generation to better handle large complex images with Latex symbols.',
-            'Fixed an issue where the Notes > Frontmatter error was not appearing until switching tabs.',
+            'Fixed an issue where errors in Notes > Frontmatter settings were not appearing until switching tabs.',
             'Fixed an issue where images containing single brackets [ and ] were not accepted as valid feature images.'
         ]
     },
