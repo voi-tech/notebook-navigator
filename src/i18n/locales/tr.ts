@@ -583,6 +583,7 @@ export const STRINGS_TR = {
             navigationPane: 'Gezinme bölmesi',
             icons: 'Simge paketleri',
             folders: 'Klasörler',
+            folderNotes: 'Klasör notları',
             foldersAndTags: 'Klasörler ve etiketler',
             tags: 'Etiketler',
             search: 'Arama',

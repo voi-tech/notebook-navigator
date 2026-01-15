@@ -583,6 +583,7 @@ export const STRINGS_FA = {
             navigationPane: 'پنل ناوبری',
             icons: 'بسته‌های آیکون',
             folders: 'پوشه‌ها',
+            folderNotes: 'یادداشت‌های پوشه',
             foldersAndTags: 'پوشه‌ها و برچسب‌ها',
             tags: 'برچسب‌ها',
             search: 'جستجو',

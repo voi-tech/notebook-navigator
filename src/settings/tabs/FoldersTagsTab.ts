@@ -129,7 +129,9 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
         }
     );
 
-    const enableFolderNotesSetting = foldersGroup.addSetting(setting => {
+    const folderNotesGroup = createGroup(strings.settings.sections.folderNotes);
+
+    const enableFolderNotesSetting = folderNotesGroup.addSetting(setting => {
         setting.setName(strings.settings.items.enableFolderNotes.name).setDesc(strings.settings.items.enableFolderNotes.desc);
     });
     const folderNotesSettingsEl = wireToggleSettingWithSubSettings(

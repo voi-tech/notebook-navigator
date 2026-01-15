@@ -586,6 +586,7 @@ export const STRINGS_JA = {
             icons: 'アイコンパック',
             tags: 'タグ表示',
             folders: 'フォルダノート',
+            folderNotes: 'フォルダノート',
             foldersAndTags: 'フォルダとタグ',
             search: '検索',
             searchAndHotkeys: '検索とホットキー',

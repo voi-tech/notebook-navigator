@@ -585,6 +585,7 @@ export const STRINGS_NL = {
             navigationPane: 'Navigatiepaneel',
             icons: 'Pictogrampakketten',
             folders: 'Mappen',
+            folderNotes: 'Mapnotities',
             foldersAndTags: 'Mappen & tags',
             tags: 'Tags',
             search: 'Zoeken',

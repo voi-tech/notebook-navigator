@@ -583,6 +583,7 @@ export const STRINGS_AR = {
             navigationPane: 'لوحة التنقل',
             icons: 'حزم الأيقونات',
             folders: 'مجلدات',
+            folderNotes: 'ملاحظات المجلد',
             foldersAndTags: 'مجلدات ووسوم',
             tags: 'وسوم',
             search: 'بحث',

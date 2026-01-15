@@ -583,6 +583,7 @@ export const STRINGS_KO = {
             navigationPane: '탐색 창',
             icons: '아이콘 팩',
             folders: '폴더',
+            folderNotes: '폴더 노트',
             foldersAndTags: '폴더 및 태그',
             tags: '태그',
             search: '검색',

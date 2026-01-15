@@ -583,6 +583,7 @@ export const STRINGS_TH = {
             navigationPane: 'แผงนำทาง',
             icons: 'ชุดไอคอน',
             folders: 'โฟลเดอร์',
+            folderNotes: 'โน้ตโฟลเดอร์',
             foldersAndTags: 'โฟลเดอร์ & แท็ก',
             tags: 'แท็ก',
             search: 'ค้นหา',

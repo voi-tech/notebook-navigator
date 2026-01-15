@@ -583,6 +583,7 @@ export const STRINGS_PT = {
             navigationPane: 'Painel de navegação',
             icons: 'Pacotes de ícones',
             folders: 'Pastas',
+            folderNotes: 'Notas de pasta',
             foldersAndTags: 'Pastas e etiquetas',
             tags: 'Etiquetas',
             search: 'Pesquisa',

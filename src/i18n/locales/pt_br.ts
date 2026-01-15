@@ -580,6 +580,7 @@ export const STRINGS_PT_BR = {
             navigationPane: 'Painel de navegação',
             icons: 'Pacotes de ícones',
             folders: 'Pastas',
+            folderNotes: 'Notas de pasta',
             foldersAndTags: 'Pastas e tags',
             tags: 'Tags',
             search: 'Pesquisar',

@@ -583,6 +583,7 @@ export const STRINGS_RU = {
             navigationPane: 'Панель навигации',
             icons: 'Наборы иконок',
             folders: 'Папки',
+            folderNotes: 'Заметки папок',
             foldersAndTags: 'Папки и теги',
             tags: 'Теги',
             search: 'Поиск',

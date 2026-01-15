@@ -583,6 +583,7 @@ export const STRINGS_ID = {
             navigationPane: 'Panel navigasi',
             icons: 'Paket ikon',
             folders: 'Folder',
+            folderNotes: 'Catatan folder',
             foldersAndTags: 'Folder & tag',
             tags: 'Tag',
             search: 'Pencarian',

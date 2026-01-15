@@ -585,6 +585,7 @@ export const STRINGS_PL = {
             navigationPane: 'Panel nawigacji',
             icons: 'Pakiety ikon',
             folders: 'Foldery',
+            folderNotes: 'Notatki folderu',
             foldersAndTags: 'Foldery i tagi',
             tags: 'Tagi',
             search: 'Wyszukiwanie',

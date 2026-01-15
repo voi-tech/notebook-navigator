@@ -583,6 +583,7 @@ export const STRINGS_EN = {
             navigationPane: 'Navigation pane',
             icons: 'Icon packs',
             folders: 'Folders',
+            folderNotes: 'Folder notes',
             foldersAndTags: 'Folders & tags',
             tags: 'Tags',
             search: 'Search',

@@ -584,6 +584,7 @@ export const STRINGS_ZH_TW = {
             icons: '圖示包',
             tags: '標籤',
             folders: '資料夾',
+            folderNotes: '資料夾筆記',
             foldersAndTags: '資料夾與標籤',
             search: '搜尋',
             searchAndHotkeys: '搜尋與快速鍵',

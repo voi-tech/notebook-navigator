@@ -583,6 +583,7 @@ export const STRINGS_VI = {
             navigationPane: 'Ngăn điều hướng',
             icons: 'Gói biểu tượng',
             folders: 'Thư mục',
+            folderNotes: 'Ghi chú thư mục',
             foldersAndTags: 'Thư mục & thẻ',
             tags: 'Thẻ',
             search: 'Tìm kiếm',
