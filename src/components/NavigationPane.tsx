@@ -148,6 +148,7 @@ import { getPathBaseName } from '../utils/pathUtils';
 import type { NavigateToFolderOptions, RevealTagOptions } from '../hooks/useNavigatorReveal';
 import { isVirtualTagCollectionId } from '../utils/virtualTagCollections';
 import { compositeWithBase } from '../utils/colorUtils';
+import { useMeasuredElementHeight } from '../hooks/useMeasuredElementHeight';
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { NAVIGATION_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
 import { TAG_DRAG_MIME } from '../types/obsidian-extended';
@@ -249,11 +250,9 @@ export const NavigationPane = React.memo(
         // navigation scroller can be padded and the bottom chrome can be positioned correctly (desktop + mobile/iOS).
         const [calendarWeekCount, setCalendarWeekCount] = useState<number>(() => settings.calendarWeeksToShow);
         const calendarOverlayRef = useRef<HTMLDivElement>(null);
-        const [calendarOverlayHeight, setCalendarOverlayHeight] = useState<number>(0);
         // The iOS bottom toolbar is a sticky overlay inside the scroll container. Measure its rendered height so
         // TanStack Virtual can treat it as a bottom inset when auto-revealing folders/tags.
         const bottomToolbarRef = useRef<HTMLDivElement>(null);
-        const [bottomToolbarHeight, setBottomToolbarHeight] = useState<number>(0);
         useEffect(() => {
             if (settings.calendarWeeksToShow !== 6) {
                 setCalendarWeekCount(settings.calendarWeeksToShow);
@@ -318,17 +317,6 @@ export const NavigationPane = React.memo(
         const pinnedShortcutsContainerRef = useRef<HTMLDivElement>(null);
         const [pinnedShortcutsScrollElement, setPinnedShortcutsScrollElement] = useState<HTMLDivElement | null>(null);
         const [pinnedShortcutsHasOverflow, setPinnedShortcutsHasOverflow] = useState(false);
-        // The navigation pane renders a "chrome" stack above the virtualized tree:
-        // - pane header
-        // - (Android) toolbar
-        // - vault banner
-        // - pinned shortcuts/recent section
-        //
-        // The virtualized list is rendered below this stack inside the same scroll container. We measure
-        // the stack height and feed it into TanStack Virtual as a scrollMargin/scrollPaddingStart so that:
-        // - scrollToIndex aligns items below the chrome (not under it)
-        // - virtual item start offsets match the real DOM layout (list starts after the chrome)
-        const [navigationOverlayHeight, setNavigationOverlayHeight] = useState<number>(0);
         const pinnedShortcutsResizeFrameRef = useRef<number | null>(null);
         const pinnedShortcutsResizeHeightRef = useRef<number>(0);
         const { startPointerDrag } = usePointerDrag();
@@ -969,116 +957,17 @@ export const NavigationPane = React.memo(
             updatePinnedShortcutsOverflow(pinnedShortcutsScrollElement);
         }, [pinnedNavigationItems, pinnedShortcutsScrollElement, updatePinnedShortcutsOverflow]);
 
-        useLayoutEffect(() => {
-            const overlayElement = navigationOverlayRef.current;
-            if (!overlayElement) {
-                setNavigationOverlayHeight(0);
-                return;
-            }
-
-            const updateOverlayHeight = () => {
-                // Measured height of the sticky navigation "chrome" stack (header/banner/pinned). Passed to the virtualizer
-                // as scrollMargin/scrollPaddingStart so scrollToIndex aligns items below the chrome instead of under it.
-                const height = Math.round(overlayElement.getBoundingClientRect().height);
-                setNavigationOverlayHeight(prev => (prev === height ? prev : height));
-            };
-
-            updateOverlayHeight();
-
-            if (typeof ResizeObserver === 'undefined') {
-                const handleResize = () => updateOverlayHeight();
-                window.addEventListener('resize', handleResize);
-                return () => {
-                    window.removeEventListener('resize', handleResize);
-                };
-            }
-
-            const resizeObserver = new ResizeObserver(() => {
-                updateOverlayHeight();
-            });
-            resizeObserver.observe(overlayElement);
-
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }, [isAndroid, isMobile, shouldRenderNavigationBanner, shouldRenderPinnedShortcuts]);
-
-        useLayoutEffect(() => {
-            if (!showCalendar) {
-                setCalendarOverlayHeight(0);
-                return;
-            }
-
-            const overlayElement = calendarOverlayRef.current;
-            if (!overlayElement) {
-                setCalendarOverlayHeight(0);
-                return;
-            }
-
-            const updateOverlayHeight = () => {
-                // Measured height of the bottom calendar overlay. Passed to the virtualizer as scrollPaddingEnd so reveals
-                // keep the selected row above the calendar.
-                const height = Math.round(overlayElement.getBoundingClientRect().height);
-                setCalendarOverlayHeight(prev => (prev === height ? prev : height));
-            };
-
-            updateOverlayHeight();
-
-            if (typeof ResizeObserver === 'undefined') {
-                const handleResize = () => updateOverlayHeight();
-                window.addEventListener('resize', handleResize);
-                return () => {
-                    window.removeEventListener('resize', handleResize);
-                };
-            }
-
-            const resizeObserver = new ResizeObserver(() => {
-                updateOverlayHeight();
-            });
-            resizeObserver.observe(overlayElement);
-
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }, [calendarWeekCount, showCalendar]);
-
-        useLayoutEffect(() => {
-            // The bottom toolbar can be dynamically sized (safe-area inset, platform-specific spacer, icon size).
-            // Keep bottomToolbarHeight in sync with the DOM so scrollToIndex aligns rows above the toolbar instead of under it.
-            const overlayElement = bottomToolbarRef.current;
-            if (!overlayElement) {
-                setBottomToolbarHeight(0);
-                return;
-            }
-
-            const updateOverlayHeight = () => {
-                // Measured height of the bottom mobile toolbar. Passed to the virtualizer as scrollPaddingEnd so reveals
-                // keep the selected row above the floating toolbar (including any platform-specific bottom gap).
-                // Rounded to avoid subpixel oscillation triggering reflows.
-                const height = Math.round(overlayElement.getBoundingClientRect().height);
-                setBottomToolbarHeight(prev => (prev === height ? prev : height));
-            };
-
-            updateOverlayHeight();
-
-            if (typeof ResizeObserver === 'undefined') {
-                // Fallback for older WebViews that do not expose ResizeObserver.
-                const handleResize = () => updateOverlayHeight();
-                window.addEventListener('resize', handleResize);
-                return () => {
-                    window.removeEventListener('resize', handleResize);
-                };
-            }
-
-            const resizeObserver = new ResizeObserver(() => {
-                updateOverlayHeight();
-            });
-            resizeObserver.observe(overlayElement);
-
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }, [isAndroid, isMobile]);
+        // The navigation pane renders a "chrome" stack above the virtualized tree:
+        // - pane header
+        // - (Android) toolbar
+        // - vault banner
+        // - pinned shortcuts/recent section
+        //
+        // The virtualized list is rendered below this stack inside the same scroll container. Feed its height into TanStack Virtual
+        // as scrollMargin/scrollPaddingStart so scrollToIndex aligns items below the chrome (not under it).
+        const navigationOverlayHeight = useMeasuredElementHeight(navigationOverlayRef);
+        const calendarOverlayHeight = useMeasuredElementHeight(calendarOverlayRef, { enabled: showCalendar });
+        const bottomToolbarHeight = useMeasuredElementHeight(bottomToolbarRef, { enabled: isMobile && !isAndroid });
 
         // We only reserve gutter space when a banner exists because Windows scrollbars
         // change container width by ~7px when they appear. That width change used to

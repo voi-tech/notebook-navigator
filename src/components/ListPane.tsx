@@ -44,7 +44,7 @@
  *    - Keyboard navigation optimized
  */
 
-import React, { useCallback, useRef, useEffect, useImperativeHandle, forwardRef, useState, useMemo, useLayoutEffect } from 'react';
+import React, { useCallback, useRef, useEffect, useImperativeHandle, forwardRef, useState, useMemo } from 'react';
 import { TFile, Platform } from 'obsidian';
 import { Virtualizer } from '@tanstack/react-virtual';
 import { useSelectionState, useSelectionDispatch, resolvePrimarySelectedFile } from '../context/SelectionContext';
@@ -75,6 +75,7 @@ import { EMPTY_LIST_MENU_TYPE } from '../utils/contextMenu';
 import { useUXPreferenceActions, useUXPreferences } from '../context/UXPreferencesContext';
 import { normalizeTagPath } from '../utils/tagUtils';
 import { parseFilterSearchTokens, updateFilterQueryWithTag, type InclusionOperator } from '../utils/filterSearch';
+import { useMeasuredElementHeight } from '../hooks/useMeasuredElementHeight';
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { LIST_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
 import { runAsyncAction } from '../utils/async';
@@ -159,7 +160,11 @@ export const ListPane = React.memo(
         const { addSearchShortcut, removeSearchShortcut, searchShortcutsByName } = shortcuts;
         const listPaneRef = useRef<HTMLDivElement>(null);
         const listOverlayRef = useRef<HTMLDivElement>(null);
-        const [listOverlayHeight, setListOverlayHeight] = useState<number>(0);
+        // The iOS bottom toolbar is a sticky overlay inside the scroll container. Measure its rendered height so
+        // TanStack Virtual can treat it as a bottom inset when auto-revealing files.
+        const bottomToolbarRef = useRef<HTMLDivElement>(null);
+        // Android uses toolbar at top, iOS at bottom
+        const isAndroid = Platform.isAndroidApp;
         /** Maps semi-transparent theme color variables to their pre-composited solid equivalents (see constants/surfaceColorMappings). */
         useSurfaceColorVariables(listPaneRef, {
             app,
@@ -186,6 +191,10 @@ export const ListPane = React.memo(
 
         // Search state - use directly from settings for sync across devices
         const isSearchActive = uxPreferences.searchActive;
+        // The list pane chrome (header/search/title) is rendered in a sticky overlay stack inside the scroller.
+        // TanStack Virtual needs the overlay height to align scrollToIndex and visible range calculations with the start of the file rows.
+        const listOverlayHeight = useMeasuredElementHeight(listOverlayRef);
+        const bottomToolbarHeight = useMeasuredElementHeight(bottomToolbarRef, { enabled: isMobile && !isAndroid });
         const [searchQuery, setSearchQuery] = useState('');
         // Debounced search query used for data filtering to avoid per-keystroke spikes
         const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -314,44 +323,6 @@ export const ListPane = React.memo(
             [setSearchActive]
         );
 
-        // Android uses toolbar at top, iOS at bottom
-        const isAndroid = Platform.isAndroidApp;
-
-        useLayoutEffect(() => {
-            const overlayElement = listOverlayRef.current;
-            if (!overlayElement) {
-                setListOverlayHeight(0);
-                return;
-            }
-
-            // The list pane chrome (header/search/title) is rendered in a sticky overlay stack inside the scroller.
-            // TanStack Virtual needs the overlay height to align scrollToIndex and visible range calculations with the
-            // start of the file rows.
-            const updateOverlayHeight = () => {
-                const height = Math.round(overlayElement.getBoundingClientRect().height);
-                setListOverlayHeight(prev => (prev === height ? prev : height));
-            };
-
-            updateOverlayHeight();
-
-            if (typeof ResizeObserver === 'undefined') {
-                const handleResize = () => updateOverlayHeight();
-                window.addEventListener('resize', handleResize);
-                return () => {
-                    window.removeEventListener('resize', handleResize);
-                };
-            }
-
-            const resizeObserver = new ResizeObserver(() => {
-                updateOverlayHeight();
-            });
-            resizeObserver.observe(overlayElement);
-
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }, [isAndroid, isMobile, isSearchActive, listPaneTitle]);
-
         // Track if the file selection is from user click vs auto-selection
         const isUserSelectionRef = useRef(false);
 
@@ -440,7 +411,8 @@ export const ListPane = React.memo(
             suppressSearchTopScrollRef,
             topSpacerHeight,
             includeDescendantNotes,
-            scrollMargin: listOverlayHeight
+            scrollMargin: listOverlayHeight,
+            scrollPaddingEnd: bottomToolbarHeight
         });
 
         // Attach context menu to empty areas in the list pane for file creation
@@ -1195,7 +1167,7 @@ export const ListPane = React.memo(
                     </div>
                     {/* iOS - toolbar at bottom */}
                     {isMobile && !isAndroid && (
-                        <div className="nn-pane-bottom-toolbar">
+                        <div className="nn-pane-bottom-toolbar" ref={bottomToolbarRef}>
                             <ListToolbar
                                 isSearchActive={isSearchActive}
                                 onSearchToggle={() => {
