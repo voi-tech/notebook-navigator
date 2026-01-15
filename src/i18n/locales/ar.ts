@@ -905,7 +905,7 @@ export const STRINGS_AR = {
                 desc: 'إظهار دائرة حمراء ونص غامق على تاريخ اليوم.'
             },
             calendarShowWeekNumber: {
-                name: 'عرض رقم الأسبوع (غير متزامن)',
+                name: 'عرض رقم الأسبوع',
                 desc: 'إضافة عمود برقم الأسبوع.'
             },
             calendarConfirmBeforeCreate: {

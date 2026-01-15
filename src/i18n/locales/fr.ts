@@ -907,7 +907,7 @@ export const STRINGS_FR = {
                 desc: "Afficher un cercle rouge et du texte en gras sur la date d'aujourd'hui."
             },
             calendarShowWeekNumber: {
-                name: 'Afficher le numéro de semaine (non synchronisé)',
+                name: 'Afficher le numéro de semaine',
                 desc: 'Ajouter une colonne avec le numéro de semaine.'
             },
             calendarConfirmBeforeCreate: {

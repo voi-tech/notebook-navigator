@@ -905,7 +905,7 @@ export const STRINGS_UK = {
                 desc: 'Показувати червоне коло та жирний текст на сьогоднішній даті.'
             },
             calendarShowWeekNumber: {
-                name: 'Показати номер тижня (не синхронізується)',
+                name: 'Показати номер тижня',
                 desc: 'Додати колонку з номером тижня.'
             },
             calendarConfirmBeforeCreate: {

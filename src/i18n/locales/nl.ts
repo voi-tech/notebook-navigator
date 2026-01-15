@@ -907,7 +907,7 @@ export const STRINGS_NL = {
                 desc: 'Toon een rode cirkel en vetgedrukte tekst op de datum van vandaag.'
             },
             calendarShowWeekNumber: {
-                name: 'Weeknummer tonen (niet gesynchroniseerd)',
+                name: 'Weeknummer tonen',
                 desc: 'Voeg een kolom toe met het weeknummer.'
             },
             calendarConfirmBeforeCreate: {

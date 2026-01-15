@@ -905,7 +905,7 @@ export const STRINGS_ID = {
                 desc: 'Tampilkan lingkaran merah dan teks tebal pada tanggal hari ini.'
             },
             calendarShowWeekNumber: {
-                name: 'Tampilkan nomor minggu (tidak disinkronkan)',
+                name: 'Tampilkan nomor minggu',
                 desc: 'Tambahkan kolom dengan nomor minggu.'
             },
             calendarConfirmBeforeCreate: {

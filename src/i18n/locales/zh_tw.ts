@@ -903,7 +903,7 @@ export const STRINGS_ZH_TW = {
                 desc: '在今天日期上顯示紅色圓圈和粗體文字。'
             },
             calendarShowWeekNumber: {
-                name: '顯示週號（不同步）',
+                name: '顯示週號',
                 desc: '在每行開頭顯示週號。'
             },
             calendarConfirmBeforeCreate: {

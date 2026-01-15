@@ -905,7 +905,7 @@ export const STRINGS_TR = {
                 desc: 'Bugünün tarihinde kırmızı bir daire ve kalın metin göster.'
             },
             calendarShowWeekNumber: {
-                name: 'Hafta numarasını göster (senkronize edilmez)',
+                name: 'Hafta numarasını göster',
                 desc: 'Hafta numarasıyla bir sütun ekle.'
             },
             calendarConfirmBeforeCreate: {

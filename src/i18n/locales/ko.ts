@@ -905,7 +905,7 @@ export const STRINGS_KO = {
                 desc: '오늘 날짜에 빨간 원과 굵은 텍스트를 표시합니다.'
             },
             calendarShowWeekNumber: {
-                name: '주 번호 표시 (동기화되지 않음)',
+                name: '주 번호 표시',
                 desc: '주 번호 열을 추가합니다.'
             },
             calendarConfirmBeforeCreate: {

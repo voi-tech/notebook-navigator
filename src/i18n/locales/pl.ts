@@ -907,7 +907,7 @@ export const STRINGS_PL = {
                 desc: 'Pokaż czerwone kółko i pogrubiony tekst na dzisiejszej dacie.'
             },
             calendarShowWeekNumber: {
-                name: 'Pokaż numer tygodnia (nie synchronizowany)',
+                name: 'Pokaż numer tygodnia',
                 desc: 'Dodaj kolumnę z numerem tygodnia.'
             },
             calendarConfirmBeforeCreate: {

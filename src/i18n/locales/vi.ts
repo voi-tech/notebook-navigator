@@ -905,7 +905,7 @@ export const STRINGS_VI = {
                 desc: 'Hiển thị vòng tròn đỏ và chữ in đậm cho ngày hôm nay.'
             },
             calendarShowWeekNumber: {
-                name: 'Hiển thị số tuần (không đồng bộ)',
+                name: 'Hiển thị số tuần',
                 desc: 'Thêm cột với số tuần.'
             },
             calendarConfirmBeforeCreate: {

@@ -905,7 +905,7 @@ export const STRINGS_FA = {
                 desc: 'نمایش دایره قرمز و متن پررنگ در تاریخ امروز.'
             },
             calendarShowWeekNumber: {
-                name: 'نمایش شماره هفته (همگام‌سازی نمی‌شود)',
+                name: 'نمایش شماره هفته',
                 desc: 'افزودن ستون شماره هفته.'
             },
             calendarConfirmBeforeCreate: {

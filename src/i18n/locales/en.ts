@@ -905,7 +905,7 @@ export const STRINGS_EN = {
                 desc: "Show a red circle and bold text on today's date."
             },
             calendarShowWeekNumber: {
-                name: 'Show week number (not synced)',
+                name: 'Show week number',
                 desc: 'Add a column with the week number.'
             },
             calendarConfirmBeforeCreate: {

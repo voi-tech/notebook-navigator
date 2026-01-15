@@ -398,35 +398,6 @@ export function resolveCalendarWeeksToShow(params: {
 }
 
 /**
- * Resolves the calendar week number toggle with local overrides.
- */
-export function resolveCalendarShowWeekNumber(params: {
-    storedData: Record<string, unknown> | null;
-    keys: LocalStorageKeys;
-    defaultSettings: NotebookNavigatorSettings;
-}): MigrationResolution<boolean> {
-    const { storedData, keys, defaultSettings } = params;
-
-    const storedLocal = localStorage.get<unknown>(keys.calendarShowWeekNumberKey);
-    if (typeof storedLocal === 'boolean') {
-        // Local storage takes precedence for per-device preferences.
-        return { value: storedLocal, migrated: false };
-    }
-
-    const storedSetting = storedData?.['calendarShowWeekNumber'];
-    if (typeof storedSetting === 'boolean') {
-        // Migrate legacy synced value into local storage.
-        localStorage.set(keys.calendarShowWeekNumberKey, storedSetting);
-        return { value: storedSetting, migrated: true };
-    }
-
-    // Seed local storage with a valid default value.
-    const fallback = defaultSettings.calendarShowWeekNumber;
-    localStorage.set(keys.calendarShowWeekNumberKey, fallback);
-    return { value: fallback, migrated: false };
-}
-
-/**
  * Resolves the compact list item height with local overrides.
  */
 export function resolveCompactItemHeight(params: {

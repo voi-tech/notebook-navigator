@@ -906,7 +906,7 @@ export const STRINGS_ES = {
                 desc: 'Mostrar un círculo rojo y texto en negrita en la fecha de hoy.'
             },
             calendarShowWeekNumber: {
-                name: 'Mostrar número de semana (no sincronizado)',
+                name: 'Mostrar número de semana',
                 desc: 'Agregar una columna con el número de semana.'
             },
             calendarConfirmBeforeCreate: {

@@ -907,7 +907,7 @@ export const STRINGS_DE = {
                 desc: 'Einen roten Kreis und fetten Text für das heutige Datum anzeigen.'
             },
             calendarShowWeekNumber: {
-                name: 'Wochennummer anzeigen (nicht synchronisiert)',
+                name: 'Wochennummer anzeigen',
                 desc: 'Spalte mit der Wochennummer hinzufügen.'
             },
             calendarConfirmBeforeCreate: {

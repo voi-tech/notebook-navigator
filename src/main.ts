@@ -22,7 +22,6 @@ import {
     migrateRecentColors,
     migrateReleaseCheckState,
     migrateUIScales,
-    resolveCalendarShowWeekNumber,
     resolveCalendarWeeksToShow,
     resolveCompactItemHeight,
     resolveCompactItemHeightScaleText,
@@ -244,9 +243,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         const calendarWeeksToShow = resolveCalendarWeeksToShow({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
         this.settings.calendarWeeksToShow = calendarWeeksToShow.value;
 
-        const calendarShowWeekNumber = resolveCalendarShowWeekNumber({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
-        this.settings.calendarShowWeekNumber = calendarShowWeekNumber.value;
-
         const compactItemHeight = resolveCompactItemHeight({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS });
         this.settings.compactItemHeight = compactItemHeight.value;
 
@@ -277,7 +273,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
                     'navItemHeight' in storedData ||
                     'navItemHeightScaleText' in storedData ||
                     'calendarWeeksToShow' in storedData ||
-                    'calendarShowWeekNumber' in storedData ||
                     'compactItemHeight' in storedData ||
                     'compactItemHeightScaleText' in storedData)
         );
@@ -326,7 +321,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             navItemHeight.migrated ||
             navItemHeightScaleText.migrated ||
             calendarWeeksToShow.migrated ||
-            calendarShowWeekNumber.migrated ||
             compactItemHeight.migrated ||
             compactItemHeightScaleText.migrated;
 
@@ -560,7 +554,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             localStorage.set(this.keys.navItemHeightKey, this.settings.navItemHeight);
             localStorage.set(this.keys.navItemHeightScaleTextKey, this.settings.navItemHeightScaleText);
             localStorage.set(this.keys.calendarWeeksToShowKey, this.settings.calendarWeeksToShow);
-            localStorage.set(this.keys.calendarShowWeekNumberKey, this.settings.calendarShowWeekNumber);
             localStorage.set(this.keys.compactItemHeightKey, this.settings.compactItemHeight);
             localStorage.set(this.keys.compactItemHeightScaleTextKey, this.settings.compactItemHeightScaleText);
 
@@ -963,18 +956,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         }
         this.settings.calendarWeeksToShow = weeks;
         localStorage.set(this.keys.calendarWeeksToShowKey, weeks);
-        this.notifySettingsUpdate();
-    }
-
-    /**
-     * Updates calendar week number visibility and persists to local storage.
-     */
-    public setCalendarShowWeekNumber(enabled: boolean): void {
-        if (this.settings.calendarShowWeekNumber === enabled) {
-            return;
-        }
-        this.settings.calendarShowWeekNumber = enabled;
-        localStorage.set(this.keys.calendarShowWeekNumberKey, enabled);
         this.notifySettingsUpdate();
     }
 
@@ -1553,7 +1534,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         delete rest.navItemHeight;
         delete rest.navItemHeightScaleText;
         delete rest.calendarWeeksToShow;
-        delete rest.calendarShowWeekNumber;
         delete rest.compactItemHeight;
         delete rest.compactItemHeightScaleText;
         if (!this.shouldPersistDesktopScale) {

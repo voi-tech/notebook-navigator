@@ -243,8 +243,9 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
             setting.setName(strings.settings.items.calendarShowWeekNumber.name).setDesc(strings.settings.items.calendarShowWeekNumber.desc);
         })
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(value => {
-                plugin.setCalendarShowWeekNumber(value);
+            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(async value => {
+                plugin.settings.calendarShowWeekNumber = value;
+                await plugin.saveSettingsAndUpdate();
             })
         );
 

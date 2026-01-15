@@ -905,7 +905,7 @@ export const STRINGS_TH = {
                 desc: 'แสดงวงกลมสีแดงและข้อความตัวหนาบนวันที่วันนี้'
             },
             calendarShowWeekNumber: {
-                name: 'แสดงหมายเลขสัปดาห์ (ไม่ซิงค์)',
+                name: 'แสดงหมายเลขสัปดาห์',
                 desc: 'เพิ่มคอลัมน์พร้อมหมายเลขสัปดาห์'
             },
             calendarConfirmBeforeCreate: {

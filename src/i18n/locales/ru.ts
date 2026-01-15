@@ -906,7 +906,7 @@ export const STRINGS_RU = {
                 desc: 'Показывать красный круг и жирный текст на сегодняшней дате.'
             },
             calendarShowWeekNumber: {
-                name: 'Показать номер недели (не синхронизируется)',
+                name: 'Показать номер недели',
                 desc: 'Добавить колонку с номером недели.'
             },
             calendarConfirmBeforeCreate: {
