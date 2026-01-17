@@ -528,10 +528,12 @@ export const STRINGS_FR = {
     // Plugin commands
     commands: {
         open: 'Ouvrir', // Command palette: Opens the Notebook Navigator view (English: Open)
-        openHomepage: 'Ouvrir la page d’accueil', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
+        toggleLeftSidebar: 'Basculer le panneau latéral gauche', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
+        openHomepage: "Ouvrir la page d'accueil", // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'Révéler le fichier', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Rechercher', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Basculer la disposition à double panneau', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'Afficher/masquer le calendrier', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Changer le profil du coffre', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)
         selectVaultProfile1: 'Changer vers le profil du coffre 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'Changer vers le profil du coffre 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

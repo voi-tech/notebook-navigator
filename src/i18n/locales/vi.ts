@@ -527,10 +527,12 @@ export const STRINGS_VI = {
     // Plugin commands
     commands: {
         open: 'Mở', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: 'Bật/tắt thanh bên trái', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'Mở trang chủ', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'Hiện tệp', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Tìm kiếm', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Bật/tắt hai ngăn', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'Bật/tắt lịch', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Chọn hồ sơ vault', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
         selectVaultProfile1: 'Chọn hồ sơ vault 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'Chọn hồ sơ vault 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

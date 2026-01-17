@@ -526,10 +526,12 @@ export const STRINGS_ZH_TW = {
     // Plugin commands
     commands: {
         open: '開啟',
+        toggleLeftSidebar: '切換左側邊欄',
         openHomepage: '開啟首頁',
         revealFile: '定位檔案',
         search: '搜尋',
         toggleDualPane: '切換雙窗格布局',
+        toggleCalendar: '切換日曆',
         selectVaultProfile: '變更保險庫設定檔',
         selectVaultProfile1: '切換到保險庫設定檔 1',
         selectVaultProfile2: '切換到保險庫設定檔 2',

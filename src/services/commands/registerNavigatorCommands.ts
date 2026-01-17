@@ -32,11 +32,12 @@ import { getActiveHiddenFolders, getActiveVaultProfile } from '../../utils/vault
 import { showNotice } from '../../utils/noticeUtils';
 import { SelectVaultProfileModal } from '../../modals/SelectVaultProfileModal';
 import { localStorage } from '../../utils/localStorage';
-import { STORAGE_KEYS, type VisibilityPreferences } from '../../types';
+import { NOTEBOOK_NAVIGATOR_VIEW, STORAGE_KEYS, type VisibilityPreferences } from '../../types';
 import { normalizeTagPath } from '../../utils/tagUtils';
 import { getFilesForFolder, getFilesForTag } from '../../utils/fileFinder';
 import { isNoteShortcut, type ShortcutEntry } from '../../types/shortcuts';
 import { getTemplaterCreateNewNoteFromTemplate } from '../../utils/templaterIntegration';
+import { getLeafSplitLocation } from '../../utils/workspaceSplit';
 
 /**
  * Reveals the navigator view and focuses whichever pane is currently visible
@@ -262,6 +263,44 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
         }
     });
 
+    // Command to toggle the left sidebar, opening Notebook Navigator when uncollapsing
+    plugin.addCommand({
+        id: 'toggle-left-sidebar',
+        name: strings.commands.toggleLeftSidebar,
+        callback: () => {
+            runAsyncAction(async () => {
+                const { workspace } = plugin.app;
+                const leftSplit = workspace.leftSplit;
+                if (leftSplit && !leftSplit.collapsed) {
+                    leftSplit.collapse();
+                    return;
+                }
+
+                const navigatorLeaves = plugin.getNavigatorLeaves();
+                const leftSidebarNavigatorLeaf = navigatorLeaves.find(leaf => {
+                    return getLeafSplitLocation(plugin.app, leaf) === 'left-sidebar';
+                });
+
+                if (leftSidebarNavigatorLeaf) {
+                    await focusNavigatorVisiblePane(plugin, [leftSidebarNavigatorLeaf]);
+                    return;
+                }
+
+                const leftLeaf = workspace.getLeftLeaf(false);
+                if (!leftLeaf) {
+                    return;
+                }
+
+                await leftLeaf.setViewState({ type: NOTEBOOK_NAVIGATOR_VIEW, active: true });
+                await workspace.revealLeaf(leftLeaf);
+                const view = leftLeaf.view;
+                if (view instanceof NotebookNavigatorView) {
+                    view.focusVisiblePane();
+                }
+            });
+        }
+    });
+
     // Command to open the configured homepage file
     plugin.addCommand({
         id: 'open-homepage',
@@ -353,6 +392,18 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
             runAsyncAction(async () => {
                 await plugin.activateView();
                 plugin.toggleDualPanePreference();
+            });
+        }
+    });
+
+    // Command to toggle showing the calendar overlay in the navigation pane
+    plugin.addCommand({
+        id: 'toggle-calendar',
+        name: strings.commands.toggleCalendar,
+        callback: () => {
+            runAsyncAction(async () => {
+                await plugin.activateView();
+                plugin.toggleShowCalendar();
             });
         }
     });

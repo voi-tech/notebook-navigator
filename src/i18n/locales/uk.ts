@@ -527,10 +527,12 @@ export const STRINGS_UK = {
     // Plugin commands
     commands: {
         open: 'Відкрити', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: 'Перемкнути ліву бічну панель', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'Відкрити домашню сторінку', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'Показати файл', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Пошук', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Перемкнути подвійну панель', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'Перемкнути календар', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Вибрати профіль сховища', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
         selectVaultProfile1: 'Вибрати профіль сховища 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'Вибрати профіль сховища 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

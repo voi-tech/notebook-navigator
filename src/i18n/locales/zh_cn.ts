@@ -526,10 +526,12 @@ export const STRINGS_ZH_CN = {
     // Plugin commands
     commands: {
         open: '打开', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: '切换左侧边栏', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: '打开主页', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: '定位文件', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: '搜索', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: '切换双窗格布局', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: '切换日历', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: '更改仓库配置文件', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)
         selectVaultProfile1: '切换到仓库配置文件 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: '切换到仓库配置文件 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

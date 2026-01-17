@@ -527,10 +527,12 @@ export const STRINGS_FA = {
     // Plugin commands
     commands: {
         open: 'باز کردن',
+        toggleLeftSidebar: 'تغییر نوار کناری چپ',
         openHomepage: 'باز کردن صفحه اصلی',
         revealFile: 'نمایش فایل',
         search: 'جستجو',
         toggleDualPane: 'تغییر نمای پنل دوگانه',
+        toggleCalendar: 'تغییر تقویم',
         selectVaultProfile: 'انتخاب پروفایل خزانه',
         selectVaultProfile1: 'انتخاب پروفایل خزانه ۱',
         selectVaultProfile2: 'انتخاب پروفایل خزانه ۲',

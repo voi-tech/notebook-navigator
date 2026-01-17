@@ -527,10 +527,12 @@ export const STRINGS_AR = {
     // Plugin commands
     commands: {
         open: 'فتح', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: 'تبديل الشريط الجانبي الأيسر', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'فتح الصفحة الرئيسية', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'الكشف عن الملف', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'بحث', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'تبديل تخطيط اللوحتين', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'تبديل التقويم', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'اختيار ملف الخزنة', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
         selectVaultProfile1: 'اختيار ملف الخزنة 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'اختيار ملف الخزنة 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

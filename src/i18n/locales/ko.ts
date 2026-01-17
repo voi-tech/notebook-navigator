@@ -527,10 +527,12 @@ export const STRINGS_KO = {
     // Plugin commands
     commands: {
         open: '열기', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: '왼쪽 사이드바 전환', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: '홈페이지 열기', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: '파일 표시', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: '검색', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: '이중 창 레이아웃 전환', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: '캘린더 전환', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: '보관소 프로필 변경', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)
         selectVaultProfile1: '보관소 프로필 1 선택', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: '보관소 프로필 2 선택', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

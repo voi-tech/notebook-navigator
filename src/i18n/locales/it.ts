@@ -527,10 +527,12 @@ export const STRINGS_IT = {
     // Plugin commands
     commands: {
         open: 'Apri', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: 'Attiva/disattiva barra laterale sinistra', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'Apri homepage', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'Mostra file', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Cerca', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Attiva/disattiva doppio pannello', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'Attiva/disattiva calendario', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Seleziona profilo vault', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
         selectVaultProfile1: 'Seleziona profilo vault 1', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'Seleziona profilo vault 2', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

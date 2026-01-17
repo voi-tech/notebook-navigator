@@ -524,10 +524,12 @@ export const STRINGS_PT_BR = {
     // Plugin commands
     commands: {
         open: 'Abrir',
+        toggleLeftSidebar: 'Alternar barra lateral esquerda',
         openHomepage: 'Abrir página inicial',
         revealFile: 'Revelar arquivo',
         search: 'Pesquisar',
         toggleDualPane: 'Alternar layout de painel duplo',
+        toggleCalendar: 'Alternar calendário',
         selectVaultProfile: 'Alterar perfil do cofre',
         selectVaultProfile1: 'Alterar para o perfil do cofre 1',
         selectVaultProfile2: 'Alterar para o perfil do cofre 2',

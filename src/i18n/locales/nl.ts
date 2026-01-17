@@ -529,10 +529,12 @@ export const STRINGS_NL = {
     // Plugin commands
     commands: {
         open: 'Openen',
+        toggleLeftSidebar: 'Linker zijbalk in-/uitschakelen',
         openHomepage: 'Startpagina openen',
         revealFile: 'Bestand tonen',
         search: 'Zoeken',
         toggleDualPane: 'Dubbel paneel in-/uitschakelen',
+        toggleCalendar: 'Kalender in-/uitschakelen',
         selectVaultProfile: 'Kluisprofiel wijzigen',
         selectVaultProfile1: 'Kluisprofiel 1 selecteren',
         selectVaultProfile2: 'Kluisprofiel 2 selecteren',

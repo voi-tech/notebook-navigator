@@ -528,10 +528,12 @@ export const STRINGS_JA = {
     // Plugin commands
     commands: {
         open: '開く', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: '左サイドバーの切り替え', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'ホームページを開く', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'ファイルを表示', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: '検索', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'デュアルペインレイアウトを切り替え', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'カレンダーの切り替え', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: '保管庫のプロファイルを変更', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)
         selectVaultProfile1: '保管庫プロファイル1を選択', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: '保管庫プロファイル2を選択', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

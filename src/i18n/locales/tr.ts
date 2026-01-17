@@ -527,10 +527,12 @@ export const STRINGS_TR = {
     // Plugin commands
     commands: {
         open: 'Aç', // Command palette: Opens the Notebook Navigator view (English: Open)
+        toggleLeftSidebar: 'Sol kenar çubuğunu aç/kapat', // Command palette: Toggles left sidebar, opening Notebook Navigator when uncollapsing (English: Toggle left sidebar)
         openHomepage: 'Ana sayfayı aç', // Command palette: Opens the Notebook Navigator view and loads the homepage file (English: Open homepage)
         revealFile: 'Dosyayı göster', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Ara', // Command palette: Toggle search in the file list (English: Search)
         toggleDualPane: 'Çift bölme düzenini aç/kapat', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
+        toggleCalendar: 'Takvimi aç/kapat', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Kasa profili seç', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)
         selectVaultProfile1: 'Kasa profili 1 seç', // Command palette: Activates the first vault profile without opening the modal (English: Select vault profile 1)
         selectVaultProfile2: 'Kasa profili 2 seç', // Command palette: Activates the second vault profile without opening the modal (English: Select vault profile 2)

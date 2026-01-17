@@ -79,7 +79,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-01-16',
         showOnUpdate: true,
         new: [
-            'New setting ==Navigation pane > Calendar integration==. Switch between Daily notes integration and a custom format that also supports daily note titles.'
+            'New setting ==Navigation pane > Calendar integration==. Switch between Daily notes integration and a custom format that also supports daily note titles.',
+            'New command: ==Toggle calendar==. Toggles the calendar overlay on or off.',
+            'New command: ==Toggle left sidebar==. Toggle the left sidebar and opens Notebook Navigator when uncollapsing the left sidebar (unlike Obsidian’s built-in Toggle left sidebar command which restores the previous left sidebar view).'
         ],
         improved: [
             'The calendar widget now renders in the bottom of the list pane when using vertical split.',

@@ -527,10 +527,12 @@ export const STRINGS_TH = {
     // Plugin commands
     commands: {
         open: 'เปิด',
+        toggleLeftSidebar: 'สลับแถบด้านซ้าย',
         openHomepage: 'เปิดหน้าแรก',
         revealFile: 'แสดงไฟล์',
         search: 'ค้นหา',
         toggleDualPane: 'สลับรูปแบบแผงคู่',
+        toggleCalendar: 'สลับปฏิทิน',
         selectVaultProfile: 'เลือกโปรไฟล์ห้องนิรภัย',
         selectVaultProfile1: 'เลือกโปรไฟล์ห้องนิรภัย 1',
         selectVaultProfile2: 'เลือกโปรไฟล์ห้องนิรภัย 2',

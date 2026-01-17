@@ -527,10 +527,12 @@ export const STRINGS_ID = {
     // Plugin commands
     commands: {
         open: 'Buka',
+        toggleLeftSidebar: 'Alihkan bilah sisi kiri',
         openHomepage: 'Buka beranda',
         revealFile: 'Tampilkan file',
         search: 'Cari',
         toggleDualPane: 'Alihkan tata letak panel ganda',
+        toggleCalendar: 'Alihkan kalender',
         selectVaultProfile: 'Pilih profil vault',
         selectVaultProfile1: 'Pilih profil vault 1',
         selectVaultProfile2: 'Pilih profil vault 2',
