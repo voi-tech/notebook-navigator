@@ -123,12 +123,15 @@ export const STRINGS_ZH_CN = {
         showFolders: '显示导航', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: '重新排列导航',
         finishRootFolderReorder: '完成',
-        toggleDescendantNotes: '显示子文件夹/后代的笔记', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
         showExcludedItems: '显示隐藏的文件夹、标签和笔记', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '隐藏隐藏的文件夹、标签和笔记', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: '显示双窗格', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: '显示单窗格', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: '更改外观', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: '显示子文件夹的笔记',
+        showFilesFromSubfolders: '显示子文件夹的文件',
+        showNotesFromDescendants: '显示后代的笔记',
+        showFilesFromDescendants: '显示后代的文件',
         search: '搜索' // Tooltip for search button (English: Search)
     },
     // Search input

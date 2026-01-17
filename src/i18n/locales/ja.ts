@@ -123,12 +123,15 @@ export const STRINGS_JA = {
         showFolders: 'ナビゲーションを表示', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'ナビゲーションを並び替え',
         finishRootFolderReorder: '完了',
-        toggleDescendantNotes: 'サブフォルダ / 子孫のノートを表示', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
         showExcludedItems: '非表示のフォルダ・タグ・ノートを表示', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '非表示のフォルダ・タグ・ノートを非表示', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'デュアルペインを表示', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'シングルペインを表示', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: '外観を変更', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'サブフォルダのノートを表示',
+        showFilesFromSubfolders: 'サブフォルダのファイルを表示',
+        showNotesFromDescendants: '子孫のノートを表示',
+        showFilesFromDescendants: '子孫のファイルを表示',
         search: '検索' // Tooltip for search button (English: Search)
     },
     // Search input

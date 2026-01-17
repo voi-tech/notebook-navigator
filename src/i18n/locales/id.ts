@@ -124,12 +124,15 @@ export const STRINGS_ID = {
         showFolders: 'Tampilkan navigasi',
         reorderRootFolders: 'Atur ulang navigasi',
         finishRootFolderReorder: 'Selesai',
-        toggleDescendantNotes: 'Tampilkan catatan dari subfolder / turunan',
         showExcludedItems: 'Tampilkan folder, tag, dan catatan tersembunyi',
         hideExcludedItems: 'Sembunyikan folder, tag, dan catatan tersembunyi',
         showDualPane: 'Tampilkan panel ganda',
         showSinglePane: 'Tampilkan panel tunggal',
         changeAppearance: 'Ubah tampilan',
+        showNotesFromSubfolders: 'Tampilkan catatan dari subfolder',
+        showFilesFromSubfolders: 'Tampilkan file dari subfolder',
+        showNotesFromDescendants: 'Tampilkan catatan dari turunan',
+        showFilesFromDescendants: 'Tampilkan file dari turunan',
         search: 'Cari'
     },
     // Search input

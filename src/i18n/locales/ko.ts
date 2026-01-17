@@ -123,12 +123,15 @@ export const STRINGS_KO = {
         showFolders: '탐색 표시', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: '내비게이션 재정렬',
         finishRootFolderReorder: '완료',
-        toggleDescendantNotes: '하위 폴더 / 하위 항목 노트 표시', // Tooltip: include descendants for folders and tags
         showExcludedItems: '숨긴 폴더, 태그, 노트 표시', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: '숨긴 폴더, 태그, 노트 숨기기', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: '이중 창 표시', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: '단일 창 표시', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: '모양 변경', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: '하위 폴더 노트 표시',
+        showFilesFromSubfolders: '하위 폴더 파일 표시',
+        showNotesFromDescendants: '하위 항목 노트 표시',
+        showFilesFromDescendants: '하위 항목 파일 표시',
         search: '검색' // Tooltip for search button (English: Search)
     },
     // Search input

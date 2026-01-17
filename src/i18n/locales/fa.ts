@@ -124,12 +124,15 @@ export const STRINGS_FA = {
         showFolders: 'نمایش ناوبری',
         reorderRootFolders: 'مرتب‌سازی مجدد ناوبری',
         finishRootFolderReorder: 'تمام',
-        toggleDescendantNotes: 'نمایش یادداشت‌ها از زیرپوشه‌ها / زیرمجموعه‌ها',
         showExcludedItems: 'نمایش پوشه‌ها، برچسب‌ها و یادداشت‌های پنهان',
         hideExcludedItems: 'مخفی کردن پوشه‌ها، برچسب‌ها و یادداشت‌های پنهان',
         showDualPane: 'نمایش پنل‌های دوگانه',
         showSinglePane: 'نمایش پنل تکی',
         changeAppearance: 'تغییر ظاهر',
+        showNotesFromSubfolders: 'نمایش یادداشت‌ها از زیرپوشه‌ها',
+        showFilesFromSubfolders: 'نمایش فایل‌ها از زیرپوشه‌ها',
+        showNotesFromDescendants: 'نمایش یادداشت‌ها از زیرمجموعه‌ها',
+        showFilesFromDescendants: 'نمایش فایل‌ها از زیرمجموعه‌ها',
         search: 'جستجو'
     },
     // Search input

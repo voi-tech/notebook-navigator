@@ -124,12 +124,15 @@ export const STRINGS_PT_BR = {
         showFolders: 'Mostrar navegação',
         reorderRootFolders: 'Reordenar navegação',
         finishRootFolderReorder: 'Concluído',
-        toggleDescendantNotes: 'Mostrar notas de subpastas / descendentes',
         showExcludedItems: 'Mostrar pastas, tags e notas ocultas',
         hideExcludedItems: 'Ocultar pastas, tags e notas ocultas',
         showDualPane: 'Mostrar painéis duplos',
         showSinglePane: 'Mostrar painel único',
         changeAppearance: 'Alterar aparência',
+        showNotesFromSubfolders: 'Mostrar notas de subpastas',
+        showFilesFromSubfolders: 'Mostrar arquivos de subpastas',
+        showNotesFromDescendants: 'Mostrar notas de descendentes',
+        showFilesFromDescendants: 'Mostrar arquivos de descendentes',
         search: 'Pesquisar'
     },
 

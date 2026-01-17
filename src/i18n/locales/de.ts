@@ -123,12 +123,15 @@ export const STRINGS_DE = {
         showFolders: 'Navigation anzeigen', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'Navigation neu anordnen',
         finishRootFolderReorder: 'Neuordnung fertig',
-        toggleDescendantNotes: 'Notizen aus Unterordnern / Nachkommen anzeigen', // Tooltip for button to toggle showing notes from descendants (English: Show notes from subfolders / descendants)
         showExcludedItems: 'Versteckte Ordner, Tags und Notizen anzeigen', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Versteckte Ordner, Tags und Notizen ausblenden', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Zweispaltige Ansicht anzeigen', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'Einspaltige Ansicht anzeigen', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: 'Erscheinungsbild ändern', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'Notizen aus Unterordnern anzeigen',
+        showFilesFromSubfolders: 'Dateien aus Unterordnern anzeigen',
+        showNotesFromDescendants: 'Notizen aus Nachkommen anzeigen',
+        showFilesFromDescendants: 'Dateien aus Nachkommen anzeigen',
         search: 'Suchen' // Tooltip for search button (English: Search)
     },
     // Search input

@@ -124,12 +124,15 @@ export const STRINGS_VI = {
         showFolders: 'Hiện điều hướng', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'Sắp xếp lại điều hướng',
         finishRootFolderReorder: 'Hoàn tất',
-        toggleDescendantNotes: 'Hiện ghi chú từ thư mục con / phần tử con', // Tooltip: include descendants for folders and tags
         showExcludedItems: 'Hiện thư mục, thẻ và ghi chú ẩn', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Ẩn thư mục, thẻ và ghi chú ẩn', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Hiện hai ngăn', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'Hiện một ngăn', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: 'Đổi giao diện', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'Hiện ghi chú từ thư mục con',
+        showFilesFromSubfolders: 'Hiện tập tin từ thư mục con',
+        showNotesFromDescendants: 'Hiện ghi chú từ phần tử con',
+        showFilesFromDescendants: 'Hiện tập tin từ phần tử con',
         search: 'Tìm kiếm' // Tooltip for search button (English: Search)
     },
     // Search input

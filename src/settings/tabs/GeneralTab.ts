@@ -909,7 +909,7 @@ const NAVIGATION_TOOLBAR_BUTTONS: ToolbarButtonConfig<NavigationToolbarButtonId>
 
 const LIST_TOOLBAR_BUTTONS: ToolbarButtonConfig<ListToolbarButtonId>[] = [
     { id: 'search', uxIconId: 'list-search', label: strings.paneHeader.search },
-    { id: 'descendants', uxIconId: 'list-descendants', label: strings.paneHeader.toggleDescendantNotes },
+    { id: 'descendants', uxIconId: 'list-descendants', label: strings.settings.items.includeDescendantNotes.name },
     { id: 'sort', uxIconId: 'list-sort-ascending', label: strings.paneHeader.changeSortOrder },
     { id: 'appearance', uxIconId: 'list-appearance', label: strings.paneHeader.changeAppearance },
     { id: 'newNote', uxIconId: 'list-new-note', label: strings.paneHeader.newNote }

@@ -124,12 +124,15 @@ export const STRINGS_RU = {
         showFolders: 'Показать навигацию', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'Изменить порядок навигации',
         finishRootFolderReorder: 'Готово',
-        toggleDescendantNotes: 'Показать заметки из подпапок / потомков', // Tooltip: include descendants for folders and tags
         showExcludedItems: 'Показать скрытые папки, теги и заметки', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Скрыть скрытые папки, теги и заметки', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Показать двойную панель', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'Показать одну панель', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: 'Изменить внешний вид', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'Показать заметки из подпапок',
+        showFilesFromSubfolders: 'Показать файлы из подпапок',
+        showNotesFromDescendants: 'Показать заметки из потомков',
+        showFilesFromDescendants: 'Показать файлы из потомков',
         search: 'Поиск' // Tooltip for search button (English: Search)
     },
     // Search input

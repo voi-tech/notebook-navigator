@@ -124,12 +124,15 @@ export const STRINGS_TR = {
         showFolders: 'Gezinmeyi göster', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'Gezinmeyi yeniden sırala',
         finishRootFolderReorder: 'Tamamlandı',
-        toggleDescendantNotes: 'Alt klasörlerden / alt öğelerden notları göster', // Tooltip: include descendants for folders and tags
         showExcludedItems: 'Gizli klasörleri, etiketleri ve notları göster', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'Gizli klasörleri, etiketleri ve notları gizle', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'Çift bölme göster', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'Tek bölme göster', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: 'Görünümü değiştir', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'Alt klasörlerden notları göster',
+        showFilesFromSubfolders: 'Alt klasörlerden dosyaları göster',
+        showNotesFromDescendants: 'Alt öğelerden notları göster',
+        showFilesFromDescendants: 'Alt öğelerden dosyaları göster',
         search: 'Ara' // Tooltip for search button (English: Search)
     },
     // Search input

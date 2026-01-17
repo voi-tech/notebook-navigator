@@ -124,12 +124,15 @@ export const STRINGS_AR = {
         showFolders: 'إظهار التنقل', // Tooltip for button to show the navigation pane (English: Show navigation)
         reorderRootFolders: 'إعادة ترتيب التنقل',
         finishRootFolderReorder: 'تم',
-        toggleDescendantNotes: 'إظهار ملاحظات المجلدات الفرعية / الفروع', // Tooltip: include descendants for folders and tags
         showExcludedItems: 'إظهار المجلدات والوسوم والملاحظات المخفية', // Tooltip for button to show hidden items (English: Show hidden items)
         hideExcludedItems: 'إخفاء المجلدات والوسوم والملاحظات المخفية', // Tooltip for button to hide hidden items (English: Hide hidden items)
         showDualPane: 'إظهار لوحتين', // Tooltip for button to show dual-pane layout (English: Show dual panes)
         showSinglePane: 'إظهار لوحة واحدة', // Tooltip for button to show single-pane layout (English: Show single pane)
         changeAppearance: 'تغيير المظهر', // Tooltip for button to change folder appearance settings (English: Change appearance)
+        showNotesFromSubfolders: 'إظهار الملاحظات من المجلدات الفرعية',
+        showFilesFromSubfolders: 'إظهار الملفات من المجلدات الفرعية',
+        showNotesFromDescendants: 'إظهار الملاحظات من الفروع',
+        showFilesFromDescendants: 'إظهار الملفات من الفروع',
         search: 'بحث' // Tooltip for search button (English: Search)
     },
     // Search input

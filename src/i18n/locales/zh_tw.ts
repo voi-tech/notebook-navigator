@@ -123,12 +123,15 @@ export const STRINGS_ZH_TW = {
         showFolders: '顯示導覽',
         reorderRootFolders: '重新排列導覽',
         finishRootFolderReorder: '完成重新排列',
-        toggleDescendantNotes: '顯示子資料夾/後代的筆記',
         showExcludedItems: '顯示隱藏的資料夾、標籤和筆記',
         hideExcludedItems: '隱藏隱藏的資料夾、標籤和筆記',
         showDualPane: '顯示雙窗格',
         showSinglePane: '顯示單窗格',
         changeAppearance: '變更外觀',
+        showNotesFromSubfolders: '顯示子資料夾的筆記',
+        showFilesFromSubfolders: '顯示子資料夾的檔案',
+        showNotesFromDescendants: '顯示後代的筆記',
+        showFilesFromDescendants: '顯示後代的檔案',
         search: '搜尋'
     },
     // Search input

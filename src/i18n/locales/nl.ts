@@ -124,12 +124,15 @@ export const STRINGS_NL = {
         showFolders: 'Navigatie tonen',
         reorderRootFolders: 'Navigatie herschikken',
         finishRootFolderReorder: 'Klaar',
-        toggleDescendantNotes: 'Notities uit submappen / afstammelingen tonen',
         showExcludedItems: 'Verborgen mappen, tags en notities tonen',
         hideExcludedItems: 'Verborgen mappen, tags en notities verbergen',
         showDualPane: 'Dubbel paneel tonen',
         showSinglePane: 'Enkel paneel tonen',
         changeAppearance: 'Uiterlijk wijzigen',
+        showNotesFromSubfolders: 'Notities uit submappen tonen',
+        showFilesFromSubfolders: 'Bestanden uit submappen tonen',
+        showNotesFromDescendants: 'Notities uit afstammelingen tonen',
+        showFilesFromDescendants: 'Bestanden uit afstammelingen tonen',
         search: 'Zoeken'
     },
 

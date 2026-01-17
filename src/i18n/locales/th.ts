@@ -124,12 +124,15 @@ export const STRINGS_TH = {
         showFolders: 'แสดงการนำทาง',
         reorderRootFolders: 'จัดเรียงการนำทางใหม่',
         finishRootFolderReorder: 'เสร็จสิ้น',
-        toggleDescendantNotes: 'แสดงโน้ตจากโฟลเดอร์ย่อย / ลูกหลาน',
         showExcludedItems: 'แสดงโฟลเดอร์ แท็ก และโน้ตที่ซ่อน',
         hideExcludedItems: 'ซ่อนโฟลเดอร์ แท็ก และโน้ตที่ซ่อน',
         showDualPane: 'แสดงแผงคู่',
         showSinglePane: 'แสดงแผงเดียว',
         changeAppearance: 'เปลี่ยนลักษณะ',
+        showNotesFromSubfolders: 'แสดงโน้ตจากโฟลเดอร์ย่อย',
+        showFilesFromSubfolders: 'แสดงไฟล์จากโฟลเดอร์ย่อย',
+        showNotesFromDescendants: 'แสดงโน้ตจากลูกหลาน',
+        showFilesFromDescendants: 'แสดงไฟล์จากลูกหลาน',
         search: 'ค้นหา'
     },
     // Search input
