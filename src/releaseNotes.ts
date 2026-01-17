@@ -79,7 +79,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-01-18',
         showOnUpdate: true,
         new: [
-            'Previously some of the settings were local only and not synced between devices. Now all settings are synced between devices by default, and you can noverride this on a per-setting basis. Current local settings will continue to default to local-only, and you can change them to synced by pressing a cloud symbol in settings. Let me know if there is any setting that is currently not enabled for local-only that you would like to override.'
+            'Previously some of the settings were local only and not synced between devices. Now all settings are synced between devices by default, and you can noverride this on a per-setting basis. Current local settings will continue to be local-only, and you can change them to synced by pressing a cloud symbol in settings. Let me know if there are any settings that are currently not enabled for local-only that you would like to override.'
         ],
         improved: [],
         changed: [
