@@ -56,6 +56,7 @@ Both videos has subtitles in 21 languages, same as Notebook Navigator.
 - **Vault profiles** - Multiple filtered views with per-profile hidden folders/tags/notes, file visibility, banner, and shortcuts
 - **Shortcuts** - Notes, folders, tags, and saved searches with pinning and reordering
 - **Recent notes/files** - Recent items section stored per vault profile, optionally pinned with shortcuts
+- **Calendar** - Daily notes calendar with day selection, feature image previews, and vertical split support
 - **Folder tree** - Expand/collapse navigation with manual root folder ordering
 - **Tag tree** - Hierarchical tags with configurable root tag ordering
 - **Auto-reveal active file** - Folder expansion and scroll-to-selection
@@ -64,11 +65,11 @@ Both videos has subtitles in 21 languages, same as Notebook Navigator.
 ### 3.3 Organization
 
 - **Pin notes** - Keep important notes at the top of folders and tags
-- **Folder notes** - Set/detach folder notes and pin folder notes
+- **Folder notes** - Set/detach folder notes, pin folder notes, open in new tab option
 - **Tag operations** - Add/remove/clear tags, rename/delete tags, drag-and-drop tag hierarchy
 - **Custom sort and grouping** - Override sort/group settings per folder or tag
 - **Per-folder/tag appearances** - Title rows, preview rows, compact mode, descendants toggle
-- **Hidden content** - Hidden folders/tags/notes/files with patterns and frontmatter properties
+- **Hidden content** - Hidden folders/tags/notes/files with patterns, frontmatter properties, and tag-based filtering per vault profile
 - **Color and icon system** - Folder/tag/file colors, icon packs, emoji/Lucide icons, frontmatter read/write, icon mapping by file name and file type category
 - **Name warnings** - Warn about forbidden filesystem characters and characters that break Obsidian links when naming files and folders
 
@@ -80,6 +81,8 @@ Both videos has subtitles in 21 languages, same as Notebook Navigator.
 - **Date grouping** - Group notes by Today, Yesterday, Previous 7 days, Previous 30 days, months, and years when sorted by date
 - **Frontmatter support** - Read note names and timestamps from frontmatter fields
 - **Note metadata** - Show modification date and tags in the file list
+- **Custom properties** - Display frontmatter properties or word count in file list with per-folder/tag overrides and custom colors
+- **Parent folder display** - Optional parent folder name and icon in file list
 - **Compact mode** - Compact display when preview, date, and images are disabled
 - **Clickable tags** - Tags in file list navigate directly to that tag
 
