@@ -635,8 +635,8 @@ export const STRINGS_VI = {
         },
         syncMode: {
             notSynced: '(chưa đồng bộ)',
-            switchToSynced: 'Chuyển sang đồng bộ',
-            switchToLocal: 'Chuyển sang cục bộ'
+            switchToSynced: 'Bật đồng bộ đám mây',
+            switchToLocal: 'Tắt đồng bộ đám mây'
         },
         items: {
             searchProvider: {

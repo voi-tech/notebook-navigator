@@ -635,8 +635,8 @@ export const STRINGS_KO = {
         },
         syncMode: {
             notSynced: '(동기화되지 않음)',
-            switchToSynced: '동기화로 전환',
-            switchToLocal: '로컬로 전환'
+            switchToSynced: '클라우드 동기화 활성화',
+            switchToLocal: '클라우드 동기화 비활성화'
         },
         items: {
             searchProvider: {

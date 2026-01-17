@@ -634,8 +634,8 @@ export const STRINGS_ZH_CN = {
         },
         syncMode: {
             notSynced: '（未同步）',
-            switchToSynced: '切换为同步',
-            switchToLocal: '切换为本地'
+            switchToSynced: '启用云同步',
+            switchToLocal: '禁用云同步'
         },
         items: {
             searchProvider: {

@@ -634,8 +634,8 @@ export const STRINGS_ZH_TW = {
         },
         syncMode: {
             notSynced: '（未同步）',
-            switchToSynced: '切換為同步',
-            switchToLocal: '切換為本機'
+            switchToSynced: '啟用雲端同步',
+            switchToLocal: '停用雲端同步'
         },
         items: {
             searchProvider: {

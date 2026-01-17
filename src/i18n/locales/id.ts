@@ -635,8 +635,8 @@ export const STRINGS_ID = {
         },
         syncMode: {
             notSynced: '(tidak disinkronkan)',
-            switchToSynced: 'Beralih ke disinkronkan',
-            switchToLocal: 'Beralih ke lokal'
+            switchToSynced: 'Aktifkan sinkronisasi cloud',
+            switchToLocal: 'Nonaktifkan sinkronisasi cloud'
         },
         items: {
             searchProvider: {

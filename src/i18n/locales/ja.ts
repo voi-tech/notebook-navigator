@@ -636,8 +636,8 @@ export const STRINGS_JA = {
         },
         syncMode: {
             notSynced: '（未同期）',
-            switchToSynced: '同期に切り替え',
-            switchToLocal: 'ローカルに切り替え'
+            switchToSynced: 'クラウド同期を有効化',
+            switchToLocal: 'クラウド同期を無効化'
         },
         items: {
             searchProvider: {

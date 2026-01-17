@@ -635,8 +635,8 @@ export const STRINGS_RU = {
         },
         syncMode: {
             notSynced: '(не синхронизировано)',
-            switchToSynced: 'Переключить на синхронизацию',
-            switchToLocal: 'Переключить на локальное'
+            switchToSynced: 'Включить облачную синхронизацию',
+            switchToLocal: 'Отключить облачную синхронизацию'
         },
         items: {
             searchProvider: {
