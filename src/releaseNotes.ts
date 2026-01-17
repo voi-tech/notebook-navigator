@@ -88,7 +88,10 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'PDF thumbnail decoding now uses the same max pixel cap as other thumbnail fallback decode paths.',
             'Mobile devices now skip PDF cover thumbnails for PDF files larger than 20 MB.'
         ],
-        fixed: ['Fixed a crash/reload on mobile devices during cache rebuild when generating PDF cover thumbnails for large PDF files.']
+        fixed: [
+            'Fixed a crash/reload on mobile devices during cache rebuild when generating PDF cover thumbnails for large PDF files.',
+            'Fixed the list pane sometimes rendering blank on iOS (Obsidian 1.11+) after preview text or feature image updates.'
+        ]
     },
     {
         version: '2.1.1',

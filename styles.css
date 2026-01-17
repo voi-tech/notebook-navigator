@@ -6346,6 +6346,23 @@ body.nn-resizing {
     );
     z-index: -1;
 }
+
+/*
+ * iOS + Obsidian 1.11+: WebKit paint workaround for virtualized lists.
+ *
+ * Symptom:
+ * - The list can render blank (rows not visible) after preview text / feature image updates when the list is short
+ *   enough that the scroller does not overflow (scrollHeight === clientHeight).
+ * - The DOM still contains the virtualized row elements and TanStack Virtual still reports virtual items, but the
+ *   scroll layer does not repaint until a user interaction (tap) or a layout-triggering event (rotation).
+ *
+ * Workaround:
+ * - Force each rendered virtual row wrapper onto its own composited layer. This makes WebKit repaint the rows
+ *   reliably when the virtualizer remeasures and updates absolute positioning.
+ */
+.notebook-navigator-obsidian-1-11-plus-ios .nn-list-pane .nn-virtual-item {
+    transform: translateZ(0);
+}
 /* Source: src/styles/sections/platform-android-obsidian-1-11.css */
 
 /* ========================================================================
