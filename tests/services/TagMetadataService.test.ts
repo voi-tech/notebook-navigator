@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { describe, expect, it, vi } from 'vitest';
-import type { App } from 'obsidian';
+import { App } from 'obsidian';
 import { TagMetadataService } from '../../src/services/metadata/TagMetadataService';
 import type { NotebookNavigatorSettings } from '../../src/settings';
 import { DEFAULT_SETTINGS } from '../../src/settings/defaultSettings';
@@ -70,13 +70,13 @@ function createSettings(): NotebookNavigatorSettings {
 }
 
 describe('TagMetadataService.handleTagRename', () => {
-    const appStub = {} as unknown as App;
+    const app = new App();
 
     it('moves metadata when destination tag has no existing entries', async () => {
         const settings = createSettings();
         settings.tagColors = { project: '#ff0000' };
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('project', 'areas', false);
 
@@ -88,7 +88,7 @@ describe('TagMetadataService.handleTagRename', () => {
         const settings = createSettings();
         settings.tagColors = { project: '#ff0000', areas: '#00ff00' };
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('project', 'areas', true);
 
@@ -101,7 +101,7 @@ describe('TagMetadataService.handleTagRename', () => {
         settings.tagIcons = { 'project/demo': 'lucide-circle' };
         settings.tagBackgroundColors = { 'project/design': '#123456' };
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('project', 'areas', true);
 
@@ -125,7 +125,7 @@ describe('TagMetadataService.handleTagRename', () => {
         );
 
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('projects', 'areas');
 
@@ -141,7 +141,7 @@ describe('TagMetadataService.handleTagRename', () => {
         const activeProfile = settings.vaultProfiles[0];
         activeProfile.hiddenTags = ['projects/*', 'projects/client'];
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('projects', 'areas');
 
@@ -161,7 +161,7 @@ describe('TagMetadataService.handleTagRename', () => {
         );
 
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('projects', 'areas');
 
@@ -182,7 +182,7 @@ describe('TagMetadataService.handleTagRename', () => {
         );
 
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagRename('draft', 'approved');
 
@@ -193,7 +193,7 @@ describe('TagMetadataService.handleTagRename', () => {
 });
 
 describe('TagMetadataService.handleTagDelete', () => {
-    const appStub = {} as unknown as App;
+    const app = new App();
 
     it('removes metadata and hidden tags for deleted hierarchy', async () => {
         const settings = createSettings();
@@ -210,7 +210,7 @@ describe('TagMetadataService.handleTagDelete', () => {
             })
         );
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagDelete('project');
 
@@ -226,7 +226,7 @@ describe('TagMetadataService.handleTagDelete', () => {
     it('skips work when no metadata matches deleted tag', async () => {
         const settings = createSettings();
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagDelete('project');
 
@@ -245,7 +245,7 @@ describe('TagMetadataService.handleTagDelete', () => {
         );
 
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagDelete('projects');
 
@@ -259,7 +259,7 @@ describe('TagMetadataService.handleTagDelete', () => {
         const activeProfile = settings.vaultProfiles[0];
         activeProfile.hiddenTags = ['projects/*', 'projects/client', 'keep'];
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagDelete('projects');
 
@@ -279,7 +279,7 @@ describe('TagMetadataService.handleTagDelete', () => {
         );
 
         const provider = new TestSettingsProvider(settings);
-        const service = new TagMetadataService(appStub, provider, () => null);
+        const service = new TagMetadataService(app, provider, () => null);
 
         await service.handleTagDelete('draft');
 

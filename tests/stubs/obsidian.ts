@@ -16,6 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 // Minimal Obsidian API stubs for Vitest environment.
+//
+// Limitations / test compromises:
+// - This file is a functional stub, not a fidelity-accurate Obsidian runtime.
+// - The `vault` methods below intentionally avoid using `this` for their internal state.
+//   They close over local `Map` instances instead, which has two consequences:
+//   1) Tests do not depend on method binding (`this`), so accidental unbound-method usage is less likely to surface here.
+//   2) Real Obsidian classes may rely on `this` in ways this stub will not emulate (e.g. calling a method detached from its instance).
+// - Prefer relying on ESLint rules in `src/**` (e.g. `@typescript-eslint/unbound-method`) to catch binding mistakes in production code.
 
 import { deriveFileMetadata } from '../utils/pathMetadata';
 
@@ -35,32 +43,7 @@ interface TestVault {
 }
 
 export class App {
-    vault: TestVault = {
-        _files: new Map<string, TFile>(),
-        _folders: new Map<string, TFolder>(),
-        registerFile(file: TFile): void {
-            this._files.set(file.path, file);
-        },
-        unregisterFile(path: string): void {
-            this._files.delete(path);
-        },
-        registerFolder(folder: TFolder): void {
-            this._folders.set(folder.path, folder);
-        },
-        unregisterFolder(path: string): void {
-            this._folders.delete(path);
-        },
-        getFolderByPath(path: string): TFolder | null {
-            return this._folders.get(path) ?? null;
-        },
-        getAbstractFileByPath(path: string): TFile | TFolder | null {
-            return this._files.get(path) ?? this._folders.get(path) ?? null;
-        },
-        cachedRead: async () => '',
-        adapter: {
-            readBinary: async () => new ArrayBuffer(0)
-        }
-    };
+    vault: TestVault;
 
     metadataCache = {
         getFileCache: () => null,
@@ -70,6 +53,39 @@ export class App {
     fileManager = {
         processFrontMatter: async () => {}
     };
+
+    constructor() {
+        const files = new Map<string, TFile>();
+        const folders = new Map<string, TFolder>();
+
+        this.vault = {
+            _files: files,
+            _folders: folders,
+            registerFile(file: TFile): void {
+                files.set(file.path, file);
+            },
+            unregisterFile(path: string): void {
+                files.delete(path);
+            },
+            registerFolder(folder: TFolder): void {
+                folders.set(folder.path, folder);
+            },
+            unregisterFolder(path: string): void {
+                folders.delete(path);
+            },
+            getFolderByPath(path: string): TFolder | null {
+                return folders.get(path) ?? null;
+            },
+            getAbstractFileByPath(path: string): TFile | TFolder | null {
+                return files.get(path) ?? folders.get(path) ?? null;
+            },
+            cachedRead: async () => '',
+            adapter: {
+                // Stubbed binary reads (tests that care about content typically override this).
+                readBinary: async () => new ArrayBuffer(0)
+            }
+        };
+    }
 }
 
 export class TFile {
@@ -100,9 +116,60 @@ export class TFolder {
     }
 }
 
+export class Scope {
+    register(): void {}
+}
+
 export class Notice {
     constructor(public message?: string) {}
     hide(): void {}
+}
+
+class StubElement {
+    setText(): void {}
+
+    createDiv(): StubElement {
+        return new StubElement();
+    }
+
+    createEl(): StubElement {
+        return new StubElement();
+    }
+
+    empty(): void {}
+
+    addClass(): void {}
+}
+
+export class Modal {
+    titleEl = new StubElement();
+    contentEl = new StubElement();
+    modalEl = new StubElement();
+    scope = new Scope();
+
+    constructor(public app: App) {}
+
+    open(): void {
+        this.onOpen();
+    }
+
+    close(): void {
+        this.onClose();
+    }
+
+    onOpen(): void {}
+
+    onClose(): void {}
+}
+
+export class Plugin {
+    app: App;
+    manifest: Record<string, unknown>;
+
+    constructor(app: App, manifest: Record<string, unknown>) {
+        this.app = app;
+        this.manifest = manifest;
+    }
 }
 
 export class Menu {}
@@ -131,6 +198,46 @@ export const requestUrl = async (): Promise<RequestUrlResponse> => ({
     status: 404,
     headers: {}
 });
+
+function parseFrontmatterStringList(raw: unknown, separatorPattern: RegExp): string[] | null {
+    if (raw === undefined || raw === null) {
+        return null;
+    }
+
+    if (Array.isArray(raw)) {
+        const values: string[] = [];
+        for (const entry of raw) {
+            if (typeof entry !== 'string') {
+                continue;
+            }
+            entry
+                .split(separatorPattern)
+                .map(value => value.trim())
+                .filter(value => value.length > 0)
+                .forEach(value => values.push(value));
+        }
+        return values.length > 0 ? values : null;
+    }
+
+    if (typeof raw === 'string') {
+        const values = raw
+            .split(separatorPattern)
+            .map(value => value.trim())
+            .filter(value => value.length > 0);
+        return values.length > 0 ? values : null;
+    }
+
+    return null;
+}
+
+export function parseFrontMatterTags(frontmatter?: { tags?: unknown }): string[] | null {
+    return parseFrontmatterStringList(frontmatter?.tags, /[, ]+/u);
+}
+
+export function parseFrontMatterAliases(frontmatter?: { aliases?: unknown; alias?: unknown }): string[] | null {
+    const raw = frontmatter?.aliases ?? frontmatter?.alias;
+    return parseFrontmatterStringList(raw, /,\s*/u);
+}
 
 function stripSurroundingQuotes(value: string): string {
     const trimmed = value.trim();

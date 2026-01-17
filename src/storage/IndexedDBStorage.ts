@@ -200,6 +200,7 @@ interface IndexedDBStorageOptions {
     featureImageCacheMaxEntries?: number;
     previewTextCacheMaxEntries?: number;
     previewLoadMaxBatch?: number;
+    cache?: MemoryFileCache;
 }
 
 // Default limits for preview text caching and load batching.
@@ -262,7 +263,7 @@ export class IndexedDBStorage {
     constructor(appId: string, options?: IndexedDBStorageOptions) {
         this.dbName = `notebooknavigator/cache/${appId}`;
         const previewTextCacheMaxEntries = options?.previewTextCacheMaxEntries ?? DEFAULT_PREVIEW_TEXT_CACHE_MAX_ENTRIES;
-        this.cache = new MemoryFileCache({ previewTextCacheMaxEntries });
+        this.cache = options?.cache ?? new MemoryFileCache({ previewTextCacheMaxEntries });
         this.previewTextCacheMaxEntries = Math.max(0, previewTextCacheMaxEntries);
         this.previewLoadMaxBatch = Math.max(1, options?.previewLoadMaxBatch ?? DEFAULT_PREVIEW_LOAD_MAX_BATCH);
         // Initialize the LRU size from caller options or fallback default.

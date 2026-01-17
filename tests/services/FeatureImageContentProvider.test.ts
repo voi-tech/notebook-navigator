@@ -124,6 +124,10 @@ function createFrontmatterPosition(bodyStartIndex: number): CachedMetadata['fron
     };
 }
 
+function isFrontMatterCache(value: unknown): value is FrontMatterCache {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
 function deriveFrontmatterAndBodyStartIndex(content: string): { frontmatter: FrontMatterCache | null; bodyStartIndex: number } {
     const block = extractFrontmatterBlock(content);
     if (!block) {
@@ -131,9 +135,16 @@ function deriveFrontmatterAndBodyStartIndex(content: string): { frontmatter: Fro
     }
 
     const yamlText = block.yamlText.trim();
-    const parsed: Record<string, unknown> = yamlText.length > 0 ? parseYaml(yamlText) : {};
-    const frontmatter = Object.keys(parsed).length > 0 ? parsed : null;
-    return { frontmatter, bodyStartIndex: block.bodyStartIndex };
+    if (yamlText.length === 0) {
+        return { frontmatter: null, bodyStartIndex: block.bodyStartIndex };
+    }
+
+    const parsed: unknown = parseYaml(yamlText);
+    if (!isFrontMatterCache(parsed) || Object.keys(parsed).length === 0) {
+        return { frontmatter: null, bodyStartIndex: block.bodyStartIndex };
+    }
+
+    return { frontmatter: parsed, bodyStartIndex: block.bodyStartIndex };
 }
 
 function resolveReference(app: App, file: TFile, content: string, settings: NotebookNavigatorSettings) {
