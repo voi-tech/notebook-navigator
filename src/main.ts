@@ -18,21 +18,7 @@
 
 import { Platform, Plugin, TFile, FileView, TFolder, WorkspaceLeaf, addIcon } from 'obsidian';
 import { NotebookNavigatorSettings, DEFAULT_SETTINGS, NotebookNavigatorSettingTab } from './settings';
-import {
-    migrateRecentColors,
-    migrateReleaseCheckState,
-    migrateUIScales,
-    resolveCalendarWeeksToShow,
-    resolveCompactItemHeight,
-    resolveCompactItemHeightScaleText,
-    resolveNavIndent,
-    resolveNavItemHeight,
-    resolveNavItemHeightScaleText,
-    resolvePaneTransitionDuration,
-    resolveSearchProvider,
-    resolveTagSortOrder,
-    resolveToolbarVisibility
-} from './settings/migrations/localPreferences';
+import { migrateRecentColors, migrateReleaseCheckState } from './settings/migrations/localPreferences';
 import {
     applyExistingUserDefaults,
     applyLegacyShortcutsMigration,
@@ -110,6 +96,7 @@ import { getPathPatternCacheKey } from './utils/pathPatternMatcher';
 import { sanitizeUIScale } from './utils/uiScale';
 import { MAX_RECENT_COLORS } from './constants/colorPalette';
 import { NOTEBOOK_NAVIGATOR_ICON_ID, NOTEBOOK_NAVIGATOR_ICON_SVG } from './constants/notebookNavigatorIcon';
+import { createSyncModeRegistry, type SyncModeRegistry } from './services/settings/syncModeRegistry';
 
 const DEFAULT_UX_PREFERENCES: UXPreferences = {
     searchActive: false,
@@ -127,17 +114,6 @@ const UX_PREFERENCE_KEYS: (keyof UXPreferences)[] = [
     'pinShortcuts',
     'showCalendar'
 ];
-
-interface SyncModeRegistryEntry {
-    loadPhase: 'preProfiles' | 'postProfiles';
-    cleanupOnLoad: boolean;
-    hasPersistedValue: (storedData: Record<string, unknown>) => boolean;
-    deleteFromPersisted: (persisted: Record<string, unknown>) => void;
-    mirrorToLocalStorage: () => void;
-    resolveOnLoad: (params: { storedData: Record<string, unknown> | null }) => { migrated: boolean };
-}
-
-type SyncModeRegistry = Record<SyncModeSettingId, SyncModeRegistryEntry>;
 
 /**
  * Main plugin class for Notebook Navigator
@@ -276,334 +252,43 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             return this.syncModeRegistry;
         }
 
-        type PersistedKey = keyof NotebookNavigatorSettings;
-
-        const setLocalStorage = <T>(key: string, value: T): void => {
-            localStorage.set(key, value);
-        };
-
-        const mirrorFromSettings = <T>(key: string, getValue: () => T) => {
-            return () => {
-                setLocalStorage(key, getValue());
-            };
-        };
-
-        const deletePersistedKeys = (persisted: Record<string, unknown>, keys: readonly PersistedKey[]) => {
-            keys.forEach(key => {
-                delete persisted[key];
-            });
-        };
-
-        const hasAnyPersistedKey = (storedData: Record<string, unknown>, keys: readonly PersistedKey[]) => {
-            return keys.some(key => key in storedData);
-        };
-
-        const mirrorUXPreferences = (update: Partial<UXPreferences>) => {
-            this.uxPreferences = {
-                ...this.uxPreferences,
-                ...update
-            };
-            this.persistUXPreferences(false);
-        };
-
-        const createUXPreferenceEntry = (params: {
-            settingId: 'includeDescendantNotes' | 'showCalendar';
-            persistedKey: 'includeDescendantNotes' | 'showCalendar';
-        }) => {
-            return createEntry({
-                persistedKeys: [params.persistedKey],
-                loadPhase: 'preProfiles',
-                resolveOnLoad: () => {
-                    const storedUXPreferences = localStorage.get<unknown>(this.keys.uxPreferencesKey);
-                    const storedValid = this.isUXPreferencesRecord(storedUXPreferences);
-                    const base: UXPreferences = storedValid
-                        ? { ...DEFAULT_UX_PREFERENCES, ...storedUXPreferences }
-                        : { ...DEFAULT_UX_PREFERENCES };
-                    const isDeviceLocal = this.isDeviceLocal(params.settingId);
-                    const nextValue = isDeviceLocal
-                        ? base[params.persistedKey]
-                        : this.sanitizeBooleanSetting(this.settings[params.persistedKey], DEFAULT_SETTINGS[params.persistedKey]);
-                    this.settings[params.persistedKey] = nextValue;
-
-                    if (!storedValid || base[params.persistedKey] !== nextValue) {
-                        setLocalStorage(this.keys.uxPreferencesKey, {
-                            ...base,
-                            [params.persistedKey]: nextValue
-                        });
-                    }
-
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: () => {
-                    mirrorUXPreferences({
-                        [params.persistedKey]: this.settings[params.persistedKey]
-                    });
-                }
-            });
-        };
-
-        const createResolvedLocalStorageEntry = <T>(params: {
-            settingId: SyncModeSettingId;
-            persistedKeys: readonly PersistedKey[];
-            loadPhase: 'preProfiles' | 'postProfiles';
-            localStorageKey: string;
-            resolveDeviceLocal: (storedData: Record<string, unknown> | null) => { value: T; migrated: boolean };
-            sanitizeSynced: () => T;
-            getCurrent: () => T;
-            setCurrent: (value: T) => void;
-            cleanupOnLoad?: boolean;
-            deleteFromPersisted?: (persisted: Record<string, unknown>) => void;
-        }) => {
-            return createEntry({
-                persistedKeys: params.persistedKeys,
-                loadPhase: params.loadPhase,
-                cleanupOnLoad: params.cleanupOnLoad,
-                deleteFromPersisted: params.deleteFromPersisted,
-                resolveOnLoad: ({ storedData }) => {
-                    if (this.isDeviceLocal(params.settingId)) {
-                        const resolved = params.resolveDeviceLocal(storedData);
-                        params.setCurrent(resolved.value);
-                        return { migrated: resolved.migrated };
-                    }
-
-                    const nextValue = params.sanitizeSynced();
-                    params.setCurrent(nextValue);
-                    setLocalStorage(params.localStorageKey, nextValue);
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: mirrorFromSettings(params.localStorageKey, params.getCurrent)
-            });
-        };
-
-        const createResolvedLocalStorageSettingEntry = <K extends SyncModeSettingId & PersistedKey>(params: {
-            settingId: K;
-            loadPhase: 'preProfiles' | 'postProfiles';
-            localStorageKey: string;
-            resolveDeviceLocal: (storedData: Record<string, unknown> | null) => { value: NotebookNavigatorSettings[K]; migrated: boolean };
-            sanitizeSynced: () => NotebookNavigatorSettings[K];
-            cleanupOnLoad?: boolean;
-            deleteFromPersisted?: (persisted: Record<string, unknown>) => void;
-        }) => {
-            return createResolvedLocalStorageEntry<NotebookNavigatorSettings[K]>({
-                settingId: params.settingId,
-                persistedKeys: [params.settingId],
-                loadPhase: params.loadPhase,
-                localStorageKey: params.localStorageKey,
-                resolveDeviceLocal: params.resolveDeviceLocal,
-                sanitizeSynced: params.sanitizeSynced,
-                getCurrent: () => this.settings[params.settingId],
-                setCurrent: value => {
-                    this.settings[params.settingId] = value;
-                },
-                cleanupOnLoad: params.cleanupOnLoad,
-                deleteFromPersisted: params.deleteFromPersisted
-            });
-        };
-
-        const createEntry = (params: {
-            persistedKeys: readonly PersistedKey[];
-            loadPhase: 'preProfiles' | 'postProfiles';
-            resolveOnLoad: (params: { storedData: Record<string, unknown> | null }) => { migrated: boolean };
-            mirrorToLocalStorage: () => void;
-            cleanupOnLoad?: boolean;
-            hasPersistedValue?: (storedData: Record<string, unknown>) => boolean;
-            deleteFromPersisted?: (persisted: Record<string, unknown>) => void;
-        }) => {
-            const cleanupOnLoad = params.cleanupOnLoad ?? true;
-            const hasPersistedValue =
-                params.hasPersistedValue ?? ((storedData: Record<string, unknown>) => hasAnyPersistedKey(storedData, params.persistedKeys));
-            const deleteFromPersisted =
-                params.deleteFromPersisted ??
-                ((persisted: Record<string, unknown>) => deletePersistedKeys(persisted, params.persistedKeys));
-
-            return {
-                loadPhase: params.loadPhase,
-                cleanupOnLoad,
-                hasPersistedValue,
-                deleteFromPersisted,
-                mirrorToLocalStorage: params.mirrorToLocalStorage,
-                resolveOnLoad: params.resolveOnLoad
-            };
-        };
-
-        this.syncModeRegistry = {
-            vaultProfile: createEntry({
-                persistedKeys: ['vaultProfile'],
-                loadPhase: 'postProfiles',
-                resolveOnLoad: () => {
-                    const isDeviceLocal = this.isDeviceLocal('vaultProfile');
-                    this.settings.vaultProfile = isDeviceLocal
-                        ? this.resolveActiveVaultProfileId()
-                        : this.sanitizeVaultProfileId(this.settings.vaultProfile);
-                    setLocalStorage(this.keys.vaultProfileKey, this.settings.vaultProfile);
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: mirrorFromSettings(this.keys.vaultProfileKey, () => this.settings.vaultProfile)
-            }),
-            tagSortOrder: createResolvedLocalStorageSettingEntry({
-                settingId: 'tagSortOrder',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.tagSortOrderKey,
-                resolveDeviceLocal: storedData => ({
-                    value: resolveTagSortOrder({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                    migrated: false
-                }),
-                sanitizeSynced: () => this.sanitizeTagSortOrderSetting(this.settings.tagSortOrder)
-            }),
-            searchProvider: createResolvedLocalStorageSettingEntry({
-                settingId: 'searchProvider',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.searchProviderKey,
-                resolveDeviceLocal: storedData => ({
-                    value: resolveSearchProvider({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                    migrated: false
-                }),
-                sanitizeSynced: () => this.sanitizeSearchProviderSetting(this.settings.searchProvider)
-            }),
-            includeDescendantNotes: createUXPreferenceEntry({
-                settingId: 'includeDescendantNotes',
-                persistedKey: 'includeDescendantNotes'
-            }),
-            dualPane: createEntry({
-                persistedKeys: ['dualPane'],
-                loadPhase: 'preProfiles',
-                resolveOnLoad: () => {
-                    const isDeviceLocal = this.isDeviceLocal('dualPane');
-                    const storedDualPane = localStorage.get<unknown>(this.keys.dualPaneKey);
-                    const parsedDualPane = this.parseDualPanePreference(storedDualPane);
-                    const dualPane = isDeviceLocal
-                        ? (parsedDualPane ?? DEFAULT_SETTINGS.dualPane)
-                        : this.sanitizeBooleanSetting(this.settings.dualPane, DEFAULT_SETTINGS.dualPane);
-                    this.settings.dualPane = dualPane;
-                    setLocalStorage(this.keys.dualPaneKey, dualPane ? '1' : '0');
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: mirrorFromSettings(this.keys.dualPaneKey, () => (this.settings.dualPane ? '1' : '0'))
-            }),
-            dualPaneOrientation: createEntry({
-                persistedKeys: ['dualPaneOrientation'],
-                loadPhase: 'preProfiles',
-                resolveOnLoad: () => {
-                    const isDeviceLocal = this.isDeviceLocal('dualPaneOrientation');
-                    const storedDualPaneOrientation = localStorage.get<unknown>(this.keys.dualPaneOrientationKey);
-                    const parsedDualPaneOrientation = this.parseDualPaneOrientation(storedDualPaneOrientation);
-                    const dualPaneOrientation = isDeviceLocal
-                        ? (parsedDualPaneOrientation ?? DEFAULT_SETTINGS.dualPaneOrientation)
-                        : this.sanitizeDualPaneOrientationSetting(this.settings.dualPaneOrientation);
-                    this.settings.dualPaneOrientation = dualPaneOrientation;
-                    setLocalStorage(this.keys.dualPaneOrientationKey, dualPaneOrientation);
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: mirrorFromSettings(this.keys.dualPaneOrientationKey, () => this.settings.dualPaneOrientation)
-            }),
-            paneTransitionDuration: createResolvedLocalStorageSettingEntry({
-                settingId: 'paneTransitionDuration',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.paneTransitionDurationKey,
-                resolveDeviceLocal: storedData =>
-                    resolvePaneTransitionDuration({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizePaneTransitionDurationSetting(this.settings.paneTransitionDuration)
-            }),
-            toolbarVisibility: createResolvedLocalStorageSettingEntry({
-                settingId: 'toolbarVisibility',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.toolbarVisibilityKey,
-                resolveDeviceLocal: storedData =>
-                    resolveToolbarVisibility({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizeToolbarVisibilitySetting(this.settings.toolbarVisibility)
-            }),
-            showCalendar: createUXPreferenceEntry({
-                settingId: 'showCalendar',
-                persistedKey: 'showCalendar'
-            }),
-            navIndent: createResolvedLocalStorageSettingEntry({
-                settingId: 'navIndent',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.navIndentKey,
-                resolveDeviceLocal: storedData => resolveNavIndent({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizeNavIndentSetting(this.settings.navIndent)
-            }),
-            navItemHeight: createResolvedLocalStorageSettingEntry({
-                settingId: 'navItemHeight',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.navItemHeightKey,
-                resolveDeviceLocal: storedData => resolveNavItemHeight({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizeNavItemHeightSetting(this.settings.navItemHeight)
-            }),
-            navItemHeightScaleText: createResolvedLocalStorageSettingEntry({
-                settingId: 'navItemHeightScaleText',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.navItemHeightScaleTextKey,
-                resolveDeviceLocal: storedData =>
-                    resolveNavItemHeightScaleText({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () =>
-                    this.sanitizeBooleanSetting(this.settings.navItemHeightScaleText, DEFAULT_SETTINGS.navItemHeightScaleText)
-            }),
-            calendarWeeksToShow: createResolvedLocalStorageSettingEntry({
-                settingId: 'calendarWeeksToShow',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.calendarWeeksToShowKey,
-                resolveDeviceLocal: storedData =>
-                    resolveCalendarWeeksToShow({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizeCalendarWeeksToShowSetting(this.settings.calendarWeeksToShow)
-            }),
-            compactItemHeight: createResolvedLocalStorageSettingEntry({
-                settingId: 'compactItemHeight',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.compactItemHeightKey,
-                resolveDeviceLocal: storedData =>
-                    resolveCompactItemHeight({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () => this.sanitizeCompactItemHeightSetting(this.settings.compactItemHeight)
-            }),
-            compactItemHeightScaleText: createResolvedLocalStorageSettingEntry({
-                settingId: 'compactItemHeightScaleText',
-                loadPhase: 'preProfiles',
-                localStorageKey: this.keys.compactItemHeightScaleTextKey,
-                resolveDeviceLocal: storedData =>
-                    resolveCompactItemHeightScaleText({ storedData, keys: this.keys, defaultSettings: DEFAULT_SETTINGS }),
-                sanitizeSynced: () =>
-                    this.sanitizeBooleanSetting(this.settings.compactItemHeightScaleText, DEFAULT_SETTINGS.compactItemHeightScaleText)
-            }),
-            uiScale: createEntry({
-                persistedKeys: ['desktopScale', 'mobileScale'],
-                loadPhase: 'preProfiles',
-                cleanupOnLoad: false,
-                hasPersistedValue: () => false,
-                deleteFromPersisted: (persisted: Record<string, unknown>) => {
-                    if (!this.shouldPersistDesktopScale) {
-                        delete persisted['desktopScale'];
-                    }
-                    if (!this.shouldPersistMobileScale) {
-                        delete persisted['mobileScale'];
-                    }
-                },
-                resolveOnLoad: ({ storedData }) => {
-                    const isDeviceLocal = this.isDeviceLocal('uiScale');
-                    if (isDeviceLocal) {
-                        const migratedScales = migrateUIScales({
-                            settings: this.settings,
-                            storedData,
-                            keys: this.keys,
-                            shouldPersistDesktopScale: this.shouldPersistDesktopScale,
-                            shouldPersistMobileScale: this.shouldPersistMobileScale
-                        });
-                        this.shouldPersistDesktopScale = migratedScales.shouldPersistDesktopScale;
-                        this.shouldPersistMobileScale = migratedScales.shouldPersistMobileScale;
-                        return { migrated: migratedScales.migrated };
-                    }
-
-                    this.settings.desktopScale = sanitizeUIScale(this.settings.desktopScale);
-                    this.settings.mobileScale = sanitizeUIScale(this.settings.mobileScale);
-                    const currentScale = sanitizeUIScale(Platform.isMobile ? this.settings.mobileScale : this.settings.desktopScale);
-                    setLocalStorage(this.keys.uiScaleKey, currentScale);
-                    return { migrated: false };
-                },
-                mirrorToLocalStorage: () => {
-                    const next = sanitizeUIScale(Platform.isMobile ? this.settings.mobileScale : this.settings.desktopScale);
-                    setLocalStorage(this.keys.uiScaleKey, next);
-                }
-            })
-        };
+        this.syncModeRegistry = createSyncModeRegistry({
+            keys: this.keys,
+            defaultSettings: DEFAULT_SETTINGS,
+            isDeviceLocal: settingId => this.isDeviceLocal(settingId),
+            getSettings: () => this.settings,
+            resolveActiveVaultProfileId: () => this.resolveActiveVaultProfileId(),
+            sanitizeVaultProfileId: value => this.sanitizeVaultProfileId(value),
+            parseDualPanePreference: raw => this.parseDualPanePreference(raw),
+            parseDualPaneOrientation: raw => this.parseDualPaneOrientation(raw),
+            sanitizeBooleanSetting: (value, fallback) => this.sanitizeBooleanSetting(value, fallback),
+            sanitizeDualPaneOrientationSetting: value => this.sanitizeDualPaneOrientationSetting(value),
+            sanitizeTagSortOrderSetting: value => this.sanitizeTagSortOrderSetting(value),
+            sanitizeSearchProviderSetting: value => this.sanitizeSearchProviderSetting(value),
+            sanitizePaneTransitionDurationSetting: value => this.sanitizePaneTransitionDurationSetting(value),
+            sanitizeToolbarVisibilitySetting: value => this.sanitizeToolbarVisibilitySetting(value),
+            sanitizeNavIndentSetting: value => this.sanitizeNavIndentSetting(value),
+            sanitizeNavItemHeightSetting: value => this.sanitizeNavItemHeightSetting(value),
+            sanitizeCalendarWeeksToShowSetting: value => this.sanitizeCalendarWeeksToShowSetting(value),
+            sanitizeCompactItemHeightSetting: value => this.sanitizeCompactItemHeightSetting(value),
+            defaultUXPreferences: DEFAULT_UX_PREFERENCES,
+            isUXPreferencesRecord: value => this.isUXPreferencesRecord(value),
+            mirrorUXPreferences: update => {
+                this.uxPreferences = {
+                    ...this.uxPreferences,
+                    ...update
+                };
+                this.persistUXPreferences(false);
+            },
+            getShouldPersistDesktopScale: () => this.shouldPersistDesktopScale,
+            getShouldPersistMobileScale: () => this.shouldPersistMobileScale,
+            setShouldPersistDesktopScale: value => {
+                this.shouldPersistDesktopScale = value;
+            },
+            setShouldPersistMobileScale: value => {
+                this.shouldPersistMobileScale = value;
+            }
+        });
 
         return this.syncModeRegistry;
     }
