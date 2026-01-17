@@ -630,10 +630,15 @@ export const STRINGS_EN = {
                 parentFolder: 'Parent folder'
             }
         },
+        syncMode: {
+            notSynced: '(not synced)',
+            switchToSynced: 'Switch to synced',
+            switchToDeviceLocal: 'Switch to device-local'
+        },
         items: {
             searchProvider: {
                 name: 'Search provider',
-                desc: 'Choose between quick file name search or full-text search with Omnisearch plugin. (not synced)',
+                desc: 'Choose between quick file name search or full-text search with Omnisearch plugin.',
                 options: {
                     internal: 'Filter search',
                     omnisearch: 'Omnisearch (full-text)'
@@ -663,7 +668,7 @@ export const STRINGS_EN = {
                 }
             },
             listPaneTitle: {
-                name: 'List pane title (desktop only)',
+                name: 'List pane title',
                 desc: 'Choose where the list pane title is shown.',
                 options: {
                     header: 'Show in header',
@@ -688,7 +693,7 @@ export const STRINGS_EN = {
                 desc: 'Scroll to the selected file when pinning notes, showing descendant notes, changing folder appearance, or running file operations.'
             },
             includeDescendantNotes: {
-                name: 'Show notes from subfolders / descendants (not synced)',
+                name: 'Show notes from subfolders / descendants',
                 desc: 'Include notes from nested subfolders and tag descendants when viewing a folder or tag.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_EN = {
                 desc: 'Use compact height for pinned notes and notes without preview text.'
             },
             compactItemHeight: {
-                name: 'Compact item height (not synced)',
+                name: 'Compact item height',
                 desc: 'Set the height of compact list items on desktop and mobile.',
                 resetTooltip: 'Restore to default (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Scale text with compact item height (not synced)',
+                name: 'Scale text with compact item height',
                 desc: 'Scale compact list text when the item height is reduced.'
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_EN = {
                 desc: 'Show folder icons next to parent folder labels.'
             },
             showQuickActions: {
-                name: 'Show quick actions (desktop only)',
+                name: 'Show quick actions',
                 desc: 'Show action buttons when hovering over files. Button controls select which actions appear.'
             },
             dualPane: {
-                name: 'Dual pane layout (not synced)',
+                name: 'Dual pane layout',
                 desc: 'Show navigation pane and list pane side by side on desktop.'
             },
             dualPaneOrientation: {
-                name: 'Dual pane orientation (not synced)',
+                name: 'Dual pane orientation',
                 desc: 'Choose horizontal or vertical layout when dual pane is active.',
                 options: {
                     horizontal: 'Horizontal split',
@@ -803,7 +808,7 @@ export const STRINGS_EN = {
                 }
             },
             appearanceScale: {
-                name: 'Zoom level (not synced)',
+                name: 'Zoom level',
                 desc: 'Controls the overall zoom level of Notebook Navigator.'
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_EN = {
                 }
             },
             toolbarButtons: {
-                name: 'Toolbar buttons (not synced)',
+                name: 'Toolbar buttons',
                 desc: 'Choose which buttons appear in the toolbar. Hidden buttons remain accessible via commands and menus.',
                 navigationLabel: 'Navigation toolbar',
                 listLabel: 'List toolbar'
@@ -829,12 +834,12 @@ export const STRINGS_EN = {
                 desc: 'Do not change active note when clicking or changing notes in the right sidebar.'
             },
             paneTransitionDuration: {
-                name: 'Single pane animation (not synced)',
+                name: 'Single pane animation',
                 desc: 'Transition duration when switching panes in single-pane mode (milliseconds).',
                 resetTooltip: 'Reset to default'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Auto-select first note (desktop only)',
+                name: 'Auto-select first note',
                 desc: 'Automatically open the first note when switching folders or tags.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_EN = {
                 desc: 'Expand folders and tags when selected. In single pane mode, first selection expands, second selection shows files.'
             },
             springLoadedFolders: {
-                name: 'Spring-loaded folders (desktop only)',
+                name: 'Spring-loaded folders',
                 desc: 'Expand folders and tags on hover during drag operations.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_EN = {
                 desc: 'Include recent notes when shortcuts are pinned.'
             },
             showCalendar: {
-                name: 'Show calendar (not synced)',
+                name: 'Show calendar',
                 desc: 'Show a calendar at the bottom of the navigation pane.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_EN = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Weeks to show (not synced)',
+                name: 'Weeks to show',
                 desc: 'Number of calendar weeks to display.',
                 options: {
                     fullMonth: 'Full month',
@@ -972,7 +977,7 @@ export const STRINGS_EN = {
                 error: 'Failed to reset settings.'
             },
             multiSelectModifier: {
-                name: 'Multi-select modifier (desktop only)',
+                name: 'Multi-select modifier',
                 desc: 'Choose which modifier key toggles multi-selection. When Option/Alt is selected, Cmd/Ctrl click opens notes in a new tab.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl click',
@@ -1031,7 +1036,7 @@ export const STRINGS_EN = {
                 }
             },
             vaultTitle: {
-                name: 'Vault title placement (desktop only)',
+                name: 'Vault title placement',
                 desc: 'Choose where the vault title is shown.',
                 options: {
                     header: 'Show in header',
@@ -1218,15 +1223,15 @@ export const STRINGS_EN = {
                 desc: 'When collapsing, keep the currently selected folder or tag and its parents expanded.'
             },
             navIndent: {
-                name: 'Tree indentation (not synced)',
+                name: 'Tree indentation',
                 desc: 'Adjust the indentation width for nested folders and tags.'
             },
             navItemHeight: {
-                name: 'Item height (not synced)',
+                name: 'Item height',
                 desc: 'Adjust the height of folders and tags in the navigation pane.'
             },
             navItemHeightScaleText: {
-                name: 'Scale text with item height (not synced)',
+                name: 'Scale text with item height',
                 desc: 'Reduce navigation text size when item height is decreased.'
             },
             navRootSpacing: {
@@ -1247,7 +1252,7 @@ export const STRINGS_EN = {
             },
             tagSortOrder: {
                 name: 'Tag sort order',
-                desc: 'Choose how tags are ordered in the navigation pane. (not synced)',
+                desc: 'Choose how tags are ordered in the navigation pane.',
                 options: {
                     alphaAsc: 'A to Z',
                     alphaDesc: 'Z to A',

@@ -57,6 +57,7 @@ import { formatCommaSeparatedList, parseCommaSeparatedList } from '../../utils/c
 import type NotebookNavigatorPlugin from '../../main';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { createSettingGroupFactory } from '../settingGroups';
+import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { createSubSettingsContainer, setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
 
 /** Renders the general settings tab */
@@ -315,6 +316,7 @@ export function renderGeneralTab(context: SettingsTabContext): void {
     });
 
     profileSetting.controlEl.addClass('nn-setting-profile-dropdown');
+    addSettingSyncModeToggle({ setting: profileSetting, plugin, settingId: 'vaultProfile' });
 
     if (!Platform.isMobile) {
         vaultTitleSetting = filteringGroup.addSetting(setting => {
@@ -571,10 +573,12 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                 })
         );
 
+    addSettingSyncModeToggle({ setting: paneTransitionSetting, plugin, settingId: 'paneTransitionDuration' });
+
     if (!Platform.isMobile) {
         const desktopAppearanceGroup = createGroup(strings.settings.groups.general.desktopAppearance);
 
-        desktopAppearanceGroup.addSetting(setting => {
+        const dualPaneSetting = desktopAppearanceGroup.addSetting(setting => {
             setting
                 .setName(strings.settings.items.dualPane.name)
                 .setDesc(strings.settings.items.dualPane.desc)
@@ -585,7 +589,9 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                 );
         });
 
-        desktopAppearanceGroup.addSetting(setting => {
+        addSettingSyncModeToggle({ setting: dualPaneSetting, plugin, settingId: 'dualPane' });
+
+        const dualPaneOrientationSetting = desktopAppearanceGroup.addSetting(setting => {
             setting
                 .setName(strings.settings.items.dualPaneOrientation.name)
                 .setDesc(strings.settings.items.dualPaneOrientation.desc)
@@ -602,6 +608,8 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                         });
                 });
         });
+
+        addSettingSyncModeToggle({ setting: dualPaneOrientationSetting, plugin, settingId: 'dualPaneOrientation' });
 
         desktopAppearanceGroup.addSetting(setting => {
             setting
@@ -686,6 +694,8 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                     updateUIScaleLabel(defaultPercent);
                 })
         );
+
+    addSettingSyncModeToggle({ setting: uiScaleSetting, plugin, settingId: 'uiScale' });
 
     updateUIScaleLabel(initialUIScalePercent);
 
@@ -937,6 +947,8 @@ function renderToolbarVisibilitySetting(
             runAsyncAction(() => plugin.persistToolbarVisibility());
         }
     });
+
+    addSettingSyncModeToggle({ setting, plugin, settingId: 'toolbarVisibility' });
 }
 
 interface ToolbarButtonGroupProps<T extends string> {

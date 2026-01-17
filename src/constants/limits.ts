@@ -138,8 +138,8 @@ export const LIMITS = {
                  * - Extremely large images can crash decoders or cause OOM during decode/resize.
                  * - Mobile is stricter because decoding is more memory constrained.
                  */
-                mobile: 80_000_000,
-                desktop: 200_000_000
+                mobile: 50_000_000,
+                desktop: 100_000_000
             },
             imageDecodeBudgetPixels: {
                 /**
@@ -181,8 +181,8 @@ export const LIMITS = {
                  * - Some decode methods are more memory efficient (e.g. resize during decode). When those aren't available,
                  *   fallback paths can require full-resolution decode + canvas draw, which is much riskier.
                  */
-                mobile: 16_000_000,
-                desktop: 80_000_000
+                mobile: 15_000_000,
+                desktop: 50_000_000
             }
         },
         pdf: {

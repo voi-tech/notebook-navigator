@@ -86,6 +86,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
     // Tracks whether a refresh is needed when the Advanced tab becomes active.
     private pendingStatisticsRefreshRequested = false;
     private metadataInfoChangeUnsubscribe: (() => void) | null = null;
+    private settingsUpdateListenerId = 'settings-tab';
 
     /**
      * Creates a new settings tab
@@ -100,6 +101,21 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
         if (requireApiVersion('1.11.0')) {
             this.icon = NOTEBOOK_NAVIGATOR_ICON_ID;
         }
+    }
+
+    private ensureSettingsUpdateListener(): void {
+        this.plugin.registerSettingsUpdateListener(this.settingsUpdateListenerId, () => {
+            if (!this.plugin.isExternalSettingsUpdate()) {
+                return;
+            }
+            this.refreshFromExternalSettingsUpdate();
+        });
+    }
+
+    private refreshFromExternalSettingsUpdate(): void {
+        const contentWrapper = this.containerEl.querySelector<HTMLElement>('.nn-settings-tabs-content');
+        const scrollTop = contentWrapper?.scrollTop ?? 0;
+        this.renderSettingsTab({ focus: false, restoreScrollTop: scrollTop });
     }
 
     /**
@@ -502,6 +518,14 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
      * - Advanced
      */
     display(): void {
+        this.ensureSettingsUpdateListener();
+        this.renderSettingsTab({ focus: true });
+    }
+
+    private renderSettingsTab(options?: { focus?: boolean; restoreScrollTop?: number }): void {
+        const shouldFocus = options?.focus ?? false;
+        const restoreScrollTop = options?.restoreScrollTop;
+
         // Clear any existing interval to prevent duplicates
         if (this.statsUpdateInterval !== null) {
             window.clearInterval(this.statsUpdateInterval);
@@ -566,7 +590,10 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
         const initialTabId =
             this.lastActiveTabId && tabs.some(tab => tab.id === this.lastActiveTabId) ? this.lastActiveTabId : fallbackTabId;
         if (initialTabId) {
-            this.activateTab(initialTabId, tabs, contentWrapper, { focus: true });
+            this.activateTab(initialTabId, tabs, contentWrapper, { focus: shouldFocus, preserveScroll: restoreScrollTop !== undefined });
+        }
+        if (restoreScrollTop !== undefined) {
+            contentWrapper.scrollTop = restoreScrollTop;
         }
     }
 
@@ -622,7 +649,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
         id: SettingsPaneId,
         tabs: SettingsPaneDefinition[],
         contentWrapper: HTMLElement,
-        options?: { focus?: boolean }
+        options?: { focus?: boolean; preserveScroll?: boolean }
     ): void {
         const definition = tabs.find(tab => tab.id === id);
         if (!definition) {
@@ -657,7 +684,9 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
             activeButton.setCta();
         }
         this.lastActiveTabId = id;
-        contentWrapper.scrollTop = 0;
+        if (!options?.preserveScroll) {
+            contentWrapper.scrollTop = 0;
+        }
 
         if (id === 'advanced') {
             // The Advanced tab owns cache statistics; start polling when visible and stop on tab switch.
@@ -815,6 +844,8 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
      * Cleans up any pending debounce timers and intervals to prevent memory leaks
      */
     hide(): void {
+        this.plugin.unregisterSettingsUpdateListener(this.settingsUpdateListenerId);
+
         // Clean up all pending debounce timers when settings tab is closed
         this.debounceTimers.forEach(timer => window.clearTimeout(timer));
         this.debounceTimers.clear();

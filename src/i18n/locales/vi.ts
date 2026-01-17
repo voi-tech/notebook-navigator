@@ -630,10 +630,15 @@ export const STRINGS_VI = {
                 parentFolder: 'Thư mục cha'
             }
         },
+        syncMode: {
+            notSynced: '(chưa đồng bộ)',
+            switchToSynced: 'Chuyển sang đồng bộ',
+            switchToDeviceLocal: 'Chuyển sang cục bộ trên thiết bị'
+        },
         items: {
             searchProvider: {
                 name: 'Nhà cung cấp tìm kiếm',
-                desc: 'Chọn giữa tìm kiếm nhanh theo tên tệp hoặc tìm kiếm toàn văn với plugin Omnisearch. (không đồng bộ)',
+                desc: 'Chọn giữa tìm kiếm nhanh theo tên tệp hoặc tìm kiếm toàn văn với plugin Omnisearch.',
                 options: {
                     internal: 'Tìm kiếm lọc',
                     omnisearch: 'Omnisearch (toàn văn)'
@@ -663,7 +668,7 @@ export const STRINGS_VI = {
                 }
             },
             listPaneTitle: {
-                name: 'Tiêu đề ngăn danh sách (chỉ máy tính)',
+                name: 'Tiêu đề ngăn danh sách',
                 desc: 'Chọn nơi hiển thị tiêu đề ngăn danh sách.',
                 options: {
                     header: 'Hiện ở header',
@@ -688,7 +693,7 @@ export const STRINGS_VI = {
                 desc: 'Cuộn đến tệp đã chọn khi ghim ghi chú, hiện ghi chú con, đổi giao diện thư mục hoặc thao tác tệp.'
             },
             includeDescendantNotes: {
-                name: 'Hiện ghi chú từ thư mục con / phần tử con (không đồng bộ)',
+                name: 'Hiện ghi chú từ thư mục con / phần tử con',
                 desc: 'Bao gồm ghi chú từ thư mục con lồng nhau và phần tử con của thẻ khi xem thư mục hoặc thẻ.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_VI = {
                 desc: 'Sử dụng chiều cao gọn cho ghi chú đã ghim và ghi chú không có văn bản xem trước.'
             },
             compactItemHeight: {
-                name: 'Chiều cao mục gọn (không đồng bộ)',
+                name: 'Chiều cao mục gọn',
                 desc: 'Đặt chiều cao mục danh sách gọn trên máy tính và di động.',
                 resetTooltip: 'Đặt lại mặc định (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Co chữ theo chiều cao mục gọn (không đồng bộ)',
+                name: 'Co chữ theo chiều cao mục gọn',
                 desc: 'Co chữ danh sách gọn khi giảm chiều cao mục.'
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_VI = {
                 desc: 'Hiện biểu tượng thư mục bên cạnh nhãn thư mục cha.'
             },
             showQuickActions: {
-                name: 'Hiện thao tác nhanh (chỉ máy tính)',
+                name: 'Hiện thao tác nhanh',
                 desc: 'Hiện nút thao tác khi di chuột qua tệp. Điều khiển nút chọn thao tác xuất hiện.'
             },
             dualPane: {
-                name: 'Bố cục hai ngăn (không đồng bộ)',
+                name: 'Bố cục hai ngăn',
                 desc: 'Hiện ngăn điều hướng và ngăn danh sách cạnh nhau trên máy tính.'
             },
             dualPaneOrientation: {
-                name: 'Hướng hai ngăn (không đồng bộ)',
+                name: 'Hướng hai ngăn',
                 desc: 'Chọn bố cục ngang hoặc dọc khi bật hai ngăn.',
                 options: {
                     horizontal: 'Chia ngang',
@@ -803,7 +808,7 @@ export const STRINGS_VI = {
                 }
             },
             appearanceScale: {
-                name: 'Mức thu phóng (không đồng bộ)',
+                name: 'Mức thu phóng',
                 desc: 'Điều khiển mức thu phóng tổng thể của Notebook Navigator.'
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_VI = {
                 }
             },
             toolbarButtons: {
-                name: 'Nút thanh công cụ (không đồng bộ)',
+                name: 'Nút thanh công cụ',
                 desc: 'Chọn nút xuất hiện trên thanh công cụ. Nút ẩn vẫn truy cập được qua lệnh và menu.',
                 navigationLabel: 'Thanh công cụ điều hướng',
                 listLabel: 'Thanh công cụ danh sách'
@@ -829,12 +834,12 @@ export const STRINGS_VI = {
                 desc: 'Không đổi ghi chú đang hoạt động khi nhấn hoặc đổi ghi chú ở thanh bên phải.'
             },
             paneTransitionDuration: {
-                name: 'Hoạt ảnh ngăn đơn (không đồng bộ)',
+                name: 'Hoạt ảnh ngăn đơn',
                 desc: 'Thời lượng chuyển đổi khi chuyển giữa các ngăn trong chế độ ngăn đơn (mili giây).',
                 resetTooltip: 'Đặt lại mặc định'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Tự động chọn ghi chú đầu tiên (chỉ máy tính)',
+                name: 'Tự động chọn ghi chú đầu tiên',
                 desc: 'Tự động mở ghi chú đầu tiên khi chuyển thư mục hoặc thẻ.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_VI = {
                 desc: 'Mở rộng thư mục và thẻ khi chọn. Ở chế độ một ngăn, chọn lần đầu mở rộng, chọn lần hai hiện tệp.'
             },
             springLoadedFolders: {
-                name: 'Mở rộng khi kéo (chỉ máy tính)',
+                name: 'Mở rộng khi kéo',
                 desc: 'Mở rộng thư mục và thẻ khi di chuột qua trong lúc kéo.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_VI = {
                 desc: 'Bao gồm ghi chú gần đây khi lối tắt được ghim.'
             },
             showCalendar: {
-                name: 'Hiển thị lịch (không đồng bộ)',
+                name: 'Hiển thị lịch',
                 desc: 'Hiển thị lịch ở dưới cùng của bảng điều hướng.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_VI = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Số tuần hiển thị (không đồng bộ)',
+                name: 'Số tuần hiển thị',
                 desc: 'Số tuần lịch để hiển thị.',
                 options: {
                     fullMonth: 'Cả tháng',
@@ -972,7 +977,7 @@ export const STRINGS_VI = {
                 error: 'Đặt lại cài đặt thất bại'
             },
             multiSelectModifier: {
-                name: 'Phím bổ trợ chọn nhiều (chỉ máy tính)',
+                name: 'Phím bổ trợ chọn nhiều',
                 desc: 'Chọn phím bổ trợ để bật/tắt chọn nhiều. Khi chọn Option/Alt, nhấn Cmd/Ctrl mở ghi chú trong tab mới.',
                 options: {
                     cmdCtrl: 'Nhấn Cmd/Ctrl',
@@ -1032,7 +1037,7 @@ export const STRINGS_VI = {
                 }
             },
             vaultTitle: {
-                name: 'Vị trí tiêu đề vault (chỉ máy tính)',
+                name: 'Vị trí tiêu đề vault',
                 desc: 'Chọn nơi tiêu đề vault được hiển thị.',
                 options: {
                     header: 'Hiển thị ở tiêu đề',
@@ -1220,15 +1225,15 @@ export const STRINGS_VI = {
                 desc: 'Khi thu gọn, giữ thư mục hoặc thẻ đang chọn và cha của nó mở rộng.'
             },
             navIndent: {
-                name: 'Thụt lề cây (không đồng bộ)',
+                name: 'Thụt lề cây',
                 desc: 'Điều chỉnh độ rộng thụt lề cho thư mục và thẻ lồng nhau.'
             },
             navItemHeight: {
-                name: 'Chiều cao mục (không đồng bộ)',
+                name: 'Chiều cao mục',
                 desc: 'Điều chỉnh chiều cao của thư mục và thẻ trong ngăn điều hướng.'
             },
             navItemHeightScaleText: {
-                name: 'Co chữ theo chiều cao mục (không đồng bộ)',
+                name: 'Co chữ theo chiều cao mục',
                 desc: 'Giảm cỡ chữ điều hướng khi giảm chiều cao mục.'
             },
             navRootSpacing: {
@@ -1249,7 +1254,7 @@ export const STRINGS_VI = {
             },
             tagSortOrder: {
                 name: 'Thứ tự sắp xếp thẻ',
-                desc: 'Chọn cách sắp xếp thẻ trong ngăn điều hướng. (không đồng bộ)',
+                desc: 'Chọn cách sắp xếp thẻ trong ngăn điều hướng.',
                 options: {
                     alphaAsc: 'A đến Z',
                     alphaDesc: 'Z đến A',

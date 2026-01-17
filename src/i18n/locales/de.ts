@@ -631,10 +631,15 @@ export const STRINGS_DE = {
                 parentFolder: 'Übergeordneter Ordner'
             }
         },
+        syncMode: {
+            notSynced: '(nicht synchronisiert)',
+            switchToSynced: 'Zu synchronisiert wechseln',
+            switchToDeviceLocal: 'Zu gerätelokal wechseln'
+        },
         items: {
             searchProvider: {
                 name: 'Suchanbieter',
-                desc: 'Wählen Sie zwischen schneller Dateinamensuche oder Volltextsuche mit dem Omnisearch-Plugin. (nicht synchronisiert)',
+                desc: 'Wählen Sie zwischen schneller Dateinamensuche oder Volltextsuche mit dem Omnisearch-Plugin.',
                 options: {
                     internal: 'Filtersuche',
                     omnisearch: 'Omnisearch (Volltext)'
@@ -665,7 +670,7 @@ export const STRINGS_DE = {
                 }
             },
             listPaneTitle: {
-                name: 'Titel des Listenbereichs (nur Desktop)',
+                name: 'Titel des Listenbereichs',
                 desc: 'Wählen Sie, wo der Titel des Listenbereichs angezeigt wird.',
                 options: {
                     header: 'Im Kopfbereich anzeigen',
@@ -690,7 +695,7 @@ export const STRINGS_DE = {
                 desc: 'Zur ausgewählten Datei scrollen beim Anheften von Notizen, Anzeigen von Unternotizen, Ändern der Ordnerdarstellung oder bei Dateioperationen.'
             },
             includeDescendantNotes: {
-                name: 'Notizen aus Unterordnern / Nachkommen anzeigen (nicht synchronisiert)',
+                name: 'Notizen aus Unterordnern / Nachkommen anzeigen',
                 desc: 'Beim Anzeigen eines Ordners oder Tags Notizen aus Unterordnern und Tag-Nachkommen einbeziehen.'
             },
             limitPinnedToCurrentFolder: {
@@ -755,12 +760,12 @@ export const STRINGS_DE = {
                 desc: 'Kompakte Höhe für angeheftete Notizen und Notizen ohne Vorschautext verwenden.'
             },
             compactItemHeight: {
-                name: 'Höhe schlanker Elemente (nicht synchronisiert)',
+                name: 'Höhe schlanker Elemente',
                 desc: 'Legt die Höhe schlanker Listenelemente auf Desktop und Mobilgeräten fest.',
                 resetTooltip: 'Auf Standard zurücksetzen (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Text an schlanke Elementhöhe anpassen (nicht synchronisiert)',
+                name: 'Text an schlanke Elementhöhe anpassen',
                 desc: 'Skaliert den Text schlanker Listenelemente bei reduzierter Höhe.'
             },
             showParentFolder: {
@@ -780,15 +785,15 @@ export const STRINGS_DE = {
                 desc: 'Ordnersymbole neben übergeordneten Ordnerlabels anzeigen.'
             },
             showQuickActions: {
-                name: 'Schnellaktionen anzeigen (nur Desktop)',
+                name: 'Schnellaktionen anzeigen',
                 desc: 'Aktionsschaltflächen beim Überfahren von Dateien anzeigen. Schaltflächensteuerung wählt aus, welche Aktionen erscheinen.'
             },
             dualPane: {
-                name: 'Doppelbereichslayout (nicht synchronisiert)',
+                name: 'Doppelbereichslayout',
                 desc: 'Navigationsbereich und Listenbereich nebeneinander auf dem Desktop anzeigen.'
             },
             dualPaneOrientation: {
-                name: 'Ausrichtung des Doppelbereichs (nicht synchronisiert)',
+                name: 'Ausrichtung des Doppelbereichs',
                 desc: 'Horizontalen oder vertikalen Aufbau wählen, wenn der Doppelbereich aktiv ist.',
                 options: {
                     horizontal: 'Horizontale Aufteilung',
@@ -805,7 +810,7 @@ export const STRINGS_DE = {
                 }
             },
             appearanceScale: {
-                name: 'Zoomstufe (nicht synchronisiert)',
+                name: 'Zoomstufe',
                 desc: 'Steuert die gesamte Zoomstufe von Notebook Navigator.'
             },
             startView: {
@@ -817,7 +822,7 @@ export const STRINGS_DE = {
                 }
             },
             toolbarButtons: {
-                name: 'Symbolleisten-Schaltflächen (nicht synchronisiert)',
+                name: 'Symbolleisten-Schaltflächen',
                 desc: 'Wählen Sie aus, welche Schaltflächen in der Symbolleiste angezeigt werden. Ausgeblendete Schaltflächen bleiben über Befehle und Menüs zugänglich.',
                 navigationLabel: 'Navigationssymbolleiste',
                 listLabel: 'Listensymbolleiste'
@@ -831,12 +836,12 @@ export const STRINGS_DE = {
                 desc: 'Aktive Notiz nicht ändern, wenn in der rechten Seitenleiste auf Notizen geklickt oder diese gewechselt werden.'
             },
             paneTransitionDuration: {
-                name: 'Einzelbereich-Animation (nicht synchronisiert)',
+                name: 'Einzelbereich-Animation',
                 desc: 'Übergangsdauer beim Wechseln zwischen Bereichen im Einzelbereich-Modus (Millisekunden).',
                 resetTooltip: 'Auf Standard zurücksetzen'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Erste Notiz automatisch auswählen (nur Desktop)',
+                name: 'Erste Notiz automatisch auswählen',
                 desc: 'Die erste Notiz automatisch öffnen, wenn Sie den Ordner oder Tag wechseln.'
             },
             skipAutoScroll: {
@@ -848,7 +853,7 @@ export const STRINGS_DE = {
                 desc: 'Ordner und Tags bei Auswahl erweitern. Im Einzelfenster-Modus: erste Auswahl erweitert, zweite Auswahl zeigt Dateien.'
             },
             springLoadedFolders: {
-                name: 'Beim Ziehen erweitern (nur Desktop)',
+                name: 'Beim Ziehen erweitern',
                 desc: 'Ordner und Tags beim Überfahren während des Ziehens erweitern.'
             },
             springLoadedFoldersInitialDelay: {
@@ -891,7 +896,7 @@ export const STRINGS_DE = {
                 desc: 'Neueste Notizen beim Anheften von Lesezeichen einbeziehen.'
             },
             showCalendar: {
-                name: 'Kalender anzeigen (nicht synchronisiert)',
+                name: 'Kalender anzeigen',
                 desc: 'Zeigt einen Kalender am unteren Rand des Navigationsbereichs an.'
             },
             calendarLocale: {
@@ -902,7 +907,7 @@ export const STRINGS_DE = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Angezeigte Wochen (nicht synchronisiert)',
+                name: 'Angezeigte Wochen',
                 desc: 'Anzahl der anzuzeigenden Kalenderwochen.',
                 options: {
                     fullMonth: 'Ganzer Monat',
@@ -975,7 +980,7 @@ export const STRINGS_DE = {
                 error: 'Zurücksetzen der Einstellungen fehlgeschlagen.'
             },
             multiSelectModifier: {
-                name: 'Mehrfachauswahl-Modifikator (nur Desktop)',
+                name: 'Mehrfachauswahl-Modifikator',
                 desc: 'Wählen Sie, welche Modifikatortaste die Mehrfachauswahl umschaltet. Wenn Option/Alt ausgewählt ist, öffnet Cmd/Strg-Klick Notizen in einem neuen Tab.',
                 options: {
                     cmdCtrl: 'Cmd/Strg-Klick',
@@ -1014,7 +1019,7 @@ export const STRINGS_DE = {
                 }
             },
             vaultTitle: {
-                name: 'Tresortitel-Platzierung (nur Desktop)',
+                name: 'Tresortitel-Platzierung',
                 desc: 'Wählen Sie, wo der Tresortitel angezeigt wird.',
                 options: {
                     header: 'Im Header anzeigen',
@@ -1222,15 +1227,15 @@ export const STRINGS_DE = {
                 desc: 'Beim Einklappen bleiben der aktuell ausgewählte Ordner oder Tag und seine übergeordneten Elemente erweitert.'
             },
             navIndent: {
-                name: 'Baum-Einrückung (nicht synchronisiert)',
+                name: 'Baum-Einrückung',
                 desc: 'Passen Sie die Einrückungsbreite für verschachtelte Ordner und Tags an.'
             },
             navItemHeight: {
-                name: 'Zeilenhöhe (nicht synchronisiert)',
+                name: 'Zeilenhöhe',
                 desc: 'Passen Sie die Höhe von Ordnern und Tags im Navigationsbereich an.'
             },
             navItemHeightScaleText: {
-                name: 'Text mit Zeilenhöhe skalieren (nicht synchronisiert)',
+                name: 'Text mit Zeilenhöhe skalieren',
                 desc: 'Verkleinert die Navigationsschrift, wenn die Zeilenhöhe reduziert wird.'
             },
             navRootSpacing: {
@@ -1251,7 +1256,7 @@ export const STRINGS_DE = {
             },
             tagSortOrder: {
                 name: 'Tag-Sortierreihenfolge',
-                desc: 'Lege fest, wie Tags im Navigationsbereich sortiert werden. (nicht synchronisiert)',
+                desc: 'Lege fest, wie Tags im Navigationsbereich sortiert werden.',
                 options: {
                     alphaAsc: 'A bis Z',
                     alphaDesc: 'Z bis A',

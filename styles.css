@@ -5118,6 +5118,34 @@ body.nn-resizing {
     font-weight: 600;
 }
 
+/* Sync mode toggle button (cloud/device) */
+.nn-setting-sync-toggle {
+    color: var(--text-muted);
+    opacity: 0.85;
+}
+
+.nn-setting-sync-toggle:hover {
+    color: var(--text-normal);
+    opacity: 1;
+}
+
+/* "Not synced" marker appended to setting names */
+.nn-settings-tab-root .setting-item-name.nn-setting-not-synced::after {
+    content: ' ' attr(data-nn-sync-marker);
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
+.mod-rtl .nn-settings-tab-root .setting-item-name.nn-setting-not-synced::after {
+    content: '';
+}
+
+.mod-rtl .nn-settings-tab-root .setting-item-name.nn-setting-not-synced::before {
+    content: attr(data-nn-sync-marker) ' ';
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
 /* Container for additional info below settings */
 .nn-setting-info-container {
     margin-top: 8px;

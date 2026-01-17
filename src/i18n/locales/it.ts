@@ -630,10 +630,15 @@ export const STRINGS_IT = {
                 parentFolder: 'Cartella superiore'
             }
         },
+        syncMode: {
+            notSynced: '(non sincronizzato)',
+            switchToSynced: 'Passa a sincronizzato',
+            switchToDeviceLocal: 'Passa a locale del dispositivo'
+        },
         items: {
             searchProvider: {
                 name: 'Provider di ricerca',
-                desc: 'Scegli tra ricerca rapida per nome file o ricerca full-text con il plugin Omnisearch. (non sincronizzato)',
+                desc: 'Scegli tra ricerca rapida per nome file o ricerca full-text con il plugin Omnisearch.',
                 options: {
                     internal: 'Ricerca con filtro',
                     omnisearch: 'Omnisearch (full-text)'
@@ -663,7 +668,7 @@ export const STRINGS_IT = {
                 }
             },
             listPaneTitle: {
-                name: 'Titolo pannello lista (solo desktop)',
+                name: 'Titolo pannello lista',
                 desc: 'Scegli dove mostrare il titolo del pannello lista.',
                 options: {
                     header: "Mostra nell'intestazione",
@@ -688,7 +693,7 @@ export const STRINGS_IT = {
                 desc: "Scorri al file selezionato quando fissi note, mostri note discendenti, cambi l'aspetto cartella o esegui operazioni sui file."
             },
             includeDescendantNotes: {
-                name: 'Mostra note da sottocartelle / discendenti (non sincronizzato)',
+                name: 'Mostra note da sottocartelle / discendenti',
                 desc: 'Includi note da sottocartelle nidificate e tag discendenti quando visualizzi una cartella o tag.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_IT = {
                 desc: 'Usa altezza compatta per note fissate e note senza testo anteprima.'
             },
             compactItemHeight: {
-                name: 'Altezza elemento compatto (non sincronizzato)',
+                name: 'Altezza elemento compatto',
                 desc: "Imposta l'altezza degli elementi lista compatta su desktop e mobile.",
                 resetTooltip: 'Ripristina predefinito (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Scala testo con altezza elemento compatto (non sincronizzato)',
+                name: 'Scala testo con altezza elemento compatto',
                 desc: "Scala il testo della lista compatta quando l'altezza elemento è ridotta."
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_IT = {
                 desc: 'Mostra le icone delle cartelle accanto alle etichette cartella genitore.'
             },
             showQuickActions: {
-                name: 'Mostra azioni rapide (solo desktop)',
+                name: 'Mostra azioni rapide',
                 desc: 'Mostra pulsanti azione al passaggio del mouse sui file. I controlli pulsanti selezionano quali azioni appaiono.'
             },
             dualPane: {
-                name: 'Layout doppio pannello (non sincronizzato)',
+                name: 'Layout doppio pannello',
                 desc: 'Mostra pannello navigazione e pannello lista affiancati su desktop.'
             },
             dualPaneOrientation: {
-                name: 'Orientamento doppio pannello (non sincronizzato)',
+                name: 'Orientamento doppio pannello',
                 desc: 'Scegli layout orizzontale o verticale quando il doppio pannello è attivo.',
                 options: {
                     horizontal: 'Divisione orizzontale',
@@ -803,7 +808,7 @@ export const STRINGS_IT = {
                 }
             },
             appearanceScale: {
-                name: 'Livello zoom (non sincronizzato)',
+                name: 'Livello zoom',
                 desc: 'Controlla il livello di zoom complessivo di Notebook Navigator.'
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_IT = {
                 }
             },
             toolbarButtons: {
-                name: 'Pulsanti barra strumenti (non sincronizzato)',
+                name: 'Pulsanti barra strumenti',
                 desc: 'Scegli quali pulsanti appaiono nella barra strumenti. I pulsanti nascosti rimangono accessibili tramite comandi e menu.',
                 navigationLabel: 'Barra strumenti navigazione',
                 listLabel: 'Barra strumenti lista'
@@ -829,12 +834,12 @@ export const STRINGS_IT = {
                 desc: 'Non cambiare nota attiva quando clicchi o cambi note nella barra laterale destra.'
             },
             paneTransitionDuration: {
-                name: 'Animazione pannello singolo (non sincronizzato)',
+                name: 'Animazione pannello singolo',
                 desc: 'Durata della transizione quando si passa tra i pannelli in modalità pannello singolo (millisecondi).',
                 resetTooltip: 'Ripristina predefinito'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Auto-seleziona prima nota (solo desktop)',
+                name: 'Auto-seleziona prima nota',
                 desc: 'Apri automaticamente la prima nota quando cambi cartella o tag.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_IT = {
                 desc: 'Espandi cartelle e tag quando selezionati. In modalità pannello singolo, la prima selezione espande, la seconda mostra i file.'
             },
             springLoadedFolders: {
-                name: 'Espandi durante il trascinamento (solo desktop)',
+                name: 'Espandi durante il trascinamento',
                 desc: 'Espandi cartelle e tag al passaggio del mouse durante il trascinamento.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_IT = {
                 desc: 'Includi le note recenti quando le scorciatoie sono fissate.'
             },
             showCalendar: {
-                name: 'Mostra calendario (non sincronizzato)',
+                name: 'Mostra calendario',
                 desc: 'Mostra un calendario nella parte inferiore del pannello di navigazione.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_IT = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Settimane da mostrare (non sincronizzato)',
+                name: 'Settimane da mostrare',
                 desc: 'Numero di settimane del calendario da visualizzare.',
                 options: {
                     fullMonth: 'Mese intero',
@@ -973,7 +978,7 @@ export const STRINGS_IT = {
                 error: 'Impossibile ripristinare le impostazioni.'
             },
             multiSelectModifier: {
-                name: 'Modificatore selezione multipla (solo desktop)',
+                name: 'Modificatore selezione multipla',
                 desc: 'Scegli quale tasto modificatore attiva la selezione multipla. Quando Option/Alt è selezionato, Cmd/Ctrl click apre le note in una nuova scheda.',
                 options: {
                     cmdCtrl: 'Click Cmd/Ctrl',
@@ -1034,7 +1039,7 @@ export const STRINGS_IT = {
                 }
             },
             vaultTitle: {
-                name: 'Posizione titolo vault (solo desktop)',
+                name: 'Posizione titolo vault',
                 desc: 'Scegli dove viene mostrato il titolo del vault.',
                 options: {
                     header: "Mostra nell'intestazione",
@@ -1222,15 +1227,15 @@ export const STRINGS_IT = {
                 desc: 'Quando comprimi, mantieni la cartella o tag attualmente selezionato e i suoi genitori espansi.'
             },
             navIndent: {
-                name: 'Indentazione albero (non sincronizzato)',
+                name: 'Indentazione albero',
                 desc: 'Regola la larghezza indentazione per cartelle e tag nidificati.'
             },
             navItemHeight: {
-                name: 'Altezza elemento (non sincronizzato)',
+                name: 'Altezza elemento',
                 desc: "Regola l'altezza di cartelle e tag nel pannello navigazione."
             },
             navItemHeightScaleText: {
-                name: 'Scala testo con altezza elemento (non sincronizzato)',
+                name: 'Scala testo con altezza elemento',
                 desc: "Riduci dimensione testo navigazione quando l'altezza elemento è ridotta."
             },
             navRootSpacing: {
@@ -1251,7 +1256,7 @@ export const STRINGS_IT = {
             },
             tagSortOrder: {
                 name: 'Ordine tag',
-                desc: 'Scegli come ordinare i tag nel pannello navigazione. (non sincronizzato)',
+                desc: 'Scegli come ordinare i tag nel pannello navigazione.',
                 options: {
                     alphaAsc: 'A a Z',
                     alphaDesc: 'Z a A',

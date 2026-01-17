@@ -630,10 +630,15 @@ export const STRINGS_TR = {
                 parentFolder: 'Üst klasör'
             }
         },
+        syncMode: {
+            notSynced: '(senkronize edilmedi)',
+            switchToSynced: 'Senkronize olana geç',
+            switchToDeviceLocal: 'Cihaza yerel olana geç'
+        },
         items: {
             searchProvider: {
                 name: 'Arama sağlayıcı',
-                desc: 'Hızlı dosya adı araması veya Omnisearch eklentisi ile tam metin araması arasında seçim yapın. (senkronize edilmez)',
+                desc: 'Hızlı dosya adı araması veya Omnisearch eklentisi ile tam metin araması arasında seçim yapın.',
                 options: {
                     internal: 'Filtre araması',
                     omnisearch: 'Omnisearch (tam metin)'
@@ -663,7 +668,7 @@ export const STRINGS_TR = {
                 }
             },
             listPaneTitle: {
-                name: 'Liste bölmesi başlığı (yalnızca masaüstü)',
+                name: 'Liste bölmesi başlığı',
                 desc: 'Liste bölmesi başlığının nerede gösterileceğini seçin.',
                 options: {
                     header: 'Başlıkta göster',
@@ -688,7 +693,7 @@ export const STRINGS_TR = {
                 desc: 'Notları sabitleme, alt notları gösterme, klasör görünümünü değiştirme veya dosya işlemleri çalıştırma sırasında seçili dosyaya kaydır.'
             },
             includeDescendantNotes: {
-                name: 'Alt klasörlerden / alt öğelerden notları göster (senkronize edilmez)',
+                name: 'Alt klasörlerden / alt öğelerden notları göster',
                 desc: 'Klasör veya etiket görüntülerken iç içe alt klasörlerden ve etiket alt öğelerinden notları dahil et.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_TR = {
                 desc: 'Sabitlenmiş notlar ve önizleme metni olmayan notlar için kompakt yükseklik kullan.'
             },
             compactItemHeight: {
-                name: 'Kompakt öğe yüksekliği (senkronize edilmez)',
+                name: 'Kompakt öğe yüksekliği',
                 desc: 'Masaüstü ve mobilde kompakt liste öğelerinin yüksekliğini ayarlayın.',
                 resetTooltip: 'Varsayılana sıfırla (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Metni kompakt öğe yüksekliğiyle ölçekle (senkronize edilmez)',
+                name: 'Metni kompakt öğe yüksekliğiyle ölçekle',
                 desc: 'Öğe yüksekliği azaltıldığında kompakt liste metnini ölçekle.'
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_TR = {
                 desc: 'Üst klasör etiketlerinin yanında klasör simgelerini göster.'
             },
             showQuickActions: {
-                name: 'Hızlı eylemleri göster (yalnızca masaüstü)',
+                name: 'Hızlı eylemleri göster',
                 desc: 'Dosyaların üzerine gelirken eylem düğmelerini göster. Düğme kontrolleri hangi eylemlerin görüneceğini seçer.'
             },
             dualPane: {
-                name: 'Çift bölme düzeni (senkronize edilmez)',
+                name: 'Çift bölme düzeni',
                 desc: 'Masaüstünde gezinme bölmesini ve liste bölmesini yan yana göster.'
             },
             dualPaneOrientation: {
-                name: 'Çift bölme yönü (senkronize edilmez)',
+                name: 'Çift bölme yönü',
                 desc: 'Çift bölme etkinken yatay veya dikey düzen seçin.',
                 options: {
                     horizontal: 'Yatay bölme',
@@ -803,7 +808,7 @@ export const STRINGS_TR = {
                 }
             },
             appearanceScale: {
-                name: 'Yakınlaştırma seviyesi (senkronize edilmez)',
+                name: 'Yakınlaştırma seviyesi',
                 desc: "Notebook Navigator'ın genel yakınlaştırma seviyesini kontrol eder."
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_TR = {
                 }
             },
             toolbarButtons: {
-                name: 'Araç çubuğu düğmeleri (senkronize edilmez)',
+                name: 'Araç çubuğu düğmeleri',
                 desc: 'Araç çubuğunda hangi düğmelerin görüneceğini seçin. Gizli düğmelere komutlar ve menüler aracılığıyla erişilebilir.',
                 navigationLabel: 'Gezinme araç çubuğu',
                 listLabel: 'Liste araç çubuğu'
@@ -829,12 +834,12 @@ export const STRINGS_TR = {
                 desc: 'Sağ kenar çubuğunda notlara tıklarken veya değiştirirken aktif notu değiştirme.'
             },
             paneTransitionDuration: {
-                name: 'Tek panel animasyonu (senkronize edilmez)',
+                name: 'Tek panel animasyonu',
                 desc: 'Tek panel modunda paneller arasında geçiş süresi (milisaniye).',
                 resetTooltip: 'Varsayılana sıfırla'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'İlk notu otomatik seç (yalnızca masaüstü)',
+                name: 'İlk notu otomatik seç',
                 desc: 'Klasör veya etiket değiştirirken ilk notu otomatik olarak aç.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_TR = {
                 desc: 'Seçildiğinde klasörleri ve etiketleri genişlet. Tek bölme modunda ilk seçim genişletir, ikinci seçim dosyaları gösterir.'
             },
             springLoadedFolders: {
-                name: 'Sürüklerken genişlet (yalnızca masaüstü)',
+                name: 'Sürüklerken genişlet',
                 desc: 'Sürükleme sırasında üzerine gelirken klasörleri ve etiketleri genişlet.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_TR = {
                 desc: 'Kısayollar sabitlendiğinde son notları dahil et.'
             },
             showCalendar: {
-                name: 'Takvimi göster (senkronize edilmez)',
+                name: 'Takvimi göster',
                 desc: 'Gezinme panelinin altında bir takvim göster.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_TR = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Gösterilecek haftalar (senkronize edilmez)',
+                name: 'Gösterilecek haftalar',
                 desc: 'Görüntülenecek takvim haftası sayısı.',
                 options: {
                     fullMonth: 'Tam ay',
@@ -972,7 +977,7 @@ export const STRINGS_TR = {
                 error: 'Ayarları sıfırlama başarısız.'
             },
             multiSelectModifier: {
-                name: 'Çoklu seçim değiştirici (yalnızca masaüstü)',
+                name: 'Çoklu seçim değiştirici',
                 desc: 'Hangi değiştirici tuşun çoklu seçimi değiştireceğini seçin. Option/Alt seçildiğinde, Cmd/Ctrl tıklaması notları yeni sekmede açar.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl tıkla',
@@ -1032,7 +1037,7 @@ export const STRINGS_TR = {
                 }
             },
             vaultTitle: {
-                name: 'Kasa başlığı konumu (yalnızca masaüstü)',
+                name: 'Kasa başlığı konumu',
                 desc: 'Kasa başlığının gösterileceği yeri seçin.',
                 options: {
                     header: 'Başlıkta göster',
@@ -1220,15 +1225,15 @@ export const STRINGS_TR = {
                 desc: 'Daraltırken seçili klasör veya etiketi ve üst öğelerini genişletilmiş tut.'
             },
             navIndent: {
-                name: 'Ağaç girintisi (senkronize edilmez)',
+                name: 'Ağaç girintisi',
                 desc: 'İç içe klasörler ve etiketler için girinti genişliğini ayarlayın.'
             },
             navItemHeight: {
-                name: 'Öğe yüksekliği (senkronize edilmez)',
+                name: 'Öğe yüksekliği',
                 desc: 'Gezinme bölmesindeki klasör ve etiketlerin yüksekliğini ayarlayın.'
             },
             navItemHeightScaleText: {
-                name: 'Metni öğe yüksekliğiyle ölçekle (senkronize edilmez)',
+                name: 'Metni öğe yüksekliğiyle ölçekle',
                 desc: 'Öğe yüksekliği azaltıldığında gezinme metni boyutunu küçült.'
             },
             navRootSpacing: {
@@ -1249,7 +1254,7 @@ export const STRINGS_TR = {
             },
             tagSortOrder: {
                 name: 'Etiket sıralama düzeni',
-                desc: 'Etiketlerin gezinme bölmesinde nasıl sıralanacağını seçin. (senkronize edilmez)',
+                desc: 'Etiketlerin gezinme bölmesinde nasıl sıralanacağını seçin.',
                 options: {
                     alphaAsc: "A'dan Z'ye",
                     alphaDesc: "Z'den A'ya",

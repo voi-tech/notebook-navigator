@@ -629,10 +629,15 @@ export const STRINGS_ZH_TW = {
                 parentFolder: '父資料夾'
             }
         },
+        syncMode: {
+            notSynced: '（未同步）',
+            switchToSynced: '切換為同步',
+            switchToDeviceLocal: '切換為裝置本機'
+        },
         items: {
             searchProvider: {
                 name: '搜尋提供器',
-                desc: '在快速檔名搜尋或使用 Omnisearch 外掛的全文搜尋之間選擇。（不同步）',
+                desc: '在快速檔名搜尋或使用 Omnisearch 外掛的全文搜尋之間選擇。',
                 options: {
                     internal: '篩選搜尋',
                     omnisearch: 'Omnisearch（全文）'
@@ -661,7 +666,7 @@ export const STRINGS_ZH_TW = {
                 }
             },
             listPaneTitle: {
-                name: '列表窗格標題（僅限桌面版）',
+                name: '列表窗格標題',
                 desc: '選擇列表窗格標題的顯示位置。',
                 options: {
                     header: '顯示在標題列',
@@ -686,7 +691,7 @@ export const STRINGS_ZH_TW = {
                 desc: '在釘選筆記、顯示後代筆記、變更資料夾外觀或執行檔案操作時捲動到選定的檔案。'
             },
             includeDescendantNotes: {
-                name: '顯示子資料夾/後代的筆記（不同步）',
+                name: '顯示子資料夾/後代的筆記',
                 desc: '在檢視資料夾或標籤時包含巢狀子資料夾和標籤後代中的筆記。'
             },
             limitPinnedToCurrentFolder: {
@@ -751,12 +756,12 @@ export const STRINGS_ZH_TW = {
                 desc: '為釘選筆記和無預覽文字的筆記使用精簡高度。'
             },
             compactItemHeight: {
-                name: '精簡項目高度（不同步）',
+                name: '精簡項目高度',
                 desc: '設定桌面和行動裝置的精簡列表項目高度。',
                 resetTooltip: '恢復預設值 (28px)'
             },
             compactItemHeightScaleText: {
-                name: '隨精簡高度縮放文字（不同步）',
+                name: '隨精簡高度縮放文字',
                 desc: '當減小精簡列表項目高度時同步縮放文字。'
             },
             showParentFolder: {
@@ -776,15 +781,15 @@ export const STRINGS_ZH_TW = {
                 desc: '在父資料夾標籤旁顯示資料夾圖示。'
             },
             showQuickActions: {
-                name: '顯示快速操作（僅桌面版）',
+                name: '顯示快速操作',
                 desc: '懸停在檔案上時顯示操作按鈕。按鈕控制項選擇顯示哪些操作。'
             },
             dualPane: {
-                name: '雙窗格布局（不同步）',
+                name: '雙窗格布局',
                 desc: '在桌面端並排顯示導覽窗格和列表窗格。'
             },
             dualPaneOrientation: {
-                name: '雙欄布局方向（不同步）',
+                name: '雙欄布局方向',
                 desc: '雙欄啟用時選擇水平或垂直布局。',
                 options: {
                     horizontal: '水平分割',
@@ -801,7 +806,7 @@ export const STRINGS_ZH_TW = {
                 }
             },
             appearanceScale: {
-                name: '縮放級別（不同步）',
+                name: '縮放級別',
                 desc: '控制 Notebook Navigator 的整體縮放級別。'
             },
             startView: {
@@ -813,7 +818,7 @@ export const STRINGS_ZH_TW = {
                 }
             },
             toolbarButtons: {
-                name: '工具列按鈕（不同步）',
+                name: '工具列按鈕',
                 desc: '選擇在工具列中顯示哪些按鈕。隱藏的按鈕仍可透過命令和選單存取。',
                 navigationLabel: '導覽工具列',
                 listLabel: '列表工具列'
@@ -827,12 +832,12 @@ export const STRINGS_ZH_TW = {
                 desc: '在右側邊欄中點按或變更筆記時不變更使用中的筆記。'
             },
             paneTransitionDuration: {
-                name: '單窗格動畫（不同步）',
+                name: '單窗格動畫',
                 desc: '在單窗格模式下切換窗格時的過渡持續時間（毫秒）。',
                 resetTooltip: '重設為預設值'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: '自動選擇第一個筆記（僅桌面端）',
+                name: '自動選擇第一個筆記',
                 desc: '切換資料夾或標籤時自動開啟第一個筆記。'
             },
             skipAutoScroll: {
@@ -844,7 +849,7 @@ export const STRINGS_ZH_TW = {
                 desc: '選取時展開資料夾和標籤。在單窗格模式下，首次選取展開，再次選取顯示檔案。'
             },
             springLoadedFolders: {
-                name: '拖曳時展開（僅桌面端）',
+                name: '拖曳時展開',
                 desc: '拖曳操作中懸停時展開資料夾和標籤。'
             },
             springLoadedFoldersInitialDelay: {
@@ -887,7 +892,7 @@ export const STRINGS_ZH_TW = {
                 desc: '釘選捷徑時包含最近筆記。'
             },
             showCalendar: {
-                name: '顯示日曆（不同步）',
+                name: '顯示日曆',
                 desc: '在導覽窗格中顯示每日筆記日曆。'
             },
             calendarLocale: {
@@ -898,7 +903,7 @@ export const STRINGS_ZH_TW = {
                 }
             },
             calendarWeeksToShow: {
-                name: '顯示週數（不同步）',
+                name: '顯示週數',
                 desc: '選擇日曆中顯示的週數。',
                 options: {
                     fullMonth: '完整月份',
@@ -970,7 +975,7 @@ export const STRINGS_ZH_TW = {
                 error: '重設設定失敗。'
             },
             multiSelectModifier: {
-                name: '多選修飾鍵（僅桌面端）',
+                name: '多選修飾鍵',
                 desc: '選擇哪個修飾鍵切換多選模式。選擇 Option/Alt 時，Cmd/Ctrl 點按會在新分頁中開啟筆記。',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl 點按',
@@ -1009,7 +1014,7 @@ export const STRINGS_ZH_TW = {
                 }
             },
             vaultTitle: {
-                name: '保險庫標題位置（僅桌面端）',
+                name: '保險庫標題位置',
                 desc: '選擇保險庫標題顯示的位置。',
                 options: {
                     header: '顯示在標題列',
@@ -1218,15 +1223,15 @@ export const STRINGS_ZH_TW = {
                 desc: '摺疊時，保持目前選取的資料夾或標籤及其父級展開。'
             },
             navIndent: {
-                name: '樹狀縮排（不同步）',
+                name: '樹狀縮排',
                 desc: '調整巢狀資料夾和標籤的縮排寬度。'
             },
             navItemHeight: {
-                name: '行高（不同步）',
+                name: '行高',
                 desc: '調整導覽窗格中資料夾和標籤的高度。'
             },
             navItemHeightScaleText: {
-                name: '隨行高調整文字大小（不同步）',
+                name: '隨行高調整文字大小',
                 desc: '降低行高時減小導覽文字大小。'
             },
             navRootSpacing: {
@@ -1247,7 +1252,7 @@ export const STRINGS_ZH_TW = {
             },
             tagSortOrder: {
                 name: '標籤排序方式',
-                desc: '選擇導覽窗格中的標籤排序順序。（不同步）',
+                desc: '選擇導覽窗格中的標籤排序順序。',
                 options: {
                     alphaAsc: 'A 到 Z',
                     alphaDesc: 'Z 到 A',

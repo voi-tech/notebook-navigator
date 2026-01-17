@@ -629,10 +629,15 @@ export const STRINGS_ZH_CN = {
                 parentFolder: '父文件夹'
             }
         },
+        syncMode: {
+            notSynced: '（未同步）',
+            switchToSynced: '切换为同步',
+            switchToDeviceLocal: '切换为设备本地'
+        },
         items: {
             searchProvider: {
                 name: '搜索提供器',
-                desc: '在快速文件名搜索或使用Omnisearch插件的全文搜索之间选择。（不同步）',
+                desc: '在快速文件名搜索或使用Omnisearch插件的全文搜索之间选择。',
                 options: {
                     internal: '过滤搜索',
                     omnisearch: 'Omnisearch（全文）'
@@ -661,7 +666,7 @@ export const STRINGS_ZH_CN = {
                 }
             },
             listPaneTitle: {
-                name: '列表窗格标题（仅限桌面版）',
+                name: '列表窗格标题',
                 desc: '选择列表窗格标题的显示位置。',
                 options: {
                     header: '显示在标题栏',
@@ -686,7 +691,7 @@ export const STRINGS_ZH_CN = {
                 desc: '在固定笔记、显示后代笔记、更改文件夹外观或执行文件操作时滚动到选定的文件。'
             },
             includeDescendantNotes: {
-                name: '显示子文件夹/后代的笔记（不同步）',
+                name: '显示子文件夹/后代的笔记',
                 desc: '在查看文件夹或标签时包含嵌套子文件夹和标签后代中的笔记。'
             },
             limitPinnedToCurrentFolder: {
@@ -751,12 +756,12 @@ export const STRINGS_ZH_CN = {
                 desc: '为固定笔记和无预览文本的笔记使用紧凑高度。'
             },
             compactItemHeight: {
-                name: '精简项目高度（不同步）',
+                name: '精简项目高度',
                 desc: '设置桌面和移动端的紧凑列表项高度。',
                 resetTooltip: '恢复默认值 (28px)'
             },
             compactItemHeightScaleText: {
-                name: '随精简高度缩放文本（不同步）',
+                name: '随精简高度缩放文本',
                 desc: '当减小紧凑列表项高度时同步缩放文本。'
             },
             showParentFolder: {
@@ -776,15 +781,15 @@ export const STRINGS_ZH_CN = {
                 desc: '在父文件夹标签旁显示文件夹图标。'
             },
             showQuickActions: {
-                name: '显示快速操作（仅桌面版）',
+                name: '显示快速操作',
                 desc: '悬停在文件上时显示操作按钮。按钮控件选择显示哪些操作。'
             },
             dualPane: {
-                name: '双窗格布局（不同步）',
+                name: '双窗格布局',
                 desc: '在桌面端并排显示导航窗格和列表窗格。'
             },
             dualPaneOrientation: {
-                name: '双栏布局方向（不同步）',
+                name: '双栏布局方向',
                 desc: '双栏启用时选择水平或垂直布局。',
                 options: {
                     horizontal: '水平分割',
@@ -801,7 +806,7 @@ export const STRINGS_ZH_CN = {
                 }
             },
             appearanceScale: {
-                name: '缩放级别（不同步）',
+                name: '缩放级别',
                 desc: '控制 Notebook Navigator 的整体缩放级别。'
             },
             startView: {
@@ -813,7 +818,7 @@ export const STRINGS_ZH_CN = {
                 }
             },
             toolbarButtons: {
-                name: '工具栏按钮（不同步）',
+                name: '工具栏按钮',
                 desc: '选择在工具栏中显示哪些按钮。隐藏的按钮仍可通过命令和菜单访问。',
                 navigationLabel: '导航工具栏',
                 listLabel: '列表工具栏'
@@ -827,12 +832,12 @@ export const STRINGS_ZH_CN = {
                 desc: '在右侧边栏中点击或更改笔记时不更改活动笔记。'
             },
             paneTransitionDuration: {
-                name: '单窗格动画（不同步）',
+                name: '单窗格动画',
                 desc: '在单窗格模式下切换窗格时的过渡持续时间（毫秒）。',
                 resetTooltip: '重置为默认值'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: '自动选择第一个笔记（仅桌面端）',
+                name: '自动选择第一个笔记',
                 desc: '切换文件夹或标签时自动打开第一个笔记。'
             },
             skipAutoScroll: {
@@ -844,7 +849,7 @@ export const STRINGS_ZH_CN = {
                 desc: '选中时展开文件夹和标签。在单窗格模式下，首次选中展开，再次选中显示文件。'
             },
             springLoadedFolders: {
-                name: '拖动时展开（仅桌面端）',
+                name: '拖动时展开',
                 desc: '拖动操作中悬停时展开文件夹和标签。'
             },
             springLoadedFoldersInitialDelay: {
@@ -887,7 +892,7 @@ export const STRINGS_ZH_CN = {
                 desc: '固定快捷方式时包含最近笔记。'
             },
             showCalendar: {
-                name: '显示日历（不同步）',
+                name: '显示日历',
                 desc: '在导航窗格中显示每日笔记日历。'
             },
             calendarLocale: {
@@ -898,7 +903,7 @@ export const STRINGS_ZH_CN = {
                 }
             },
             calendarWeeksToShow: {
-                name: '显示周数（不同步）',
+                name: '显示周数',
                 desc: '选择日历中显示的周数。',
                 options: {
                     fullMonth: '完整月份',
@@ -970,7 +975,7 @@ export const STRINGS_ZH_CN = {
                 error: '重置设置失败。'
             },
             multiSelectModifier: {
-                name: '多选修饰键（仅桌面端）',
+                name: '多选修饰键',
                 desc: '选择哪个修饰键切换多选模式。选择 Option/Alt 时，Cmd/Ctrl 点击会在新标签页中打开笔记。',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl 点击',
@@ -1009,7 +1014,7 @@ export const STRINGS_ZH_CN = {
                 }
             },
             vaultTitle: {
-                name: '库标题位置（仅桌面端）',
+                name: '库标题位置',
                 desc: '选择库标题显示的位置。',
                 options: {
                     header: '显示在标题栏',
@@ -1219,15 +1224,15 @@ export const STRINGS_ZH_CN = {
                 desc: '折叠时，保持当前选中的文件夹或标签及其父级展开。'
             },
             navIndent: {
-                name: '树形缩进（不同步）',
+                name: '树形缩进',
                 desc: '调整嵌套文件夹和标签的缩进宽度。'
             },
             navItemHeight: {
-                name: '行高（不同步）',
+                name: '行高',
                 desc: '调整导航窗格中文件夹和标签的高度。'
             },
             navItemHeightScaleText: {
-                name: '随行高调整文字大小（不同步）',
+                name: '随行高调整文字大小',
                 desc: '降低行高时减小导航文字大小。'
             },
             navRootSpacing: {
@@ -1248,7 +1253,7 @@ export const STRINGS_ZH_CN = {
             },
             tagSortOrder: {
                 name: '标签排序方式',
-                desc: '选择导航窗格中的标签排序顺序。（不同步）',
+                desc: '选择导航窗格中的标签排序顺序。',
                 options: {
                     alphaAsc: 'A 到 Z',
                     alphaDesc: 'Z 到 A',

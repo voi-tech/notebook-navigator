@@ -631,10 +631,15 @@ export const STRINGS_FR = {
                 parentFolder: 'Dossier parent'
             }
         },
+        syncMode: {
+            notSynced: '(non synchronisé)',
+            switchToSynced: 'Passer à synchronisé',
+            switchToDeviceLocal: 'Passer à local sur l’appareil'
+        },
         items: {
             searchProvider: {
                 name: 'Fournisseur de recherche',
-                desc: 'Choisissez entre la recherche rapide par nom de fichier ou la recherche plein texte avec le plugin Omnisearch. (non synchronisé)',
+                desc: 'Choisissez entre la recherche rapide par nom de fichier ou la recherche plein texte avec le plugin Omnisearch.',
                 options: {
                     internal: 'Recherche par filtre',
                     omnisearch: 'Omnisearch (plein texte)'
@@ -665,7 +670,7 @@ export const STRINGS_FR = {
                 }
             },
             listPaneTitle: {
-                name: 'Titre du panneau de liste (ordinateur uniquement)',
+                name: 'Titre du panneau de liste',
                 desc: 'Choisissez où afficher le titre du panneau de liste.',
                 options: {
                     header: 'Afficher dans l’en-tête',
@@ -690,7 +695,7 @@ export const STRINGS_FR = {
                 desc: "Défiler vers le fichier sélectionné lors de l'épinglage de notes, l'affichage de notes descendantes, le changement d'apparence de dossier ou l'exécution d'opérations sur les fichiers."
             },
             includeDescendantNotes: {
-                name: 'Afficher les notes des sous-dossiers / descendants (non synchronisé)',
+                name: 'Afficher les notes des sous-dossiers / descendants',
                 desc: "Inclure les notes des sous-dossiers imbriqués et des descendants d'étiquettes lors de l'affichage d'un dossier ou d'une étiquette."
             },
             limitPinnedToCurrentFolder: {
@@ -755,12 +760,12 @@ export const STRINGS_FR = {
                 desc: "Utiliser une hauteur compacte pour les notes épinglées et les notes sans texte d'aperçu."
             },
             compactItemHeight: {
-                name: 'Hauteur des éléments compacts (non synchronisé)',
+                name: 'Hauteur des éléments compacts',
                 desc: 'Définit la hauteur des éléments compacts sur ordinateur et mobile.',
                 resetTooltip: 'Restaurer la valeur par défaut (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Adapter le texte à la hauteur compacte (non synchronisé)',
+                name: 'Adapter le texte à la hauteur compacte',
                 desc: 'Adapte le texte des éléments compacts lorsque la hauteur est réduite.'
             },
             showParentFolder: {
@@ -780,15 +785,15 @@ export const STRINGS_FR = {
                 desc: 'Afficher les icônes de dossier à côté des étiquettes des dossiers parents.'
             },
             showQuickActions: {
-                name: 'Afficher les actions rapides (bureau uniquement)',
+                name: 'Afficher les actions rapides',
                 desc: "Afficher les boutons d'action au survol des fichiers. Les contrôles des boutons sélectionnent les actions qui apparaissent."
             },
             dualPane: {
-                name: 'Disposition à double panneau (non synchronisé)',
+                name: 'Disposition à double panneau',
                 desc: 'Afficher le panneau de navigation et le panneau de liste côte à côte sur ordinateur.'
             },
             dualPaneOrientation: {
-                name: 'Orientation du double panneau (non synchronisé)',
+                name: 'Orientation du double panneau',
                 desc: 'Choisir une disposition horizontale ou verticale lorsque le double panneau est actif.',
                 options: {
                     horizontal: 'Séparation horizontale',
@@ -805,7 +810,7 @@ export const STRINGS_FR = {
                 }
             },
             appearanceScale: {
-                name: 'Niveau de zoom (non synchronisé)',
+                name: 'Niveau de zoom',
                 desc: 'Contrôle le niveau de zoom global de Notebook Navigator.'
             },
             startView: {
@@ -817,7 +822,7 @@ export const STRINGS_FR = {
                 }
             },
             toolbarButtons: {
-                name: "Boutons de la barre d'outils (non synchronisé)",
+                name: "Boutons de la barre d'outils",
                 desc: "Choisissez quels boutons apparaissent dans la barre d'outils. Les boutons masqués restent accessibles via les commandes et les menus.",
                 navigationLabel: 'Barre de navigation',
                 listLabel: 'Barre de liste'
@@ -831,12 +836,12 @@ export const STRINGS_FR = {
                 desc: "Ne pas changer la note active lors d'un clic ou du changement de notes dans le panneau de droite."
             },
             paneTransitionDuration: {
-                name: 'Animation panneau unique (non synchronisé)',
+                name: 'Animation panneau unique',
                 desc: 'Durée de transition lors du changement de panneau en mode panneau unique (millisecondes).',
                 resetTooltip: 'Réinitialiser par défaut'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Sélectionner automatiquement la première note (ordinateur uniquement)',
+                name: 'Sélectionner automatiquement la première note',
                 desc: "Ouvrir automatiquement la première note lors du changement de dossier ou d'étiquette."
             },
             skipAutoScroll: {
@@ -848,7 +853,7 @@ export const STRINGS_FR = {
                 desc: 'Développer les dossiers et étiquettes lors de la sélection. En mode panneau unique, la première sélection développe, la seconde affiche les fichiers.'
             },
             springLoadedFolders: {
-                name: 'Développer au survol (ordinateur uniquement)',
+                name: 'Développer au survol',
                 desc: 'Développer les dossiers et les étiquettes au survol pendant le glisser-déposer.'
             },
             springLoadedFoldersInitialDelay: {
@@ -891,7 +896,7 @@ export const STRINGS_FR = {
                 desc: "Inclure les notes récentes lors de l'épinglage des raccourcis."
             },
             showCalendar: {
-                name: 'Afficher le calendrier (non synchronisé)',
+                name: 'Afficher le calendrier',
                 desc: 'Afficher un calendrier en bas du panneau de navigation.'
             },
             calendarLocale: {
@@ -902,7 +907,7 @@ export const STRINGS_FR = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Semaines à afficher (non synchronisé)',
+                name: 'Semaines à afficher',
                 desc: 'Nombre de semaines du calendrier à afficher.',
                 options: {
                     fullMonth: 'Mois complet',
@@ -975,7 +980,7 @@ export const STRINGS_FR = {
                 error: 'Échec de la réinitialisation des paramètres.'
             },
             multiSelectModifier: {
-                name: 'Modificateur de sélection multiple (ordinateur uniquement)',
+                name: 'Modificateur de sélection multiple',
                 desc: 'Choisissez quelle touche modificatrice active la sélection multiple. Quand Option/Alt est sélectionné, Cmd/Ctrl clic ouvre les notes dans un nouvel onglet.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl clic',
@@ -1015,7 +1020,7 @@ export const STRINGS_FR = {
                 }
             },
             vaultTitle: {
-                name: 'Placement du titre du coffre (bureau uniquement)',
+                name: 'Placement du titre du coffre',
                 desc: 'Choisissez où le titre du coffre est affiché.',
                 options: {
                     header: "Afficher dans l'en-tête",
@@ -1225,15 +1230,15 @@ export const STRINGS_FR = {
                 desc: "Lors du repliement, garde le dossier ou l'étiquette actuellement sélectionné et ses parents dépliés."
             },
             navIndent: {
-                name: "Indentation de l'arbre (non synchronisé)",
+                name: "Indentation de l'arbre",
                 desc: "Ajuster la largeur d'indentation pour les dossiers et étiquettes imbriqués."
             },
             navItemHeight: {
-                name: 'Hauteur de ligne (non synchronisé)',
+                name: 'Hauteur de ligne',
                 desc: 'Ajuster la hauteur des dossiers et étiquettes dans le panneau de navigation.'
             },
             navItemHeightScaleText: {
-                name: 'Adapter le texte à la hauteur de ligne (non synchronisé)',
+                name: 'Adapter le texte à la hauteur de ligne',
                 desc: 'Réduit le texte de navigation lorsque la hauteur de ligne est diminuée.'
             },
             navRootSpacing: {
@@ -1254,7 +1259,7 @@ export const STRINGS_FR = {
             },
             tagSortOrder: {
                 name: 'Ordre de tri des étiquettes',
-                desc: 'Définir comment les étiquettes sont triées dans le panneau de navigation. (non synchronisé)',
+                desc: 'Définir comment les étiquettes sont triées dans le panneau de navigation.',
                 options: {
                     alphaAsc: 'A à Z',
                     alphaDesc: 'Z à A',

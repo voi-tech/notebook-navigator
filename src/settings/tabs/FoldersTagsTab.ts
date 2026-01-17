@@ -22,6 +22,7 @@ import { isFolderNoteCreationPreference } from '../../types/folderNote';
 import { isTagSortOrder } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import { createSettingGroupFactory } from '../settingGroups';
+import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
 
 /** Renders the folders and tags settings tab */
@@ -258,7 +259,7 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
         );
 
     /** Setting for choosing tag sort order in the navigation pane */
-    new Setting(tagSubSettingsEl)
+    const tagSortOrderSetting = new Setting(tagSubSettingsEl)
         .setName(strings.settings.items.tagSortOrder.name)
         .setDesc(strings.settings.items.tagSortOrder.desc)
         .addDropdown(dropdown => {
@@ -275,6 +276,8 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
                     plugin.setTagSortOrder(value);
                 });
         });
+
+    addSettingSyncModeToggle({ setting: tagSortOrderSetting, plugin, settingId: 'tagSortOrder' });
 
     new Setting(tagSubSettingsEl)
         .setName(strings.settings.items.showAllTagsFolder.name)

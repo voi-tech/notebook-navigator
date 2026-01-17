@@ -49,7 +49,6 @@ export function migrateLegacySyncedSettings(params: {
     delete mutableSettings.recentNotes;
     delete mutableSettings.recentIcons;
     delete mutableSettings.searchActive;
-    delete mutableSettings.includeDescendantNotes;
     delete mutableSettings.showHiddenItems;
     delete mutableSettings.hiddenTags;
     delete mutableSettings.fileVisibility;

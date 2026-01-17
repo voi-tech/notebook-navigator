@@ -18,11 +18,39 @@
 
 import type { FileVisibility } from '../utils/fileTypeUtils';
 import type { FolderAppearance, TagAppearance } from '../hooks/useListPaneAppearance';
-import type { BackgroundMode, PinnedNotes } from '../types';
+import type { BackgroundMode, DualPaneOrientation, PinnedNotes } from '../types';
 import type { FolderNoteCreationPreference } from '../types/folderNote';
 import type { KeyboardShortcutConfig } from '../utils/keyboardShortcuts';
 import type { ShortcutEntry } from '../types/shortcuts';
 import type { SearchProvider } from '../types/search';
+
+export type SettingSyncMode = 'deviceLocal' | 'synced';
+
+export function isSettingSyncMode(value: unknown): value is SettingSyncMode {
+    return value === 'deviceLocal' || value === 'synced';
+}
+
+/** Identifiers for settings that can be switched between synced and device-local storage. */
+export const SYNC_MODE_SETTING_IDS = [
+    'vaultProfile',
+    'tagSortOrder',
+    'searchProvider',
+    'includeDescendantNotes',
+    'dualPane',
+    'dualPaneOrientation',
+    'paneTransitionDuration',
+    'toolbarVisibility',
+    'showCalendar',
+    'navIndent',
+    'navItemHeight',
+    'navItemHeightScaleText',
+    'calendarWeeksToShow',
+    'compactItemHeight',
+    'compactItemHeightScaleText',
+    'uiScale'
+] as const;
+
+export type SyncModeSettingId = (typeof SYNC_MODE_SETTING_IDS)[number];
 
 /** Available sort options for file listing */
 export type SortOption = 'modified-desc' | 'modified-asc' | 'created-desc' | 'created-asc' | 'title-asc' | 'title-desc';
@@ -115,6 +143,7 @@ export interface NotebookNavigatorSettings {
     vaultProfiles: VaultProfile[];
     vaultProfile: string;
     vaultTitle: VaultTitleOption;
+    settingSyncModes: Record<SyncModeSettingId, SettingSyncMode>;
 
     // General tab - Behavior
     autoRevealActiveFile: boolean;
@@ -132,6 +161,8 @@ export interface NotebookNavigatorSettings {
     useMobileHomepage: boolean;
 
     // General tab - Desktop appearance
+    dualPane: boolean;
+    dualPaneOrientation: DualPaneOrientation;
     showTooltips: boolean;
     showTooltipPath: boolean;
     desktopBackground: BackgroundMode;
@@ -156,6 +187,7 @@ export interface NotebookNavigatorSettings {
     recentNotesCount: number;
 
     // Navigation pane tab - Calendar
+    showCalendar: boolean;
     calendarLocale: string;
     calendarWeeksToShow: CalendarWeeksToShow;
     calendarHighlightToday: boolean;
@@ -204,6 +236,7 @@ export interface NotebookNavigatorSettings {
 
     // List pane tab
     defaultListMode: ListDisplayMode;
+    includeDescendantNotes: boolean;
     defaultFolderSort: SortOption;
     revealFileOnListChanges: boolean;
     listPaneTitle: ListPaneTitleOption;

@@ -630,10 +630,15 @@ export const STRINGS_ID = {
                 parentFolder: 'Folder induk'
             }
         },
+        syncMode: {
+            notSynced: '(tidak disinkronkan)',
+            switchToSynced: 'Beralih ke disinkronkan',
+            switchToDeviceLocal: 'Beralih ke lokal perangkat'
+        },
         items: {
             searchProvider: {
                 name: 'Penyedia pencarian',
-                desc: 'Pilih antara pencarian nama file cepat atau pencarian teks lengkap dengan plugin Omnisearch. (tidak disinkronkan)',
+                desc: 'Pilih antara pencarian nama file cepat atau pencarian teks lengkap dengan plugin Omnisearch.',
                 options: {
                     internal: 'Pencarian filter',
                     omnisearch: 'Omnisearch (teks lengkap)'
@@ -663,7 +668,7 @@ export const STRINGS_ID = {
                 }
             },
             listPaneTitle: {
-                name: 'Judul panel daftar (desktop saja)',
+                name: 'Judul panel daftar',
                 desc: 'Pilih di mana judul panel daftar ditampilkan.',
                 options: {
                     header: 'Tampilkan di header',
@@ -688,7 +693,7 @@ export const STRINGS_ID = {
                 desc: 'Gulir ke file yang dipilih saat menyematkan catatan, menampilkan catatan turunan, mengubah tampilan folder, atau menjalankan operasi file.'
             },
             includeDescendantNotes: {
-                name: 'Tampilkan catatan dari subfolder / turunan (tidak disinkronkan)',
+                name: 'Tampilkan catatan dari subfolder / turunan',
                 desc: 'Sertakan catatan dari subfolder bersarang dan turunan tag saat melihat folder atau tag.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_ID = {
                 desc: 'Gunakan tinggi ringkas untuk catatan yang disematkan dan catatan tanpa teks pratinjau.'
             },
             compactItemHeight: {
-                name: 'Tinggi item kompak (tidak disinkronkan)',
+                name: 'Tinggi item kompak',
                 desc: 'Atur tinggi item daftar kompak di desktop dan mobile.',
                 resetTooltip: 'Kembalikan ke default (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Skalakan teks dengan tinggi item kompak (tidak disinkronkan)',
+                name: 'Skalakan teks dengan tinggi item kompak',
                 desc: 'Skalakan teks daftar kompak saat tinggi item dikurangi.'
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_ID = {
                 desc: 'Tampilkan ikon folder di samping label folder induk.'
             },
             showQuickActions: {
-                name: 'Tampilkan aksi cepat (desktop saja)',
+                name: 'Tampilkan aksi cepat',
                 desc: 'Tampilkan tombol aksi saat mengarahkan kursor ke file. Kontrol tombol memilih aksi mana yang muncul.'
             },
             dualPane: {
-                name: 'Tata letak panel ganda (tidak disinkronkan)',
+                name: 'Tata letak panel ganda',
                 desc: 'Tampilkan panel navigasi dan panel daftar berdampingan di desktop.'
             },
             dualPaneOrientation: {
-                name: 'Orientasi panel ganda (tidak disinkronkan)',
+                name: 'Orientasi panel ganda',
                 desc: 'Pilih tata letak horizontal atau vertikal saat panel ganda aktif.',
                 options: {
                     horizontal: 'Pembagian horizontal',
@@ -803,7 +808,7 @@ export const STRINGS_ID = {
                 }
             },
             appearanceScale: {
-                name: 'Tingkat zoom (tidak disinkronkan)',
+                name: 'Tingkat zoom',
                 desc: 'Mengontrol tingkat zoom keseluruhan Notebook Navigator.'
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_ID = {
                 }
             },
             toolbarButtons: {
-                name: 'Tombol toolbar (tidak disinkronkan)',
+                name: 'Tombol toolbar',
                 desc: 'Pilih tombol mana yang muncul di toolbar. Tombol tersembunyi tetap dapat diakses melalui perintah dan menu.',
                 navigationLabel: 'Toolbar navigasi',
                 listLabel: 'Toolbar daftar'
@@ -829,12 +834,12 @@ export const STRINGS_ID = {
                 desc: 'Jangan ubah catatan aktif saat mengklik atau mengubah catatan di sidebar kanan.'
             },
             paneTransitionDuration: {
-                name: 'Animasi panel tunggal (tidak disinkronkan)',
+                name: 'Animasi panel tunggal',
                 desc: 'Durasi transisi saat beralih panel dalam mode panel tunggal (milidetik).',
                 resetTooltip: 'Atur ulang ke default'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Auto-pilih catatan pertama (desktop saja)',
+                name: 'Auto-pilih catatan pertama',
                 desc: 'Secara otomatis membuka catatan pertama saat beralih folder atau tag.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_ID = {
                 desc: 'Luaskan folder dan tag saat dipilih. Dalam mode panel tunggal, pilihan pertama meluaskan, pilihan kedua menampilkan file.'
             },
             springLoadedFolders: {
-                name: 'Luaskan saat menyeret (desktop saja)',
+                name: 'Luaskan saat menyeret',
                 desc: 'Luaskan folder dan tag saat mengarahkan kursor selama menyeret.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_ID = {
                 desc: 'Sertakan catatan terbaru saat pintasan disematkan.'
             },
             showCalendar: {
-                name: 'Tampilkan kalender (tidak disinkronkan)',
+                name: 'Tampilkan kalender',
                 desc: 'Tampilkan kalender di bagian bawah panel navigasi.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_ID = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Minggu yang ditampilkan (tidak disinkronkan)',
+                name: 'Minggu yang ditampilkan',
                 desc: 'Jumlah minggu kalender yang ditampilkan.',
                 options: {
                     fullMonth: 'Bulan penuh',
@@ -972,7 +977,7 @@ export const STRINGS_ID = {
                 error: 'Gagal mengatur ulang pengaturan.'
             },
             multiSelectModifier: {
-                name: 'Modifier multi-pilih (desktop saja)',
+                name: 'Modifier multi-pilih',
                 desc: 'Pilih tombol modifier mana yang mengalihkan multi-pilih. Ketika Option/Alt dipilih, klik Cmd/Ctrl membuka catatan di tab baru.',
                 options: {
                     cmdCtrl: 'Klik Cmd/Ctrl',
@@ -1033,7 +1038,7 @@ export const STRINGS_ID = {
                 }
             },
             vaultTitle: {
-                name: 'Penempatan judul vault (khusus desktop)',
+                name: 'Penempatan judul vault',
                 desc: 'Pilih di mana judul vault ditampilkan.',
                 options: {
                     header: 'Tampilkan di header',
@@ -1221,15 +1226,15 @@ export const STRINGS_ID = {
                 desc: 'Saat menciutkan, pertahankan folder atau tag yang dipilih saat ini dan induknya tetap terbuka.'
             },
             navIndent: {
-                name: 'Indentasi pohon (tidak disinkronkan)',
+                name: 'Indentasi pohon',
                 desc: 'Sesuaikan lebar indentasi untuk folder dan tag bersarang.'
             },
             navItemHeight: {
-                name: 'Tinggi item (tidak disinkronkan)',
+                name: 'Tinggi item',
                 desc: 'Sesuaikan tinggi folder dan tag di panel navigasi.'
             },
             navItemHeightScaleText: {
-                name: 'Skalakan teks dengan tinggi item (tidak disinkronkan)',
+                name: 'Skalakan teks dengan tinggi item',
                 desc: 'Kurangi ukuran teks navigasi saat tinggi item dikurangi.'
             },
             navRootSpacing: {
@@ -1250,7 +1255,7 @@ export const STRINGS_ID = {
             },
             tagSortOrder: {
                 name: 'Urutan tag',
-                desc: 'Pilih cara tag diurutkan di panel navigasi. (tidak disinkronkan)',
+                desc: 'Pilih cara tag diurutkan di panel navigasi.',
                 options: {
                     alphaAsc: 'A ke Z',
                     alphaDesc: 'Z ke A',

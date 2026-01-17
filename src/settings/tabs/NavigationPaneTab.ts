@@ -34,6 +34,7 @@ import {
 } from '../../utils/calendarCustomNotePatterns';
 import { getActiveVaultProfile } from '../../utils/vaultProfiles';
 import { createSettingGroupFactory } from '../settingGroups';
+import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { createSubSettingsContainer, setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
 import { getMomentApi } from '../../utils/moment';
 
@@ -177,7 +178,7 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
 
     const calendarGroup = createGroup(strings.navigationCalendar.ariaLabel);
 
-    calendarGroup.addSetting(setting => {
+    const showCalendarSetting = calendarGroup.addSetting(setting => {
         setting
             .setName(strings.settings.items.showCalendar.name)
             .setDesc(strings.settings.items.showCalendar.desc)
@@ -187,6 +188,8 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                 })
             );
     });
+
+    addSettingSyncModeToggle({ setting: showCalendarSetting, plugin, settingId: 'showCalendar' });
 
     const momentApi = getMomentApi();
     // Offer moment locales as options; the selected locale is used for week rules (start-of-week + week numbering).
@@ -215,26 +218,28 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
             });
         });
 
-    calendarGroup
-        .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarWeeksToShow.name).setDesc(strings.settings.items.calendarWeeksToShow.desc);
-        })
-        .addDropdown((dropdown: DropdownComponent) => {
-            dropdown.addOption('1', strings.settings.items.calendarWeeksToShow.options.oneWeek);
-            for (let count = 2; count <= 5; count++) {
-                dropdown.addOption(String(count), formatCalendarWeeksOption(count));
+    const calendarWeeksToShowSetting = calendarGroup.addSetting(setting => {
+        setting.setName(strings.settings.items.calendarWeeksToShow.name).setDesc(strings.settings.items.calendarWeeksToShow.desc);
+    });
+
+    calendarWeeksToShowSetting.addDropdown((dropdown: DropdownComponent) => {
+        dropdown.addOption('1', strings.settings.items.calendarWeeksToShow.options.oneWeek);
+        for (let count = 2; count <= 5; count++) {
+            dropdown.addOption(String(count), formatCalendarWeeksOption(count));
+        }
+        dropdown.addOption('6', strings.settings.items.calendarWeeksToShow.options.fullMonth);
+
+        dropdown.setValue(String(plugin.settings.calendarWeeksToShow)).onChange(value => {
+            const parsed = parseCalendarWeeksToShow(value);
+            if (parsed === null) {
+                return;
             }
-            dropdown.addOption('6', strings.settings.items.calendarWeeksToShow.options.fullMonth);
 
-            dropdown.setValue(String(plugin.settings.calendarWeeksToShow)).onChange(value => {
-                const parsed = parseCalendarWeeksToShow(value);
-                if (parsed === null) {
-                    return;
-                }
-
-                plugin.setCalendarWeeksToShow(parsed);
-            });
+            plugin.setCalendarWeeksToShow(parsed);
         });
+    });
+
+    addSettingSyncModeToggle({ setting: calendarWeeksToShowSetting, plugin, settingId: 'calendarWeeksToShow' });
 
     calendarGroup
         .addSetting(setting => {
@@ -544,7 +549,7 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
     });
 
     let indentationSlider: SliderComponent;
-    appearanceGroup.addSetting(setting => {
+    const navIndentSetting = appearanceGroup.addSetting(setting => {
         setting
             .setName(strings.settings.items.navIndent.name)
             .setDesc(strings.settings.items.navIndent.desc)
@@ -573,6 +578,8 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                     })
             );
     });
+
+    addSettingSyncModeToggle({ setting: navIndentSetting, plugin, settingId: 'navIndent' });
 
     let lineHeightSlider: SliderComponent;
     const navItemHeightSetting = appearanceGroup.addSetting(setting => {
@@ -605,9 +612,11 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
             );
     });
 
+    addSettingSyncModeToggle({ setting: navItemHeightSetting, plugin, settingId: 'navItemHeight' });
+
     const navItemHeightSettingsEl = createSubSettingsContainer(navItemHeightSetting);
 
-    new Setting(navItemHeightSettingsEl)
+    const navItemHeightScaleTextSetting = new Setting(navItemHeightSettingsEl)
         .setName(strings.settings.items.navItemHeightScaleText.name)
         .setDesc(strings.settings.items.navItemHeightScaleText.desc)
         .addToggle(toggle =>
@@ -615,4 +624,6 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
                 plugin.setNavItemHeightScaleText(value);
             })
         );
+
+    addSettingSyncModeToggle({ setting: navItemHeightScaleTextSetting, plugin, settingId: 'navItemHeightScaleText' });
 }

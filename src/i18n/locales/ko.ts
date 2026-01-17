@@ -630,10 +630,15 @@ export const STRINGS_KO = {
                 parentFolder: '상위 폴더'
             }
         },
+        syncMode: {
+            notSynced: '(동기화되지 않음)',
+            switchToSynced: '동기화로 전환',
+            switchToDeviceLocal: '기기 로컬로 전환'
+        },
         items: {
             searchProvider: {
                 name: '검색 제공자',
-                desc: '빠른 파일명 검색 또는 Omnisearch 플러그인을 통한 전체 텍스트 검색 중에서 선택하세요. (동기화 안 됨)',
+                desc: '빠른 파일명 검색 또는 Omnisearch 플러그인을 통한 전체 텍스트 검색 중에서 선택하세요.',
                 options: {
                     internal: '필터 검색',
                     omnisearch: 'Omnisearch (전체 텍스트)'
@@ -663,7 +668,7 @@ export const STRINGS_KO = {
                 }
             },
             listPaneTitle: {
-                name: '목록 창 제목(데스크톱 전용)',
+                name: '목록 창 제목',
                 desc: '목록 창 제목을 표시할 위치를 선택하세요.',
                 options: {
                     header: '헤더에 표시',
@@ -688,7 +693,7 @@ export const STRINGS_KO = {
                 desc: '노트 고정, 하위 노트 표시, 폴더 모양 변경 또는 파일 작업 실행 시 선택된 파일로 스크롤합니다.'
             },
             includeDescendantNotes: {
-                name: '하위 폴더 / 하위 항목 노트 표시 (동기화 안 됨)',
+                name: '하위 폴더 / 하위 항목 노트 표시',
                 desc: '폴더나 태그를 볼 때 중첩된 하위 폴더와 태그 하위 항목의 노트를 포함합니다.'
             },
             limitPinnedToCurrentFolder: {
@@ -753,12 +758,12 @@ export const STRINGS_KO = {
                 desc: '고정된 노트와 미리보기 텍스트가 없는 노트에 컴팩트한 높이를 사용합니다.'
             },
             compactItemHeight: {
-                name: '슬림 항목 높이 (동기화되지 않음)',
+                name: '슬림 항목 높이',
                 desc: '데스크톱과 모바일에서 슬림 목록 항목 높이를 설정합니다.',
                 resetTooltip: '기본값으로 복원 (28px)'
             },
             compactItemHeightScaleText: {
-                name: '슬림 항목 높이에 맞춰 텍스트 크기 조정 (동기화되지 않음)',
+                name: '슬림 항목 높이에 맞춰 텍스트 크기 조정',
                 desc: '항목 높이를 줄이면 슬림 목록 텍스트 크기를 조정합니다.'
             },
             showParentFolder: {
@@ -778,15 +783,15 @@ export const STRINGS_KO = {
                 desc: '상위 폴더 레이블 옆에 폴더 아이콘을 표시합니다.'
             },
             showQuickActions: {
-                name: '빠른 작업 표시 (데스크톱 전용)',
+                name: '빠른 작업 표시',
                 desc: '파일 위에 마우스를 올리면 작업 버튼을 표시합니다. 버튼 컨트롤로 표시할 작업을 선택합니다.'
             },
             dualPane: {
-                name: '이중 창 레이아웃 (동기화되지 않음)',
+                name: '이중 창 레이아웃',
                 desc: '데스크톱에서 탐색 창과 목록 창을 나란히 표시합니다.'
             },
             dualPaneOrientation: {
-                name: '듀얼 창 방향 (동기화되지 않음)',
+                name: '듀얼 창 방향',
                 desc: '듀얼 창이 활성화된 경우 가로 또는 세로 레이아웃을 선택합니다.',
                 options: {
                     horizontal: '가로 분할',
@@ -803,7 +808,7 @@ export const STRINGS_KO = {
                 }
             },
             appearanceScale: {
-                name: '확대 수준 (동기화 안 됨)',
+                name: '확대 수준',
                 desc: 'Notebook Navigator의 전체 확대 수준을 제어합니다.'
             },
             startView: {
@@ -815,7 +820,7 @@ export const STRINGS_KO = {
                 }
             },
             toolbarButtons: {
-                name: '도구 모음 버튼 (동기화되지 않음)',
+                name: '도구 모음 버튼',
                 desc: '도구 모음에 표시할 버튼을 선택하세요. 숨겨진 버튼은 명령과 메뉴를 통해 계속 사용할 수 있습니다.',
                 navigationLabel: '탐색 도구 모음',
                 listLabel: '목록 도구 모음'
@@ -829,12 +834,12 @@ export const STRINGS_KO = {
                 desc: '오른쪽 사이드바에서 클릭하거나 노트를 변경할 때 활성 노트를 변경하지 않습니다.'
             },
             paneTransitionDuration: {
-                name: '단일 창 애니메이션 (동기화되지 않음)',
+                name: '단일 창 애니메이션',
                 desc: '단일 창 모드에서 창 전환 시 트랜지션 시간 (밀리초).',
                 resetTooltip: '기본값으로 재설정'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: '첫 번째 노트 자동 선택 (데스크톱 전용)',
+                name: '첫 번째 노트 자동 선택',
                 desc: '폴더나 태그를 전환할 때 첫 번째 노트를 자동으로 엽니다.'
             },
             skipAutoScroll: {
@@ -846,7 +851,7 @@ export const STRINGS_KO = {
                 desc: '선택 시 폴더와 태그를 확장합니다. 단일 창 모드에서는 첫 번째 선택이 확장하고 두 번째 선택이 파일을 표시합니다.'
             },
             springLoadedFolders: {
-                name: '드래그 중 확장 (데스크톱 전용)',
+                name: '드래그 중 확장',
                 desc: '드래그 작업 중에 마우스를 올리면 폴더와 태그를 확장합니다.'
             },
             springLoadedFoldersInitialDelay: {
@@ -889,7 +894,7 @@ export const STRINGS_KO = {
                 desc: '바로가기를 고정할 때 최근 노트를 포함합니다.'
             },
             showCalendar: {
-                name: '달력 표시 (동기화되지 않음)',
+                name: '달력 표시',
                 desc: '탐색 창 하단에 달력을 표시합니다.'
             },
             calendarLocale: {
@@ -900,7 +905,7 @@ export const STRINGS_KO = {
                 }
             },
             calendarWeeksToShow: {
-                name: '표시할 주 (동기화되지 않음)',
+                name: '표시할 주',
                 desc: '표시할 달력 주 수입니다.',
                 options: {
                     fullMonth: '전체 월',
@@ -972,7 +977,7 @@ export const STRINGS_KO = {
                 error: '설정 초기화에 실패했습니다.'
             },
             multiSelectModifier: {
-                name: '다중 선택 수정자 (데스크톱 전용)',
+                name: '다중 선택 수정자',
                 desc: '다중 선택을 전환하는 수정자 키를 선택하세요. Option/Alt를 선택하면 Cmd/Ctrl 클릭이 새 탭에서 노트를 엽니다.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl 클릭',
@@ -1032,7 +1037,7 @@ export const STRINGS_KO = {
                 }
             },
             vaultTitle: {
-                name: '볼트 제목 위치 (데스크톱 전용)',
+                name: '볼트 제목 위치',
                 desc: '볼트 제목이 표시되는 위치를 선택합니다.',
                 options: {
                     header: '헤더에 표시',
@@ -1220,15 +1225,15 @@ export const STRINGS_KO = {
                 desc: '접을 때 현재 선택한 폴더나 태그와 상위 항목을 펼친 상태로 유지합니다.'
             },
             navIndent: {
-                name: '트리 들여쓰기 (동기화되지 않음)',
+                name: '트리 들여쓰기',
                 desc: '중첩된 폴더와 태그의 들여쓰기 너비를 조정합니다.'
             },
             navItemHeight: {
-                name: '항목 높이 (동기화되지 않음)',
+                name: '항목 높이',
                 desc: '탐색 창에서 폴더와 태그의 높이를 조정합니다.'
             },
             navItemHeightScaleText: {
-                name: '항목 높이에 따라 글자 크기 조정 (동기화되지 않음)',
+                name: '항목 높이에 따라 글자 크기 조정',
                 desc: '항목 높이를 줄이면 탐색 글자 크기를 작게 합니다.'
             },
             navRootSpacing: {
@@ -1249,7 +1254,7 @@ export const STRINGS_KO = {
             },
             tagSortOrder: {
                 name: '태그 정렬 순서',
-                desc: '탐색 창에서 태그를 정렬하는 방식을 선택합니다. (동기화 안 됨)',
+                desc: '탐색 창에서 태그를 정렬하는 방식을 선택합니다.',
                 options: {
                     alphaAsc: 'A부터 Z까지',
                     alphaDesc: 'Z부터 A까지',

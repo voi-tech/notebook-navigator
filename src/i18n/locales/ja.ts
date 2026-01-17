@@ -631,10 +631,15 @@ export const STRINGS_JA = {
                 parentFolder: '親フォルダ'
             }
         },
+        syncMode: {
+            notSynced: '（未同期）',
+            switchToSynced: '同期に切り替え',
+            switchToDeviceLocal: 'デバイスローカルに切り替え'
+        },
         items: {
             searchProvider: {
                 name: '検索プロバイダー',
-                desc: 'クイックファイル名検索またはOmnisearchプラグインによる全文検索を選択してください。（同期されません）',
+                desc: 'クイックファイル名検索またはOmnisearchプラグインによる全文検索を選択してください。',
                 options: {
                     internal: 'フィルター検索',
                     omnisearch: 'Omnisearch（全文）'
@@ -664,7 +669,7 @@ export const STRINGS_JA = {
                 }
             },
             listPaneTitle: {
-                name: 'リストペインのタイトル（デスクトップのみ）',
+                name: 'リストペインのタイトル',
                 desc: 'リストペインのタイトルを表示する場所を選択します。',
                 options: {
                     header: 'ヘッダーに表示',
@@ -689,7 +694,7 @@ export const STRINGS_JA = {
                 desc: 'ノートのピン留め、子孫ノートの表示、フォルダ外観の変更、ファイル操作の実行時に選択したファイルへスクロールします。'
             },
             includeDescendantNotes: {
-                name: 'サブフォルダ / 子孫のノートを表示（同期されません）',
+                name: 'サブフォルダ / 子孫のノートを表示',
                 desc: 'フォルダまたはタグを表示するとき、入れ子のサブフォルダとタグの子孫にあるノートを含めます。'
             },
             limitPinnedToCurrentFolder: {
@@ -754,12 +759,12 @@ export const STRINGS_JA = {
                 desc: 'ピン留めされたノートとプレビューテキストのないノートにコンパクトな高さを使用。'
             },
             compactItemHeight: {
-                name: 'スリム表示の項目高さ（同期されません）',
+                name: 'スリム表示の項目高さ',
                 desc: 'デスクトップとモバイルのスリム表示項目の高さを設定します。',
                 resetTooltip: 'デフォルトに戻す (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'スリム表示の文字サイズを高さに合わせる（同期されません）',
+                name: 'スリム表示の文字サイズを高さに合わせる',
                 desc: '項目の高さを下げたときにスリム表示の文字サイズを調整します。'
             },
             showParentFolder: {
@@ -779,15 +784,15 @@ export const STRINGS_JA = {
                 desc: '親フォルダラベルの横にフォルダアイコンを表示します。'
             },
             showQuickActions: {
-                name: 'クイックアクションを表示 (デスクトップのみ)',
+                name: 'クイックアクションを表示',
                 desc: 'ファイルにホバーしたときにアクションボタンを表示します。ボタンコントロールで表示するアクションを選択します。'
             },
             dualPane: {
-                name: 'デュアルペインレイアウト（同期されません）',
+                name: 'デュアルペインレイアウト',
                 desc: 'デスクトップでナビゲーションペインとリストペインを並べて表示します。'
             },
             dualPaneOrientation: {
-                name: 'デュアルペインの向き（同期されません）',
+                name: 'デュアルペインの向き',
                 desc: 'デュアルペイン使用時の水平または垂直レイアウトを選択します。',
                 options: {
                     horizontal: '水平分割',
@@ -804,7 +809,7 @@ export const STRINGS_JA = {
                 }
             },
             appearanceScale: {
-                name: 'ズームレベル（同期されません）',
+                name: 'ズームレベル',
                 desc: 'Notebook Navigator 全体のズームレベルを制御します。'
             },
             startView: {
@@ -816,7 +821,7 @@ export const STRINGS_JA = {
                 }
             },
             toolbarButtons: {
-                name: 'ツールバーボタン（同期されません）',
+                name: 'ツールバーボタン',
                 desc: 'ツールバーに表示するボタンを選択します。非表示のボタンはコマンドとメニューから引き続き利用できます。',
                 navigationLabel: 'ナビゲーションツールバー',
                 listLabel: 'リストツールバー'
@@ -830,12 +835,12 @@ export const STRINGS_JA = {
                 desc: '右サイドバーでのクリックやノートの変更時にアクティブノートを変更しません。'
             },
             paneTransitionDuration: {
-                name: 'シングルペインアニメーション（同期されません）',
+                name: 'シングルペインアニメーション',
                 desc: 'シングルペインモードでペイン切り替え時のトランジション時間（ミリ秒）。',
                 resetTooltip: 'デフォルトにリセット'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: '最初のノートを自動選択（デスクトップのみ）',
+                name: '最初のノートを自動選択',
                 desc: 'フォルダまたはタグを切り替えた際に自動的に最初のノートを開きます。'
             },
             skipAutoScroll: {
@@ -847,7 +852,7 @@ export const STRINGS_JA = {
                 desc: '選択時にフォルダとタグを展開します。シングルペインモードでは、最初の選択で展開、2回目の選択でファイルを表示します。'
             },
             springLoadedFolders: {
-                name: 'ドラッグ時に展開（デスクトップのみ）',
+                name: 'ドラッグ時に展開',
                 desc: 'ドラッグ操作中にホバーするとフォルダとタグを展開します。'
             },
             springLoadedFoldersInitialDelay: {
@@ -890,7 +895,7 @@ export const STRINGS_JA = {
                 desc: 'ショートカットを固定するときに最近のノートを含める。'
             },
             showCalendar: {
-                name: 'カレンダーを表示（同期されません）',
+                name: 'カレンダーを表示',
                 desc: 'ナビゲーションペインの下部にカレンダーを表示します。'
             },
             calendarLocale: {
@@ -901,7 +906,7 @@ export const STRINGS_JA = {
                 }
             },
             calendarWeeksToShow: {
-                name: '表示週数（同期されません）',
+                name: '表示週数',
                 desc: '表示するカレンダーの週数。',
                 options: {
                     fullMonth: '月全体',
@@ -973,7 +978,7 @@ export const STRINGS_JA = {
                 error: '設定のリセットに失敗しました。'
             },
             multiSelectModifier: {
-                name: '複数選択モディファイア (デスクトップのみ)',
+                name: '複数選択モディファイア',
                 desc: '複数選択を切り替えるモディファイアキーを選択します。Option/Altが選択されている場合、Cmd/Ctrlクリックでノートを新しいタブで開きます。',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl クリック',
@@ -1013,7 +1018,7 @@ export const STRINGS_JA = {
                 }
             },
             vaultTitle: {
-                name: 'ボルトタイトルの配置（デスクトップのみ）',
+                name: 'ボルトタイトルの配置',
                 desc: 'ボルトタイトルの表示場所を選択します。',
                 options: {
                     header: 'ヘッダーに表示',
@@ -1223,15 +1228,15 @@ export const STRINGS_JA = {
                 desc: '折りたたむ時、現在選択されているフォルダまたはタグとその親を展開したままにします。'
             },
             navIndent: {
-                name: 'ツリーインデント（同期されません）',
+                name: 'ツリーインデント',
                 desc: 'ネストされたフォルダとタグのインデント幅を調整します。'
             },
             navItemHeight: {
-                name: '行高（同期されません）',
+                name: '行高',
                 desc: 'ナビゲーションペイン内のフォルダとタグの高さを調整します。'
             },
             navItemHeightScaleText: {
-                name: '行高に合わせて文字サイズを調整（同期されません）',
+                name: '行高に合わせて文字サイズを調整',
                 desc: '行高を下げたときにナビゲーションの文字サイズを小さくします。'
             },
             navRootSpacing: {
@@ -1252,7 +1257,7 @@ export const STRINGS_JA = {
             },
             tagSortOrder: {
                 name: 'タグの並び順',
-                desc: 'ナビゲーションペインでタグを並べ替える方法を設定します。（同期されません）',
+                desc: 'ナビゲーションペインでタグを並べ替える方法を設定します。',
                 options: {
                     alphaAsc: 'A から Z',
                     alphaDesc: 'Z から A',

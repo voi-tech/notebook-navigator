@@ -23,8 +23,14 @@ import { LISTPANE_MEASUREMENTS, NAVPANE_MEASUREMENTS, type PinnedNotes } from '.
 import { DEFAULT_UI_SCALE } from '../utils/uiScale';
 import type { FolderAppearance, TagAppearance } from '../hooks/useListPaneAppearance';
 import type { NotebookNavigatorSettings } from './types';
+import { SYNC_MODE_SETTING_IDS, type SettingSyncMode } from './types';
 import { sanitizeRecord } from '../utils/recordUtils';
 import { DEFAULT_CALENDAR_CUSTOM_FILE_PATTERN } from '../utils/calendarCustomNotePatterns';
+
+const defaultSettingSyncModes = sanitizeRecord<SettingSyncMode>(undefined);
+SYNC_MODE_SETTING_IDS.forEach(settingId => {
+    defaultSettingSyncModes[settingId] = 'synced';
+});
 
 /**
  * Default settings for the plugin
@@ -48,6 +54,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     ],
     vaultProfile: 'default',
     vaultTitle: 'navigation',
+    settingSyncModes: defaultSettingSyncModes,
 
     // General tab - Behavior
     autoRevealActiveFile: true,
@@ -65,6 +72,8 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     useMobileHomepage: false,
 
     // General tab - Desktop appearance
+    dualPane: true,
+    dualPaneOrientation: 'horizontal',
     showTooltips: false,
     showTooltipPath: true,
     desktopBackground: 'separate',
@@ -90,6 +99,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     recentNotesCount: 5,
 
     // Navigation pane tab - Calendar
+    showCalendar: false,
     calendarLocale: 'system-default',
     calendarWeeksToShow: 1,
     calendarHighlightToday: true,
@@ -154,6 +164,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
 
     // List pane tab
     defaultListMode: 'standard',
+    includeDescendantNotes: false,
     defaultFolderSort: 'modified-desc',
     revealFileOnListChanges: true,
     listPaneTitle: 'header',

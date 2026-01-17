@@ -632,10 +632,15 @@ export const STRINGS_NL = {
                 parentFolder: 'Bovenliggende map'
             }
         },
+        syncMode: {
+            notSynced: '(niet gesynchroniseerd)',
+            switchToSynced: 'Wisselen naar gesynchroniseerd',
+            switchToDeviceLocal: 'Wisselen naar apparaat-lokaal'
+        },
         items: {
             searchProvider: {
                 name: 'Zoekprovider',
-                desc: 'Kies tussen snelle bestandsnaamzoekfunctie of volledige tekstzoekfunctie met Omnisearch plugin. (niet gesynchroniseerd)',
+                desc: 'Kies tussen snelle bestandsnaamzoekfunctie of volledige tekstzoekfunctie met Omnisearch plugin.',
                 options: {
                     internal: 'Filter zoeken',
                     omnisearch: 'Omnisearch (volledige tekst)'
@@ -665,7 +670,7 @@ export const STRINGS_NL = {
                 }
             },
             listPaneTitle: {
-                name: 'Titel lijstpaneel (alleen desktop)',
+                name: 'Titel lijstpaneel',
                 desc: 'Kies waar de titel van het lijstpaneel wordt weergegeven.',
                 options: {
                     header: 'Tonen in koptekst',
@@ -690,7 +695,7 @@ export const STRINGS_NL = {
                 desc: 'Scroll naar het geselecteerde bestand bij het vastpinnen van notities, tonen van afstammelingen-notities, wijzigen van mapweergave of uitvoeren van bestandsoperaties.'
             },
             includeDescendantNotes: {
-                name: 'Notities uit submappen / afstammelingen tonen (niet gesynchroniseerd)',
+                name: 'Notities uit submappen / afstammelingen tonen',
                 desc: 'Notities uit geneste submappen en tag-afstammelingen opnemen bij het bekijken van een map of tag.'
             },
             limitPinnedToCurrentFolder: {
@@ -755,12 +760,12 @@ export const STRINGS_NL = {
                 desc: 'Compacte hoogte gebruiken voor vastgepinde notities en notities zonder voorbeeldtekst.'
             },
             compactItemHeight: {
-                name: 'Compacte itemhoogte (niet gesynchroniseerd)',
+                name: 'Compacte itemhoogte',
                 desc: 'Stel de hoogte van compacte lijstitems in op desktop en mobiel.',
                 resetTooltip: 'Herstellen naar standaard (28px)'
             },
             compactItemHeightScaleText: {
-                name: 'Tekst schalen met compacte itemhoogte (niet gesynchroniseerd)',
+                name: 'Tekst schalen met compacte itemhoogte',
                 desc: 'Compacte lijsttekst schalen wanneer de itemhoogte wordt verminderd.'
             },
             showParentFolder: {
@@ -780,15 +785,15 @@ export const STRINGS_NL = {
                 desc: 'Mapiconen tonen naast labels van bovenliggende mappen.'
             },
             showQuickActions: {
-                name: 'Snelle acties tonen (alleen desktop)',
+                name: 'Snelle acties tonen',
                 desc: 'Actieknoppen tonen bij zweven over bestanden. Knopbediening selecteert welke acties verschijnen.'
             },
             dualPane: {
-                name: 'Dubbel paneellay-out (niet gesynchroniseerd)',
+                name: 'Dubbel paneellay-out',
                 desc: 'Navigatiepaneel en lijstpaneel naast elkaar tonen op desktop.'
             },
             dualPaneOrientation: {
-                name: 'Dubbel paneel oriëntatie (niet gesynchroniseerd)',
+                name: 'Dubbel paneel oriëntatie',
                 desc: 'Kies horizontale of verticale lay-out wanneer dubbel paneel actief is.',
                 options: {
                     horizontal: 'Horizontale splitsing',
@@ -805,7 +810,7 @@ export const STRINGS_NL = {
                 }
             },
             appearanceScale: {
-                name: 'Zoomniveau (niet gesynchroniseerd)',
+                name: 'Zoomniveau',
                 desc: 'Regelt het algemene zoomniveau van Notebook Navigator.'
             },
             startView: {
@@ -817,7 +822,7 @@ export const STRINGS_NL = {
                 }
             },
             toolbarButtons: {
-                name: 'Werkbalkknoppen (niet gesynchroniseerd)',
+                name: 'Werkbalkknoppen',
                 desc: "Kies welke knoppen in de werkbalk worden weergegeven. Verborgen knoppen blijven toegankelijk via opdrachten en menu's.",
                 navigationLabel: 'Navigatiewerkbalk',
                 listLabel: 'Lijstwerkbalk'
@@ -831,12 +836,12 @@ export const STRINGS_NL = {
                 desc: 'Actieve notitie niet wijzigen bij klikken of wijzigen van notities in de rechter zijbalk.'
             },
             paneTransitionDuration: {
-                name: 'Enkelvoudig paneel animatie (niet gesynchroniseerd)',
+                name: 'Enkelvoudig paneel animatie',
                 desc: 'Transitieduur bij het wisselen tussen panelen in enkelvoudig-paneel-modus (milliseconden).',
                 resetTooltip: 'Herstellen naar standaard'
             },
             autoSelectFirstFileOnFocusChange: {
-                name: 'Eerste notitie automatisch selecteren (alleen desktop)',
+                name: 'Eerste notitie automatisch selecteren',
                 desc: 'Automatisch de eerste notitie openen bij het wisselen van mappen of tags.'
             },
             skipAutoScroll: {
@@ -848,7 +853,7 @@ export const STRINGS_NL = {
                 desc: 'Mappen en tags uitvouwen bij selectie. In enkelvoudige paneelmodus: eerste selectie vouwt uit, tweede selectie toont bestanden.'
             },
             springLoadedFolders: {
-                name: 'Uitvouwen bij slepen (alleen desktop)',
+                name: 'Uitvouwen bij slepen',
                 desc: 'Mappen en tags uitvouwen bij zweven tijdens slepen.'
             },
             springLoadedFoldersInitialDelay: {
@@ -891,7 +896,7 @@ export const STRINGS_NL = {
                 desc: 'Recente notities opnemen wanneer snelkoppelingen zijn vastgepind.'
             },
             showCalendar: {
-                name: 'Kalender tonen (niet gesynchroniseerd)',
+                name: 'Kalender tonen',
                 desc: 'Toon een kalender onderaan het navigatiepaneel.'
             },
             calendarLocale: {
@@ -902,7 +907,7 @@ export const STRINGS_NL = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Weken om te tonen (niet gesynchroniseerd)',
+                name: 'Weken om te tonen',
                 desc: 'Aantal kalenderweken om weer te geven.',
                 options: {
                     fullMonth: 'Volledige maand',
@@ -975,7 +980,7 @@ export const STRINGS_NL = {
                 error: 'Instellingen resetten mislukt.'
             },
             multiSelectModifier: {
-                name: 'Meervoudige selectie modifier (alleen desktop)',
+                name: 'Meervoudige selectie modifier',
                 desc: 'Kies welke modificatortoets meervoudige selectie in-/uitschakelt. Wanneer Option/Alt is geselecteerd, opent Cmd/Ctrl klik notities in een nieuw tabblad.',
                 options: {
                     cmdCtrl: 'Cmd/Ctrl klik',
@@ -1036,7 +1041,7 @@ export const STRINGS_NL = {
                 }
             },
             vaultTitle: {
-                name: 'Kluistitel plaatsing (alleen desktop)',
+                name: 'Kluistitel plaatsing',
                 desc: 'Kies waar de kluistitel wordt weergegeven.',
                 options: {
                     header: 'Weergeven in header',
@@ -1224,15 +1229,15 @@ export const STRINGS_NL = {
                 desc: 'Bij het inklappen de momenteel geselecteerde map of tag en de bovenliggende items uitgeklapt houden.'
             },
             navIndent: {
-                name: 'Structuurinspringing (niet gesynchroniseerd)',
+                name: 'Structuurinspringing',
                 desc: 'De inspringbreedte aanpassen voor geneste mappen en tags.'
             },
             navItemHeight: {
-                name: 'Itemhoogte (niet gesynchroniseerd)',
+                name: 'Itemhoogte',
                 desc: 'De hoogte van mappen en tags in het navigatiepaneel aanpassen.'
             },
             navItemHeightScaleText: {
-                name: 'Tekst schalen met itemhoogte (niet gesynchroniseerd)',
+                name: 'Tekst schalen met itemhoogte',
                 desc: 'Navigatietekstgrootte verminderen wanneer itemhoogte wordt verminderd.'
             },
             navRootSpacing: {
@@ -1253,7 +1258,7 @@ export const STRINGS_NL = {
             },
             tagSortOrder: {
                 name: 'Tag sorteervolgorde',
-                desc: 'Kies hoe tags worden geordend in het navigatiepaneel. (niet gesynchroniseerd)',
+                desc: 'Kies hoe tags worden geordend in het navigatiepaneel.',
                 options: {
                     alphaAsc: 'A tot Z',
                     alphaDesc: 'Z tot A',
