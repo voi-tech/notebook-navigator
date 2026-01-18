@@ -6,7 +6,8 @@ Read in your language: [English](https://notebooknavigator.com/docs.html) • [�
 
 ![Notebook Navigator Screenshot](https://github.com/johansan/notebook-navigator/blob/main/images/notebook-navigator.png?raw=true)
 
-Notebook Navigator brings the best of Apple Notes, Bear, and Evernote to [Obsidian](https://obsidian.md).
+Turn Obsidian into a fast, customizable notes browser with folders, tags and shortcuts in one view.
+Visual previews. Full keyboard navigation. Dual-pane layout. Mobile optimized. Works with 100,000+ notes.
 
 If you love using Notebook Navigator, please consider [☕️ Buying me a coffee](https://buymeacoffee.com/johansan) or [Sponsor on GitHub ❤️](https://github.com/sponsors/johansan).
 
