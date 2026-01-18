@@ -75,10 +75,22 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.1.3',
+        date: '2026-01-18',
+        showOnUpdate: true,
+        new: [
+        ],
+        improved: [],
+        changed: [
+        ],
+        fixed: [
+            'Fixed an issue where the What\'s New modal didn\'t appear after updating the plugin.'
+        ]
+    },
+    {
         version: '2.1.2',
         date: '2026-01-17',
         showOnUpdate: true,
-        info: 'My apologies for the rapid releases but I had to fix a crash issue with huge PDF files on mobile devices and fix a display issue caused by the new floating toolbar. To make up for it you can now control which settings should be synced or kept local on a setting-by-setting basis!',
         new: [
             '==All settings are now synced between devices by default==. You can override this on a per-setting basis. Current local settings will continue to be local-only, and you can change them to synced by pressing a cloud symbol in settings. Let me know if there are any settings that are currently not enabled for local-only that you would like to override.'
         ],

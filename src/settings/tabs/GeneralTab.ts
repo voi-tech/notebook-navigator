@@ -99,7 +99,14 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                         const { WhatsNewModal } = await import('../../modals/WhatsNewModal');
                         const { getLatestReleaseNotes } = await import('../../releaseNotes');
                         const latestNotes = getLatestReleaseNotes();
-                        new WhatsNewModal(context.app, latestNotes, plugin.settings.dateFormat).open();
+                        new WhatsNewModal(context.app, latestNotes, plugin.settings.dateFormat, () => {
+                            setTimeout(() => {
+                                runAsyncAction(async () => {
+                                    plugin.settings.lastShownVersion = pluginVersion;
+                                    await plugin.saveSettingsAndUpdate();
+                                });
+                            }, 1000);
+                        }).open();
                     });
                 })
             );

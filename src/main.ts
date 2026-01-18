@@ -892,7 +892,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
                 }
 
                 // Check for version updates
-                await this.checkForVersionUpdate();
+                await this.checkForVersionUpdate({ isFirstLaunch });
 
                 // Trigger Style Settings plugin to parse our settings
                 this.app.workspace.trigger('parse-style-settings');
@@ -2088,15 +2088,43 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     /**
      * Check if the plugin has been updated and show release notes if needed
      */
-    private async checkForVersionUpdate(): Promise<void> {
+    private async checkForVersionUpdate(params: { isFirstLaunch: boolean }): Promise<void> {
+        const { isFirstLaunch } = params;
         // Get current version from manifest
         const currentVersion = this.manifest.version;
 
         // Get last shown version from settings
         const lastShownVersion = this.settings.lastShownVersion;
 
-        // Don't show on first install (when lastShownVersion is empty)
+        // Initialize lastShownVersion on first install.
         if (!lastShownVersion) {
+            if (isFirstLaunch) {
+                this.settings.lastShownVersion = currentVersion;
+                await this.saveSettingsAndUpdate();
+                return;
+            }
+
+            const { getLatestReleaseNotes, isReleaseAutoDisplayEnabled } = await import('./releaseNotes');
+
+            if (!isReleaseAutoDisplayEnabled(currentVersion)) {
+                this.settings.lastShownVersion = currentVersion;
+                await this.saveSettingsAndUpdate();
+                return;
+            }
+
+            const { WhatsNewModal } = await import('./modals/WhatsNewModal');
+
+            const releaseNotes = getLatestReleaseNotes();
+            new WhatsNewModal(this.app, releaseNotes, this.settings.dateFormat, () => {
+                // Save version after 1 second delay when user closes the modal
+                setTimeout(() => {
+                    // Wrap in runAsyncAction to handle async without blocking callback
+                    runAsyncAction(async () => {
+                        this.settings.lastShownVersion = currentVersion;
+                        await this.saveSettingsAndUpdate();
+                    });
+                }, 1000);
+            }).open();
             return;
         }
 
