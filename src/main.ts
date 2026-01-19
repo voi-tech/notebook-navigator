@@ -98,34 +98,47 @@ import { MAX_RECENT_COLORS } from './constants/colorPalette';
 import { NOTEBOOK_NAVIGATOR_ICON_ID, NOTEBOOK_NAVIGATOR_ICON_SVG } from './constants/notebookNavigatorIcon';
 import { createSyncModeRegistry, type SyncModeRegistry } from './services/settings/syncModeRegistry';
 
-function getDefaultUXPreferences(): UXPreferences {
-    const defaults: UXPreferences = {
+const UX_PREFERENCES_DEFAULTS = {
+    base: {
         // Local-only UX preferences (per-device, stored in localStorage only)
         searchActive: false,
         showHiddenItems: false,
         pinShortcuts: true,
 
         // UX preferences that mirror settings (sync-mode controlled)
-        includeDescendantNotes: false,
+        includeDescendantNotes: DEFAULT_SETTINGS.includeDescendantNotes,
         // Navigation calendar overlay toggle (mirrors settings; sync-mode controlled)
-        showCalendar: false
-    };
-
-    // Local-only defaults can vary per-device without affecting synced settings.
-    if (Platform.isMobile) {
-        defaults.pinShortcuts = false;
+        showCalendar: DEFAULT_SETTINGS.showCalendar
+    },
+    platform: {
+        // Platform-specific default overrides.
+        // Applied before merging stored localStorage UX preferences; stored values override defaults.
+        mobile: {},
+        desktop: {}
     }
+} satisfies {
+    base: UXPreferences;
+    platform: {
+        mobile: Partial<UXPreferences>;
+        desktop: Partial<UXPreferences>;
+    };
+};
 
-    return defaults;
+type UXPreferenceKey = keyof typeof UX_PREFERENCES_DEFAULTS.base;
+
+const UX_PREFERENCE_KEYS = Object.keys(UX_PREFERENCES_DEFAULTS.base).filter((key): key is UXPreferenceKey => {
+    return key in UX_PREFERENCES_DEFAULTS.base;
+});
+
+function getDefaultUXPreferences(): UXPreferences {
+    // Used on first launch and when newly-added UX preference keys are missing from localStorage.
+    const overrides = Platform.isMobile ? UX_PREFERENCES_DEFAULTS.platform.mobile : UX_PREFERENCES_DEFAULTS.platform.desktop;
+
+    return {
+        ...UX_PREFERENCES_DEFAULTS.base,
+        ...overrides
+    };
 }
-
-const UX_PREFERENCE_KEYS: (keyof UXPreferences)[] = [
-    'searchActive',
-    'includeDescendantNotes',
-    'showHiddenItems',
-    'pinShortcuts',
-    'showCalendar'
-];
 
 // Settings that historically lived in localStorage only.
 // During upgrades (no stored syncModes), these default to local to preserve per-device behavior.
