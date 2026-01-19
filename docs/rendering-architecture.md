@@ -99,49 +99,49 @@ colors used for background compositing.
 
 ```mermaid
 flowchart TD
-    OV[NotebookNavigatorView] --> SM[React.StrictMode] --> SP[SettingsProvider] --> UX[UXPreferencesProvider] --> RD[RecentDataProvider]
-    RD --> SVC[ServicesProvider] --> SHC[ShortcutsProvider] --> ST[StorageProvider] --> EP[ExpansionProvider] --> SEL[SelectionProvider]
-    SEL --> UI[UIStateProvider] --> NC[NotebookNavigatorContainer]
+    OV["NotebookNavigatorView"] --> SM["React.StrictMode"] --> SP["SettingsProvider"] --> UX["UXPreferencesProvider"] --> RD["RecentDataProvider"];
+    RD --> SVC["ServicesProvider"] --> SHC["ShortcutsProvider"] --> ST["StorageProvider"] --> EP["ExpansionProvider"] --> SEL["SelectionProvider"];
+    SEL --> UI["UIStateProvider"] --> NC["NotebookNavigatorContainer"];
 
-    NC -->|isStorageReady=false| SK[SkeletonView]
-    NC -->|isStorageReady=true| NNC[NotebookNavigatorComponent]
-    NNC --> UNB[UpdateNoticeBanner]
-    NNC --> UNI[UpdateNoticeIndicator]
-    NNC --> NPR[NavigationPane]
-    NNC --> LPR[ListPane]
+    NC -->|isStorageReady=false| SK["SkeletonView"];
+    NC -->|isStorageReady=true| NNC["NotebookNavigatorComponent"];
+    NNC --> UNB["UpdateNoticeBanner"];
+    NNC --> UNI["UpdateNoticeIndicator"];
+    NNC --> NPR["NavigationPane"];
+    NNC --> LPR["ListPane"];
 ```
 
 ### NavigationPane subtree
 
 ```mermaid
 flowchart TD
-    NPR[NavigationPane] --> SC[Scroll container]
-    SC --> OVL[Sticky overlay stack]
-    OVL --> NPH[NavigationPaneHeader]
-    OVL --> VTA[VaultTitleArea]
-    OVL --> NTBA[NavigationToolbar (Android)]
-    OVL --> PB[NavigationBanner (pinned)]
-    OVL --> PS[Pinned shortcuts/recent]
-    SC --> NB[NavigationBanner (unpinned)]
-    SC -->|normal mode| NPL[Virtualized navigation list]
-    SC -->|root reorder| NRP[NavigationRootReorderPanel]
-    NPR --> NTBI[NavigationToolbar (iOS)]
-    NPR --> CAL[NavigationPaneCalendar overlay]
+    NPR["NavigationPane"] --> SC["Scroll container"];
+    SC --> OVL["Sticky overlay stack"];
+    OVL --> NPH["NavigationPaneHeader"];
+    OVL --> VTA["VaultTitleArea"];
+    OVL --> NTBA["NavigationToolbar Android"];
+    OVL --> PB["NavigationBanner pinned"];
+    OVL --> PINNED["Pinned shortcuts/recent"];
+    SC --> NB["NavigationBanner unpinned"];
+    SC -->|normal mode| NPL["Virtualized navigation list"];
+    SC -->|root reorder| NRP["NavigationRootReorderPanel"];
+    NPR --> NTBI["NavigationToolbar iOS"];
+    NPR --> CAL["NavigationPaneCalendar overlay"];
 ```
 
 ### ListPane subtree
 
 ```mermaid
 flowchart TD
-    LPR[ListPane] --> SC[Scroll container]
-    SC --> OVL[Sticky overlay stack]
-    OVL --> LPH[ListPaneHeader]
-    OVL --> LTBA[ListToolbar (Android)]
-    OVL --> SI[SearchInput]
-    OVL --> LTA[ListPaneTitleArea]
-    SC --> LPL[Virtualized file list]
-    LPR --> LTBI[ListToolbar (iOS)]
-    LPR --> CAL[NavigationPaneCalendar overlay]
+    LPR["ListPane"] --> SC["Scroll container"];
+    SC --> OVL["Sticky overlay stack"];
+    OVL --> LPH["ListPaneHeader"];
+    OVL --> LTBA["ListToolbar Android"];
+    OVL --> SI["SearchInput"];
+    OVL --> LTA["ListPaneTitleArea"];
+    SC --> LPL["Virtualized file list"];
+    LPR --> LTBI["ListToolbar iOS"];
+    LPR --> CAL["NavigationPaneCalendar overlay"];
 ```
 
 ## Component Responsibilities
