@@ -467,7 +467,7 @@ export const NavigationPane = React.memo(
             },
             [isMobile, pinnedShortcutsScrollElement, scaleFactor, schedulePinnedShortcutsHeightUpdate, startPointerDrag]
         );
-        /** Maps semi-transparent theme color variables to their pre-composited solid equivalents (see constants/surfaceColorMappings). */
+        /** Maps semi-transparent theme color variables to computed opaque equivalents (see constants/surfaceColorMappings). */
         const { color: navSurfaceColor, version: navSurfaceVersion } = useSurfaceColorVariables(navigationPaneRef, {
             app,
             rootContainerRef,

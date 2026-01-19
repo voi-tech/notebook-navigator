@@ -119,18 +119,6 @@ Most variables are colors and should resolve to a computed color (some are used 
 | `--nn-theme-tag-positive-bg`                         | `#00800033`                                      | Background for positive tag highlights and tag drop targets         |
 | `--nn-theme-tag-negative-bg`                         | `#ff000033`                                      | Background for negative tag highlights and the untagged drop target |
 
-#### Solid background variants (generated)
-
-Notebook Navigator uses `*-solid` variables when present. It may set these variables at runtime by compositing the source
-color over the navigation pane background.
-
-| Variable                                   | Derived from                              | Description                                           |
-| ------------------------------------------ | ----------------------------------------- | ----------------------------------------------------- |
-| `--nn-theme-navitem-selected-bg-solid`     | `--nn-theme-navitem-selected-bg`          | Solid variant of the selected item background         |
-| `--nn-theme-navitem-selected-inactive-bg-solid` | `--nn-theme-navitem-selected-inactive-bg` | Solid variant of the inactive selected item background |
-| `--nn-theme-tag-positive-bg-solid`         | `--nn-theme-tag-positive-bg`              | Solid variant of positive tag highlights and drop targets |
-| `--nn-theme-tag-negative-bg-solid`         | `--nn-theme-tag-negative-bg`              | Solid variant of negative tag highlights and the untagged drop target |
-
 #### Text styling
 
 These variables control the font weight and decoration of folder/tag names and file names in shortcuts and recent files.
@@ -203,16 +191,6 @@ Priority order: folder note styles override custom color styles, which override 
 | `--nn-theme-file-selected-inactive-custom-property-color` | `var(--nn-theme-file-selected-custom-property-color)` | Custom property text color when selected and pane is inactive   |
 | `--nn-theme-file-selected-inactive-custom-property-bg`    | `var(--nn-theme-file-custom-property-bg)`     | Custom property background color when selected and pane is inactive |
 
-#### Solid background variants (generated)
-
-Notebook Navigator uses `*-solid` variables when present. It may set these variables at runtime by compositing the source
-color over the list pane background.
-
-| Variable                                        | Derived from                               | Description                                   |
-| ----------------------------------------------- | ------------------------------------------ | --------------------------------------------- |
-| `--nn-theme-file-selected-bg-solid`             | `--nn-theme-file-selected-bg`              | Solid variant of the selected file background |
-| `--nn-theme-file-selected-inactive-bg-solid`    | `--nn-theme-file-selected-inactive-bg`     | Solid variant of the inactive selected file background |
-
 Tag pills that only set a custom text color use the list pane background. Tag pills that set a custom background use the
 navigation pane background. In `primary` and `secondary` background modes, both panes share the same background.
 
@@ -274,8 +252,7 @@ On Obsidian 1.11+ on iOS, `.notebook-navigator-obsidian-1-11-plus-ios` overrides
 
 ## Complete Theme Example
 
-Example theme snippet using a JetBrains Darcula-inspired palette. It sets all `--nn-theme-*` variables defined in CSS
-(excluding generated `*-solid` variables):
+Example theme snippet using a JetBrains Darcula-inspired palette. It sets all `--nn-theme-*` variables defined in CSS:
 
 ```css
 body {
@@ -502,4 +479,3 @@ Not currently exposed in the Style Settings UI:
 - `--nn-theme-nav-separator-background`
 - `--nn-theme-nav-separator-height`
 - `--nn-theme-nav-separator-opacity`
-- Generated `*-solid` variables (selection backgrounds and drop targets)

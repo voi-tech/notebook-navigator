@@ -381,7 +381,7 @@ body {
     position: relative;
     --nn-pane-transition-duration: 0.15s;
     --nn-pane-transition-timing: ease-in-out;
-    --nn-selected-file-bg-color: var(--nn-theme-file-selected-bg-solid, var(--nn-theme-file-selected-bg));
+    --nn-selected-file-bg-color: var(--nn-computed-file-selected-bg, var(--nn-theme-file-selected-bg));
     --nn-selected-file-name-color: var(--nn-theme-file-selected-name-color);
     --nn-selected-file-preview-color: var(--nn-theme-file-selected-preview-color);
     --nn-selected-file-date-color: var(--nn-theme-file-selected-date-color);
@@ -390,7 +390,7 @@ body {
     --nn-selected-file-tag-bg: var(--nn-theme-file-selected-tag-bg);
     --nn-selected-file-custom-property-color: var(--nn-theme-file-selected-custom-property-color);
     --nn-selected-file-custom-property-bg: var(--nn-theme-file-selected-custom-property-bg);
-    --nn-selected-navitem-bg-color: var(--nn-theme-navitem-selected-bg-solid, var(--nn-theme-navitem-selected-bg));
+    --nn-selected-navitem-bg-color: var(--nn-computed-navitem-selected-bg, var(--nn-theme-navitem-selected-bg));
     --nn-selected-navitem-name-color: var(--nn-theme-navitem-selected-name-color);
     --nn-selected-navitem-chevron-color: var(--nn-theme-navitem-selected-chevron-color);
     --nn-selected-navitem-icon-color: var(--nn-theme-navitem-selected-icon-color);
@@ -399,7 +399,7 @@ body {
 }
 
 .nn-split-container:is([data-navigator-focused='false'], [data-focus-pane='navigation'], [data-focus-pane='search']) {
-    --nn-selected-file-bg-color: var(--nn-theme-file-selected-inactive-bg-solid, var(--nn-theme-file-selected-inactive-bg));
+    --nn-selected-file-bg-color: var(--nn-computed-file-selected-inactive-bg, var(--nn-theme-file-selected-inactive-bg));
     --nn-selected-file-name-color: var(--nn-theme-file-selected-inactive-name-color);
     --nn-selected-file-preview-color: var(--nn-theme-file-selected-inactive-preview-color);
     --nn-selected-file-date-color: var(--nn-theme-file-selected-inactive-date-color);
@@ -411,7 +411,7 @@ body {
 }
 
 .nn-split-container:is([data-navigator-focused='false'], [data-focus-pane='files'], [data-focus-pane='search']) {
-    --nn-selected-navitem-bg-color: var(--nn-theme-navitem-selected-inactive-bg-solid, var(--nn-theme-navitem-selected-inactive-bg));
+    --nn-selected-navitem-bg-color: var(--nn-computed-navitem-selected-inactive-bg, var(--nn-theme-navitem-selected-inactive-bg));
     --nn-selected-navitem-name-color: var(--nn-theme-navitem-selected-inactive-name-color);
     --nn-selected-navitem-chevron-color: var(--nn-theme-navitem-selected-inactive-chevron-color);
     --nn-selected-navitem-icon-color: var(--nn-theme-navitem-selected-inactive-icon-color);
@@ -1963,12 +1963,12 @@ body {
 
 /* Pre-composited solid color prevents hairlines by blending alpha with pane background */
 .nn-navitem-content--search-include::before {
-    background-color: var(--nn-theme-tag-positive-bg-solid, var(--nn-theme-tag-positive-bg));
+    background-color: var(--nn-computed-tag-positive-bg, var(--nn-theme-tag-positive-bg));
 }
 
 /* Pre-composited solid color prevents hairlines by blending alpha with pane background */
 .nn-navitem-content--search-exclude::before {
-    background-color: var(--nn-theme-tag-negative-bg-solid, var(--nn-theme-tag-negative-bg));
+    background-color: var(--nn-computed-tag-negative-bg, var(--nn-theme-tag-negative-bg));
 }
 
 /* Folder hover state - desktop only, using pseudo-element for padding control */
@@ -3900,18 +3900,18 @@ body.nn-resizing {
 
 /* Special visual feedback for tag drop zones - uses pre-composited solid color */
 [data-drop-zone='tag'].nn-drag-over {
-    background-color: var(--nn-theme-tag-positive-bg-solid, var(--nn-theme-tag-positive-bg));
+    background-color: var(--nn-computed-tag-positive-bg, var(--nn-theme-tag-positive-bg));
     border-radius: min(14px, var(--nn-theme-navitem-border-radius));
 }
 
 [data-drop-zone='tag-root'].nn-drag-over {
-    background-color: var(--nn-theme-tag-positive-bg-solid, var(--nn-theme-tag-positive-bg));
+    background-color: var(--nn-computed-tag-positive-bg, var(--nn-theme-tag-positive-bg));
     border-radius: min(14px, var(--nn-theme-navitem-border-radius));
 }
 
 /* Different style for untagged drop zone - uses pre-composited solid color */
 [data-drop-zone='tag'][data-tag='__untagged__'].nn-drag-over {
-    background-color: var(--nn-theme-tag-negative-bg-solid, var(--nn-theme-tag-negative-bg));
+    background-color: var(--nn-computed-tag-negative-bg, var(--nn-theme-tag-negative-bg));
     border-radius: min(14px, var(--nn-theme-navitem-border-radius));
 }
 
@@ -4008,7 +4008,7 @@ body.nn-resizing {
     inset-inline-end: 0;
     bottom: 0;
     /* Use pre-composited solid color for consistent border appearance */
-    border: 2px solid var(--nn-theme-navitem-selected-bg-solid, var(--nn-theme-navitem-selected-bg));
+    border: 2px solid var(--nn-computed-navitem-selected-bg, var(--nn-theme-navitem-selected-bg));
     border-radius: min(14px, var(--nn-theme-navitem-border-radius));
     pointer-events: none;
     z-index: 10;
@@ -4028,7 +4028,7 @@ body.nn-resizing {
     inset-inline-end: 0;
     bottom: 0; /* Extend to bottom edge to cover separator space */
     /* Use pre-composited solid color for consistent border appearance */
-    border: 2px solid var(--nn-theme-navitem-selected-bg-solid, var(--nn-theme-navitem-selected-bg));
+    border: 2px solid var(--nn-computed-navitem-selected-bg, var(--nn-theme-navitem-selected-bg));
     border-radius: min(16px, var(--nn-theme-file-border-radius));
     pointer-events: none;
     z-index: 10;

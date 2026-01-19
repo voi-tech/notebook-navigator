@@ -172,7 +172,7 @@ export const ListPane = React.memo(
         const bottomToolbarRef = useRef<HTMLDivElement>(null);
         // Android uses toolbar at top, iOS at bottom
         const isAndroid = Platform.isAndroidApp;
-        /** Maps semi-transparent theme color variables to their pre-composited solid equivalents (see constants/surfaceColorMappings). */
+        /** Maps semi-transparent theme color variables to computed opaque equivalents (see constants/surfaceColorMappings). */
         useSurfaceColorVariables(listPaneRef, {
             app,
             rootContainerRef: props.rootContainerRef,
