@@ -131,6 +131,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
             newNote: true
         }
     },
+    pinNavigationBanner: true,
     showNoteCount: true,
     separateNoteCounts: true,
     rootLevelSpacing: 0,

@@ -871,6 +871,10 @@ export const STRINGS_VI = {
                 current: 'Banner hiện tại: {path}',
                 chooseButton: 'Chọn ảnh'
             },
+            pinNavigationBanner: {
+                name: 'Ghim biểu ngữ',
+                desc: 'Ghim biểu ngữ điều hướng phía trên cây điều hướng.'
+            },
             showShortcuts: {
                 name: 'Hiện lối tắt',
                 desc: 'Hiển thị phần lối tắt trong ngăn điều hướng.'

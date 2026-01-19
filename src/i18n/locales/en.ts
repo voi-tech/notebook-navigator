@@ -871,6 +871,10 @@ export const STRINGS_EN = {
                 current: 'Current banner: {path}',
                 chooseButton: 'Choose image'
             },
+            pinNavigationBanner: {
+                name: 'Pin banner',
+                desc: 'Pin the navigation banner above the navigation tree.'
+            },
             showShortcuts: {
                 name: 'Show shortcuts',
                 desc: 'Display the shortcuts section in the navigation pane.'

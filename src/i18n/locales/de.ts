@@ -873,6 +873,10 @@ export const STRINGS_DE = {
                 current: 'Aktuelles Banner: {path}',
                 chooseButton: 'Bild auswählen'
             },
+            pinNavigationBanner: {
+                name: 'Banner anheften',
+                desc: 'Banner oberhalb des Navigationsbaums anheften.'
+            },
             showShortcuts: {
                 name: 'Lesezeichen anzeigen',
                 desc: 'Lesezeichen-Bereich im Navigationsbereich anzeigen.'

@@ -72,12 +72,19 @@ interface UseNavigationPaneScrollParams {
     /**
      * Top offset inside the scroll container before the virtual list begins.
      *
-     * The navigation pane renders a sticky "chrome" stack (header/toolbar/banner/pinned shortcuts)
-     * above the virtualized tree inside the same scroll container. Providing its height keeps:
+     * The navigation pane renders a stack of non-virtualized content above the virtualized tree inside
+     * the same scroll container. Providing its height keeps:
      * - visible range calculations aligned with the tree rows (excluding the chrome),
      * - scrollToIndex alignment below the chrome stack.
      */
     scrollMargin: number;
+    /**
+     * Height of the sticky top chrome that can cover tree rows when scrolling.
+     *
+     * This is used as TanStack Virtual scrollPaddingStart and for post-scroll safety adjustments to
+     * ensure selected rows stay below the pinned header/toolbar/shortcuts stack.
+     */
+    scrollPaddingStart: number;
     /**
      * Bottom inset reserved by overlays that sit on top of the scroll content.
      *
@@ -118,6 +125,7 @@ export function useNavigationPaneScroll({
     isVisible,
     activeShortcutKey,
     scrollMargin,
+    scrollPaddingStart,
     scrollPaddingEnd
 }: UseNavigationPaneScrollParams): UseNavigationPaneScrollResult {
     const { isMobile } = useServices();
@@ -262,6 +270,7 @@ export function useNavigationPaneScroll({
      * Initialize TanStack Virtual virtualizer with dynamic heights for navigation items
      */
     const effectiveScrollMargin = Number.isFinite(scrollMargin) && scrollMargin > 0 ? scrollMargin : 0;
+    const effectiveScrollPaddingStart = Number.isFinite(scrollPaddingStart) && scrollPaddingStart > 0 ? scrollPaddingStart : 0;
     const effectiveScrollPaddingEnd = Number.isFinite(scrollPaddingEnd) && scrollPaddingEnd > 0 ? scrollPaddingEnd : 0;
 
     const ensureIndexNotCovered = useCallback(
@@ -280,7 +289,7 @@ export function useNavigationPaneScroll({
 
             const containerRect = scrollElement.getBoundingClientRect();
             const rowRect = row.getBoundingClientRect();
-            const safeTop = containerRect.top + effectiveScrollMargin;
+            const safeTop = containerRect.top + effectiveScrollPaddingStart;
             const safeBottom = containerRect.bottom - effectiveScrollPaddingEnd;
 
             if (rowRect.top < safeTop) {
@@ -292,7 +301,7 @@ export function useNavigationPaneScroll({
                 scrollElement.scrollTop += Math.round(rowRect.bottom - safeBottom);
             }
         },
-        [effectiveScrollMargin, effectiveScrollPaddingEnd]
+        [effectiveScrollPaddingStart, effectiveScrollPaddingEnd]
     );
 
     const rowVirtualizer = useVirtualizer({
@@ -301,7 +310,7 @@ export function useNavigationPaneScroll({
         // Align virtualizer scroll math with the start of the list content (excluding pinned headers).
         scrollMargin: effectiveScrollMargin,
         // Ensure scrollToIndex aligns items below the pinned header instead of under it.
-        scrollPaddingStart: effectiveScrollMargin,
+        scrollPaddingStart: effectiveScrollPaddingStart,
         scrollPaddingEnd: effectiveScrollPaddingEnd,
         estimateSize: index => {
             const item = items[index];

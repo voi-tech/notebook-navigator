@@ -869,6 +869,10 @@ export const STRINGS_ZH_CN = {
                 current: '当前横幅：{path}',
                 chooseButton: '选择图片'
             },
+            pinNavigationBanner: {
+                name: '固定横幅',
+                desc: '将导航横幅固定在导航树上方。'
+            },
             showShortcuts: {
                 name: '显示快捷方式',
                 desc: '在导航窗格中显示快捷方式部分。'

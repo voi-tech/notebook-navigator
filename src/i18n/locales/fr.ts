@@ -873,6 +873,10 @@ export const STRINGS_FR = {
                 current: 'Bannière actuelle : {path}',
                 chooseButton: 'Choisir une image'
             },
+            pinNavigationBanner: {
+                name: 'Épingler la bannière',
+                desc: "Épingler la bannière de navigation au-dessus de l'arborescence de navigation."
+            },
             showShortcuts: {
                 name: 'Afficher les raccourcis',
                 desc: 'Afficher la section des raccourcis dans le panneau de navigation.'

@@ -316,6 +316,7 @@ export const NavigationPane = React.memo(
         const shouldShowVaultTitleInNavigationPane = !isMobile && hasMultipleVaultProfiles && vaultTitlePreference === 'navigation';
         const navigationPaneRef = useRef<HTMLDivElement>(null);
         const navigationOverlayRef = useRef<HTMLDivElement>(null);
+        const navigationBannerRef = useRef<HTMLDivElement>(null);
         const pinnedShortcutsContainerRef = useRef<HTMLDivElement>(null);
         const [pinnedShortcutsScrollElement, setPinnedShortcutsScrollElement] = useState<HTMLDivElement | null>(null);
         const [pinnedShortcutsHasOverflow, setPinnedShortcutsHasOverflow] = useState(false);
@@ -951,6 +952,8 @@ export const NavigationPane = React.memo(
             return ordered;
         }, [pinnedRecentNotesItems, sectionOrder, shortcutItems, shouldPinRecentNotes, shouldPinShortcuts]);
         const shouldRenderNavigationBanner = Boolean(navigationBannerPath && !isRootReorderMode);
+        const navigationBannerContent =
+            shouldRenderNavigationBanner && navigationBannerPath ? <NavigationBanner path={navigationBannerPath} /> : null;
         // Pinned shortcuts are shown in normal navigation mode (but hidden during reorder mode).
         const shouldRenderPinnedShortcuts = pinnedNavigationItems.length > 0 && !isRootReorderMode;
 
@@ -962,14 +965,18 @@ export const NavigationPane = React.memo(
         // The navigation pane renders a "chrome" stack above the virtualized tree:
         // - pane header
         // - (Android) toolbar
-        // - vault banner
+        // - (optional) pinned navigation banner
         // - pinned shortcuts/recent section
         //
-        // The virtualized list is rendered below this stack inside the same scroll container. Feed its height into TanStack Virtual
-        // as scrollMargin/scrollPaddingStart so scrollToIndex aligns items below the chrome (not under it).
+        // When the navigation banner is not pinned, it is rendered above the tree as normal scroll content and its
+        // height must be included in the TanStack Virtual scrollMargin so item positions match scrollTop.
         const navigationOverlayHeight = useMeasuredElementHeight(navigationOverlayRef);
+        const navigationBannerHeight = useMeasuredElementHeight(navigationBannerRef, {
+            enabled: Boolean(navigationBannerContent) && !settings.pinNavigationBanner
+        });
         const calendarOverlayHeight = useMeasuredElementHeight(calendarOverlayRef, { enabled: shouldRenderCalendarOverlay });
         const bottomToolbarHeight = useMeasuredElementHeight(bottomToolbarRef, { enabled: isMobile && !isAndroid });
+        const navigationScrollMargin = navigationOverlayHeight + navigationBannerHeight;
 
         // We only reserve gutter space when a banner exists because Windows scrollbars
         // change container width by ~7px when they appear. That width change used to
@@ -1048,7 +1055,8 @@ export const NavigationPane = React.memo(
             pathToIndex,
             isVisible,
             activeShortcutKey,
-            scrollMargin: navigationOverlayHeight,
+            scrollMargin: navigationScrollMargin,
+            scrollPaddingStart: navigationOverlayHeight,
             // Reserve space for bottom overlays so scrollToIndex({ align: 'auto' }) reveals rows above the calendar and iOS toolbar.
             scrollPaddingEnd: calendarOverlayHeight + bottomToolbarHeight
         });
@@ -1080,7 +1088,7 @@ export const NavigationPane = React.memo(
                 return;
             }
             rowVirtualizer.measure();
-        }, [isRootReorderMode, rowVirtualizer, sectionOrder, reorderableRootFolders, reorderableRootTags]);
+        }, [isRootReorderMode, rowVirtualizer, sectionOrder, reorderableRootFolders, reorderableRootTags, navigationScrollMargin]);
 
         // Scroll to top when entering root reorder mode for better UX
         useEffect(() => {
@@ -2764,7 +2772,7 @@ export const NavigationPane = React.memo(
                                 rootReorderDisabled={!canReorderRootItems}
                             />
                         )}
-                        {shouldRenderNavigationBanner && navigationBannerPath ? <NavigationBanner path={navigationBannerPath} /> : null}
+                        {settings.pinNavigationBanner ? navigationBannerContent : null}
                         {shouldRenderPinnedShortcuts ? (
                             <div
                                 className="nn-shortcut-pinned"
@@ -2793,6 +2801,11 @@ export const NavigationPane = React.memo(
                         ) : null}
                     </div>
                     <div className="nn-navigation-pane-content">
+                        {!settings.pinNavigationBanner && navigationBannerContent ? (
+                            <div className="nn-navigation-pane-banner" ref={navigationBannerRef}>
+                                {navigationBannerContent}
+                            </div>
+                        ) : null}
                         <div role={isRootReorderMode ? 'list' : 'tree'}>
                             {isRootReorderMode ? (
                                 <NavigationRootReorderPanel
@@ -2838,14 +2851,11 @@ export const NavigationPane = React.memo(
                                                     data-index={virtualItem.index}
                                                     className="nn-virtual-nav-item"
                                                     style={{
-                                                        // The navigation chrome stack (header/banner/pinned) lives above the virtual list
-                                                        // inside the same scroll container. TanStack Virtual is configured with a
-                                                        // scrollMargin/scrollPaddingStart equal to the chrome height so scrollToIndex aligns
-                                                        // items below the chrome, but it also
-                                                        // means virtualItem.start includes that margin. The virtual container itself
-                                                        // is rendered below the chrome stack in normal flow, so we subtract the
-                                                        // overlay height to position items at the correct Y within the container.
-                                                        transform: `translateY(${Math.max(0, virtualItem.start - navigationOverlayHeight)}px)`
+                                                        // The navigation chrome stack lives above the virtual list inside the same scroll container.
+                                                        // TanStack Virtual scrollMargin matches the non-virtualized content height above the list,
+                                                        // so virtualItem.start includes it. The virtual container sits below that content in normal
+                                                        // flow, so subtract the scrollMargin to position rows at the correct Y within the container.
+                                                        transform: `translateY(${Math.max(0, virtualItem.start - navigationScrollMargin)}px)`
                                                     }}
                                                 >
                                                     {renderItem(item)}

@@ -27,6 +27,7 @@ import {
     resolveNavItemHeight,
     resolveNavItemHeightScaleText,
     resolvePaneTransitionDuration,
+    resolvePinNavigationBanner,
     resolveSearchProvider,
     resolveTagSortOrder,
     resolveToolbarVisibility
@@ -312,6 +313,15 @@ export function createSyncModeRegistry(params: CreateSyncModeRegistryParams): Sy
             resolveDeviceLocal: storedData =>
                 resolveToolbarVisibility({ storedData, keys: params.keys, defaultSettings: params.defaultSettings }),
             sanitizeSynced: () => params.sanitizeToolbarVisibilitySetting(params.getSettings().toolbarVisibility)
+        }),
+        pinNavigationBanner: createResolvedLocalStorageSettingEntry({
+            settingId: 'pinNavigationBanner',
+            loadPhase: 'preProfiles',
+            localStorageKey: params.keys.pinNavigationBannerKey,
+            resolveDeviceLocal: storedData =>
+                resolvePinNavigationBanner({ storedData, keys: params.keys, defaultSettings: params.defaultSettings }),
+            sanitizeSynced: () =>
+                params.sanitizeBooleanSetting(params.getSettings().pinNavigationBanner, params.defaultSettings.pinNavigationBanner)
         }),
         showCalendar: createUXPreferenceEntry({
             settingId: 'showCalendar',

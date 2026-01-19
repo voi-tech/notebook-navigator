@@ -871,6 +871,10 @@ export const STRINGS_FA = {
                 current: 'بنر فعلی: {path}',
                 chooseButton: 'انتخاب تصویر'
             },
+            pinNavigationBanner: {
+                name: 'سنجاق کردن بنر',
+                desc: 'سنجاق کردن بنر ناوبری بالای درخت ناوبری.'
+            },
             showShortcuts: {
                 name: 'نمایش میانبرها',
                 desc: 'بخش میانبرها را در پنل ناوبری نمایش دهید.'

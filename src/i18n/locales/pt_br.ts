@@ -868,6 +868,10 @@ export const STRINGS_PT_BR = {
                 current: 'Banner atual: {path}',
                 chooseButton: 'Escolher imagem'
             },
+            pinNavigationBanner: {
+                name: 'Fixar banner',
+                desc: 'Fixar o banner de navegação acima da árvore de navegação.'
+            },
             showShortcuts: {
                 name: 'Mostrar atalhos',
                 desc: 'Exibir a seção de atalhos no painel de navegação.'

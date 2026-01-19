@@ -873,6 +873,10 @@ export const STRINGS_NL = {
                 current: 'Huidige banner: {path}',
                 chooseButton: 'Afbeelding kiezen'
             },
+            pinNavigationBanner: {
+                name: 'Banner vastpinnen',
+                desc: 'Pin de navigatiebanner boven de navigatieboom.'
+            },
             showShortcuts: {
                 name: 'Snelkoppelingen tonen',
                 desc: 'De sectie snelkoppelingen weergeven in het navigatiepaneel.'

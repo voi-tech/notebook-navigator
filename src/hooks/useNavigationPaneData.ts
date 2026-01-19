@@ -1126,9 +1126,9 @@ export function useNavigationPaneData({
         const sectionSpacerMap = new Map<NavigationSectionId, string>();
         let firstVisibleSectionId: NavigationSectionId | null = null;
 
-        // Navigation banners are rendered in the pinned chrome stack (above the virtualized list).
-        // Keeping them out of the virtualized items ensures the banner stays in front of the tree rows
-        // and avoids mixing "header chrome" elements into the tree/list semantics.
+        // Navigation banners are rendered outside the virtualized items (either pinned in the chrome stack
+        // or as scroll content above the tree). Keeping them out of the virtualized rows avoids mixing
+        // chrome elements into the tree/list semantics.
 
         // Add top spacer for visual separation between pinned content and tree items
         allItems.push({

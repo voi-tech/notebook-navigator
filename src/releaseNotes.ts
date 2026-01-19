@@ -81,7 +81,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         new: [
             'Public API: Added a new ==Menus API== for extending the Notebook Navigator context menus! You can now "hook" into the file and folder context menus of Notebook Navigator to add your own menu items. The new API methods are:',
             '==registerFileMenu(callback)== for adding items to the file context menu.',
-            '==registerFolderMenu(callback)== for adding items to the folder context menu.'
+            '==registerFolderMenu(callback)== for adding items to the folder context menu.',
+            'New setting: ==Navigation pane > Appearance > Pin banner==. Enable to keep the banner pinned to top, disable to make it scroll with the navigation tree.'
         ],
         improved: [],
         changed: [],

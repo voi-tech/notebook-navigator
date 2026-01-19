@@ -873,6 +873,10 @@ export const STRINGS_PL = {
                 current: 'Aktualny baner: {path}',
                 chooseButton: 'Wybierz obraz'
             },
+            pinNavigationBanner: {
+                name: 'Przypnij baner',
+                desc: 'Przypnij baner nawigacyjny nad drzewem nawigacji.'
+            },
             showShortcuts: {
                 name: 'Pokaż skróty',
                 desc: 'Wyświetl sekcję skrótów w panelu nawigacji.'

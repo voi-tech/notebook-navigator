@@ -871,6 +871,10 @@ export const STRINGS_UK = {
                 current: 'Поточний банер: {path}',
                 chooseButton: 'Вибрати зображення'
             },
+            pinNavigationBanner: {
+                name: 'Закріпити банер',
+                desc: 'Закріпити банер навігації над деревом навігації.'
+            },
             showShortcuts: {
                 name: 'Показувати ярлики',
                 desc: 'Відображати розділ ярликів у панелі навігації.'

@@ -872,6 +872,10 @@ export const STRINGS_JA = {
                 current: '現在のバナー: {path}',
                 chooseButton: '画像を選択'
             },
+            pinNavigationBanner: {
+                name: 'バナーを固定',
+                desc: 'ナビゲーションバナーをナビゲーションツリーの上に固定します。'
+            },
             showShortcuts: {
                 name: 'ショートカットを表示',
                 desc: 'ナビゲーションペインにショートカットセクションを表示します。'

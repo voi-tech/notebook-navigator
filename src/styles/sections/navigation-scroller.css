@@ -259,6 +259,11 @@
     box-sizing: border-box;
 }
 
+.nn-navigation-pane-banner {
+    margin-inline-start: calc(-1 * var(--nn-scroller-padding));
+    margin-inline-end: calc(-1 * var(--nn-scroller-padding));
+}
+
 .nn-nav-banner-image {
     display: block;
     width: 100%;

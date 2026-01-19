@@ -872,6 +872,10 @@ export const STRINGS_RU = {
                 current: 'Текущий баннер: {path}',
                 chooseButton: 'Выбрать изображение'
             },
+            pinNavigationBanner: {
+                name: 'Закрепить баннер',
+                desc: 'Закрепить баннер навигации над деревом навигации.'
+            },
             showShortcuts: {
                 name: 'Показывать ярлыки',
                 desc: 'Отображать раздел ярлыков в панели навигации.'

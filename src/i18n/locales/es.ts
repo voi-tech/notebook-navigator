@@ -872,6 +872,10 @@ export const STRINGS_ES = {
                 current: 'Banner actual: {path}',
                 chooseButton: 'Elegir imagen'
             },
+            pinNavigationBanner: {
+                name: 'Fijar banner',
+                desc: 'Fijar el banner de navegación sobre el árbol de navegación.'
+            },
             showShortcuts: {
                 name: 'Mostrar accesos directos',
                 desc: 'Mostrar la sección de accesos directos en el panel de navegación.'

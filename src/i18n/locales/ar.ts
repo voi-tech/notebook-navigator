@@ -871,6 +871,10 @@ export const STRINGS_AR = {
                 current: 'الشعار الحالي: {path}',
                 chooseButton: 'اختيار صورة'
             },
+            pinNavigationBanner: {
+                name: 'تثبيت البانر',
+                desc: 'تثبيت لافتة التنقل فوق شجرة التنقل.'
+            },
             showShortcuts: {
                 name: 'إظهار الاختصارات',
                 desc: 'عرض قسم الاختصارات في لوحة التنقل.'

@@ -871,6 +871,10 @@ export const STRINGS_ID = {
                 current: 'Banner saat ini: {path}',
                 chooseButton: 'Pilih gambar'
             },
+            pinNavigationBanner: {
+                name: 'Sematkan banner',
+                desc: 'Sematkan banner navigasi di atas pohon navigasi.'
+            },
             showShortcuts: {
                 name: 'Tampilkan pintasan',
                 desc: 'Tampilkan bagian pintasan di panel navigasi.'

@@ -871,6 +871,10 @@ export const STRINGS_KO = {
                 current: '현재 배너: {path}',
                 chooseButton: '이미지 선택'
             },
+            pinNavigationBanner: {
+                name: '배너 고정',
+                desc: '탐색 배너를 탐색 트리 위에 고정합니다.'
+            },
             showShortcuts: {
                 name: '바로가기 표시',
                 desc: '탐색 창에 바로가기 섹션을 표시합니다.'

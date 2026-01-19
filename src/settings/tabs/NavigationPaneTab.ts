@@ -492,6 +492,17 @@ export function renderNavigationPaneTab(context: SettingsTabContext): void {
 
     renderNavigationBannerValue();
 
+    const navigationBannerSubSettingsEl = createSubSettingsContainer(navigationBannerSetting);
+    const pinNavigationBannerSetting = new Setting(navigationBannerSubSettingsEl)
+        .setName(strings.settings.items.pinNavigationBanner.name)
+        .setDesc(strings.settings.items.pinNavigationBanner.desc)
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.pinNavigationBanner).onChange(value => {
+                plugin.setPinNavigationBanner(value);
+            })
+        );
+    addSettingSyncModeToggle({ setting: pinNavigationBannerSetting, plugin, settingId: 'pinNavigationBanner' });
+
     const showNoteCountSetting = appearanceGroup.addSetting(setting => {
         setting.setName(strings.settings.items.showNoteCount.name).setDesc(strings.settings.items.showNoteCount.desc);
     });

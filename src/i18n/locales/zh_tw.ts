@@ -869,6 +869,10 @@ export const STRINGS_ZH_TW = {
                 current: '目前橫幅：{path}',
                 chooseButton: '選擇圖片'
             },
+            pinNavigationBanner: {
+                name: '固定橫幅',
+                desc: '將導航橫幅固定在導航樹上方。'
+            },
             showShortcuts: {
                 name: '顯示捷徑',
                 desc: '在導覽窗格中顯示捷徑區段。'

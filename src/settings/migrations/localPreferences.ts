@@ -367,6 +367,35 @@ export function resolveNavItemHeightScaleText(params: {
 }
 
 /**
+ * Resolves the navigation banner pinned toggle with local overrides.
+ */
+export function resolvePinNavigationBanner(params: {
+    storedData: Record<string, unknown> | null;
+    keys: LocalStorageKeys;
+    defaultSettings: NotebookNavigatorSettings;
+}): MigrationResolution<boolean> {
+    const { storedData, keys, defaultSettings } = params;
+
+    const storedLocal = localStorage.get<unknown>(keys.pinNavigationBannerKey);
+    if (typeof storedLocal === 'boolean') {
+        // Local storage takes precedence for per-device preferences.
+        return { value: storedLocal, migrated: false };
+    }
+
+    const storedSetting = storedData?.['pinNavigationBanner'];
+    if (typeof storedSetting === 'boolean') {
+        // Migrate legacy synced value into local storage.
+        localStorage.set(keys.pinNavigationBannerKey, storedSetting);
+        return { value: storedSetting, migrated: true };
+    }
+
+    // Seed local storage with a valid default value.
+    const fallback = defaultSettings.pinNavigationBanner;
+    localStorage.set(keys.pinNavigationBannerKey, fallback);
+    return { value: fallback, migrated: false };
+}
+
+/**
  * Resolves the calendar weeks-to-show value with local overrides.
  */
 export function resolveCalendarWeeksToShow(params: {

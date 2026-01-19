@@ -871,6 +871,10 @@ export const STRINGS_TH = {
                 current: 'แบนเนอร์ปัจจุบัน: {path}',
                 chooseButton: 'เลือกรูปภาพ'
             },
+            pinNavigationBanner: {
+                name: 'ปักหมุดแบนเนอร์',
+                desc: 'ปักหมุดแบนเนอร์การนำทางไว้เหนือแผนผังการนำทาง'
+            },
             showShortcuts: {
                 name: 'แสดงทางลัด',
                 desc: 'แสดงส่วนทางลัดในแผงนำทาง'

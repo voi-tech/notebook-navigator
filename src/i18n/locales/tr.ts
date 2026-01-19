@@ -871,6 +871,10 @@ export const STRINGS_TR = {
                 current: 'Mevcut afiş: {path}',
                 chooseButton: 'Görsel seç'
             },
+            pinNavigationBanner: {
+                name: 'Afişi sabitle',
+                desc: 'Gezinme afişini gezinme ağacının üstüne sabitle.'
+            },
             showShortcuts: {
                 name: 'Kısayolları göster',
                 desc: 'Gezinme bölmesinde kısayollar bölümünü görüntüle.'

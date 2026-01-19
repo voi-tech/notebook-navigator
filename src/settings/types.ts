@@ -40,6 +40,7 @@ export const SYNC_MODE_SETTING_IDS = [
     'dualPaneOrientation',
     'paneTransitionDuration',
     'toolbarVisibility',
+    'pinNavigationBanner',
     'showCalendar',
     'navIndent',
     'navItemHeight',
@@ -203,6 +204,7 @@ export interface NotebookNavigatorSettings {
     // Navigation pane tab - Appearance
     colorIconOnly: boolean;
     toolbarVisibility: ToolbarVisibilitySettings;
+    pinNavigationBanner: boolean;
     showNoteCount: boolean;
     separateNoteCounts: boolean;
     rootLevelSpacing: number;

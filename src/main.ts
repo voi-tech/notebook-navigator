@@ -127,6 +127,27 @@ const UX_PREFERENCE_KEYS: (keyof UXPreferences)[] = [
     'showCalendar'
 ];
 
+// Settings that historically lived in localStorage only.
+// During upgrades (no stored syncModes), these default to local to preserve per-device behavior.
+const LEGACY_LOCAL_SYNC_MODE_SETTING_IDS = new Set<SyncModeSettingId>([
+    'vaultProfile',
+    'tagSortOrder',
+    'searchProvider',
+    'includeDescendantNotes',
+    'dualPane',
+    'dualPaneOrientation',
+    'paneTransitionDuration',
+    'toolbarVisibility',
+    'showCalendar',
+    'navIndent',
+    'navItemHeight',
+    'navItemHeightScaleText',
+    'calendarWeeksToShow',
+    'compactItemHeight',
+    'compactItemHeightScaleText',
+    'uiScale'
+]);
+
 /**
  * Main plugin class for Notebook Navigator
  * Provides a Notes-style file explorer for Obsidian with two-pane layout
@@ -311,12 +332,18 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
     private normalizeSyncModes(params: { storedData: Record<string, unknown> | null; isFirstLaunch: boolean }): void {
         const { storedData, isFirstLaunch } = params;
-        const defaultMode: SettingSyncMode = isFirstLaunch ? 'synced' : 'local';
         const storedModes = storedData?.['syncModes'];
         const source = isPlainObjectRecordValue(storedModes) ? storedModes : null;
 
         const resolved = sanitizeRecord<SettingSyncMode>(undefined);
         SYNC_MODE_SETTING_IDS.forEach(settingId => {
+            // First launch: initialize all sync-mode settings as synced.
+            // Upgrade (missing per-setting mode): keep legacy local-only settings local and default new settings to synced.
+            const defaultMode: SettingSyncMode = isFirstLaunch
+                ? 'synced'
+                : LEGACY_LOCAL_SYNC_MODE_SETTING_IDS.has(settingId)
+                  ? 'local'
+                  : 'synced';
             const value = source ? source[settingId] : undefined;
             resolved[settingId] = isSettingSyncMode(value) ? value : defaultMode;
         });
@@ -1136,6 +1163,17 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     public persistToolbarVisibility(): void {
         localStorage.set(this.keys.toolbarVisibilityKey, this.settings.toolbarVisibility);
         this.persistSyncModeSettingUpdate('toolbarVisibility');
+    }
+
+    /**
+     * Updates whether the navigation banner is pinned to the top of the navigation pane.
+     */
+    public setPinNavigationBanner(enabled: boolean): void {
+        this.updateSettingAndMirrorToLocalStorage({
+            settingId: 'pinNavigationBanner',
+            localStorageKey: this.keys.pinNavigationBannerKey,
+            nextValue: enabled
+        });
     }
 
     /**
