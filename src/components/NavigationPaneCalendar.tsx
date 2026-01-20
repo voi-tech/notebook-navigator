@@ -18,7 +18,7 @@
 
 import React, { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Notice, Platform, TFile, TFolder, normalizePath, type App } from 'obsidian';
+import { Menu, Notice, Platform, TFile, TFolder, normalizePath, type App } from 'obsidian';
 import { getWeek, getWeekYear } from 'date-fns';
 import { getCurrentLanguage, strings } from '../i18n';
 import { ConfirmModal } from '../modals/ConfirmModal';
@@ -57,6 +57,7 @@ import {
 } from '../utils/calendarCustomNotePatterns';
 import { stripForbiddenNameCharactersAllPlatforms, stripForbiddenNameCharactersWindows } from '../utils/fileNameUtils';
 import { getTooltipPlacement } from '../utils/domUtils';
+import { resolveUXIconForMenu } from '../utils/uxIcons';
 
 interface CalendarDay {
     date: MomentInstance;
@@ -78,6 +79,7 @@ interface CalendarDayButtonProps {
     dayNumber: number;
     isMobile: boolean;
     onClick: () => void;
+    onContextMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
     style: React.CSSProperties | undefined;
     tooltipEnabled: boolean;
     tooltipImageUrl: string | null;
@@ -93,6 +95,7 @@ function CalendarDayButton({
     dayNumber,
     isMobile,
     onClick,
+    onContextMenu,
     style,
     tooltipEnabled,
     tooltipImageUrl,
@@ -163,6 +166,7 @@ function CalendarDayButton({
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
+            onContextMenu={onContextMenu}
         >
             <span className="nn-navigation-calendar-day-number" aria-hidden="true">
                 {dayNumber}
@@ -448,7 +452,7 @@ interface CustomCalendarNoteConfig {
 }
 
 export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCalendarProps) {
-    const { app, isMobile } = useServices();
+    const { app, fileSystemOps, isMobile } = useServices();
     const settings = useSettingsState();
     const { getDB } = useFileCache();
     const openFile = useFileOpener();
@@ -1229,6 +1233,71 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
         [app, collapseNavigationIfMobile, dailyNoteSettings, openFile, openOrCreateCustomCalendarNote, settings]
     );
 
+    const showCalendarNoteContextMenu = useCallback(
+        (
+            event: React.MouseEvent<HTMLElement>,
+            target: {
+                kind: CustomCalendarNoteKind;
+                date: MomentInstance;
+                existingFile: TFile | null;
+                canCreate: boolean;
+            }
+        ) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            setHoverTooltip(null);
+
+            const menu = new Menu();
+
+            const existingFile = target.existingFile;
+            if (existingFile) {
+                menu.addItem(item => {
+                    item.setTitle(strings.contextMenu.file.deleteNote)
+                        .setIcon('lucide-trash')
+                        .onClick(() => {
+                            runAsyncAction(() =>
+                                fileSystemOps.deleteFile(existingFile, settings.confirmBeforeDelete, () => {
+                                    setVaultVersion(v => v + 1);
+                                    collapseNavigationIfMobile();
+                                })
+                            );
+                        });
+                });
+            } else {
+                menu.addItem(item => {
+                    item.setTitle(strings.contextMenu.folder.newNote)
+                        .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'list-new-note', 'lucide-pen-box'))
+                        .setDisabled(!target.canCreate)
+                        .onClick(() => {
+                            if (!target.canCreate) {
+                                return;
+                            }
+
+                            if (target.kind === 'day') {
+                                runAsyncAction(() => openOrCreateDailyNote(target.date, null));
+                                return;
+                            }
+
+                            runAsyncAction(() => openOrCreateCustomCalendarNote(target.kind, target.date, null));
+                        });
+                });
+            }
+
+            menu.showAtMouseEvent(event.nativeEvent);
+        },
+        [
+            fileSystemOps,
+            collapseNavigationIfMobile,
+            openOrCreateCustomCalendarNote,
+            openOrCreateDailyNote,
+            setHoverTooltip,
+            setVaultVersion,
+            settings.confirmBeforeDelete,
+            settings.interfaceIcons
+        ]
+    );
+
     const showWeekNumbers = settings.calendarShowWeekNumber;
     const highlightToday = settings.calendarHighlightToday;
 
@@ -1359,11 +1428,31 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                                         headerPeriodNoteEntries.month?.file ?? null
                                     )
                                 }
+                                onContextMenu={event =>
+                                    showCalendarNoteContextMenu(event, {
+                                        kind: 'month',
+                                        date: cursorDate.clone().locale(displayLocale),
+                                        existingFile: headerPeriodNoteEntries.month?.file ?? null,
+                                        canCreate: monthNotesEnabled
+                                    })
+                                }
                             >
                                 {monthLabel}
                             </button>
                         ) : (
-                            <span className="nn-navigation-calendar-period-label">{monthLabel}</span>
+                            <span
+                                className="nn-navigation-calendar-period-label"
+                                onContextMenu={event =>
+                                    showCalendarNoteContextMenu(event, {
+                                        kind: 'month',
+                                        date: cursorDate.clone().locale(displayLocale),
+                                        existingFile: headerPeriodNoteEntries.month?.file ?? null,
+                                        canCreate: monthNotesEnabled
+                                    })
+                                }
+                            >
+                                {monthLabel}
+                            </span>
                         )}
 
                         {yearNotesEnabled ? (
@@ -1379,11 +1468,31 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                                         headerPeriodNoteEntries.year?.file ?? null
                                     )
                                 }
+                                onContextMenu={event =>
+                                    showCalendarNoteContextMenu(event, {
+                                        kind: 'year',
+                                        date: cursorDate.clone().locale(displayLocale),
+                                        existingFile: headerPeriodNoteEntries.year?.file ?? null,
+                                        canCreate: yearNotesEnabled
+                                    })
+                                }
                             >
                                 {yearLabel}
                             </button>
                         ) : (
-                            <span className="nn-navigation-calendar-period-label">{yearLabel}</span>
+                            <span
+                                className="nn-navigation-calendar-period-label"
+                                onContextMenu={event =>
+                                    showCalendarNoteContextMenu(event, {
+                                        kind: 'year',
+                                        date: cursorDate.clone().locale(displayLocale),
+                                        existingFile: headerPeriodNoteEntries.year?.file ?? null,
+                                        canCreate: yearNotesEnabled
+                                    })
+                                }
+                            >
+                                {yearLabel}
+                            </span>
                         )}
 
                         {settings.calendarShowQuarter ? (
@@ -1404,13 +1513,31 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                                             headerPeriodNoteEntries.quarter?.file ?? null
                                         )
                                     }
+                                    onContextMenu={event =>
+                                        showCalendarNoteContextMenu(event, {
+                                            kind: 'quarter',
+                                            date: cursorDate.clone().locale(displayLocale),
+                                            existingFile: headerPeriodNoteEntries.quarter?.file ?? null,
+                                            canCreate: settings.calendarShowQuarter && quarterNotesEnabled
+                                        })
+                                    }
                                 >
                                     <span aria-hidden="true">(</span>
                                     {quarterLabel}
                                     <span aria-hidden="true">)</span>
                                 </button>
                             ) : (
-                                <span className="nn-navigation-calendar-period-label nn-navigation-calendar-quarter-label">
+                                <span
+                                    className="nn-navigation-calendar-period-label nn-navigation-calendar-quarter-label"
+                                    onContextMenu={event =>
+                                        showCalendarNoteContextMenu(event, {
+                                            kind: 'quarter',
+                                            date: cursorDate.clone().locale(displayLocale),
+                                            existingFile: headerPeriodNoteEntries.quarter?.file ?? null,
+                                            canCreate: settings.calendarShowQuarter && quarterNotesEnabled
+                                        })
+                                    }
+                                >
                                     <span aria-hidden="true">(</span>
                                     {quarterLabel}
                                     <span aria-hidden="true">)</span>
@@ -1484,11 +1611,40 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                                                         weekNoteEntriesByKey.get(week.key)?.file ?? null
                                                     );
                                                 }}
+                                                onContextMenu={event => {
+                                                    const weekStart = week.days[0]?.date;
+                                                    if (!weekStart) {
+                                                        return;
+                                                    }
+
+                                                    showCalendarNoteContextMenu(event, {
+                                                        kind: 'week',
+                                                        date: weekStart.clone().locale(calendarRulesLocale),
+                                                        existingFile: weekNoteEntriesByKey.get(week.key)?.file ?? null,
+                                                        canCreate: weekNotesEnabled
+                                                    });
+                                                }}
                                             >
                                                 {week.weekNumber}
                                             </button>
                                         ) : (
-                                            <div className="nn-navigation-calendar-weeknumber" aria-hidden="true">
+                                            <div
+                                                className="nn-navigation-calendar-weeknumber"
+                                                aria-hidden="true"
+                                                onContextMenu={event => {
+                                                    const weekStart = week.days[0]?.date;
+                                                    if (!weekStart) {
+                                                        return;
+                                                    }
+
+                                                    showCalendarNoteContextMenu(event, {
+                                                        kind: 'week',
+                                                        date: weekStart.clone().locale(calendarRulesLocale),
+                                                        existingFile: null,
+                                                        canCreate: weekNotesEnabled
+                                                    });
+                                                }}
+                                            >
                                                 {week.weekNumber}
                                             </div>
                                         )}
@@ -1536,6 +1692,15 @@ export function NavigationPaneCalendar({ onWeekCountChange }: NavigationPaneCale
                                             onShowTooltip={handleShowTooltip}
                                             onHideTooltip={handleHideTooltip}
                                             onClick={() => openOrCreateDailyNote(day.date, day.file)}
+                                            onContextMenu={event =>
+                                                showCalendarNoteContextMenu(event, {
+                                                    kind: 'day',
+                                                    date: day.date,
+                                                    existingFile: day.file,
+                                                    canCreate:
+                                                        settings.calendarIntegrationMode !== 'daily-notes' || Boolean(dailyNoteSettings)
+                                                })
+                                            }
                                         />
                                     );
                                 })}
