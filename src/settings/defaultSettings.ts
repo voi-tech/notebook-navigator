@@ -104,7 +104,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     showRecentNotes: true,
     recentNotesCount: 5,
 
-    // Navigation pane tab - Calendar
+    // Calendar tab - Calendar
     showCalendar: false,
     calendarLocale: 'system-default',
     calendarWeeksToShow: 1,
@@ -113,7 +113,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     calendarShowQuarter: false,
     calendarConfirmBeforeCreate: true,
 
-    // Navigation pane tab - Calendar integration
+    // Calendar tab - Calendar integration
     calendarIntegrationMode: 'daily-notes',
     calendarCustomRootFolder: '',
     calendarCustomFilePattern: DEFAULT_CALENDAR_CUSTOM_FILE_PATTERN,

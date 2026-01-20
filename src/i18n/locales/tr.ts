@@ -591,6 +591,7 @@ export const STRINGS_TR = {
         sections: {
             general: 'Genel',
             navigationPane: 'Gezinme bölmesi',
+            calendar: 'Takvim',
             icons: 'Simge paketleri',
             folders: 'Klasörler',
             folderNotes: 'Klasör notları',

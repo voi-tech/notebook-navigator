@@ -591,6 +591,7 @@ export const STRINGS_ZH_CN = {
             general: '通用',
             notes: '笔记',
             navigationPane: '导航窗格',
+            calendar: '导航日历',
             icons: '图标包',
             tags: '标签',
             folders: '文件夹',

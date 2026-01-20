@@ -591,6 +591,7 @@ export const STRINGS_ZH_TW = {
             general: '一般',
             notes: '筆記',
             navigationPane: '導覽窗格',
+            calendar: '導覽日曆',
             icons: '圖示包',
             tags: '標籤',
             folders: '資料夾',

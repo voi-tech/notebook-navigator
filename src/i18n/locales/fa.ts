@@ -591,6 +591,7 @@ export const STRINGS_FA = {
         sections: {
             general: 'عمومی',
             navigationPane: 'پنل ناوبری',
+            calendar: 'تقویم',
             icons: 'بسته‌های آیکون',
             folders: 'پوشه‌ها',
             folderNotes: 'یادداشت‌های پوشه',

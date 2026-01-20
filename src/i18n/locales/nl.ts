@@ -593,6 +593,7 @@ export const STRINGS_NL = {
         sections: {
             general: 'Algemeen',
             navigationPane: 'Navigatiepaneel',
+            calendar: 'Kalender',
             icons: 'Pictogrampakketten',
             folders: 'Mappen',
             folderNotes: 'Mapnotities',

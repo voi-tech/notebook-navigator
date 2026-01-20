@@ -30,6 +30,7 @@ import {
 } from './storage/statistics';
 import { renderGeneralTab } from './settings/tabs/GeneralTab';
 import { renderNavigationPaneTab } from './settings/tabs/NavigationPaneTab';
+import { renderCalendarTab } from './settings/tabs/CalendarTab';
 import { renderFoldersTagsTab } from './settings/tabs/FoldersTagsTab';
 import { renderListPaneTab } from './settings/tabs/ListPaneTab';
 import { renderNotesTab } from './settings/tabs/NotesTab';
@@ -42,7 +43,16 @@ import { NOTEBOOK_NAVIGATOR_ICON_ID } from './constants/notebookNavigatorIcon';
 import { getDBInstanceOrNull } from './storage/fileOperations';
 
 /** Identifiers for different settings tab panes */
-type SettingsPaneId = 'general' | 'navigation-pane' | 'folders-tags' | 'list-pane' | 'notes' | 'icon-packs' | 'search-hotkeys' | 'advanced';
+type SettingsPaneId =
+    | 'general'
+    | 'navigation-pane'
+    | 'calendar'
+    | 'folders-tags'
+    | 'list-pane'
+    | 'notes'
+    | 'icon-packs'
+    | 'search-hotkeys'
+    | 'advanced';
 
 /** Definition of a settings pane with its ID, label, and render function */
 interface SettingsPaneDefinition {
@@ -521,6 +531,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
      * Organizes settings into logical sections:
      * - Top level (no header)
      * - Navigation pane
+     * - Calendar
      * - Folders
      * - Tags
      * - File list
@@ -559,6 +570,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
         const tabs: SettingsPaneDefinition[] = [
             { id: 'general', label: strings.settings.sections.general, render: renderGeneralTab },
             { id: 'navigation-pane', label: strings.settings.sections.navigationPane, render: renderNavigationPaneTab },
+            { id: 'calendar', label: strings.settings.sections.calendar, render: renderCalendarTab },
             {
                 id: 'folders-tags',
                 label: strings.settings.sections.foldersAndTags,

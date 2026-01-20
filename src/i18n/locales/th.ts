@@ -591,6 +591,7 @@ export const STRINGS_TH = {
         sections: {
             general: 'ทั่วไป',
             navigationPane: 'แผงนำทาง',
+            calendar: 'ปฏิทิน',
             icons: 'ชุดไอคอน',
             folders: 'โฟลเดอร์',
             folderNotes: 'โน้ตโฟลเดอร์',

@@ -593,6 +593,7 @@ export const STRINGS_JA = {
             general: '一般設定',
             notes: 'ノート表示',
             navigationPane: 'フォルダ表示',
+            calendar: 'カレンダー',
             icons: 'アイコンパック',
             tags: 'タグ表示',
             folders: 'フォルダノート',

@@ -591,6 +591,7 @@ export const STRINGS_EN = {
         sections: {
             general: 'General',
             navigationPane: 'Navigation pane',
+            calendar: 'Calendar',
             icons: 'Icon packs',
             folders: 'Folders',
             folderNotes: 'Folder notes',

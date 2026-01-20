@@ -591,6 +591,7 @@ export const STRINGS_RU = {
         sections: {
             general: 'Общие',
             navigationPane: 'Панель навигации',
+            calendar: 'Календарь',
             icons: 'Наборы иконок',
             folders: 'Папки',
             folderNotes: 'Заметки папок',

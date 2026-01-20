@@ -593,6 +593,7 @@ export const STRINGS_DE = {
             general: 'Allgemein',
             notes: 'Notizen',
             navigationPane: 'Navigationsbereich',
+            calendar: 'Kalender',
             icons: 'Icon-Pakete',
             tags: 'Tags',
             folders: 'Ordner',

@@ -187,7 +187,7 @@ export interface NotebookNavigatorSettings {
     showRecentNotes: boolean;
     recentNotesCount: number;
 
-    // Navigation pane tab - Calendar
+    // Calendar tab - Calendar
     showCalendar: boolean;
     calendarLocale: string;
     calendarWeeksToShow: CalendarWeeksToShow;
@@ -196,7 +196,7 @@ export interface NotebookNavigatorSettings {
     calendarShowQuarter: boolean;
     calendarConfirmBeforeCreate: boolean;
 
-    // Navigation pane tab - Calendar integration
+    // Calendar tab - Calendar integration
     calendarIntegrationMode: CalendarIntegrationMode;
     calendarCustomRootFolder: string;
     calendarCustomFilePattern: string;

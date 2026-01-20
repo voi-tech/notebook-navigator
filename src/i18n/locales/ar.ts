@@ -591,6 +591,7 @@ export const STRINGS_AR = {
         sections: {
             general: 'عام',
             navigationPane: 'لوحة التنقل',
+            calendar: 'التقويم',
             icons: 'حزم الأيقونات',
             folders: 'مجلدات',
             folderNotes: 'ملاحظات المجلد',

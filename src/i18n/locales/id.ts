@@ -591,6 +591,7 @@ export const STRINGS_ID = {
         sections: {
             general: 'Umum',
             navigationPane: 'Panel navigasi',
+            calendar: 'Kalender',
             icons: 'Paket ikon',
             folders: 'Folder',
             folderNotes: 'Catatan folder',

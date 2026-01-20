@@ -591,6 +591,7 @@ export const STRINGS_KO = {
         sections: {
             general: '일반',
             navigationPane: '탐색 창',
+            calendar: '달력',
             icons: '아이콘 팩',
             folders: '폴더',
             folderNotes: '폴더 노트',

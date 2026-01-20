@@ -591,6 +591,7 @@ export const STRINGS_VI = {
         sections: {
             general: 'Chung',
             navigationPane: 'Ngăn điều hướng',
+            calendar: 'Lịch',
             icons: 'Gói biểu tượng',
             folders: 'Thư mục',
             folderNotes: 'Ghi chú thư mục',
