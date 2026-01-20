@@ -2718,8 +2718,8 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: min(calc(100% - 4px), calc(var(--nn-nav-calendar-week-row-height) - 4px));
-    height: min(calc(100% - 4px), calc(var(--nn-nav-calendar-week-row-height) - 4px));
+    width: min(calc(100% - 2px), calc(var(--nn-nav-calendar-week-row-height) - 4px));
+    aspect-ratio: 1 / 1;
     border-radius: 999px;
     background-color: var(--nn-theme-nav-calendar-day-today-bg);
     z-index: 0;
