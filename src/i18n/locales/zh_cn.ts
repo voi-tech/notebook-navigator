@@ -952,7 +952,7 @@ export const STRINGS_ZH_CN = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: '日记模式',
+                name: '日记',
                 desc: '使用 Moment 日期格式设置路径。',
                 momentDescPrefix: '使用 ',
                 momentLinkText: 'Moment 日期格式',
@@ -963,19 +963,19 @@ export const STRINGS_ZH_CN = {
                 titlePlaceholder: '笔记标题'
             },
             calendarCustomWeekPattern: {
-                name: '周记模式',
+                name: '周记',
                 parsingError: '模式必须能格式化并重新解析为完整周（周年、周数）。'
             },
             calendarCustomMonthPattern: {
-                name: '月记模式',
+                name: '月记',
                 parsingError: '模式必须能格式化并重新解析为完整月份（年、月）。'
             },
             calendarCustomQuarterPattern: {
-                name: '季度笔记模式',
+                name: '季度笔记',
                 parsingError: '模式必须能格式化并重新解析为完整季度（年、季度）。'
             },
             calendarCustomYearPattern: {
-                name: '年记模式',
+                name: '年记',
                 parsingError: '模式必须能格式化并重新解析为完整年份（年）。'
             },
             calendarCustomPromptForTitle: {

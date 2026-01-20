@@ -954,7 +954,7 @@ export const STRINGS_TR = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Günlük not kalıbı',
+                name: 'Günlük notlar',
                 desc: 'Moment tarih biçimini kullanarak yolu biçimlendir.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment tarih biçimi',
@@ -965,19 +965,19 @@ export const STRINGS_TR = {
                 titlePlaceholder: 'Not başlığı'
             },
             calendarCustomWeekPattern: {
-                name: 'Haftalık not kalıbı',
+                name: 'Haftalık notlar',
                 parsingError: 'Desen, tam bir hafta (hafta yılı, hafta numarası) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
             },
             calendarCustomMonthPattern: {
-                name: 'Aylık not kalıbı',
+                name: 'Aylık notlar',
                 parsingError: 'Desen, tam bir ay (yıl, ay) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
             },
             calendarCustomQuarterPattern: {
-                name: 'Çeyreklik not kalıbı',
+                name: 'Çeyreklik notlar',
                 parsingError: 'Desen, tam bir çeyrek (yıl, çeyrek) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
             },
             calendarCustomYearPattern: {
-                name: 'Yıllık not kalıbı',
+                name: 'Yıllık notlar',
                 parsingError: 'Desen, tam bir yıl (yıl) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
             },
             calendarCustomPromptForTitle: {

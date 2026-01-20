@@ -954,7 +954,7 @@ export const STRINGS_EN = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Daily note pattern',
+                name: 'Daily notes',
                 desc: 'Format path using Moment date format.',
                 momentDescPrefix: 'Format path using ',
                 momentLinkText: 'Moment date format',
@@ -965,19 +965,19 @@ export const STRINGS_EN = {
                 titlePlaceholder: 'Note title'
             },
             calendarCustomWeekPattern: {
-                name: 'Weekly note pattern',
+                name: 'Weekly notes',
                 parsingError: 'Pattern must format and parse back to a full week (week year, week number).'
             },
             calendarCustomMonthPattern: {
-                name: 'Monthly note pattern',
+                name: 'Monthly notes',
                 parsingError: 'Pattern must format and parse back to a full month (year, month).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Quarterly note pattern',
+                name: 'Quarterly notes',
                 parsingError: 'Pattern must format and parse back to a full quarter (year, quarter).'
             },
             calendarCustomYearPattern: {
-                name: 'Yearly note pattern',
+                name: 'Yearly notes',
                 parsingError: 'Pattern must format and parse back to a full year (year).'
             },
             calendarCustomPromptForTitle: {

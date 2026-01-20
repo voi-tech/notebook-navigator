@@ -956,7 +956,7 @@ export const STRINGS_DE = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Tägliches-Notiz-Muster',
+                name: 'Tägliche Notizen',
                 desc: 'Pfad mit Moment-Datumsformat formatieren.',
                 momentDescPrefix: 'Pfad formatieren mit ',
                 momentLinkText: 'Moment-Datumsformat',
@@ -967,20 +967,20 @@ export const STRINGS_DE = {
                 titlePlaceholder: 'Notiz-Titel'
             },
             calendarCustomWeekPattern: {
-                name: 'Wöchentliches-Notiz-Muster',
+                name: 'Wöchentliche Notizen',
                 parsingError:
                     'Das Muster muss als vollständige Woche (Wochenjahr, Wochennummer) formatiert und wieder geparst werden können.'
             },
             calendarCustomMonthPattern: {
-                name: 'Monatliches-Notiz-Muster',
+                name: 'Monatliche Notizen',
                 parsingError: 'Das Muster muss als vollständiger Monat (Jahr, Monat) formatiert und wieder geparst werden können.'
             },
             calendarCustomQuarterPattern: {
-                name: 'Vierteljährliches-Notiz-Muster',
+                name: 'Vierteljährliche Notizen',
                 parsingError: 'Das Muster muss als vollständiges Quartal (Jahr, Quartal) formatiert und wieder geparst werden können.'
             },
             calendarCustomYearPattern: {
-                name: 'Jährliches-Notiz-Muster',
+                name: 'Jährliche Notizen',
                 parsingError: 'Das Muster muss als vollständiges Jahr (Jahr) formatiert und wieder geparst werden können.'
             },
             calendarCustomPromptForTitle: {

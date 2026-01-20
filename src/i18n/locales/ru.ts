@@ -955,7 +955,7 @@ export const STRINGS_RU = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Шаблон ежедневной заметки',
+                name: 'Ежедневные заметки',
                 desc: 'Формат пути с использованием формата даты Moment.',
                 momentDescPrefix: 'Формат пути с использованием ',
                 momentLinkText: 'формата даты Moment',
@@ -966,19 +966,19 @@ export const STRINGS_RU = {
                 titlePlaceholder: 'Название заметки'
             },
             calendarCustomWeekPattern: {
-                name: 'Шаблон еженедельной заметки',
+                name: 'Еженедельные заметки',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полная неделя (год недели, номер недели).'
             },
             calendarCustomMonthPattern: {
-                name: 'Шаблон ежемесячной заметки',
+                name: 'Ежемесячные заметки',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полный месяц (год, месяц).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Шаблон квартальной заметки',
+                name: 'Квартальные заметки',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полный квартал (год, квартал).'
             },
             calendarCustomYearPattern: {
-                name: 'Шаблон годовой заметки',
+                name: 'Годовые заметки',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полный год (год).'
             },
             calendarCustomPromptForTitle: {

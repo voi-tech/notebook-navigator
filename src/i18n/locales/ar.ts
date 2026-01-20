@@ -954,7 +954,7 @@ export const STRINGS_AR = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'نمط الملاحظة اليومية',
+                name: 'الملاحظات اليومية',
                 desc: 'تنسيق المسار باستخدام تنسيق تاريخ Moment.',
                 momentDescPrefix: 'تنسيق المسار باستخدام ',
                 momentLinkText: 'تنسيق تاريخ Moment',
@@ -965,19 +965,19 @@ export const STRINGS_AR = {
                 titlePlaceholder: 'عنوان الملاحظة'
             },
             calendarCustomWeekPattern: {
-                name: 'نمط الملاحظة الأسبوعية',
+                name: 'الملاحظات الأسبوعية',
                 parsingError: 'يجب أن يقوم النمط بتنسيق الأسبوع ثم تحليله مرة أخرى كأسبوع كامل (سنة الأسبوع، رقم الأسبوع).'
             },
             calendarCustomMonthPattern: {
-                name: 'نمط الملاحظة الشهرية',
+                name: 'الملاحظات الشهرية',
                 parsingError: 'يجب أن يقوم النمط بتنسيق الشهر ثم تحليله مرة أخرى كشهر كامل (السنة، الشهر).'
             },
             calendarCustomQuarterPattern: {
-                name: 'نمط الملاحظة الفصلية',
+                name: 'الملاحظات الفصلية',
                 parsingError: 'يجب أن يقوم النمط بتنسيق الفصل ثم تحليله مرة أخرى كفصل كامل (السنة، الفصل).'
             },
             calendarCustomYearPattern: {
-                name: 'نمط الملاحظة السنوية',
+                name: 'الملاحظات السنوية',
                 parsingError: 'يجب أن يقوم النمط بتنسيق السنة ثم تحليلها مرة أخرى كسنة كاملة (السنة).'
             },
             calendarCustomPromptForTitle: {

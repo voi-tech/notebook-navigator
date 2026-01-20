@@ -956,7 +956,7 @@ export const STRINGS_NL = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Dagelijkse notitie patroon',
+                name: 'Dagelijkse notities',
                 desc: 'Pad formatteren met Moment-datumnotatie.',
                 momentDescPrefix: 'Pad formatteren met ',
                 momentLinkText: 'Moment-datumnotatie',
@@ -967,19 +967,19 @@ export const STRINGS_NL = {
                 titlePlaceholder: 'Notitie titel'
             },
             calendarCustomWeekPattern: {
-                name: 'Wekelijkse notitie patroon',
+                name: 'Wekelijkse notities',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledige week (weekjaar, weeknummer).'
             },
             calendarCustomMonthPattern: {
-                name: 'Maandelijkse notitie patroon',
+                name: 'Maandelijkse notities',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledige maand (jaar, maand).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Kwartaalnotitie patroon',
+                name: 'Kwartaalnotities',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledig kwartaal (jaar, kwartaal).'
             },
             calendarCustomYearPattern: {
-                name: 'Jaarlijkse notitie patroon',
+                name: 'Jaarlijkse notities',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledig jaar (jaar).'
             },
             calendarCustomPromptForTitle: {

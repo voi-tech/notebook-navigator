@@ -954,7 +954,7 @@ export const STRINGS_FA = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'الگوی یادداشت روزانه',
+                name: 'یادداشت‌های روزانه',
                 desc: 'قالب‌بندی مسیر با استفاده از فرمت تاریخ Moment.',
                 momentDescPrefix: 'قالب‌بندی مسیر با استفاده از ',
                 momentLinkText: 'فرمت تاریخ Moment',
@@ -965,19 +965,19 @@ export const STRINGS_FA = {
                 titlePlaceholder: 'عنوان یادداشت'
             },
             calendarCustomWeekPattern: {
-                name: 'الگوی یادداشت هفتگی',
+                name: 'یادداشت‌های هفتگی',
                 parsingError: 'الگو باید بتواند به یک هفته کامل (سال هفته، شماره هفته) قالب‌بندی شود و دوباره تجزیه شود.'
             },
             calendarCustomMonthPattern: {
-                name: 'الگوی یادداشت ماهانه',
+                name: 'یادداشت‌های ماهانه',
                 parsingError: 'الگو باید بتواند به یک ماه کامل (سال، ماه) قالب‌بندی شود و دوباره تجزیه شود.'
             },
             calendarCustomQuarterPattern: {
-                name: 'الگوی یادداشت فصلی',
+                name: 'یادداشت‌های فصلی',
                 parsingError: 'الگو باید بتواند به یک فصل کامل (سال، فصل) قالب‌بندی شود و دوباره تجزیه شود.'
             },
             calendarCustomYearPattern: {
-                name: 'الگوی یادداشت سالانه',
+                name: 'یادداشت‌های سالانه',
                 parsingError: 'الگو باید بتواند به یک سال کامل (سال) قالب‌بندی شود و دوباره تجزیه شود.'
             },
             calendarCustomPromptForTitle: {

@@ -956,7 +956,7 @@ export const STRINGS_PL = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Wzorzec notatki dziennej',
+                name: 'Notatki dzienne',
                 desc: 'Formatuj ścieżkę używając formatu daty Moment.',
                 momentDescPrefix: 'Formatuj ścieżkę używając ',
                 momentLinkText: 'formatu daty Moment',
@@ -967,19 +967,19 @@ export const STRINGS_PL = {
                 titlePlaceholder: 'Tytuł notatki'
             },
             calendarCustomWeekPattern: {
-                name: 'Wzorzec notatki tygodniowej',
+                name: 'Notatki tygodniowe',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełny tydzień (rok tygodnia, numer tygodnia).'
             },
             calendarCustomMonthPattern: {
-                name: 'Wzorzec notatki miesięcznej',
+                name: 'Notatki miesięczne',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełny miesiąc (rok, miesiąc).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Wzorzec notatki kwartalnej',
+                name: 'Notatki kwartalne',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełny kwartał (rok, kwartał).'
             },
             calendarCustomYearPattern: {
-                name: 'Wzorzec notatki rocznej',
+                name: 'Notatki roczne',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełny rok (rok).'
             },
             calendarCustomPromptForTitle: {

@@ -954,7 +954,7 @@ export const STRINGS_KO = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: '일일 노트 패턴',
+                name: '일일 노트',
                 desc: 'Moment 날짜 형식을 사용하여 경로 지정.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 날짜 형식',
@@ -965,19 +965,19 @@ export const STRINGS_KO = {
                 titlePlaceholder: '노트 제목'
             },
             calendarCustomWeekPattern: {
-                name: '주간 노트 패턴',
+                name: '주간 노트',
                 parsingError: '패턴은 전체 주(주 연도, 주 번호)로 포맷되고 다시 파싱될 수 있어야 합니다.'
             },
             calendarCustomMonthPattern: {
-                name: '월간 노트 패턴',
+                name: '월간 노트',
                 parsingError: '패턴은 전체 월(연도, 월)로 포맷되고 다시 파싱될 수 있어야 합니다.'
             },
             calendarCustomQuarterPattern: {
-                name: '분기별 노트 패턴',
+                name: '분기별 노트',
                 parsingError: '패턴은 전체 분기(연도, 분기)로 포맷되고 다시 파싱될 수 있어야 합니다.'
             },
             calendarCustomYearPattern: {
-                name: '연간 노트 패턴',
+                name: '연간 노트',
                 parsingError: '패턴은 전체 연도(연도)로 포맷되고 다시 파싱될 수 있어야 합니다.'
             },
             calendarCustomPromptForTitle: {

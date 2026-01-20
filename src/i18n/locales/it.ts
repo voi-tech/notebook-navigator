@@ -954,7 +954,7 @@ export const STRINGS_IT = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Modello nota giornaliera',
+                name: 'Note giornaliere',
                 desc: 'Formatta percorso usando formato data Moment.',
                 momentDescPrefix: 'Formatta percorso usando ',
                 momentLinkText: 'formato data Moment',
@@ -965,20 +965,20 @@ export const STRINGS_IT = {
                 titlePlaceholder: 'Titolo nota'
             },
             calendarCustomWeekPattern: {
-                name: 'Modello nota settimanale',
+                name: 'Note settimanali',
                 parsingError:
                     'Il modello deve poter essere formattato e rianalizzato come una settimana completa (anno settimana, numero settimana).'
             },
             calendarCustomMonthPattern: {
-                name: 'Modello nota mensile',
+                name: 'Note mensili',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come un mese completo (anno, mese).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Modello nota trimestrale',
+                name: 'Note trimestrali',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come un trimestre completo (anno, trimestre).'
             },
             calendarCustomYearPattern: {
-                name: 'Modello nota annuale',
+                name: 'Note annuali',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come un anno completo (anno).'
             },
             calendarCustomPromptForTitle: {

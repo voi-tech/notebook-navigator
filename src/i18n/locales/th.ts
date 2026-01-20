@@ -954,7 +954,7 @@ export const STRINGS_TH = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'รูปแบบโน้ตรายวัน',
+                name: 'โน้ตรายวัน',
                 desc: 'กำหนดเส้นทางโดยใช้รูปแบบวันที่ Moment',
                 momentDescPrefix: 'กำหนดเส้นทางโดยใช้ ',
                 momentLinkText: 'รูปแบบวันที่ Moment',
@@ -965,19 +965,19 @@ export const STRINGS_TH = {
                 titlePlaceholder: 'ชื่อโน้ต'
             },
             calendarCustomWeekPattern: {
-                name: 'รูปแบบโน้ตรายสัปดาห์',
+                name: 'โน้ตรายสัปดาห์',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นสัปดาห์แบบเต็ม (ปีของสัปดาห์ หมายเลขสัปดาห์) ได้'
             },
             calendarCustomMonthPattern: {
-                name: 'รูปแบบโน้ตรายเดือน',
+                name: 'โน้ตรายเดือน',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นเดือนแบบเต็ม (ปี เดือน) ได้'
             },
             calendarCustomQuarterPattern: {
-                name: 'รูปแบบโน้ตรายไตรมาส',
+                name: 'โน้ตรายไตรมาส',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นไตรมาสแบบเต็ม (ปี ไตรมาส) ได้'
             },
             calendarCustomYearPattern: {
-                name: 'รูปแบบโน้ตรายปี',
+                name: 'โน้ตรายปี',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นปีแบบเต็ม (ปี) ได้'
             },
             calendarCustomPromptForTitle: {

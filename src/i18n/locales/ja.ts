@@ -955,7 +955,7 @@ export const STRINGS_JA = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'デイリーノートパターン',
+                name: 'デイリーノート',
                 desc: 'Moment 日付フォーマットを使用してパスを指定。',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 日付フォーマット',
@@ -966,19 +966,19 @@ export const STRINGS_JA = {
                 titlePlaceholder: 'ノートタイトル'
             },
             calendarCustomWeekPattern: {
-                name: 'ウィークリーノートパターン',
+                name: 'ウィークリーノート',
                 parsingError: 'パターンは完全な週（週年、週番号）としてフォーマットされ、再度パースできる必要があります。'
             },
             calendarCustomMonthPattern: {
-                name: 'マンスリーノートパターン',
+                name: 'マンスリーノート',
                 parsingError: 'パターンは完全な月（年、月）としてフォーマットされ、再度パースできる必要があります。'
             },
             calendarCustomQuarterPattern: {
-                name: '四半期ノートパターン',
+                name: '四半期ノート',
                 parsingError: 'パターンは完全な四半期（年、四半期）としてフォーマットされ、再度パースできる必要があります。'
             },
             calendarCustomYearPattern: {
-                name: '年次ノートパターン',
+                name: '年次ノート',
                 parsingError: 'パターンは完全な年（年）としてフォーマットされ、再度パースできる必要があります。'
             },
             calendarCustomPromptForTitle: {

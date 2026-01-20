@@ -954,7 +954,7 @@ export const STRINGS_VI = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Mẫu ghi chú hàng ngày',
+                name: 'Ghi chú hàng ngày',
                 desc: 'Định dạng đường dẫn sử dụng định dạng ngày Moment.',
                 momentDescPrefix: 'Định dạng đường dẫn sử dụng ',
                 momentLinkText: 'định dạng ngày Moment',
@@ -965,19 +965,19 @@ export const STRINGS_VI = {
                 titlePlaceholder: 'Tiêu đề ghi chú'
             },
             calendarCustomWeekPattern: {
-                name: 'Mẫu ghi chú hàng tuần',
+                name: 'Ghi chú hàng tuần',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một tuần đầy đủ (năm tuần, số tuần).'
             },
             calendarCustomMonthPattern: {
-                name: 'Mẫu ghi chú hàng tháng',
+                name: 'Ghi chú hàng tháng',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một tháng đầy đủ (năm, tháng).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Mẫu ghi chú hàng quý',
+                name: 'Ghi chú hàng quý',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một quý đầy đủ (năm, quý).'
             },
             calendarCustomYearPattern: {
-                name: 'Mẫu ghi chú hàng năm',
+                name: 'Ghi chú hàng năm',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một năm đầy đủ (năm).'
             },
             calendarCustomPromptForTitle: {

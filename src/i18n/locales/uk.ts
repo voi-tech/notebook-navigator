@@ -954,7 +954,7 @@ export const STRINGS_UK = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Шаблон щоденної нотатки',
+                name: 'Щоденні нотатки',
                 desc: 'Формат шляху з використанням формату дати Moment.',
                 momentDescPrefix: 'Формат шляху з використанням ',
                 momentLinkText: 'формату дати Moment',
@@ -965,19 +965,19 @@ export const STRINGS_UK = {
                 titlePlaceholder: 'Назва нотатки'
             },
             calendarCustomWeekPattern: {
-                name: 'Шаблон щотижневої нотатки',
+                name: 'Щотижневі нотатки',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повний тиждень (рік тижня, номер тижня).'
             },
             calendarCustomMonthPattern: {
-                name: 'Шаблон щомісячної нотатки',
+                name: 'Щомісячні нотатки',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повний місяць (рік, місяць).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Шаблон квартальної нотатки',
+                name: 'Квартальні нотатки',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повний квартал (рік, квартал).'
             },
             calendarCustomYearPattern: {
-                name: 'Шаблон річної нотатки',
+                name: 'Річні нотатки',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повний рік (рік).'
             },
             calendarCustomPromptForTitle: {

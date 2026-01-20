@@ -954,7 +954,7 @@ export const STRINGS_ID = {
                 placeholder: 'Personal/Diary'
             },
             calendarCustomFilePattern: {
-                name: 'Pola catatan harian',
+                name: 'Catatan harian',
                 desc: 'Format jalur menggunakan format tanggal Moment.',
                 momentDescPrefix: 'Format jalur menggunakan ',
                 momentLinkText: 'format tanggal Moment',
@@ -965,19 +965,19 @@ export const STRINGS_ID = {
                 titlePlaceholder: 'Judul catatan'
             },
             calendarCustomWeekPattern: {
-                name: 'Pola catatan mingguan',
+                name: 'Catatan mingguan',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai minggu lengkap (tahun minggu, nomor minggu).'
             },
             calendarCustomMonthPattern: {
-                name: 'Pola catatan bulanan',
+                name: 'Catatan bulanan',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai bulan lengkap (tahun, bulan).'
             },
             calendarCustomQuarterPattern: {
-                name: 'Pola catatan kuartalan',
+                name: 'Catatan kuartalan',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai kuartal lengkap (tahun, kuartal).'
             },
             calendarCustomYearPattern: {
-                name: 'Pola catatan tahunan',
+                name: 'Catatan tahunan',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai tahun lengkap (tahun).'
             },
             calendarCustomPromptForTitle: {
