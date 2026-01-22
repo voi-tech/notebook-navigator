@@ -28,15 +28,11 @@ For precise image management, consider also installing [Pixel Perfect Image](htt
 
 ## 2 Getting started
 
-Here is the official tutorial for installing and mastering Notebook Navigator:
+Here is the official tutorial for learning and mastering Notebook Navigator:
 
 [![Mastering Notebook Navigator](https://raw.githubusercontent.com/johansan/notebook-navigator/main/images/youtube-thumbnail.jpg)](https://www.youtube.com/watch?v=BewIlG8wLAM)
 
-And here is a video walkthrough of all the new features in Notebook Navigator 2.1:
-
-[![What's new in Notebook Navigator 2.1 for Obsidian](https://raw.githubusercontent.com/johansan/notebook-navigator/main/images/youtube-2.1.jpg)](https://www.youtube.com/watch?v=1Kxrq832kfM)
-
-Both videos has subtitles in 21 languages, same as Notebook Navigator.
+The video has subtitles in 21 languages.
 
 <br>
 
