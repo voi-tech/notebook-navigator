@@ -8,6 +8,7 @@ Updated: January 19, 2026
 - [CSS Variables Reference](#css-variables-reference)
   - [Theme foreground](#theme-foreground)
   - [Pane overlay stacks](#pane-overlay-stacks)
+  - [Calendar](#calendar)
   - [Navigation pane](#navigation-pane)
   - [Pane divider](#pane-divider-desktop-only)
   - [List pane (files)](#list-pane-files)
@@ -60,6 +61,22 @@ Most variables are colors and should resolve to a computed color (some are used 
 | `--nn-theme-pane-overlay-opacity`   | `87`    | Opacity (0-100) for the pane overlay stacks rendered above scrolling rows |
 | `--nn-theme-pane-overlay-filter`    | `blur(3px) saturate(160%)` | Backdrop filter for the pane overlay stacks (used for `backdrop-filter`) |
 
+### Calendar
+
+| Variable                                        | Default                         | Description                                             |
+| ----------------------------------------------- | ------------------------------- | ------------------------------------------------------- |
+| `--nn-theme-calendar-header-color`          | `var(--nn-theme-foreground)`          | Text color for month/year and header buttons            |
+| `--nn-theme-calendar-week-label-color`      | `var(--nn-theme-foreground-muted)`    | Text color for weekday labels and week numbers          |
+| `--nn-theme-calendar-day-in-month-color`    | `var(--nn-theme-foreground)`          | Text color for days within the current month            |
+| `--nn-theme-calendar-day-outside-month-color` | `var(--nn-theme-foreground-muted)`  | Text color for days outside the current month           |
+| `--nn-theme-calendar-hover-bg`              | `var(--background-modifier-hover)` | Hover background for calendar buttons and days          |
+| `--nn-theme-calendar-weekend-bg`            | `var(--background-secondary)`       | Background color for weekend day columns                |
+| `--nn-theme-calendar-day-has-note-color`    | `white`                         | Text color for dates with a daily note                  |
+| `--nn-theme-calendar-day-has-note-bg`       | `var(--text-selection)`         | Background color for dates with a daily note            |
+| `--nn-theme-calendar-day-has-feature-image-color` | `white`                  | Text color for dates with feature images                |
+| `--nn-theme-calendar-day-today-color`       | `var(--nn-theme-calendar-day-has-note-color)` | Text color for today's date                             |
+| `--nn-theme-calendar-day-today-bg`          | `var(--color-red)`            | Color for the today highlight circle and day number accent |
+
 ### Navigation pane
 
 | Variable                              | Default                                                                                                                                      | Description                                                                         |
@@ -69,21 +86,6 @@ Most variables are colors and should resolve to a computed color (some are used 
 | `--nn-theme-nav-separator-background` | `linear-gradient(90deg, transparent 0%, var(--nn-theme-nav-separator-color) 15%, var(--nn-theme-nav-separator-color) 85%, transparent 100%)` | Fill for navigation separators; override to supply your own gradient or solid color |
 | `--nn-theme-nav-separator-height`     | `1px`                                                                                                                                        | Thickness for navigation separators                                                 |
 | `--nn-theme-nav-separator-opacity`    | `0.3`                                                                                                                                        | Opacity for navigation separators                                                   |
-
-#### Navigation calendar
-
-| Variable                                        | Default                         | Description                                             |
-| ----------------------------------------------- | ------------------------------- | ------------------------------------------------------- |
-| `--nn-theme-nav-calendar-header-color`          | `var(--nn-theme-foreground)`          | Text color for month/year and header buttons            |
-| `--nn-theme-nav-calendar-week-label-color`      | `var(--nn-theme-foreground-muted)`    | Text color for weekday labels and week numbers          |
-| `--nn-theme-nav-calendar-day-in-month-color`    | `var(--nn-theme-foreground)`          | Text color for days within the current month            |
-| `--nn-theme-nav-calendar-day-outside-month-color` | `var(--nn-theme-foreground-muted)`  | Text color for days outside the current month           |
-| `--nn-theme-nav-calendar-hover-bg`              | `var(--background-modifier-hover)` | Hover background for calendar buttons and days          |
-| `--nn-theme-nav-calendar-day-has-note-color`    | `white`                         | Text color for dates with a daily note                  |
-| `--nn-theme-nav-calendar-day-has-note-bg`       | `var(--text-selection)`         | Background color for dates with a daily note            |
-| `--nn-theme-nav-calendar-day-has-feature-image-color` | `white`                  | Text color for dates with feature images                |
-| `--nn-theme-nav-calendar-day-today-color`       | `var(--nn-theme-nav-calendar-day-has-note-color)` | Text color for today's date                             |
-| `--nn-theme-nav-calendar-day-today-bg`          | `var(--color-red)`            | Color for the today highlight circle and day number accent |
 
 #### Pinned shortcuts
 
@@ -273,16 +275,17 @@ body {
   --nn-theme-nav-separator-opacity: 0.35;
 
   /* Navigation calendar */
-  --nn-theme-nav-calendar-header-color: var(--nn-theme-foreground);
-  --nn-theme-nav-calendar-week-label-color: var(--nn-theme-foreground-muted);
-  --nn-theme-nav-calendar-day-in-month-color: var(--nn-theme-foreground);
-  --nn-theme-nav-calendar-day-outside-month-color: var(--nn-theme-foreground-muted);
-  --nn-theme-nav-calendar-hover-bg: #4b5059;
-  --nn-theme-nav-calendar-day-has-note-color: #ffffff;
-  --nn-theme-nav-calendar-day-has-note-bg: #4a78c8;
-  --nn-theme-nav-calendar-day-has-feature-image-color: #ffffff;
-  --nn-theme-nav-calendar-day-today-color: #ffffff;
-  --nn-theme-nav-calendar-day-today-bg: #db5050;
+  --nn-theme-calendar-header-color: var(--nn-theme-foreground);
+  --nn-theme-calendar-week-label-color: var(--nn-theme-foreground-muted);
+  --nn-theme-calendar-day-in-month-color: var(--nn-theme-foreground);
+  --nn-theme-calendar-day-outside-month-color: var(--nn-theme-foreground-muted);
+  --nn-theme-calendar-hover-bg: #4b5059;
+  --nn-theme-calendar-weekend-bg: #4b5059;
+  --nn-theme-calendar-day-has-note-color: #ffffff;
+  --nn-theme-calendar-day-has-note-bg: #4a78c8;
+  --nn-theme-calendar-day-has-feature-image-color: #ffffff;
+  --nn-theme-calendar-day-today-color: #ffffff;
+  --nn-theme-calendar-day-today-bg: #db5050;
 
   /* Folder & tag items */
   --nn-theme-navitem-chevron-color: #6e6e6e;

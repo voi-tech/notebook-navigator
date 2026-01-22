@@ -111,7 +111,7 @@
 .nn-navigation-calendar-month {
     font-size: var(--nn-nav-calendar-header-font-size);
     font-weight: 600;
-    color: var(--nn-theme-nav-calendar-header-color);
+    color: var(--nn-theme-calendar-header-color);
     display: inline-flex;
     align-items: center;
     gap: 2px;
@@ -171,7 +171,7 @@
     border: none !important;
     border-radius: 6px;
     background: transparent !important;
-    color: var(--nn-theme-nav-calendar-header-color);
+    color: var(--nn-theme-calendar-header-color);
     cursor: pointer;
     padding: 0;
     box-shadow: none !important;
@@ -188,7 +188,7 @@
     appearance: none;
     border: none !important;
     background: transparent !important;
-    color: var(--nn-theme-nav-calendar-header-color);
+    color: var(--nn-theme-calendar-header-color);
     font: inherit;
     font-size: var(--nn-nav-calendar-today-font-size);
     height: var(--nn-nav-calendar-today-height);
@@ -219,7 +219,7 @@
     align-items: center;
     column-gap: 1px;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    color: var(--nn-theme-nav-calendar-week-label-color);
+    color: var(--nn-theme-calendar-week-label-color);
     font-size: var(--nn-nav-calendar-week-label-font-size);
     line-height: 1;
 }
@@ -255,7 +255,7 @@
     bottom: 0;
     left: calc(var(--nn-nav-calendar-weeknumber-column-width) + 1px);
     width: 1px;
-    background-color: var(--nn-theme-nav-calendar-hover-bg);
+    background-color: var(--nn-theme-calendar-hover-bg);
     pointer-events: none;
 }
 
@@ -281,7 +281,7 @@
     align-items: center;
     justify-content: flex-end;
     padding-right: var(--nn-nav-calendar-weeknumber-padding-right);
-    color: var(--nn-theme-nav-calendar-week-label-color);
+    color: var(--nn-theme-calendar-week-label-color);
     font-size: var(--nn-nav-calendar-weeknumber-font-size);
     font-weight: 400;
     line-height: 1;
@@ -304,7 +304,7 @@
 }
 
 .nn-navigation-calendar button.nn-navigation-calendar-weeknumber {
-    color: var(--nn-theme-nav-calendar-week-label-color);
+    color: var(--nn-theme-calendar-week-label-color);
 }
 
 .nn-navigation-calendar-weeknumber-button.has-period-note {
@@ -328,7 +328,7 @@
     align-items: center;
     justify-content: center;
     background-color: transparent !important;
-    color: var(--nn-theme-nav-calendar-day-in-month-color);
+    color: var(--nn-theme-calendar-day-in-month-color);
     cursor: pointer;
     background-size: cover;
     background-position: center;
@@ -344,17 +344,17 @@
 /* Hover effects only apply on hover-capable devices (prevents "stuck hover" on touch). */
 @media (hover: hover) and (pointer: fine) {
     .nn-navigation-calendar-nav-button:hover {
-        background-color: var(--nn-theme-nav-calendar-hover-bg) !important;
+        background-color: var(--nn-theme-calendar-hover-bg) !important;
     }
 
     .nn-navigation-calendar-today:hover {
-        background-color: var(--nn-theme-nav-calendar-hover-bg) !important;
+        background-color: var(--nn-theme-calendar-hover-bg) !important;
     }
 
     .nn-navigation-calendar-period-button:hover,
     .nn-navigation-calendar-weeknumber-button:hover {
         filter: brightness(1.05);
-        background-color: var(--nn-theme-nav-calendar-hover-bg) !important;
+        background-color: var(--nn-theme-calendar-hover-bg) !important;
     }
 
     .nn-navigation-calendar-day:hover {
@@ -362,16 +362,16 @@
     }
 
     .nn-navigation-calendar-day:hover:not(.has-feature-image):not(.has-daily-note) {
-        background-color: var(--nn-theme-nav-calendar-hover-bg) !important;
+        background-color: var(--nn-theme-calendar-hover-bg) !important;
     }
 }
 
 .nn-navigation-calendar-day.is-outside-month:not(.has-daily-note):not(.has-feature-image) {
-    color: var(--nn-theme-nav-calendar-day-outside-month-color);
+    color: var(--nn-theme-calendar-day-outside-month-color);
 }
 
 .nn-navigation-calendar[data-highlight-today='true'] .nn-navigation-calendar-day.is-today {
-    color: var(--nn-theme-nav-calendar-day-today-color);
+    color: var(--nn-theme-calendar-day-today-color);
 }
 
 .nn-navigation-calendar[data-highlight-today='true'] .nn-navigation-calendar-day.is-today .nn-navigation-calendar-day-number {
@@ -388,13 +388,13 @@
     width: min(calc(100% - 2px), calc(var(--nn-nav-calendar-week-row-height) - 4px));
     aspect-ratio: 1 / 1;
     border-radius: 999px;
-    background-color: var(--nn-theme-nav-calendar-day-today-bg);
+    background-color: var(--nn-theme-calendar-day-today-bg);
     z-index: 0;
 }
 
 .nn-navigation-calendar-day.has-daily-note:not(.has-feature-image):not(.has-feature-image-key) {
-    background-color: var(--nn-theme-nav-calendar-day-has-note-bg) !important;
-    color: var(--nn-theme-nav-calendar-day-has-note-color);
+    background-color: var(--nn-theme-calendar-day-has-note-bg) !important;
+    color: var(--nn-theme-calendar-day-has-note-color);
 }
 
 .nn-navigation-calendar-day.has-daily-note .nn-navigation-calendar-day-number {
@@ -402,7 +402,7 @@
 }
 
 .nn-navigation-calendar[data-highlight-today='true'] .nn-navigation-calendar-day.has-daily-note.is-today {
-    color: var(--nn-theme-nav-calendar-day-today-color);
+    color: var(--nn-theme-calendar-day-today-color);
 }
 
 .nn-navigation-calendar[data-highlight-today='true'] .nn-navigation-calendar-day.is-today.has-daily-note .nn-navigation-calendar-day-number,
@@ -412,11 +412,11 @@
 .nn-navigation-calendar[data-highlight-today='true']
     .nn-navigation-calendar-day.is-today.has-feature-image-key
     .nn-navigation-calendar-day-number {
-    color: var(--nn-theme-nav-calendar-day-today-bg);
+    color: var(--nn-theme-calendar-day-today-bg);
 }
 
 .nn-navigation-calendar-day.has-feature-image {
-    color: var(--nn-theme-nav-calendar-day-has-feature-image-color);
+    color: var(--nn-theme-calendar-day-has-feature-image-color);
 }
 
 .nn-navigation-calendar-day.has-feature-image .nn-navigation-calendar-day-number {
@@ -600,8 +600,8 @@
 
 @media (hover: hover) and (pointer: fine) {
     .nn-calendar-right-sidebar .nn-navigation-calendar[data-layout='panel'] .nn-navigation-calendar-day:hover {
-        background-color: var(--nn-theme-nav-calendar-hover-bg) !important;
-        border-color: color-mix(in srgb, var(--nn-theme-nav-calendar-hover-bg) 55%, var(--background-modifier-border));
+        background-color: var(--nn-theme-calendar-hover-bg) !important;
+        border-color: color-mix(in srgb, var(--nn-theme-calendar-hover-bg) 55%, var(--background-modifier-border));
     }
 }
 
@@ -612,12 +612,20 @@
 }
 
 .nn-calendar-right-sidebar .nn-navigation-calendar[data-layout='panel'][data-highlight-today='true'] .nn-navigation-calendar-day.is-today {
-    border-color: var(--nn-theme-nav-calendar-day-today-bg);
+    border-color: var(--nn-theme-calendar-day-today-bg);
 }
 
 .nn-calendar-right-sidebar
     .nn-navigation-calendar[data-layout='panel'][data-highlight-today='true']
     .nn-navigation-calendar-day.is-today
     .nn-navigation-calendar-day-number {
-    color: var(--nn-theme-nav-calendar-day-today-bg);
+    color: var(--nn-theme-calendar-day-today-bg);
+}
+
+/* ========================================================================
+   Weekend Column Background
+   ======================================================================== */
+
+.nn-navigation-calendar-day.is-weekend:not(.has-daily-note):not(.has-feature-image) {
+    background-color: var(--nn-theme-calendar-weekend-bg) !important;
 }

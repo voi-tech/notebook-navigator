@@ -96,6 +96,101 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
+        id: nn-calendar-heading
+        title: Calendar
+        description: Customize the daily notes calendar.
+        type: heading
+        level: 1
+        collapsed: true
+    -
+        id: nn-theme-calendar-header-color
+        title: Header text color
+        description: Text color for month/year and header buttons.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-week-label-color
+        title: Week label text color
+        description: Text color for weekday labels and week numbers.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-in-month-color
+        title: Day text color (current month)
+        description: Text color for days within the current month.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-outside-month-color
+        title: Day text color (outside month)
+        description: Text color for days outside the current month.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-hover-bg
+        title: Hover background
+        description: Background color when hovering calendar buttons and days.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-weekend-bg
+        title: Weekend background
+        description: Background color for weekend day columns.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-has-note-color
+        title: Daily note text color
+        description: Text color for dates with a daily note.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-has-note-bg
+        title: Daily note background
+        description: Background color for dates with a daily note.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-has-feature-image-color
+        title: Feature image text color
+        description: Text color for dates with feature images.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-today-color
+        title: Day text color (today)
+        description: Text color for today's date.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-day-today-bg
+        title: Today highlight background
+        description: Background color for the today highlight circle.
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
         id: nn-nav-pane-heading
         title: Navigation pane (folders, tags, shortcuts)
         description: Customize the background and items within the navigation pane.
@@ -930,93 +1025,6 @@ settings:
         id: nn-theme-divider-resize-handle-hover-bg
         title: Resize handle hover background
         description: Background color when hovering the pane divider to resize.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-nav-calendar-heading
-        title: Calendar overlay
-        description: Customize the navigation pane calendar overlay.
-        type: heading
-        level: 1
-        collapsed: true
-    -
-        id: nn-theme-nav-calendar-header-color
-        title: Header text color
-        description: Text color for month/year and header buttons.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-week-label-color
-        title: Week label text color
-        description: Text color for weekday labels and week numbers.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-in-month-color
-        title: Day text color (current month)
-        description: Text color for days within the current month.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-outside-month-color
-        title: Day text color (outside month)
-        description: Text color for days outside the current month.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-hover-bg
-        title: Hover background
-        description: Background color when hovering calendar buttons and days.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-has-note-color
-        title: Daily note text color
-        description: Text color for dates with a daily note.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-has-note-bg
-        title: Daily note background
-        description: Background color for dates with a daily note.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-has-feature-image-color
-        title: Feature image text color
-        description: Text color for dates with feature images.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-today-color
-        title: Day text color (today)
-        description: Text color for today's date.
-        type: variable-themed-color
-        format: hex
-        default-light: '#'
-        default-dark: '#'
-    -
-        id: nn-theme-nav-calendar-day-today-bg
-        title: Today highlight background
-        description: Background color for the today highlight circle.
         type: variable-themed-color
         format: hex
         default-light: '#'
