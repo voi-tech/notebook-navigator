@@ -1,9 +1,9 @@
 import { NavigationPaneCalendar } from './NavigationPaneCalendar';
 
-export function CalendarRightPanel() {
+export function CalendarRightSidebar() {
     return (
-        <div className="nn-calendar-right-panel nn-list-pane">
-            <div className="nn-calendar-right-panel-content">
+        <div className="nn-calendar-right-sidebar nn-list-pane">
+            <div className="nn-calendar-right-sidebar-content">
                 <NavigationPaneCalendar layout="panel" weeksToShowOverride={6} />
             </div>
         </div>

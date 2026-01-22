@@ -70,8 +70,8 @@ export function renderCalendarTab(context: SettingsTabContext): void {
 
     calendarPlacementSetting.addDropdown((dropdown: DropdownComponent) => {
         dropdown
-            .addOption('left-panel', strings.settings.items.calendarPlacement.options.leftPanel)
-            .addOption('right-panel', strings.settings.items.calendarPlacement.options.rightPanel)
+            .addOption('left-sidebar', strings.settings.items.calendarPlacement.options.leftSidebar)
+            .addOption('right-sidebar', strings.settings.items.calendarPlacement.options.rightSidebar)
             .setValue(plugin.settings.calendarPlacement)
             .onChange(value => {
                 if (!isCalendarPlacement(value)) {

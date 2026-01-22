@@ -91,10 +91,10 @@ export type ShortcutBadgeDisplayMode = 'index' | 'count' | 'none';
 export type CalendarWeeksToShow = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** Where the calendar is shown in the navigator UI. */
-export type CalendarPlacement = 'left-panel' | 'right-panel';
+export type CalendarPlacement = 'left-sidebar' | 'right-sidebar';
 
 export function isCalendarPlacement(value: unknown): value is CalendarPlacement {
-    return value === 'left-panel' || value === 'right-panel';
+    return value === 'left-sidebar' || value === 'right-sidebar';
 }
 
 /** Source used for calendar notes in the navigation pane */

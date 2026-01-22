@@ -105,7 +105,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     recentNotesCount: 5,
 
     // Calendar tab - Calendar
-    calendarPlacement: 'left-panel',
+    calendarPlacement: 'left-sidebar',
     calendarLocale: 'system-default',
     calendarWeeksToShow: 1,
     calendarHighlightToday: true,

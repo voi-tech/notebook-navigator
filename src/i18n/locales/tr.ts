@@ -911,10 +911,10 @@ export const STRINGS_TR = {
             },
             calendarPlacement: {
                 name: 'Takvim konumu',
-                desc: "Navigator'da veya sağ kenar çubuğunda görüntüle.",
+                desc: 'Sol veya sağ kenar çubuğunda görüntüle.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Sağ kenar çubuğu'
+                    leftSidebar: 'Sol kenar çubuğu',
+                    rightSidebar: 'Sağ kenar çubuğu'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_TR = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Gösterilecek haftalar',
-                desc: 'Görüntülenecek takvim haftası sayısı.',
+                name: 'Sol kenar çubuğunda gösterilecek haftalar',
+                desc: 'Sağ kenar çubuğundaki takvim her zaman tam ayı gösterir.',
                 options: {
                     fullMonth: 'Tam ay',
                     oneWeek: '1 hafta',

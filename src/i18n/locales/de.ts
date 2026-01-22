@@ -913,10 +913,10 @@ export const STRINGS_DE = {
             },
             calendarPlacement: {
                 name: 'Kalenderposition',
-                desc: 'Anzeige im Navigator oder in der rechten Seitenleiste.',
+                desc: 'Anzeige in der linken oder rechten Seitenleiste.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Rechte Seitenleiste'
+                    leftSidebar: 'Linke Seitenleiste',
+                    rightSidebar: 'Rechte Seitenleiste'
                 }
             },
             calendarLocale: {
@@ -927,8 +927,8 @@ export const STRINGS_DE = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Angezeigte Wochen',
-                desc: 'Anzahl der anzuzeigenden Kalenderwochen.',
+                name: 'Angezeigte Wochen in linker Seitenleiste',
+                desc: 'Der Kalender in der rechten Seitenleiste zeigt immer den vollen Monat an.',
                 options: {
                     fullMonth: 'Ganzer Monat',
                     oneWeek: '1 Woche',

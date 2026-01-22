@@ -911,10 +911,10 @@ export const STRINGS_KO = {
             },
             calendarPlacement: {
                 name: '캘린더 위치',
-                desc: 'Navigator 또는 오른쪽 사이드바에 표시합니다.',
+                desc: '왼쪽 또는 오른쪽 사이드바에 표시합니다.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: '오른쪽 사이드바'
+                    leftSidebar: '왼쪽 사이드바',
+                    rightSidebar: '오른쪽 사이드바'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_KO = {
                 }
             },
             calendarWeeksToShow: {
-                name: '표시할 주',
-                desc: '표시할 달력 주 수입니다.',
+                name: '왼쪽 사이드바에 표시할 주',
+                desc: '오른쪽 사이드바의 캘린더는 항상 전체 월을 표시합니다.',
                 options: {
                     fullMonth: '전체 월',
                     oneWeek: '1주',

@@ -913,10 +913,10 @@ export const STRINGS_FR = {
             },
             calendarPlacement: {
                 name: 'Emplacement du calendrier',
-                desc: 'Afficher dans Navigator ou dans la barre latérale droite.',
+                desc: 'Afficher dans la barre latérale gauche ou droite.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Barre latérale droite'
+                    leftSidebar: 'Barre latérale gauche',
+                    rightSidebar: 'Barre latérale droite'
                 }
             },
             calendarLocale: {
@@ -927,8 +927,8 @@ export const STRINGS_FR = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Semaines à afficher',
-                desc: 'Nombre de semaines du calendrier à afficher.',
+                name: 'Semaines à afficher dans la barre latérale gauche',
+                desc: 'Le calendrier dans la barre latérale droite affiche toujours le mois complet.',
                 options: {
                     fullMonth: 'Mois complet',
                     oneWeek: '1 semaine',

@@ -911,10 +911,10 @@ export const STRINGS_ID = {
             },
             calendarPlacement: {
                 name: 'Penempatan kalender',
-                desc: 'Tampilkan di Navigator atau sidebar kanan.',
+                desc: 'Tampilkan di sidebar kiri atau kanan.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Sidebar kanan'
+                    leftSidebar: 'Sidebar kiri',
+                    rightSidebar: 'Sidebar kanan'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_ID = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Minggu yang ditampilkan',
-                desc: 'Jumlah minggu kalender yang ditampilkan.',
+                name: 'Minggu yang ditampilkan di sidebar kiri',
+                desc: 'Kalender di sidebar kanan selalu menampilkan bulan penuh.',
                 options: {
                     fullMonth: 'Bulan penuh',
                     oneWeek: '1 minggu',

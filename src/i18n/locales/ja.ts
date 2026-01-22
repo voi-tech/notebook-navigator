@@ -912,10 +912,10 @@ export const STRINGS_JA = {
             },
             calendarPlacement: {
                 name: 'カレンダーの配置',
-                desc: 'Navigatorまたは右サイドバーに表示します。',
+                desc: '左または右サイドバーに表示します。',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: '右サイドバー'
+                    leftSidebar: '左サイドバー',
+                    rightSidebar: '右サイドバー'
                 }
             },
             calendarLocale: {
@@ -926,8 +926,8 @@ export const STRINGS_JA = {
                 }
             },
             calendarWeeksToShow: {
-                name: '表示週数',
-                desc: '表示するカレンダーの週数。',
+                name: '左サイドバーの表示週数',
+                desc: '右サイドバーのカレンダーは常に月全体を表示します。',
                 options: {
                     fullMonth: '月全体',
                     oneWeek: '1週間',

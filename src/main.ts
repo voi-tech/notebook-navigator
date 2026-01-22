@@ -1979,7 +1979,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.lastCalendarPlacement = nextPlacement;
         const requestId = ++this.calendarPlacementRequestId;
 
-        if (nextPlacement === 'right-panel') {
+        if (nextPlacement === 'right-sidebar') {
             const reveal = options.reveal ?? false;
             runAsyncAction(() =>
                 coordinator.ensureCalendarViewInRightSidebar({
@@ -1988,7 +1988,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
                         !this.isUnloading &&
                         this.hasWorkspaceLayoutReady &&
                         this.calendarPlacementRequestId === requestId &&
-                        this.settings.calendarPlacement === 'right-panel'
+                        this.settings.calendarPlacement === 'right-sidebar'
                 })
             );
             return;
@@ -2048,7 +2048,8 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             }
         });
 
-        const shouldRevealCalendarView = this.lastCalendarPlacement !== 'right-panel' && this.settings.calendarPlacement === 'right-panel';
+        const shouldRevealCalendarView =
+            this.lastCalendarPlacement !== 'right-sidebar' && this.settings.calendarPlacement === 'right-sidebar';
         this.applyCalendarPlacementView({ reveal: shouldRevealCalendarView });
     }
 

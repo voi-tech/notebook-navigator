@@ -913,10 +913,10 @@ export const STRINGS_PL = {
             },
             calendarPlacement: {
                 name: 'Położenie kalendarza',
-                desc: 'Wyświetlaj w Navigator lub na prawym pasku bocznym.',
+                desc: 'Wyświetlaj na lewym lub prawym pasku bocznym.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Prawy pasek boczny'
+                    leftSidebar: 'Lewy pasek boczny',
+                    rightSidebar: 'Prawy pasek boczny'
                 }
             },
             calendarLocale: {
@@ -927,8 +927,8 @@ export const STRINGS_PL = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Tygodnie do wyświetlenia',
-                desc: 'Liczba tygodni kalendarza do wyświetlenia.',
+                name: 'Tygodnie do wyświetlenia na lewym pasku bocznym',
+                desc: 'Kalendarz na prawym pasku bocznym zawsze wyświetla pełny miesiąc.',
                 options: {
                     fullMonth: 'Pełny miesiąc',
                     oneWeek: '1 tydzień',

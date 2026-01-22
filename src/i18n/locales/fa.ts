@@ -911,10 +911,10 @@ export const STRINGS_FA = {
             },
             calendarPlacement: {
                 name: 'محل قرارگیری تقویم',
-                desc: 'نمایش در Navigator یا نوار کناری سمت راست.',
+                desc: 'نمایش در نوار کناری راست یا چپ.', // RTL: right↔left flipped to match visual layout
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'نوار کناری سمت راست'
+                    leftSidebar: 'نوار کناری راست', // RTL: "Left sidebar" → "Right sidebar" (appears on right in RTL)
+                    rightSidebar: 'نوار کناری چپ' // RTL: "Right sidebar" → "Left sidebar" (appears on left in RTL)
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_FA = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'هفته‌های نمایش داده شده',
-                desc: 'تعداد هفته‌های تقویم برای نمایش.',
+                name: 'هفته‌های نمایش در نوار کناری راست', // RTL: "left sidebar" → "right sidebar"
+                desc: 'تقویم در نوار کناری چپ همیشه ماه کامل را نمایش می‌دهد.', // RTL: "right sidebar" → "left sidebar"
                 options: {
                     fullMonth: 'ماه کامل',
                     oneWeek: '۱ هفته',

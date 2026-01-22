@@ -911,10 +911,10 @@ export const STRINGS_EN = {
             },
             calendarPlacement: {
                 name: 'Calendar placement',
-                desc: 'Display in Navigator or the right sidebar.',
+                desc: 'Display in the left or right sidebar.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Right sidebar'
+                    leftSidebar: 'Left sidebar',
+                    rightSidebar: 'Right sidebar'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_EN = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Weeks to show',
-                desc: 'Number of calendar weeks to display.',
+                name: 'Weeks to show in left sidebar',
+                desc: 'Calendar in the right sidebar always displays the full month.',
                 options: {
                     fullMonth: 'Full month',
                     oneWeek: '1 week',

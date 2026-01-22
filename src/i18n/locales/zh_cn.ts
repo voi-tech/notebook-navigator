@@ -909,10 +909,10 @@ export const STRINGS_ZH_CN = {
             },
             calendarPlacement: {
                 name: '日历位置',
-                desc: '在 Navigator 或右侧边栏中显示。',
+                desc: '在左侧边栏或右侧边栏中显示。',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: '右侧边栏'
+                    leftSidebar: '左侧边栏',
+                    rightSidebar: '右侧边栏'
                 }
             },
             calendarLocale: {
@@ -923,8 +923,8 @@ export const STRINGS_ZH_CN = {
                 }
             },
             calendarWeeksToShow: {
-                name: '显示周数',
-                desc: '选择日历中显示的周数。',
+                name: '左侧边栏显示周数',
+                desc: '右侧边栏的日历始终显示完整月份。',
                 options: {
                     fullMonth: '完整月份',
                     oneWeek: '1 周',

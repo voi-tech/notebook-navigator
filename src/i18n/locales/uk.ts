@@ -911,10 +911,10 @@ export const STRINGS_UK = {
             },
             calendarPlacement: {
                 name: 'Розташування календаря',
-                desc: 'Відображати в Navigator або на правій бічній панелі.',
+                desc: 'Відображати на лівій або правій бічній панелі.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Права бічна панель'
+                    leftSidebar: 'Ліва бічна панель',
+                    rightSidebar: 'Права бічна панель'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_UK = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Тижнів для показу',
-                desc: 'Кількість тижнів календаря для відображення.',
+                name: 'Тижнів для показу на лівій бічній панелі',
+                desc: 'Календар на правій бічній панелі завжди відображає повний місяць.',
                 options: {
                     fullMonth: 'Повний місяць',
                     oneWeek: '1 тиждень',

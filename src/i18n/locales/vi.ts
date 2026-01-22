@@ -911,10 +911,10 @@ export const STRINGS_VI = {
             },
             calendarPlacement: {
                 name: 'Vị trí lịch',
-                desc: 'Hiển thị trong Navigator hoặc thanh bên phải.',
+                desc: 'Hiển thị trong thanh bên trái hoặc phải.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Thanh bên phải'
+                    leftSidebar: 'Thanh bên trái',
+                    rightSidebar: 'Thanh bên phải'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_VI = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Số tuần hiển thị',
-                desc: 'Số tuần lịch để hiển thị.',
+                name: 'Số tuần hiển thị trong thanh bên trái',
+                desc: 'Lịch trong thanh bên phải luôn hiển thị cả tháng.',
                 options: {
                     fullMonth: 'Cả tháng',
                     oneWeek: '1 tuần',

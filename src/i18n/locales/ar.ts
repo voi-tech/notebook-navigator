@@ -911,10 +911,10 @@ export const STRINGS_AR = {
             },
             calendarPlacement: {
                 name: 'موضع التقويم',
-                desc: 'العرض في Navigator أو الشريط الجانبي الأيمن.',
+                desc: 'العرض في الشريط الجانبي الأيمن أو الأيسر.', // RTL: right↔left flipped to match visual layout
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'الشريط الجانبي الأيمن'
+                    leftSidebar: 'الشريط الجانبي الأيمن', // RTL: "Left sidebar" → "Right sidebar" (appears on right in RTL)
+                    rightSidebar: 'الشريط الجانبي الأيسر' // RTL: "Right sidebar" → "Left sidebar" (appears on left in RTL)
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_AR = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'الأسابيع المعروضة',
-                desc: 'عدد أسابيع التقويم المعروضة.',
+                name: 'الأسابيع المعروضة في الشريط الجانبي الأيمن', // RTL: "left sidebar" → "right sidebar"
+                desc: 'التقويم في الشريط الجانبي الأيسر يعرض الشهر كاملاً دائماً.', // RTL: "right sidebar" → "left sidebar"
                 options: {
                     fullMonth: 'شهر كامل',
                     oneWeek: 'أسبوع واحد',

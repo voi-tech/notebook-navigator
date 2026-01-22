@@ -911,10 +911,10 @@ export const STRINGS_TH = {
             },
             calendarPlacement: {
                 name: 'ตำแหน่งปฏิทิน',
-                desc: 'แสดงใน Navigator หรือแถบด้านขวา',
+                desc: 'แสดงในแถบด้านซ้ายหรือขวา',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'แถบด้านขวา'
+                    leftSidebar: 'แถบด้านซ้าย',
+                    rightSidebar: 'แถบด้านขวา'
                 }
             },
             calendarLocale: {
@@ -925,8 +925,8 @@ export const STRINGS_TH = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'สัปดาห์ที่แสดง',
-                desc: 'จำนวนสัปดาห์ปฏิทินที่จะแสดง',
+                name: 'สัปดาห์ที่แสดงในแถบด้านซ้าย',
+                desc: 'ปฏิทินในแถบด้านขวาจะแสดงเต็มเดือนเสมอ',
                 options: {
                     fullMonth: 'เต็มเดือน',
                     oneWeek: '1 สัปดาห์',

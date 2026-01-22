@@ -913,10 +913,10 @@ export const STRINGS_NL = {
             },
             calendarPlacement: {
                 name: 'Kalenderpositie',
-                desc: 'Weergeven in Navigator of de rechter zijbalk.',
+                desc: 'Weergeven in de linker of rechter zijbalk.',
                 options: {
-                    leftPanel: 'Navigator',
-                    rightPanel: 'Rechter zijbalk'
+                    leftSidebar: 'Linker zijbalk',
+                    rightSidebar: 'Rechter zijbalk'
                 }
             },
             calendarLocale: {
@@ -927,8 +927,8 @@ export const STRINGS_NL = {
                 }
             },
             calendarWeeksToShow: {
-                name: 'Weken om te tonen',
-                desc: 'Aantal kalenderweken om weer te geven.',
+                name: 'Weken om te tonen in linker zijbalk',
+                desc: 'De kalender in de rechter zijbalk toont altijd de volledige maand.',
                 options: {
                     fullMonth: 'Volledige maand',
                     oneWeek: '1 week',

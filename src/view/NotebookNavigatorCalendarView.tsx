@@ -21,7 +21,7 @@ import { Root, createRoot } from 'react-dom/client';
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import { SettingsProvider } from '../context/SettingsContext';
 import { ServicesProvider } from '../context/ServicesContext';
-import { CalendarRightPanel } from '../components/CalendarRightPanel';
+import { CalendarRightSidebar } from '../components/CalendarRightSidebar';
 import { NOTEBOOK_NAVIGATOR_ICON_ID } from '../constants/notebookNavigatorIcon';
 import { strings } from '../i18n';
 import NotebookNavigatorPlugin from '../main';
@@ -62,7 +62,7 @@ export class NotebookNavigatorCalendarView extends ItemView {
             <React.StrictMode>
                 <SettingsProvider plugin={this.plugin}>
                     <ServicesProvider plugin={this.plugin}>
-                        <CalendarRightPanel />
+                        <CalendarRightSidebar />
                     </ServicesProvider>
                 </SettingsProvider>
             </React.StrictMode>
