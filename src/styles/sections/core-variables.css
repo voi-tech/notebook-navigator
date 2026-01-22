@@ -168,7 +168,8 @@ body {
 
     /* -- Navigation Calendar -- */
     --nn-theme-calendar-header-color: var(--nn-theme-foreground);
-    --nn-theme-calendar-week-label-color: var(--nn-theme-calendar-day-outside-month-color);
+    --nn-theme-calendar-weekday-color: var(--nn-theme-foreground-muted);
+    --nn-theme-calendar-week-color: var(--nn-theme-foreground-muted);
     --nn-theme-calendar-day-in-month-color: var(--nn-theme-foreground);
     --nn-theme-calendar-day-outside-month-color: var(--nn-theme-foreground-muted);
     --nn-theme-calendar-hover-bg: var(--background-modifier-hover);

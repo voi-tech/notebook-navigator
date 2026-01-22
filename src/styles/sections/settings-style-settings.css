@@ -111,9 +111,17 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
-        id: nn-theme-calendar-week-label-color
-        title: Week label text color
-        description: Text color for weekday labels and week numbers.
+        id: nn-theme-calendar-weekday-color
+        title: Weekday label text color
+        description: Text color for weekday labels (Mon, Tue, Wed...).
+        type: variable-themed-color
+        format: hex
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-calendar-week-color
+        title: Week number text color
+        description: Text color for week numbers.
         type: variable-themed-color
         format: hex
         default-light: '#'

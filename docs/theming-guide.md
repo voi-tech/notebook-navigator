@@ -66,7 +66,8 @@ Most variables are colors and should resolve to a computed color (some are used 
 | Variable                                        | Default                         | Description                                             |
 | ----------------------------------------------- | ------------------------------- | ------------------------------------------------------- |
 | `--nn-theme-calendar-header-color`          | `var(--nn-theme-foreground)`          | Text color for month/year and header buttons            |
-| `--nn-theme-calendar-week-label-color`      | `var(--nn-theme-foreground-muted)`    | Text color for weekday labels and week numbers          |
+| `--nn-theme-calendar-weekday-color`         | `var(--nn-theme-foreground-muted)`    | Text color for weekday labels (Mon, Tue, Wed...)        |
+| `--nn-theme-calendar-week-color`      | `var(--nn-theme-foreground-muted)`                 | Text color for week numbers                             |
 | `--nn-theme-calendar-day-in-month-color`    | `var(--nn-theme-foreground)`          | Text color for days within the current month            |
 | `--nn-theme-calendar-day-outside-month-color` | `var(--nn-theme-foreground-muted)`  | Text color for days outside the current month           |
 | `--nn-theme-calendar-hover-bg`              | `var(--background-modifier-hover)` | Hover background for calendar buttons and days          |
@@ -276,7 +277,8 @@ body {
 
   /* Navigation calendar */
   --nn-theme-calendar-header-color: var(--nn-theme-foreground);
-  --nn-theme-calendar-week-label-color: var(--nn-theme-foreground-muted);
+  --nn-theme-calendar-weekday-color: var(--nn-theme-foreground-muted);
+  --nn-theme-calendar-week-color: var(--nn-theme-foreground-muted);
   --nn-theme-calendar-day-in-month-color: var(--nn-theme-foreground);
   --nn-theme-calendar-day-outside-month-color: var(--nn-theme-foreground-muted);
   --nn-theme-calendar-hover-bg: #4b5059;
