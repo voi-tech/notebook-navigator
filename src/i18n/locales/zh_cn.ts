@@ -418,7 +418,7 @@ export const STRINGS_ZH_CN = {
             thanksText: '非常感谢您的下载，祝您使用愉快！',
             videoAlt: '安装和掌握 Notebook Navigator',
             openVideoButton: '播放视频',
-            closeButton: '稍后观看'
+            closeButton: '以后再说'
         }
     },
 

@@ -421,7 +421,7 @@ export const STRINGS_PL = {
             thanksText: 'Bardzo dziękuję za pobranie i miłego korzystania!',
             videoAlt: 'Instalacja i opanowanie Notebook Navigator',
             openVideoButton: 'Odtwórz wideo',
-            closeButton: 'Obejrzę później'
+            closeButton: 'Może później'
         }
     },
 

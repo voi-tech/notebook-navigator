@@ -420,7 +420,7 @@ export const STRINGS_UK = {
             thanksText: 'Дуже дякую за завантаження, насолоджуйтесь!',
             videoAlt: 'Встановлення та освоєння Notebook Navigator',
             openVideoButton: 'Відтворити відео',
-            closeButton: 'Подивлюсь пізніше'
+            closeButton: 'Можливо, пізніше'
         }
     },
     // File system operations

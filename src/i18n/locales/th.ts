@@ -420,7 +420,7 @@ export const STRINGS_TH = {
             thanksText: 'ขอบคุณมากที่ดาวน์โหลด สนุกกับการใช้งาน!',
             videoAlt: 'การติดตั้งและเชี่ยวชาญ Notebook Navigator',
             openVideoButton: 'เล่นวิดีโอ',
-            closeButton: 'ไว้ดูทีหลัง'
+            closeButton: 'ไว้ทีหลัง'
         }
     },
     // File system operations

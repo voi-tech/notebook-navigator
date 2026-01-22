@@ -420,7 +420,7 @@ export const STRINGS_IT = {
             thanksText: 'Grazie mille per aver scaricato e buon divertimento!',
             videoAlt: 'Installare e padroneggiare Notebook Navigator',
             openVideoButton: 'Riproduci video',
-            closeButton: 'Lo guarderò più tardi'
+            closeButton: 'Forse più tardi'
         }
     },
     // File system operations

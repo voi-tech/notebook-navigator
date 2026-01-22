@@ -420,7 +420,7 @@ export const STRINGS_FA = {
             thanksText: 'از دانلود شما بسیار سپاسگزارم، لذت ببرید!',
             videoAlt: 'نصب و تسلط بر Notebook Navigator',
             openVideoButton: 'پخش ویدیو',
-            closeButton: 'بعداً تماشا می‌کنم'
+            closeButton: 'شاید بعداً'
         }
     },
     // File system operations

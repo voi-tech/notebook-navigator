@@ -416,7 +416,7 @@ export const STRINGS_PT_BR = {
             thanksText: 'Muito obrigado por baixar e aproveite!',
             videoAlt: 'Instalando e dominando o Notebook Navigator',
             openVideoButton: 'Reproduzir vídeo',
-            closeButton: 'Vou assistir depois'
+            closeButton: 'Talvez depois'
         }
     },
 

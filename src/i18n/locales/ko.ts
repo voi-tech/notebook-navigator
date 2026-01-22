@@ -419,7 +419,7 @@ export const STRINGS_KO = {
             thanksText: '다운로드해 주셔서 감사합니다. 즐겁게 사용하세요!',
             videoAlt: 'Notebook Navigator 설치 및 마스터하기',
             openVideoButton: '비디오 재생',
-            closeButton: '나중에 볼게요'
+            closeButton: '나중에'
         }
     },
 

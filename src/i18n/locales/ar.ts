@@ -420,7 +420,7 @@ export const STRINGS_AR = {
             thanksText: 'شكراً جزيلاً على التحميل، واستمتع!',
             videoAlt: 'تثبيت وإتقان Notebook Navigator',
             openVideoButton: 'تشغيل الفيديو',
-            closeButton: 'سأشاهده لاحقاً'
+            closeButton: 'ربما لاحقاً'
         }
     },
     // File system operations

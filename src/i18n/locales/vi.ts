@@ -420,7 +420,7 @@ export const STRINGS_VI = {
             thanksText: 'Cảm ơn bạn rất nhiều vì đã tải xuống, chúc bạn sử dụng vui vẻ!',
             videoAlt: 'Cài đặt và làm chủ Notebook Navigator',
             openVideoButton: 'Phát video',
-            closeButton: 'Để sau xem'
+            closeButton: 'Có lẽ sau'
         }
     },
     // File system operations

@@ -420,7 +420,7 @@ export const STRINGS_JA = {
             thanksText: 'ダウンロードいただきありがとうございます。お楽しみください！',
             videoAlt: 'Notebook Navigatorのインストールとマスター',
             openVideoButton: 'ビデオを再生',
-            closeButton: 'あとで見る'
+            closeButton: 'また今度'
         }
     },
 

@@ -420,7 +420,7 @@ export const STRINGS_ID = {
             thanksText: 'Terima kasih banyak telah mengunduh, selamat menggunakan!',
             videoAlt: 'Menginstal dan menguasai Notebook Navigator',
             openVideoButton: 'Putar video',
-            closeButton: 'Nanti saja'
+            closeButton: 'Mungkin nanti'
         }
     },
     // File system operations

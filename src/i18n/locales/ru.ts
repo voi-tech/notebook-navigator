@@ -420,7 +420,7 @@ export const STRINGS_RU = {
             thanksText: 'Большое спасибо за загрузку, приятного использования!',
             videoAlt: 'Установка и освоение Notebook Navigator',
             openVideoButton: 'Воспроизвести видео',
-            closeButton: 'Посмотрю позже'
+            closeButton: 'Может, позже'
         }
     },
     // File system operations

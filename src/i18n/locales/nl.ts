@@ -421,7 +421,7 @@ export const STRINGS_NL = {
             thanksText: 'Heel erg bedankt voor het downloaden en veel plezier!',
             videoAlt: 'Notebook Navigator installeren en beheersen',
             openVideoButton: 'Video afspelen',
-            closeButton: 'Ik bekijk het later'
+            closeButton: 'Misschien later'
         }
     },
 

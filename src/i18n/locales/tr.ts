@@ -420,7 +420,7 @@ export const STRINGS_TR = {
             thanksText: 'İndirdiğiniz için çok teşekkürler, keyifli kullanımlar!',
             videoAlt: 'Notebook Navigator kurulumu ve ustalaşma',
             openVideoButton: 'Videoyu oynat',
-            closeButton: 'Daha sonra izleyeceğim'
+            closeButton: 'Belki sonra'
         }
     },
     // File system operations

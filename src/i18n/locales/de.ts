@@ -420,7 +420,7 @@ export const STRINGS_DE = {
             thanksText: 'Vielen Dank fürs Herunterladen und viel Spaß!',
             videoAlt: 'Notebook Navigator installieren und beherrschen',
             openVideoButton: 'Video abspielen',
-            closeButton: 'Ich schaue es später'
+            closeButton: 'Vielleicht später'
         }
     },
 
