@@ -536,6 +536,7 @@ export const STRINGS_AR = {
         openYearlyNote: 'فتح الملاحظة السنوية',
         revealFile: 'الكشف عن الملف', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'بحث', // Command palette: Toggle search in the file list (English: Search)
+        searchVaultRoot: 'بحث في جذر الخزنة', // Command palette: Selects the vault root folder and focuses search (English: Search in vault root)
         toggleDualPane: 'تبديل تخطيط اللوحتين', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
         toggleCalendar: 'تبديل التقويم', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'اختيار ملف الخزنة', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)

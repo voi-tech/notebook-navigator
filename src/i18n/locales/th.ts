@@ -536,6 +536,7 @@ export const STRINGS_TH = {
         openYearlyNote: 'เปิดโน้ตรายปี',
         revealFile: 'แสดงไฟล์',
         search: 'ค้นหา',
+        searchVaultRoot: 'ค้นหาในรูทห้องนิรภัย',
         toggleDualPane: 'สลับรูปแบบแผงคู่',
         toggleCalendar: 'สลับปฏิทิน',
         selectVaultProfile: 'เลือกโปรไฟล์ห้องนิรภัย',

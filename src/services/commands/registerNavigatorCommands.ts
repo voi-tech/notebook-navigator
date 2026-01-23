@@ -1247,4 +1247,32 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
             });
         }
     });
+
+    // Command to select the vault root folder and open search
+    plugin.addCommand({
+        id: 'search-vault',
+        name: strings.commands.searchVaultRoot,
+        checkCallback: (checking: boolean) => {
+            if (!plugin.settings.showRootFolder) {
+                return false;
+            }
+
+            if (checking) {
+                return true;
+            }
+
+            runAsyncAction(async () => {
+                const view = await ensureNavigatorOpen(plugin);
+                if (!view) {
+                    return;
+                }
+
+                const root = plugin.app.vault.getRoot();
+                view.navigateToFolder(root, { source: 'manual', preserveNavigationFocus: false });
+                view.toggleSearch();
+            });
+
+            return true;
+        }
+    });
 }

@@ -533,6 +533,7 @@ export const STRINGS_PT_BR = {
         openYearlyNote: 'Abrir nota anual',
         revealFile: 'Revelar arquivo',
         search: 'Pesquisar',
+        searchVaultRoot: 'Pesquisar na raiz do cofre',
         toggleDualPane: 'Alternar layout de painel duplo',
         toggleCalendar: 'Alternar calendário',
         selectVaultProfile: 'Alterar perfil do cofre',

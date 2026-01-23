@@ -535,6 +535,7 @@ export const STRINGS_ZH_TW = {
         openYearlyNote: '開啟每年筆記',
         revealFile: '定位檔案',
         search: '搜尋',
+        searchVaultRoot: '在保險庫根目錄搜尋',
         toggleDualPane: '切換雙窗格布局',
         toggleCalendar: '切換日曆',
         selectVaultProfile: '變更保險庫設定檔',

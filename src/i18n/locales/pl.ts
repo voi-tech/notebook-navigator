@@ -538,6 +538,7 @@ export const STRINGS_PL = {
         openYearlyNote: 'Otwórz roczną notatkę',
         revealFile: 'Pokaż plik', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Szukaj', // Command palette: Toggle search in the file list (English: Search)
+        searchVaultRoot: 'Szukaj w katalogu głównym sejfu', // Command palette: Selects the vault root folder and focuses search (English: Search in vault root)
         toggleDualPane: 'Przełącz układ podwójnego panelu', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
         toggleCalendar: 'Przełącz kalendarz', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Zmień profil sejfu', // Command palette: Opens a modal to choose a different vault profile (English: Switch vault profile)

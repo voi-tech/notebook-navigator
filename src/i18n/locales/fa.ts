@@ -536,6 +536,7 @@ export const STRINGS_FA = {
         openYearlyNote: 'باز کردن یادداشت سالانه',
         revealFile: 'نمایش فایل',
         search: 'جستجو',
+        searchVaultRoot: 'جستجو در ریشه خزانه',
         toggleDualPane: 'تغییر نمای پنل دوگانه',
         toggleCalendar: 'تغییر تقویم',
         selectVaultProfile: 'انتخاب پروفایل خزانه',

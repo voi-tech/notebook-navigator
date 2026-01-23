@@ -538,6 +538,7 @@ export const STRINGS_NL = {
         openYearlyNote: 'Jaarlijkse notitie openen',
         revealFile: 'Bestand tonen',
         search: 'Zoeken',
+        searchVaultRoot: 'Zoeken in kluisroot',
         toggleDualPane: 'Dubbel paneel in-/uitschakelen',
         toggleCalendar: 'Kalender in-/uitschakelen',
         selectVaultProfile: 'Kluisprofiel wijzigen',

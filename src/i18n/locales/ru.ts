@@ -536,6 +536,7 @@ export const STRINGS_RU = {
         openYearlyNote: 'Открыть годовую заметку',
         revealFile: 'Показать файл', // Command palette: Reveals and selects the currently active file in the navigator (English: Reveal file)
         search: 'Поиск', // Command palette: Toggle search in the file list (English: Search)
+        searchVaultRoot: 'Поиск в корне хранилища', // Command palette: Selects the vault root folder and focuses search (English: Search in vault root)
         toggleDualPane: 'Переключить двухпанельный режим', // Command palette: Toggles between single-pane and dual-pane layout (English: Toggle dual pane layout)
         toggleCalendar: 'Переключить календарь', // Command palette: Toggles showing the calendar overlay in the navigation pane (English: Toggle calendar)
         selectVaultProfile: 'Выбрать профиль хранилища', // Command palette: Opens a modal to choose a different vault profile (English: Select vault profile)

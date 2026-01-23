@@ -536,6 +536,7 @@ export const STRINGS_ID = {
         openYearlyNote: 'Buka catatan tahunan',
         revealFile: 'Tampilkan file',
         search: 'Cari',
+        searchVaultRoot: 'Cari di root vault',
         toggleDualPane: 'Alihkan tata letak panel ganda',
         toggleCalendar: 'Alihkan kalender',
         selectVaultProfile: 'Pilih profil vault',
