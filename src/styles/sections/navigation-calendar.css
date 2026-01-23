@@ -549,15 +549,6 @@
     height: auto;
     align-items: flex-end;
     padding-bottom: 4px;
-    border-top: 1px solid var(--background-modifier-border);
-    border-left: 1px solid var(--background-modifier-border);
-}
-
-.nn-calendar-right-sidebar
-    .nn-navigation-calendar[data-layout='panel']
-    .nn-navigation-calendar-week:last-child
-    .nn-navigation-calendar-weeknumber {
-    border-bottom: 1px solid var(--background-modifier-border);
 }
 
 .nn-calendar-right-sidebar .nn-navigation-calendar[data-layout='panel'] .nn-navigation-calendar-day {
