@@ -1132,7 +1132,7 @@ export const STRINGS_KO = {
                 }
             },
             customPropertyFields: {
-                name: '표시할 속성',
+                name: '표시할 속성들',
                 desc: '배지로 표시할 프론트매터 속성의 쉼표로 구분된 목록. 목록 값 속성은 값당 하나의 배지를 표시합니다. [[위키링크]] 값은 클릭 가능한 링크로 표시됩니다.',
                 placeholder: '상태, 유형, 카테고리'
             },

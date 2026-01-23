@@ -26,7 +26,7 @@ import { getCachedCommaSeparatedList } from '../../utils/commaSeparatedListUtils
 import { areStringArraysEqual } from '../../utils/arrayUtils';
 import { areCustomPropertyItemsEqual, hasCustomPropertyFrontmatterFields } from '../../utils/customPropertyUtils';
 import { PreviewTextUtils } from '../../utils/previewTextUtils';
-import { casefold, createCaseInsensitiveKeyMatcher } from '../../utils/recordUtils';
+import { createCaseInsensitiveKeyMatcher } from '../../utils/recordUtils';
 import { countWordsForCustomProperty } from '../../utils/wordCountUtils';
 import type { ContentProviderProcessResult } from './BaseContentProvider';
 import { findFeatureImageReference, type FeatureImageReference } from './featureImageReferenceResolver';
@@ -43,7 +43,6 @@ type MarkdownPipelineContext = {
     fileModified: boolean;
     customPropertyEnabled: boolean;
     customPropertyNameFields: readonly string[];
-    customPropertyColorMap: Record<string, string>;
     hasContent: boolean;
     featureImageReference: FeatureImageReference | null;
     featureImageExcluded: boolean;
@@ -116,16 +115,16 @@ function extractFrontmatterValues(value: unknown): string[] {
 
 // Builds the custom property pill list from frontmatter.
 // - `nameFields` produce the pill values (all matching fields are included)
-// - `colorMap` applies the same color to all values for a field
 function resolveCustomPropertyItemsFromFrontmatter(
     frontmatter: FrontMatterCache | null,
-    nameFields: readonly string[],
-    colorMap: Record<string, string>
+    nameFields: readonly string[]
 ): CustomPropertyItem[] {
     if (!frontmatter) {
         return [];
     }
 
+    // Custom property items are persisted without styling metadata.
+    // Rendering derives per-property colors from settings using the `fieldKey`.
     const entries: CustomPropertyItem[] = [];
 
     for (let fieldIndex = 0; fieldIndex < nameFields.length; fieldIndex += 1) {
@@ -135,17 +134,9 @@ function resolveCustomPropertyItemsFromFrontmatter(
             continue;
         }
 
-        const colorKey = casefold(field);
-        const mappedColor = colorKey ? (colorMap[colorKey] ?? '').trim() : '';
-        const color = mappedColor.length > 0 ? mappedColor : null;
-
         for (let valueIndex = 0; valueIndex < values.length; valueIndex += 1) {
             const value = values[valueIndex];
-            if (color) {
-                entries.push({ value, color });
-            } else {
-                entries.push({ value });
-            }
+            entries.push({ fieldKey: field, value });
         }
     }
 
@@ -226,8 +217,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             'featureImageProperties',
             'featureImageExcludeProperties',
             'downloadExternalFeatureImages',
-            'customPropertyFields',
-            'customPropertyColorMap'
+            'customPropertyFields'
         ];
     }
 
@@ -264,9 +254,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             oldSettings.stripHtmlInPreview !== newSettings.stripHtmlInPreview ||
             !areStringArraysEqual(oldSettings.previewProperties, newSettings.previewProperties);
 
-        const shouldClearCustomProperty =
-            oldSettings.customPropertyFields !== newSettings.customPropertyFields ||
-            oldSettings.customPropertyColorMap !== newSettings.customPropertyColorMap;
+        const shouldClearCustomProperty = oldSettings.customPropertyFields !== newSettings.customPropertyFields;
 
         const featureImagePropertiesChanged = !areStringArraysEqual(oldSettings.featureImageProperties, newSettings.featureImageProperties);
         const featureImageExcludePropertiesChanged = !areStringArraysEqual(
@@ -341,7 +329,6 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
         }
 
         const customPropertyNameFields = getCachedCommaSeparatedList(settings.customPropertyFields);
-        const customPropertyColorMap = settings.customPropertyColorMap;
         const customPropertyEnabled = customPropertyNameFields.length > 0;
 
         const cachedMetadata = this.app.metadataCache.getFileCache(job.file);
@@ -401,11 +388,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                 }
 
                 if (customPropertyEnabled) {
-                    const nextCustomProperty = resolveCustomPropertyItemsFromFrontmatter(
-                        frontmatter,
-                        customPropertyNameFields,
-                        customPropertyColorMap
-                    );
+                    const nextCustomProperty = resolveCustomPropertyItemsFromFrontmatter(frontmatter, customPropertyNameFields);
                     if (
                         !fileData ||
                         fileData.customProperty === null ||
@@ -487,11 +470,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             }
 
             if (customPropertyEnabled) {
-                const nextCustomProperty = resolveCustomPropertyItemsFromFrontmatter(
-                    frontmatter,
-                    customPropertyNameFields,
-                    customPropertyColorMap
-                );
+                const nextCustomProperty = resolveCustomPropertyItemsFromFrontmatter(frontmatter, customPropertyNameFields);
                 if (
                     !fileData ||
                     fileData.customProperty === null ||
@@ -575,7 +554,6 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             fileModified,
             customPropertyEnabled,
             customPropertyNameFields,
-            customPropertyColorMap,
             hasContent,
             featureImageReference: frontmatterFeatureImageReference,
             featureImageExcluded
@@ -671,11 +649,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
 
     private async processCustomProperty(context: MarkdownPipelineContext): Promise<MarkdownPipelineUpdate | null> {
         try {
-            const nextValue = resolveCustomPropertyItemsFromFrontmatter(
-                context.frontmatter,
-                context.customPropertyNameFields,
-                context.customPropertyColorMap
-            );
+            const nextValue = resolveCustomPropertyItemsFromFrontmatter(context.frontmatter, context.customPropertyNameFields);
 
             if (
                 !context.fileData ||

@@ -1133,7 +1133,7 @@ export const STRINGS_ID = {
                 }
             },
             customPropertyFields: {
-                name: 'Properti untuk ditampilkan',
+                name: 'Properti-properti untuk ditampilkan',
                 desc: 'Daftar properti frontmatter yang dipisahkan koma untuk ditampilkan sebagai lencana. Properti bernilai daftar menampilkan satu lencana per nilai. Nilai [[wikilink]] ditampilkan sebagai tautan yang dapat diklik.',
                 placeholder: 'status, tipe, kategori'
             },

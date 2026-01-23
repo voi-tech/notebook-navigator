@@ -1132,7 +1132,7 @@ export const STRINGS_TR = {
                 }
             },
             customPropertyFields: {
-                name: 'Görüntülenecek özellik',
+                name: 'Görüntülenecek özellikler',
                 desc: 'Rozet olarak gösterilecek virgülle ayrılmış frontmatter özellikleri listesi. Liste değerli özellikler değer başına bir rozet gösterir. [[wikilink]] formatındaki değerler tıklanabilir bağlantılar olarak gösterilir.',
                 placeholder: 'durum, tür, kategori'
             },

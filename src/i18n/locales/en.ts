@@ -1131,7 +1131,7 @@ export const STRINGS_EN = {
                 }
             },
             customPropertyFields: {
-                name: 'Property to display',
+                name: 'Properties to display',
                 desc: 'Comma-separated list of frontmatter properties to display as badges. List-valued properties render one badge per value. [[wikilink]] values displayed as clickable links.',
                 placeholder: 'status, type, category'
             },

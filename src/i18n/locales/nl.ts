@@ -1136,7 +1136,7 @@ export const STRINGS_NL = {
                 }
             },
             customPropertyFields: {
-                name: 'Weer te geven eigenschap',
+                name: 'Weer te geven eigenschappen',
                 desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen om als badges weer te geven. Lijstwaarde-eigenschappen tonen één badge per waarde. Waarden in [[wikilink]]-formaat worden weergegeven als aanklikbare links.",
                 placeholder: 'status, type, categorie'
             },

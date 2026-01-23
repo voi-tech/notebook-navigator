@@ -66,6 +66,7 @@ function setFrontmatter(context: ReturnType<typeof createApp>, file: TFile, fron
 }
 
 describe('MarkdownPipelineContentProvider frontmatter custom properties', () => {
+    // Custom property items persist the source field key and the raw value; styling is derived at render time.
     it('returns multiple properties as pills', async () => {
         const context = createApp();
         const settings = createSettings({ customPropertyFields: 'status, type' });
@@ -75,7 +76,10 @@ describe('MarkdownPipelineContentProvider frontmatter custom properties', () => 
         setFrontmatter(context, file, { status: 'Active', type: 'Project' });
         const result = await provider.runCustomProperty(file, settings);
 
-        expect(result).toEqual([{ value: 'Active' }, { value: 'Project' }]);
+        expect(result).toEqual([
+            { fieldKey: 'status', value: 'Active' },
+            { fieldKey: 'type', value: 'Project' }
+        ]);
     });
 
     it('flattens list values into multiple pills', async () => {
@@ -87,10 +91,14 @@ describe('MarkdownPipelineContentProvider frontmatter custom properties', () => 
         setFrontmatter(context, file, { status: ['A', 'B'], type: 'Project' });
         const result = await provider.runCustomProperty(file, settings);
 
-        expect(result).toEqual([{ value: 'A' }, { value: 'B' }, { value: 'Project' }]);
+        expect(result).toEqual([
+            { fieldKey: 'status', value: 'A' },
+            { fieldKey: 'status', value: 'B' },
+            { fieldKey: 'type', value: 'Project' }
+        ]);
     });
 
-    it('applies colors by property name', async () => {
+    it('does not persist colors in custom property items', async () => {
         const context = createApp();
         const settings = createSettings({
             customPropertyFields: 'status, type',
@@ -106,28 +114,8 @@ describe('MarkdownPipelineContentProvider frontmatter custom properties', () => 
         const result = await provider.runCustomProperty(file, settings);
 
         expect(result).toEqual([
-            { value: 'Active', color: '#ff0000' },
-            { value: 'Project', color: '#00ff00' }
-        ]);
-    });
-
-    it('applies the same color to list values', async () => {
-        const context = createApp();
-        const settings = createSettings({
-            customPropertyFields: 'status',
-            customPropertyColorMap: {
-                status: '#ff0000'
-            }
-        });
-        const provider = new TestMarkdownPipelineContentProvider(context.app);
-        const file = createFile('notes/note.md');
-
-        setFrontmatter(context, file, { status: ['A', 'B'] });
-        const result = await provider.runCustomProperty(file, settings);
-
-        expect(result).toEqual([
-            { value: 'A', color: '#ff0000' },
-            { value: 'B', color: '#ff0000' }
+            { fieldKey: 'status', value: 'Active' },
+            { fieldKey: 'type', value: 'Project' }
         ]);
     });
 });

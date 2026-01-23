@@ -1135,7 +1135,7 @@ export const STRINGS_PL = {
                 }
             },
             customPropertyFields: {
-                name: 'Właściwość do wyświetlenia',
+                name: 'Właściwości do wyświetlenia',
                 desc: 'Lista właściwości frontmatter oddzielonych przecinkami do wyświetlenia jako plakietki. Właściwości z wartościami listowymi wyświetlają jedną plakietkę na wartość. Wartości w formacie [[wikilink]] są wyświetlane jako klikalne linki.',
                 placeholder: 'status, typ, kategoria'
             },

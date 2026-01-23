@@ -85,6 +85,7 @@ import { openAddTagToFilesModal } from '../utils/tagModalHelpers';
 import { getTagSearchModifierOperator } from '../utils/tagUtils';
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { InclusionOperator } from '../utils/filterSearch';
+import { casefold } from '../utils/recordUtils';
 import { ServiceIcon } from './ServiceIcon';
 
 const FEATURE_IMAGE_MAX_ASPECT_RATIO = 16 / 9;
@@ -640,11 +641,18 @@ export const FileItem = React.memo(function FileItem({
 
             const wikiLink = parseStrictWikiLink(rawValue);
             const label = wikiLink ? wikiLink.displayText : rawValue;
-            pills.push({ value: rawValue, label, wikiLink, color: entry.color });
+
+            // Resolve custom property colors at render time from the field key.
+            // This keeps persisted custom property items stable across style rule changes.
+            const colorKey = casefold(entry.fieldKey);
+            const mappedColor = colorKey ? (settings.customPropertyColorMap[colorKey] ?? '').trim() : '';
+            const color = mappedColor.length > 0 ? mappedColor : undefined;
+
+            pills.push({ value: rawValue, label, wikiLink, color });
         }
 
         return pills;
-    }, [appearanceSettings.customPropertyType, customProperty, wordCount]);
+    }, [appearanceSettings.customPropertyType, customProperty, settings.customPropertyColorMap, wordCount]);
 
     const customPropertyColorData = useMemo(() => {
         void settings.tagColors;

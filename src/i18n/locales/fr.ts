@@ -1138,7 +1138,7 @@ export const STRINGS_FR = {
                 }
             },
             customPropertyFields: {
-                name: 'Propriété à afficher',
+                name: 'Propriétés à afficher',
                 desc: 'Liste de propriétés frontmatter séparées par des virgules à afficher sous forme de badges. Les propriétés à valeurs multiples affichent un badge par valeur. Les valeurs [[wikilink]] sont affichées comme liens cliquables.',
                 placeholder: 'statut, type, catégorie'
             },

@@ -1136,7 +1136,7 @@ export const STRINGS_DE = {
                 }
             },
             customPropertyFields: {
-                name: 'Anzuzeigende Eigenschaft',
+                name: 'Anzuzeigende Eigenschaften',
                 desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften zur Anzeige als Badges. Listen-Eigenschaften zeigen ein Badge pro Wert. [[Wikilink]]-Werte werden als anklickbare Links angezeigt.',
                 placeholder: 'status, typ, kategorie'
             },

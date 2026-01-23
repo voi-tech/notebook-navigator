@@ -1132,7 +1132,7 @@ export const STRINGS_VI = {
                 }
             },
             customPropertyFields: {
-                name: 'Thuộc tính để hiển thị',
+                name: 'Các thuộc tính để hiển thị',
                 desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để hiển thị dưới dạng huy hiệu. Thuộc tính có giá trị danh sách hiển thị một huy hiệu cho mỗi giá trị. Giá trị ở định dạng [[wikilink]] được hiển thị dưới dạng liên kết có thể nhấp.',
                 placeholder: 'trạng thái, loại, danh mục'
             },

@@ -1132,7 +1132,7 @@ export const STRINGS_PT_BR = {
                 }
             },
             customPropertyFields: {
-                name: 'Propriedade a exibir',
+                name: 'Propriedades a exibir',
                 desc: 'Lista de propriedades frontmatter separadas por vírgulas para exibir como emblemas. Propriedades com valores de lista exibem um emblema por valor. Valores em formato [[wikilink]] são exibidos como links clicáveis.',
                 placeholder: 'status, tipo, categoria'
             },
