@@ -17,7 +17,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { normalizePropertyColorMapKey, parsePropertyColorMapText, serializePropertyColorMapRecord } from '../../src/utils/propertyColorMapFormat';
+import {
+    normalizePropertyColorMapKey,
+    parsePropertyColorMapText,
+    serializePropertyColorMapRecord
+} from '../../src/utils/propertyColorMapFormat';
 
 describe('propertyColorMapFormat', () => {
     it('parses single-quoted keys', () => {
@@ -33,11 +37,11 @@ describe('propertyColorMapFormat', () => {
     });
 
     it('unescapes quotes inside quoted keys', () => {
-        const singleQuoted = parsePropertyColorMapText(`'Due\\'s'=#ff0000`, normalizePropertyColorMapKey);
+        const singleQuoted = parsePropertyColorMapText("'Due\\'s'=#ff0000", normalizePropertyColorMapKey);
         expect(singleQuoted.invalidLines).toEqual([]);
         expect(Object.entries(singleQuoted.map)).toEqual([["due's", '#ff0000']]);
 
-        const doubleQuoted = parsePropertyColorMapText(`"a\\\"b"=#ff0000`, normalizePropertyColorMapKey);
+        const doubleQuoted = parsePropertyColorMapText('"a\\"b"=#ff0000', normalizePropertyColorMapKey);
         expect(doubleQuoted.invalidLines).toEqual([]);
         expect(Object.entries(doubleQuoted.map)).toEqual([['a"b', '#ff0000']]);
     });
@@ -50,4 +54,3 @@ describe('propertyColorMapFormat', () => {
         expect(Object.entries(parsed.map)).toEqual([['due date', '#ff0000']]);
     });
 });
-
