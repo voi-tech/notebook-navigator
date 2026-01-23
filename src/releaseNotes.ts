@@ -75,8 +75,8 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
-        version: '2.1.3',
-        date: '2026-01-20',
+        version: '2.2.0',
+        date: '2026-01-24',
         showOnUpdate: true,
         new: [
             'Public API: Added a new ==Menus API== for extending the Notebook Navigator context menus! You can now "hook" into the file and folder context menus of Notebook Navigator to add your own menu items. The new API methods are:',
