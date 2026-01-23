@@ -2432,8 +2432,8 @@ body {
     --nn-nav-calendar-nav-icon-size: 16px;
     --nn-nav-calendar-today-height: 28px;
     --nn-nav-calendar-today-font-size: 12px;
-    --nn-nav-calendar-week-label-font-size: 11px;
-    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-week-label-font-size);
+    --nn-nav-calendar-weekday-font-size: 11px;
+    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-day-font-size);
     --nn-nav-calendar-day-font-size: 12px;
     --nn-nav-calendar-section-gap: 6px;
     --nn-nav-calendar-padding: 8px;
@@ -2459,8 +2459,8 @@ body {
     --nn-nav-calendar-nav-icon-size: 18px;
     --nn-nav-calendar-today-height: 32px;
     --nn-nav-calendar-today-font-size: 14px;
-    --nn-nav-calendar-week-label-font-size: 12px;
-    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-week-label-font-size);
+    --nn-nav-calendar-weekday-font-size: 12px;
+    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-day-font-size);
     --nn-nav-calendar-day-font-size: 13px;
 }
 
@@ -2609,6 +2609,7 @@ body {
     color: var(--nn-theme-calendar-header-color);
     font: inherit;
     font-size: var(--nn-nav-calendar-today-font-size);
+    font-weight: 600;
     height: var(--nn-nav-calendar-today-height);
     padding: 0 8px;
     border-radius: 6px;
@@ -2643,7 +2644,7 @@ body {
     column-gap: 1px;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     color: var(--nn-theme-calendar-weekday-color);
-    font-size: var(--nn-nav-calendar-week-label-font-size);
+    font-size: var(--nn-nav-calendar-weekday-font-size);
     line-height: 1;
 }
 
@@ -2916,8 +2917,8 @@ body {
     --nn-nav-calendar-nav-button-size: 34px;
     --nn-nav-calendar-day-font-size: 13px;
     --nn-nav-calendar-nav-icon-size: var(--nn-nav-calendar-day-font-size);
-    --nn-nav-calendar-week-label-font-size: 12px;
-    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-week-label-font-size);
+    --nn-nav-calendar-weekday-font-size: 12px;
+    --nn-nav-calendar-weeknumber-font-size: var(--nn-nav-calendar-day-font-size);
     --nn-nav-calendar-today-font-size: var(--nn-nav-calendar-day-font-size);
     --nn-nav-calendar-weeknumber-column-width: 34px;
     --nn-nav-calendar-weeknumber-padding-right: 6px;
