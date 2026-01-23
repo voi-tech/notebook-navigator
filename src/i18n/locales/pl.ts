@@ -1139,10 +1139,11 @@ export const STRINGS_PL = {
                 desc: 'Lista właściwości frontmatter oddzielonych przecinkami do wyświetlenia jako plakietki. Właściwości z wartościami listowymi wyświetlają jedną plakietkę na wartość. Wartości w formacie [[wikilink]] są wyświetlane jako klikalne linki.',
                 placeholder: 'status, typ, kategoria'
             },
-            customPropertyColorFields: {
-                name: 'Właściwość dla koloru',
-                desc: 'Lista właściwości frontmatter oddzielonych przecinkami dla kolorów plakietek. Właściwości kolorów są łączone z właściwościami wyświetlania według pozycji. Właściwości z wartościami listowymi łączą kolory według indeksu. Wartości mogą być nazwami tagów lub kolorami CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Kolory właściwości',
+                desc: 'Przypisz właściwości frontmatter do kolorów odznak. Jedno przypisanie na wiersz: właściwość=kolor',
+                placeholder: '# Właściwość=kolor\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Edytuj przypisania'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Pokaż właściwość niestandardową w trybie kompaktowym',

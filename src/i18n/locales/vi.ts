@@ -1136,10 +1136,11 @@ export const STRINGS_VI = {
                 desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để hiển thị dưới dạng huy hiệu. Thuộc tính có giá trị danh sách hiển thị một huy hiệu cho mỗi giá trị. Giá trị ở định dạng [[wikilink]] được hiển thị dưới dạng liên kết có thể nhấp.',
                 placeholder: 'trạng thái, loại, danh mục'
             },
-            customPropertyColorFields: {
-                name: 'Thuộc tính cho màu sắc',
-                desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy cho màu huy hiệu. Thuộc tính màu được ghép cặp với thuộc tính hiển thị theo vị trí. Thuộc tính có giá trị danh sách ghép cặp màu theo chỉ mục. Giá trị có thể là tên thẻ hoặc màu CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Màu thuộc tính',
+                desc: 'Ánh xạ thuộc tính frontmatter thành màu huy hiệu. Một ánh xạ mỗi dòng: thuộc tính=màu',
+                placeholder: '# Thuộc tính=màu\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Chỉnh sửa ánh xạ'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Hiện thuộc tính tùy chỉnh ở chế độ gọn',

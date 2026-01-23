@@ -1136,10 +1136,11 @@ export const STRINGS_AR = {
                 desc: 'قائمة خصائص frontmatter مفصولة بفواصل لعرضها كشارات. الخصائص ذات القيم المتعددة تعرض شارة واحدة لكل قيمة. قيم [[wikilink]] تُعرض كروابط قابلة للنقر.',
                 placeholder: 'الحالة، النوع، الفئة'
             },
-            customPropertyColorFields: {
-                name: 'الخاصية للون',
-                desc: 'قائمة خصائص frontmatter مفصولة بفواصل لألوان الشارات. تقترن خصائص الألوان بخصائص العرض حسب الموضع. الخصائص ذات القيم المتعددة تقرن الألوان حسب الفهرس. يمكن أن تكون القيم أسماء وسوم أو ألوان CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'ألوان الخصائص',
+                desc: 'ربط خصائص البيانات الوصفية بألوان الشارات. رابط واحد لكل سطر: خاصية=لون',
+                placeholder: '# خاصية=لون\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'تحرير الروابط'
             },
             showCustomPropertyInCompactMode: {
                 name: 'إظهار الخاصية المخصصة في الوضع المضغوط',

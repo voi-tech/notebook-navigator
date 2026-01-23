@@ -1136,10 +1136,11 @@ export const STRINGS_FA = {
                 desc: 'لیست ویژگی‌های frontmatter جدا شده با کاما برای نمایش به صورت نشان. ویژگی‌های با مقادیر لیستی یک نشان برای هر مقدار نمایش می‌دهند. مقادیر [[wikilink]] به صورت لینک‌های قابل کلیک نمایش داده می‌شوند.',
                 placeholder: 'وضعیت، نوع، دسته‌بندی'
             },
-            customPropertyColorFields: {
-                name: 'ویژگی برای رنگ',
-                desc: 'لیست ویژگی‌های frontmatter جدا شده با کاما برای رنگ نشان‌ها. ویژگی‌های رنگ با ویژگی‌های نمایش بر اساس موقعیت جفت می‌شوند. ویژگی‌های با مقادیر لیستی رنگ‌ها را بر اساس شاخص جفت می‌کنند. مقادیر می‌توانند نام برچسب یا رنگ‌های CSS باشند.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'رنگ‌های ویژگی',
+                desc: 'نگاشت ویژگی‌های فرانت‌متر به رنگ‌های نشان. یک نگاشت در هر خط: ویژگی=رنگ',
+                placeholder: '# ویژگی=رنگ\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'ویرایش نگاشت‌ها'
             },
             showCustomPropertyInCompactMode: {
                 name: 'نمایش ویژگی سفارشی در حالت فشرده',

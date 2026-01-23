@@ -1139,10 +1139,11 @@ export const STRINGS_ES = {
                 desc: 'Lista separada por comas de propiedades del frontmatter para mostrar como insignias. Las propiedades con valores de lista muestran una insignia por valor. Los valores [[wikilink]] se muestran como enlaces clicables.',
                 placeholder: 'estado, tipo, categoría'
             },
-            customPropertyColorFields: {
-                name: 'Propiedad para color',
-                desc: 'Lista separada por comas de propiedades del frontmatter para colores de insignias. Las propiedades de color se emparejan con las de visualización por posición. Las propiedades con valores de lista emparejan colores por índice. Los valores pueden ser nombres de etiquetas o colores CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Colores de propiedad',
+                desc: 'Asigna propiedades de frontmatter a colores de insignia. Una asignación por línea: propiedad=color',
+                placeholder: '# Propiedad=color\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Editar asignaciones'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Mostrar propiedad personalizada en modo compacto',

@@ -68,6 +68,7 @@ import {
     normalizeFileTypeIconMapKey,
     normalizeIconMapRecord
 } from './utils/iconizeFormat';
+import { normalizePropertyColorMapKey, normalizePropertyColorMapRecord } from './utils/propertyColorMapFormat';
 import { normalizeUXIconMapRecord } from './utils/uxIcons';
 import { isBooleanRecordValue, isPlainObjectRecordValue, isStringRecordValue, sanitizeRecord } from './utils/recordUtils';
 import { isRecord } from './utils/typeGuards';
@@ -493,6 +494,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         applyLegacyShortcutsMigration({ settings: this.settings, legacyShortcuts });
         this.normalizeIconSettings(this.settings);
         this.normalizeFileIconMapSettings(this.settings);
+        this.normalizeCustomPropertyColorMapSettings(this.settings);
         this.normalizeInterfaceIconsSettings(this.settings);
         syncModeRegistry.vaultProfile.resolveOnLoad({ storedData });
         this.refreshMatcherCachesIfNeeded();
@@ -1756,6 +1758,26 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             normalizeFileNameIconMapKey,
             DEFAULT_SETTINGS.fileNameIconMap
         );
+    }
+
+    private normalizeCustomPropertyColorMapSettings(settings: NotebookNavigatorSettings): void {
+        const normalizeColorMap = (input: unknown, fallback: Record<string, string>) => {
+            if (!isPlainObjectRecordValue(input)) {
+                return normalizePropertyColorMapRecord(fallback, normalizePropertyColorMapKey);
+            }
+
+            const source = sanitizeRecord<string>(undefined);
+            Object.entries(input).forEach(([key, value]) => {
+                if (typeof value !== 'string') {
+                    return;
+                }
+                source[key] = value;
+            });
+
+            return normalizePropertyColorMapRecord(source, normalizePropertyColorMapKey);
+        };
+
+        settings.customPropertyColorMap = normalizeColorMap(settings.customPropertyColorMap, DEFAULT_SETTINGS.customPropertyColorMap);
     }
 
     private normalizeInterfaceIconsSettings(settings: NotebookNavigatorSettings): void {

@@ -1139,10 +1139,11 @@ export const STRINGS_JA = {
                 desc: 'バッジとして表示するフロントマタープロパティのカンマ区切りリスト。リスト値のプロパティは値ごとに1つのバッジを表示します。[[wikilink]]値はクリック可能なリンクとして表示されます。',
                 placeholder: 'ステータス, タイプ, カテゴリ'
             },
-            customPropertyColorFields: {
-                name: '色のプロパティ',
-                desc: 'バッジの色を指定するフロントマタープロパティのカンマ区切りリスト。色プロパティは位置によって表示プロパティとペアになります。リスト値のプロパティはインデックスで色をペアにします。値はタグ名またはCSSカラーが使用できます。',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'プロパティの色',
+                desc: 'フロントマターのプロパティをバッジの色にマッピングします。1行に1つのマッピング: プロパティ=色',
+                placeholder: '# プロパティ=色\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'マッピングを編集'
             },
             showCustomPropertyInCompactMode: {
                 name: 'スリムモードでカスタムプロパティを表示',

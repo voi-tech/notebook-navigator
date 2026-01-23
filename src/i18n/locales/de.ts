@@ -1140,10 +1140,11 @@ export const STRINGS_DE = {
                 desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften zur Anzeige als Badges. Listen-Eigenschaften zeigen ein Badge pro Wert. [[Wikilink]]-Werte werden als anklickbare Links angezeigt.',
                 placeholder: 'status, typ, kategorie'
             },
-            customPropertyColorFields: {
-                name: 'Eigenschaft für Farbe',
-                desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften für Badge-Farben. Farb-Eigenschaften werden nach Position mit Anzeige-Eigenschaften gepaart. Listen-Eigenschaften paaren Farben nach Index. Werte können Tag-Namen oder CSS-Farben sein.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Eigenschaftsfarben',
+                desc: 'Ordne Frontmatter-Eigenschaften Badge-Farben zu. Eine Zuordnung pro Zeile: Eigenschaft=Farbe',
+                placeholder: '# Eigenschaft=Farbe\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Zuordnungen bearbeiten'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Benutzerdefinierte Eigenschaft im Kompaktmodus anzeigen',

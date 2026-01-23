@@ -1135,10 +1135,11 @@ export const STRINGS_ZH_CN = {
                 desc: '以逗号分隔的前置元数据属性列表，用于显示为标签。列表值属性每个值显示一个标签。[[wikilink]] 格式的值将显示为可点击链接。',
                 placeholder: '状态, 类型, 分类'
             },
-            customPropertyColorFields: {
-                name: '颜色属性',
-                desc: '以逗号分隔的前置元数据属性列表，用于标签颜色。颜色属性按位置与显示属性配对。列表值属性按索引配对颜色。值可以是标签名称或 CSS 颜色。',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: '属性颜色',
+                desc: '将前置元数据属性映射到徽章颜色。每行一个映射：属性=颜色',
+                placeholder: '# 属性=颜色\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: '编辑映射'
             },
             showCustomPropertyInCompactMode: {
                 name: '在精简模式中显示自定义属性',

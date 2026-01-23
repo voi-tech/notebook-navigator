@@ -1134,10 +1134,11 @@ export const STRINGS_ZH_TW = {
                 desc: '以逗號分隔的前置中繼資料屬性清單，用於顯示為標籤。清單值屬性每個值顯示一個標籤。[[wikilink]] 格式的值會顯示為可點擊連結。',
                 placeholder: 'status, type, category'
             },
-            customPropertyColorFields: {
-                name: '顏色屬性',
-                desc: '以逗號分隔的前置中繼資料屬性清單，用於標籤顏色。顏色屬性按位置與顯示屬性配對。清單值屬性按索引配對顏色。值可以是標籤名稱或 CSS 顏色。',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: '屬性顏色',
+                desc: '將前置資料屬性對應到徽章顏色。每行一個對應：屬性=顏色',
+                placeholder: '# 屬性=顏色\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: '編輯對應'
             },
             showCustomPropertyInCompactMode: {
                 name: '在精簡模式中顯示自訂屬性',

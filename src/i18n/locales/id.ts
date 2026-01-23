@@ -1137,10 +1137,11 @@ export const STRINGS_ID = {
                 desc: 'Daftar properti frontmatter yang dipisahkan koma untuk ditampilkan sebagai lencana. Properti bernilai daftar menampilkan satu lencana per nilai. Nilai [[wikilink]] ditampilkan sebagai tautan yang dapat diklik.',
                 placeholder: 'status, tipe, kategori'
             },
-            customPropertyColorFields: {
-                name: 'Properti untuk warna',
-                desc: 'Daftar properti frontmatter yang dipisahkan koma untuk warna lencana. Properti warna dipasangkan dengan properti tampilan berdasarkan posisi. Properti bernilai daftar memasangkan warna berdasarkan indeks. Nilai dapat berupa nama tag atau warna CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Warna properti',
+                desc: 'Petakan properti frontmatter ke warna lencana. Satu pemetaan per baris: properti=warna',
+                placeholder: '# Properti=warna\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Edit pemetaan'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Tampilkan properti kustom dalam mode kompak',

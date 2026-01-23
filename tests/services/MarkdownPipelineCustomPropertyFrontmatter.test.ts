@@ -90,39 +90,44 @@ describe('MarkdownPipelineContentProvider frontmatter custom properties', () => 
         expect(result).toEqual([{ value: 'A' }, { value: 'B' }, { value: 'Project' }]);
     });
 
-    it('pairs color values by property order', async () => {
+    it('applies colors by property name', async () => {
         const context = createApp();
         const settings = createSettings({
             customPropertyFields: 'status, type',
-            customPropertyColorFields: 'statusColor, typeColor'
+            customPropertyColorMap: {
+                status: '#ff0000',
+                type: '#00ff00'
+            }
         });
         const provider = new TestMarkdownPipelineContentProvider(context.app);
         const file = createFile('notes/note.md');
 
-        setFrontmatter(context, file, { status: 'Active', type: 'Project', statusColor: '#ff0000', typeColor: 'todo' });
+        setFrontmatter(context, file, { status: 'Active', type: 'Project' });
         const result = await provider.runCustomProperty(file, settings);
 
         expect(result).toEqual([
             { value: 'Active', color: '#ff0000' },
-            { value: 'Project', color: 'todo' }
+            { value: 'Project', color: '#00ff00' }
         ]);
     });
 
-    it('pairs list color values by index', async () => {
+    it('applies the same color to list values', async () => {
         const context = createApp();
         const settings = createSettings({
             customPropertyFields: 'status',
-            customPropertyColorFields: 'statusColor'
+            customPropertyColorMap: {
+                status: '#ff0000'
+            }
         });
         const provider = new TestMarkdownPipelineContentProvider(context.app);
         const file = createFile('notes/note.md');
 
-        setFrontmatter(context, file, { status: ['A', 'B'], statusColor: ['red', 'blue'] });
+        setFrontmatter(context, file, { status: ['A', 'B'] });
         const result = await provider.runCustomProperty(file, settings);
 
         expect(result).toEqual([
-            { value: 'A', color: 'red' },
-            { value: 'B', color: 'blue' }
+            { value: 'A', color: '#ff0000' },
+            { value: 'B', color: '#ff0000' }
         ]);
     });
 });

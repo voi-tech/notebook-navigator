@@ -1136,10 +1136,11 @@ export const STRINGS_KO = {
                 desc: '배지로 표시할 프론트매터 속성의 쉼표로 구분된 목록. 목록 값 속성은 값당 하나의 배지를 표시합니다. [[위키링크]] 값은 클릭 가능한 링크로 표시됩니다.',
                 placeholder: '상태, 유형, 카테고리'
             },
-            customPropertyColorFields: {
-                name: '색상 속성',
-                desc: '배지 색상을 위한 프론트매터 속성의 쉼표로 구분된 목록. 색상 속성은 위치별로 표시 속성과 쌍을 이룹니다. 목록 값 속성은 인덱스별로 색상을 쌍으로 만듭니다. 값은 태그 이름 또는 CSS 색상이 될 수 있습니다.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: '속성 색상',
+                desc: '프론트매터 속성을 배지 색상에 매핑합니다. 한 줄에 하나의 매핑: 속성=색상',
+                placeholder: '# 속성=색상\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: '매핑 편집'
             },
             showCustomPropertyInCompactMode: {
                 name: '슬림 모드에서 사용자 정의 속성 표시',

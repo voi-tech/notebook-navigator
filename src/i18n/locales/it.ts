@@ -1139,10 +1139,11 @@ export const STRINGS_IT = {
                 desc: 'Elenco di proprietà frontmatter separate da virgola da visualizzare come badge. Le proprietà con valori lista mostrano un badge per valore. I valori [[wikilink]] vengono visualizzati come link cliccabili.',
                 placeholder: 'stato, tipo, categoria'
             },
-            customPropertyColorFields: {
-                name: 'Proprietà per il colore',
-                desc: 'Elenco di proprietà frontmatter separate da virgola per i colori dei badge. Le proprietà colore sono abbinate alle proprietà di visualizzazione per posizione. Le proprietà con valori lista abbinano i colori per indice. I valori possono essere nomi di tag o colori CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Colori proprietà',
+                desc: 'Associa proprietà frontmatter a colori dei badge. Una associazione per riga: proprietà=colore',
+                placeholder: '# Proprietà=colore\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Modifica associazioni'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Mostra proprietà personalizzata in modalità compatta',

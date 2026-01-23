@@ -21,6 +21,7 @@ import type { NotebookNavigatorSettings } from '../types';
 import type { LocalStorageKeys } from '../../types';
 import type { FolderAppearance } from '../../hooks/useListPaneAppearance';
 import { localStorage } from '../../utils/localStorage';
+import { isPlainObjectRecordValue } from '../../utils/recordUtils';
 import { cloneShortcuts, DEFAULT_VAULT_PROFILE_ID } from '../../utils/vaultProfiles';
 import { ShortcutType, type ShortcutEntry } from '../../types/shortcuts';
 import { isCustomPropertyType } from '../types';
@@ -118,8 +119,10 @@ export function migrateLegacySyncedSettings(params: {
         settings.customPropertyFields = defaultSettings.customPropertyFields;
     }
 
-    if (typeof settings.customPropertyColorFields !== 'string') {
-        settings.customPropertyColorFields = defaultSettings.customPropertyColorFields;
+    delete mutableSettings['customPropertyColorFields'];
+
+    if (!isPlainObjectRecordValue(settings.customPropertyColorMap)) {
+        settings.customPropertyColorMap = defaultSettings.customPropertyColorMap;
     }
 
     if (typeof settings.showCustomPropertyInCompactMode !== 'boolean') {

@@ -1136,10 +1136,11 @@ export const STRINGS_PT_BR = {
                 desc: 'Lista de propriedades frontmatter separadas por vírgulas para exibir como emblemas. Propriedades com valores de lista exibem um emblema por valor. Valores em formato [[wikilink]] são exibidos como links clicáveis.',
                 placeholder: 'status, tipo, categoria'
             },
-            customPropertyColorFields: {
-                name: 'Propriedade para cor',
-                desc: 'Lista de propriedades frontmatter separadas por vírgulas para cores dos emblemas. As propriedades de cor são emparelhadas com as propriedades de exibição por posição. Propriedades com valores de lista emparelham cores por índice. Os valores podem ser nomes de tags ou cores CSS.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Cores de propriedade',
+                desc: 'Associa propriedades de frontmatter a cores de emblema. Uma associação por linha: propriedade=cor',
+                placeholder: '# Propriedade=cor\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Editar associações'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Mostrar propriedade personalizada no modo compacto',

@@ -1140,10 +1140,11 @@ export const STRINGS_NL = {
                 desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen om als badges weer te geven. Lijstwaarde-eigenschappen tonen één badge per waarde. Waarden in [[wikilink]]-formaat worden weergegeven als aanklikbare links.",
                 placeholder: 'status, type, categorie'
             },
-            customPropertyColorFields: {
-                name: 'Eigenschap voor kleur',
-                desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen voor badge-kleuren. Kleureigenschappen worden gekoppeld aan weergave-eigenschappen op positie. Lijstwaarde-eigenschappen koppelen kleuren op index. Waarden kunnen tagnamen of CSS-kleuren zijn.",
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Eigenschapkleuren',
+                desc: 'Koppel frontmatter-eigenschappen aan badge-kleuren. Eén koppeling per regel: eigenschap=kleur',
+                placeholder: '# Eigenschap=kleur\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Koppelingen bewerken'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Toon aangepaste eigenschap in compacte modus',

@@ -1136,10 +1136,11 @@ export const STRINGS_TR = {
                 desc: 'Rozet olarak gösterilecek virgülle ayrılmış frontmatter özellikleri listesi. Liste değerli özellikler değer başına bir rozet gösterir. [[wikilink]] formatındaki değerler tıklanabilir bağlantılar olarak gösterilir.',
                 placeholder: 'durum, tür, kategori'
             },
-            customPropertyColorFields: {
-                name: 'Renk için özellik',
-                desc: 'Rozet renkleri için virgülle ayrılmış frontmatter özellikleri listesi. Renk özellikleri görüntüleme özellikleriyle konuma göre eşleştirilir. Liste değerli özellikler renkleri dizine göre eşleştirir. Değerler etiket adları veya CSS renkleri olabilir.',
-                placeholder: 'statusColor, typeColor, categoryColor'
+            customPropertyColorMap: {
+                name: 'Özellik renkleri',
+                desc: 'Frontmatter özelliklerini rozet renklerine eşle. Satır başına bir eşleme: özellik=renk',
+                placeholder: '# Özellik=renk\nstatus=#ff0000\ntype=#00ff00',
+                editTooltip: 'Eşlemeleri düzenle'
             },
             showCustomPropertyInCompactMode: {
                 name: 'Kompakt modda özel özelliği göster',
