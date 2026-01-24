@@ -88,7 +88,10 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Public API: Added a new ==Menus API== for extending context menus. Use ==registerFileMenu(callback)== and ==registerFolderMenu(callback)== to add custom menu items.',
             'New setting: ==Navigation pane > Appearance > Pin banner==. Keep the banner pinned to top or let it scroll with the navigation tree.'
         ],
-        improved: ['==Copy path== now shows a submenu with options: Obsidian URL, from vault folder, from system root.'],
+        improved: [
+            '==Copy path== now shows a submenu with options: Obsidian URL, from vault folder, from system root.',
+            'Preview text now strips Obsidian block IDs like ^37066f and ^quote-of-the-day.'
+        ],
         changed: [
             'Replaced ==Property for color== setting with ==Property color map==. Define colors with a simple key=color format using a visual editor.',
             'Folders with folder notes no longer show a note icon by default.'

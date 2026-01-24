@@ -435,6 +435,15 @@ function stripTaskCheckboxesAndHorizontalRules(text: string): string {
     return withoutTaskCheckboxes.replace(/^\s*([*_-])(?:\s*\1){2,}\s*$/gm, '');
 }
 
+/** Removes Obsidian block identifiers like `^37066f` from preview text while preserving surrounding content. */
+function stripObsidianBlockIdentifiers(text: string): string {
+    if (!text.includes('^')) {
+        return text;
+    }
+
+    return text.replace(/(^|[ \t])\^[0-9A-Za-z-]+(?=\s|$)/gm, '$1');
+}
+
 /** Replaces inline code spans with their unwrapped content (backticks removed) */
 function unwrapInlineCodeSegments(text: string, inlineRanges: readonly NumericRange[]): string {
     if (inlineRanges.length === 0) {
@@ -1023,7 +1032,9 @@ export class PreviewTextUtils {
         // Apply post-cleanups before restoring code placeholders so code content is not altered.
         const withoutTasksAndRules = stripTaskCheckboxesAndHorizontalRules(withoutWikiLinkSyntax);
 
-        return restorePlaceholders(withoutTasksAndRules, inlineSegments, fencedSegments, inlineBase, fencedBase);
+        const withoutBlockIdentifiers = stripObsidianBlockIdentifiers(withoutTasksAndRules);
+
+        return restorePlaceholders(withoutBlockIdentifiers, inlineSegments, fencedSegments, inlineBase, fencedBase);
     }
 
     /**

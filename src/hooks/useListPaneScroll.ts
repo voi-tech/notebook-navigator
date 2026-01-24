@@ -56,7 +56,7 @@ import type { NotebookNavigatorSettings } from '../settings';
 import type { CustomPropertyType } from '../settings/types';
 import type { SelectionState } from '../context/SelectionContext';
 import { calculateCompactListMetrics } from '../utils/listPaneMetrics';
-import { getListPaneMeasurements, shouldShowCustomPropertyRow, shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
+import { getCustomPropertyRowCount, getListPaneMeasurements, shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
 
 /**
  * Parameters for the useListPaneScroll hook
@@ -360,37 +360,21 @@ export function useListPaneScroll({
                 textContentHeight += heights.tagRowHeight;
             }
 
-            const shouldShowCustomProperty = shouldShowCustomPropertyRow({
+            // Keep the height estimator aligned with FileItem custom property rendering.
+            // `getCustomPropertyRowCount` applies the same trimming rules and separate-row behavior.
+            const customPropertyRowCount = getCustomPropertyRowCount({
                 customPropertyType: folderSettings.customPropertyType,
+                showCustomPropertiesOnSeparateRows: settings.showCustomPropertiesOnSeparateRows,
                 showCustomPropertyInCompactMode: settings.showCustomPropertyInCompactMode,
                 isCompactMode,
                 file,
-                wordCount: fileRecord?.wordCount,
-                customProperty: fileRecord?.customProperty
+                wordCount: fileRecord?.wordCount ?? undefined,
+                customProperty: fileRecord?.customProperty ?? undefined
             });
 
-            if (shouldShowCustomProperty) {
-                const shouldUseSeparateRows =
-                    folderSettings.customPropertyType === 'frontmatter' && settings.showCustomPropertiesOnSeparateRows;
-                if (!shouldUseSeparateRows) {
-                    textContentHeight += heights.tagRowHeight;
-                } else {
-                    const customPropertyEntries = fileRecord?.customProperty;
-                    let customPropertyRowCount = 0;
-                    if (customPropertyEntries) {
-                        for (const entry of customPropertyEntries) {
-                            const rawValue = entry.value;
-                            if (typeof rawValue !== 'string' || rawValue.trim().length === 0) {
-                                continue;
-                            }
-                            customPropertyRowCount += 1;
-                        }
-                    }
-
-                    if (customPropertyRowCount > 0) {
-                        textContentHeight += heights.tagRowHeight * customPropertyRowCount;
-                    }
-                }
+            if (customPropertyRowCount > 0) {
+                // `tagRowHeight` mirrors the combined CSS row height + margin-top gap for pill rows.
+                textContentHeight += heights.tagRowHeight * customPropertyRowCount;
             }
 
             // Apply min-height constraint AFTER including all content (but not in compact mode)

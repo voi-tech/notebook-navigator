@@ -212,6 +212,37 @@ describe('PreviewTextUtils.extractPreviewText', () => {
         expect(preview).toBe('Sentence continues');
     });
 
+    it('removes Obsidian block identifiers on their own line', () => {
+        const content = ['Alpha line', '^37066f', 'Omega line'].join('\n');
+        const preview = PreviewTextUtils.extractPreviewText(content, skipCodeSettings);
+        expect(preview).toBe('Alpha line Omega line');
+    });
+
+    it('removes Obsidian block identifiers at the end of paragraphs', () => {
+        const preview = PreviewTextUtils.extractPreviewText('The quick purple gem dashes through. ^37066d', skipCodeSettings);
+        expect(preview).toBe('The quick purple gem dashes through.');
+    });
+
+    it('preserves spacing when removing Obsidian block identifiers inside text', () => {
+        const preview = PreviewTextUtils.extractPreviewText('Alpha ^37066d Omega', skipCodeSettings);
+        expect(preview).toBe('Alpha Omega');
+    });
+
+    it('removes named Obsidian block identifiers', () => {
+        const preview = PreviewTextUtils.extractPreviewText('Alpha ^id Omega', skipCodeSettings);
+        expect(preview).toBe('Alpha Omega');
+    });
+
+    it('removes named Obsidian block identifiers containing hyphens', () => {
+        const preview = PreviewTextUtils.extractPreviewText('Alpha ^quote-of-the-day Omega', skipCodeSettings);
+        expect(preview).toBe('Alpha Omega');
+    });
+
+    it('does not strip Obsidian block identifier patterns inside inline code', () => {
+        const preview = PreviewTextUtils.extractPreviewText('Example `^37066d` token', skipCodeSettings);
+        expect(preview).toBe('Example ^37066d token');
+    });
+
     it('removes spaced underscore horizontal rules without leaving stray characters', () => {
         const content = ['Alpha line', '_ _ _', 'Omega line'].join('\n');
         const preview = PreviewTextUtils.extractPreviewText(content, skipCodeSettings);
