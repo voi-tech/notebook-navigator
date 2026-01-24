@@ -28,7 +28,7 @@ import type { ContentReadCache } from './ContentReadCache';
 import { isValidHttpsUrl, type FeatureImageReference } from './featureImageReferenceResolver';
 import { renderExcalidrawThumbnail } from './excalidraw/excalidrawThumbnail';
 import { renderPdfCoverThumbnail } from './pdf/pdfCoverThumbnail';
-import { detectImageMimeTypeFromBuffer, getImageDimensionsFromBuffer, normalizeImageMimeType } from './thumbnail/imageDimensions';
+import { detectImageMimeTypeFromBuffer, getImageDimensionsPairFromBuffer, normalizeImageMimeType } from './thumbnail/imageDimensions';
 import { createOnceLogger, createRenderBudgetLimiter, createRenderLimiter } from './thumbnail/thumbnailRuntimeUtils';
 import { LIMITS } from '../../constants/limits';
 
@@ -600,8 +600,8 @@ export class FeatureImageContentProvider extends BaseContentProvider {
 
         // Extract dimensions from the image header to determine if resizing is needed.
         // Skip images with unknown dimensions to avoid memory issues during decoding.
-        const dimensions = getImageDimensionsFromBuffer(buffer, effectiveMimeType);
-        if (!dimensions) {
+        const dimensionsPair = getImageDimensionsPairFromBuffer(buffer, effectiveMimeType);
+        if (!dimensionsPair) {
             this.thumbnailRuntime.logOnce(
                 `featureImage-unknown-dimensions:${effectiveMimeType}:${source}`,
                 `[${source}] Skipping ${effectiveMimeType} (${buffer.byteLength} bytes) - unable to determine image dimensions`
@@ -609,10 +609,18 @@ export class FeatureImageContentProvider extends BaseContentProvider {
             return null;
         }
 
-        const pixelCount = dimensions.width * dimensions.height;
+        const { display: displayDimensions, coded: codedDimensions } = dimensionsPair;
+        const pixelCount = codedDimensions.width * codedDimensions.height;
 
-        const { width: targetWidth, height: targetHeight } = this.calculateThumbnailDimensions(dimensions.width, dimensions.height);
-        if (targetWidth === dimensions.width && targetHeight === dimensions.height) {
+        const maxFallbackPixels = Platform.isMobile
+            ? LIMITS.thumbnails.featureImage.maxFallbackPixels.mobile
+            : LIMITS.thumbnails.featureImage.maxFallbackPixels.desktop;
+
+        const { width: targetWidth, height: targetHeight } = this.calculateThumbnailDimensions(
+            displayDimensions.width,
+            displayDimensions.height
+        );
+        if (targetWidth === displayDimensions.width && targetHeight === displayDimensions.height && pixelCount <= maxFallbackPixels) {
             // Skip decoding when the image is already within thumbnail limits.
             return new Blob([buffer], { type: effectiveMimeType });
         }
@@ -629,13 +637,10 @@ export class FeatureImageContentProvider extends BaseContentProvider {
             }
 
             // Fallback decoding loads the full image into memory, so apply stricter limits.
-            const maxFallbackPixels = Platform.isMobile
-                ? LIMITS.thumbnails.featureImage.maxFallbackPixels.mobile
-                : LIMITS.thumbnails.featureImage.maxFallbackPixels.desktop;
             if (pixelCount > maxFallbackPixels) {
                 this.thumbnailRuntime.logOnce(
-                    `featureImage-fallback-skip:${effectiveMimeType}:${dimensions.width}x${dimensions.height}:${source}`,
-                    `[${source}] Skipping ${effectiveMimeType} (${dimensions.width}x${dimensions.height}) - thumbnail decode fallback disabled for large images`
+                    `featureImage-fallback-skip:${effectiveMimeType}:${codedDimensions.width}x${codedDimensions.height}:${source}`,
+                    `[${source}] Skipping ${effectiveMimeType} (${codedDimensions.width}x${codedDimensions.height}) - thumbnail decode fallback disabled for large images`
                 );
                 return null;
             }
