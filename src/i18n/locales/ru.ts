@@ -625,6 +625,7 @@ export const STRINGS_RU = {
             },
             list: {
                 display: 'Внешний вид',
+                keyboardNavigation: 'Навигация с клавиатуры',
                 pinnedNotes: 'Закреплённые заметки'
             },
             notes: {
@@ -1025,6 +1026,22 @@ export const STRINGS_RU = {
                     cmdCtrl: 'Клик с Cmd/Ctrl',
                     optionAlt: 'Клик с Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Нажать Enter для открытия файлов',
+                desc: 'Открывать файлы только при нажатии Enter во время навигации по списку с клавиатуры.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Открыть выбранный файл в новой вкладке, разделении или окне при нажатии Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Открыть выбранный файл в новой вкладке, разделении или окне при нажатии Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Открыть выбранный файл в новой вкладке, разделении или окне при нажатии Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Показывать типы файлов (профиль хранилища)',

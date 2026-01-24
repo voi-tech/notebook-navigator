@@ -626,6 +626,7 @@ export const STRINGS_JA = {
             },
             list: {
                 display: '外観',
+                keyboardNavigation: 'キーボード操作',
                 pinnedNotes: 'ピン留めされたノート'
             },
             notes: {
@@ -1025,6 +1026,22 @@ export const STRINGS_JA = {
                     cmdCtrl: 'Cmd/Ctrl クリック',
                     optionAlt: 'Option/Alt クリック'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Enterキーでファイルを開く',
+                desc: 'リストのキーボード操作中にEnterキーを押したときのみファイルを開きます。'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Shift+Enterで選択したファイルを新しいタブ、分割、またはウィンドウで開きます。'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Cmd+Enterで選択したファイルを新しいタブ、分割、またはウィンドウで開きます。'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Ctrl+Enterで選択したファイルを新しいタブ、分割、またはウィンドウで開きます。'
             },
             excludedNotes: {
                 name: 'プロパティ付きノートを非表示 (ボルトプロファイル)',

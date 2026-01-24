@@ -625,6 +625,7 @@ export const STRINGS_KO = {
             },
             list: {
                 display: '모양',
+                keyboardNavigation: '키보드 탐색',
                 pinnedNotes: '고정된 노트'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_KO = {
                     cmdCtrl: 'Cmd/Ctrl 클릭',
                     optionAlt: 'Option/Alt 클릭'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Enter 키로 파일 열기',
+                desc: '목록 키보드 탐색 중 Enter 키를 누를 때만 파일을 엽니다.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Shift+Enter를 누르면 선택한 파일을 새 탭, 분할 또는 창에서 엽니다.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Cmd+Enter를 누르면 선택한 파일을 새 탭, 분할 또는 창에서 엽니다.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Ctrl+Enter를 누르면 선택한 파일을 새 탭, 분할 또는 창에서 엽니다.'
             },
             fileVisibility: {
                 name: '파일 유형 표시 (볼트 프로필)',

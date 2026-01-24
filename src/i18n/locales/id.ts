@@ -625,6 +625,7 @@ export const STRINGS_ID = {
             },
             list: {
                 display: 'Tampilan',
+                keyboardNavigation: 'Navigasi keyboard',
                 pinnedNotes: 'Catatan yang disematkan'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_ID = {
                     cmdCtrl: 'Klik Cmd/Ctrl',
                     optionAlt: 'Klik Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Tekan Enter untuk membuka file',
+                desc: 'Buka file hanya saat menekan Enter selama navigasi keyboard di daftar.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Buka file yang dipilih di tab baru, split, atau jendela saat menekan Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Buka file yang dipilih di tab baru, split, atau jendela saat menekan Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Buka file yang dipilih di tab baru, split, atau jendela saat menekan Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Tampilkan jenis file (profil vault)',

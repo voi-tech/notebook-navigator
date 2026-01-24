@@ -625,6 +625,7 @@ export const STRINGS_VI = {
             },
             list: {
                 display: 'Giao diện',
+                keyboardNavigation: 'Điều hướng bằng bàn phím',
                 pinnedNotes: 'Ghi chú đã ghim'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_VI = {
                     cmdCtrl: 'Nhấn Cmd/Ctrl',
                     optionAlt: 'Nhấn Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Nhấn Enter để mở tệp',
+                desc: 'Chỉ mở tệp khi nhấn Enter trong quá trình điều hướng bằng bàn phím trong danh sách.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Mở tệp đã chọn trong tab mới, chia đôi hoặc cửa sổ khi nhấn Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Mở tệp đã chọn trong tab mới, chia đôi hoặc cửa sổ khi nhấn Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Mở tệp đã chọn trong tab mới, chia đôi hoặc cửa sổ khi nhấn Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Hiện loại tệp (hồ sơ vault)',

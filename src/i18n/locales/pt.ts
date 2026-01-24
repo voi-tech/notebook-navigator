@@ -625,6 +625,7 @@ export const STRINGS_PT = {
             },
             list: {
                 display: 'Aparência',
+                keyboardNavigation: 'Navegação por teclado',
                 pinnedNotes: 'Notas fixadas'
             },
             notes: {
@@ -1026,6 +1027,22 @@ export const STRINGS_PT = {
                     cmdCtrl: 'Clique Cmd/Ctrl',
                     optionAlt: 'Clique Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Pressionar Enter para abrir ficheiros',
+                desc: 'Abrir ficheiros apenas ao pressionar Enter durante a navegação por teclado na lista.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Abrir o ficheiro selecionado num novo separador, divisão ou janela ao premir Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Abrir o ficheiro selecionado num novo separador, divisão ou janela ao premir Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Abrir o ficheiro selecionado num novo separador, divisão ou janela ao premir Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Mostrar tipos de ficheiro (perfil do cofre)',

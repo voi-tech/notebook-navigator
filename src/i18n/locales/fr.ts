@@ -626,6 +626,7 @@ export const STRINGS_FR = {
             },
             list: {
                 display: 'Apparence',
+                keyboardNavigation: 'Navigation au clavier',
                 pinnedNotes: 'Notes épinglées'
             },
             notes: {
@@ -1028,6 +1029,22 @@ export const STRINGS_FR = {
                     cmdCtrl: 'Cmd/Ctrl clic',
                     optionAlt: 'Option/Alt clic'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Appuyer sur Entrée pour ouvrir',
+                desc: 'Ouvrir les fichiers uniquement en appuyant sur Entrée lors de la navigation au clavier dans la liste.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Entrée',
+                desc: 'Ouvrir le fichier sélectionné dans un nouvel onglet, une division ou une fenêtre avec Shift+Entrée.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Entrée',
+                desc: 'Ouvrir le fichier sélectionné dans un nouvel onglet, une division ou une fenêtre avec Cmd+Entrée.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Entrée',
+                desc: 'Ouvrir le fichier sélectionné dans un nouvel onglet, une division ou une fenêtre avec Ctrl+Entrée.'
             },
             excludedNotes: {
                 name: 'Masquer les notes avec propriétés (profil du coffre)',

@@ -19,7 +19,14 @@
 import { DropdownComponent, Platform, Setting, SliderComponent, setIcon } from 'obsidian';
 import { strings } from '../../i18n';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
-import type { ListDisplayMode, ListNoteGroupingOption, ListPaneTitleOption, SortOption } from '../types';
+import type {
+    FileOpenContext,
+    ListDisplayMode,
+    ListNoteGroupingOption,
+    ListPaneTitleOption,
+    MultiSelectModifier,
+    SortOption
+} from '../types';
 import { SORT_OPTIONS } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import { runAsyncAction } from '../../utils/async';
@@ -177,6 +184,78 @@ export function renderListPaneTab(context: SettingsTabContext): void {
 
         updateButtonsDisabledState(plugin.settings.showQuickActions);
     }
+
+    const keyboardNavigationGroup = createGroup(strings.settings.groups.list.keyboardNavigation);
+
+    if (!Platform.isMobile) {
+        keyboardNavigationGroup.addSetting(setting => {
+            setting
+                .setName(strings.settings.items.multiSelectModifier.name)
+                .setDesc(strings.settings.items.multiSelectModifier.desc)
+                .addDropdown(dropdown =>
+                    dropdown
+                        .addOption('cmdCtrl', strings.settings.items.multiSelectModifier.options.cmdCtrl)
+                        .addOption('optionAlt', strings.settings.items.multiSelectModifier.options.optionAlt)
+                        .setValue(plugin.settings.multiSelectModifier)
+                        .onChange(async (value: MultiSelectModifier) => {
+                            plugin.settings.multiSelectModifier = value;
+                            await plugin.saveSettingsAndUpdate();
+                        })
+                );
+        });
+    }
+
+    const enterToOpenSetting = keyboardNavigationGroup.addSetting(setting => {
+        setting.setName(strings.settings.items.enterToOpenFiles.name).setDesc(strings.settings.items.enterToOpenFiles.desc);
+    });
+
+    const enterToOpenSettingsEl = wireToggleSettingWithSubSettings(
+        enterToOpenSetting,
+        () => plugin.settings.enterToOpenFiles,
+        async value => {
+            plugin.settings.enterToOpenFiles = value;
+            await plugin.saveSettingsAndUpdate();
+        }
+    );
+
+    const normalizeOpenContext = (value: string): FileOpenContext => {
+        if (value === 'split' || value === 'window') {
+            return value;
+        }
+        return 'tab';
+    };
+
+    new Setting(enterToOpenSettingsEl)
+        .setName(strings.settings.items.shiftEnterOpenContext.name)
+        .setDesc(strings.settings.items.shiftEnterOpenContext.desc)
+        .addDropdown(dropdown =>
+            dropdown
+                .addOption('tab', strings.contextMenu.file.openInNewTab)
+                .addOption('split', strings.contextMenu.file.openToRight)
+                .addOption('window', strings.contextMenu.file.openInNewWindow)
+                .setValue(plugin.settings.shiftEnterOpenContext)
+                .onChange(async value => {
+                    plugin.settings.shiftEnterOpenContext = normalizeOpenContext(value);
+                    await plugin.saveSettingsAndUpdate();
+                })
+        );
+
+    const cmdCtrlStrings = Platform.isMacOS ? strings.settings.items.cmdEnterOpenContext : strings.settings.items.ctrlEnterOpenContext;
+
+    new Setting(enterToOpenSettingsEl)
+        .setName(cmdCtrlStrings.name)
+        .setDesc(cmdCtrlStrings.desc)
+        .addDropdown(dropdown =>
+            dropdown
+                .addOption('tab', strings.contextMenu.file.openInNewTab)
+                .addOption('split', strings.contextMenu.file.openToRight)
+                .addOption('window', strings.contextMenu.file.openInNewWindow)
+                .setValue(plugin.settings.cmdCtrlEnterOpenContext)
+                .onChange(async value => {
+                    plugin.settings.cmdCtrlEnterOpenContext = normalizeOpenContext(value);
+                    await plugin.saveSettingsAndUpdate();
+                })
+        );
 
     const pinnedNotesGroup = createGroup(strings.settings.groups.list.pinnedNotes);
 

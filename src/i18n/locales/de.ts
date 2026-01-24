@@ -626,6 +626,7 @@ export const STRINGS_DE = {
             },
             list: {
                 display: 'Darstellung',
+                keyboardNavigation: 'Tastaturnavigation',
                 pinnedNotes: 'Angeheftete Notizen'
             },
             notes: {
@@ -1028,6 +1029,22 @@ export const STRINGS_DE = {
                     cmdCtrl: 'Cmd/Strg-Klick',
                     optionAlt: 'Option/Alt-Klick'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Enter drücken zum Öffnen',
+                desc: 'Dateien nur mit Enter öffnen während der Tastaturnavigation in der Liste.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Ausgewählte Datei in neuem Tab, geteilter Ansicht oder Fenster öffnen mit Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Ausgewählte Datei in neuem Tab, geteilter Ansicht oder Fenster öffnen mit Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Strg+Enter',
+                desc: 'Ausgewählte Datei in neuem Tab, geteilter Ansicht oder Fenster öffnen mit Strg+Enter.'
             },
             excludedNotes: {
                 name: 'Notizen mit Eigenschaften verstecken (Tresorprofil)',

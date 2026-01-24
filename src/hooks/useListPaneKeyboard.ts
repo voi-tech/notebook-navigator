@@ -31,7 +31,7 @@
 import { useCallback } from 'react';
 import { TFile, FileView } from 'obsidian';
 import { Virtualizer } from '@tanstack/react-virtual';
-import { useSelectionState, useSelectionDispatch } from '../context/SelectionContext';
+import { useSelectionState, useSelectionDispatch, resolvePrimarySelectedFile } from '../context/SelectionContext';
 import { useServices, useFileSystemOps } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
@@ -45,6 +45,7 @@ import { useMultiSelection } from './useMultiSelection';
 import { useFileOpener } from './useFileOpener';
 import { matchesShortcut, KeyboardShortcutAction } from '../utils/keyboardShortcuts';
 import { runAsyncAction } from '../utils/async';
+import { openFileInContext } from '../utils/openFileInContext';
 
 /**
  * Check if a list item is selectable (file, not header or spacer)
@@ -83,7 +84,7 @@ export function useListPaneKeyboard({
     fileIndexMap,
     onSelectFile
 }: UseListPaneKeyboardProps) {
-    const { app, isMobile, tagTreeService } = useServices();
+    const { app, commandQueue, isMobile, tagTreeService } = useServices();
     const openFileInWorkspace = useFileOpener();
     const fileSystemOps = useFileSystemOps();
     const settings = useSettingsState();
@@ -148,12 +149,14 @@ export function useListPaneKeyboard({
             selectionDispatch({ type: 'UPDATE_CURRENT_FILE', file: targetFile });
 
             // Open the file without changing focus
-            openFileInWorkspace(targetFile);
+            if (!settings.enterToOpenFiles) {
+                openFileInWorkspace(targetFile);
+            }
 
             // Scroll to target position
             virtualizer.scrollToIndex(targetIndex, { align: 'auto' });
         },
-        [files, selectionState.selectedFiles, selectionDispatch, virtualizer, openFileInWorkspace]
+        [files, selectionState.selectedFiles, selectionDispatch, virtualizer, openFileInWorkspace, settings.enterToOpenFiles]
     );
 
     /**
@@ -185,6 +188,38 @@ export function useListPaneKeyboard({
 
                 return -1;
             };
+
+            const isEnterKey = e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter';
+
+            if (settings.enterToOpenFiles && isEnterKey) {
+                const selectedFile = resolvePrimarySelectedFile(app, selectionState);
+                if (!selectedFile) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                const isCmdCtrl = e.metaKey || e.ctrlKey;
+                const isShift = e.shiftKey;
+
+                if (isCmdCtrl || isShift) {
+                    const context = isCmdCtrl ? settings.cmdCtrlEnterOpenContext : settings.shiftEnterOpenContext;
+                    const resolvedContext = isMobile && context === 'window' ? 'tab' : context;
+                    runAsyncAction(() =>
+                        openFileInContext({
+                            app,
+                            commandQueue,
+                            file: selectedFile,
+                            context: resolvedContext,
+                            active: false
+                        })
+                    );
+                    return;
+                }
+
+                openFileInWorkspace(selectedFile);
+                return;
+            }
 
             if (matchesShortcut(e, shortcuts, KeyboardShortcutAction.LIST_EXTEND_SELECTION_DOWN)) {
                 e.preventDefault();
@@ -397,6 +432,7 @@ export function useListPaneKeyboard({
             files,
             pathToIndex,
             app,
+            commandQueue,
             uiState.singlePane,
             uiDispatch,
             fileSystemOps,
@@ -407,7 +443,8 @@ export function useListPaneKeyboard({
             items,
             virtualizer,
             includeDescendantNotes,
-            showHiddenItems
+            showHiddenItems,
+            openFileInWorkspace
         ]
     );
 

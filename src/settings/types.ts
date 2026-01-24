@@ -78,6 +78,9 @@ export type ItemScope = 'all' | 'folders-only' | 'tags-only';
 /** Modifier key used for multi-select operations */
 export type MultiSelectModifier = 'cmdCtrl' | 'optionAlt';
 
+/** Workspace context used when opening a file in a new leaf. */
+export type FileOpenContext = 'tab' | 'split' | 'window';
+
 /** Display options for vault title */
 export type VaultTitleOption = 'header' | 'navigation';
 
@@ -156,7 +159,6 @@ export interface NotebookNavigatorSettings {
     // General tab - Behavior
     autoRevealActiveFile: boolean;
     autoRevealIgnoreRightSidebar: boolean;
-    multiSelectModifier: MultiSelectModifier;
     paneTransitionDuration: number;
 
     // General tab - View
@@ -249,6 +251,10 @@ export interface NotebookNavigatorSettings {
     keepEmptyTagsProperty: boolean;
 
     // List pane tab
+    multiSelectModifier: MultiSelectModifier;
+    enterToOpenFiles: boolean;
+    shiftEnterOpenContext: FileOpenContext;
+    cmdCtrlEnterOpenContext: FileOpenContext;
     defaultListMode: ListDisplayMode;
     includeDescendantNotes: boolean;
     defaultFolderSort: SortOption;

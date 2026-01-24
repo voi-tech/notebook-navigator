@@ -447,6 +447,7 @@ export const ListPane = React.memo(
         const ensureSelectionForCurrentFilter = useCallback(
             (options?: { openInEditor?: boolean; clearIfEmpty?: boolean; selectFallback?: boolean }) => {
                 const openInEditor = options?.openInEditor ?? false;
+                const shouldOpenInEditor = openInEditor && !settings.enterToOpenFiles;
                 const clearIfEmpty = options?.clearIfEmpty ?? false;
                 const selectFallback = options?.selectFallback ?? true;
                 const hasNoSelection = !selectedFile;
@@ -456,13 +457,13 @@ export const ListPane = React.memo(
                 if (needsSelection) {
                     if (selectFallback && orderedFiles.length > 0) {
                         const firstFile = orderedFiles[0];
-                        selectFileFromList(firstFile, { suppressOpen: !openInEditor });
+                        selectFileFromList(firstFile, { suppressOpen: !shouldOpenInEditor });
                     } else if (!selectFallback && clearIfEmpty && orderedFiles.length === 0) {
                         selectionDispatch({ type: 'SET_SELECTED_FILE', file: null });
                     }
                 }
             },
-            [selectedFile, orderedFiles, filePathToIndex, selectionDispatch, selectFileFromList]
+            [selectedFile, orderedFiles, filePathToIndex, selectionDispatch, selectFileFromList, settings.enterToOpenFiles]
         );
 
         /**
@@ -551,7 +552,11 @@ export const ListPane = React.memo(
 
                 // Select the target file and scroll to it in the virtualized list
                 const targetFile = orderedFiles[targetIndex];
-                selectFileFromList(targetFile, { markKeyboardNavigation: true, markUserSelection: true });
+                selectFileFromList(targetFile, {
+                    markKeyboardNavigation: true,
+                    markUserSelection: true,
+                    suppressOpen: settings.enterToOpenFiles
+                });
                 const virtualIndex = filePathToIndex.get(targetFile.path);
                 if (virtualIndex !== undefined) {
                     rowVirtualizer?.scrollToIndex(virtualIndex, { align: 'auto' });
@@ -559,7 +564,16 @@ export const ListPane = React.memo(
 
                 return true;
             },
-            [orderedFiles, orderedFileIndexMap, selectFileFromList, rowVirtualizer, app, selectionState, filePathToIndex]
+            [
+                orderedFiles,
+                orderedFileIndexMap,
+                selectFileFromList,
+                rowVirtualizer,
+                app,
+                selectionState,
+                filePathToIndex,
+                settings.enterToOpenFiles
+            ]
         );
 
         const handleFileClick = useCallback(
@@ -758,7 +772,9 @@ export const ListPane = React.memo(
 
                 // Open the file if we're not actively using the navigator OR if this is a folder change with auto-select
                 if (!hasNavigatorFocus || isFolderChangeWithAutoSelect) {
-                    openFileInWorkspace(selectedFile);
+                    if (!settings.enterToOpenFiles) {
+                        openFileInWorkspace(selectedFile);
+                    }
                 }
             }
             // Reset the flag after processing
@@ -766,6 +782,7 @@ export const ListPane = React.memo(
         }, [
             selectedFile,
             settings.autoSelectFirstFileOnFocusChange,
+            settings.enterToOpenFiles,
             isMobile,
             selectionState.isRevealOperation,
             selectionState.isFolderChangeWithAutoSelect,
@@ -923,7 +940,7 @@ export const ListPane = React.memo(
             pathToIndex: filePathToIndex,
             files,
             fileIndexMap,
-            onSelectFile: file => selectFileFromList(file, { markKeyboardNavigation: true })
+            onSelectFile: file => selectFileFromList(file, { markKeyboardNavigation: true, suppressOpen: settings.enterToOpenFiles })
         });
 
         // Determine if we're showing empty state

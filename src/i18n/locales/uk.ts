@@ -625,6 +625,7 @@ export const STRINGS_UK = {
             },
             list: {
                 display: 'Вигляд',
+                keyboardNavigation: 'Навігація з клавіатури',
                 pinnedNotes: 'Закріплені нотатки'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_UK = {
                     cmdCtrl: 'Натискання Cmd/Ctrl',
                     optionAlt: 'Натискання Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Натисніть Enter для відкриття файлів',
+                desc: 'Відкривати файли лише при натисканні Enter під час навігації клавіатурою у списку.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Відкрити вибраний файл у новій вкладці, розділенні або вікні при натисканні Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Відкрити вибраний файл у новій вкладці, розділенні або вікні при натисканні Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Відкрити вибраний файл у новій вкладці, розділенні або вікні при натисканні Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Показувати типи файлів (профіль сховища)',

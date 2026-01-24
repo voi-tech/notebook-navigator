@@ -625,6 +625,7 @@ export const STRINGS_TR = {
             },
             list: {
                 display: 'Görünüm',
+                keyboardNavigation: 'Klavye ile gezinme',
                 pinnedNotes: 'Sabitlenmiş notlar'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_TR = {
                     cmdCtrl: 'Cmd/Ctrl tıkla',
                     optionAlt: 'Option/Alt tıkla'
                 }
+            },
+            enterToOpenFiles: {
+                name: "Dosyaları açmak için Enter'a basın",
+                desc: "Dosyaları yalnızca listede klavye ile gezinirken Enter'a basarak açın."
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Shift+Enter ile seçili dosyayı yeni sekmede, bölmede veya pencerede aç.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Cmd+Enter ile seçili dosyayı yeni sekmede, bölmede veya pencerede aç.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Ctrl+Enter ile seçili dosyayı yeni sekmede, bölmede veya pencerede aç.'
             },
             fileVisibility: {
                 name: 'Dosya türlerini göster (kasa profili)',

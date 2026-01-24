@@ -625,6 +625,7 @@ export const STRINGS_IT = {
             },
             list: {
                 display: 'Aspetto',
+                keyboardNavigation: 'Navigazione da tastiera',
                 pinnedNotes: 'Note fissate'
             },
             notes: {
@@ -1026,6 +1027,22 @@ export const STRINGS_IT = {
                     cmdCtrl: 'Click Cmd/Ctrl',
                     optionAlt: 'Click Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Premi Invio per aprire i file',
+                desc: "Apri i file solo premendo Invio durante la navigazione da tastiera nell'elenco."
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Invio',
+                desc: 'Apri il file selezionato in una nuova scheda, divisione o finestra premendo Shift+Invio.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Invio',
+                desc: 'Apri il file selezionato in una nuova scheda, divisione o finestra premendo Cmd+Invio.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Invio',
+                desc: 'Apri il file selezionato in una nuova scheda, divisione o finestra premendo Ctrl+Invio.'
             },
             fileVisibility: {
                 name: 'Mostra tipi file (profilo vault)',

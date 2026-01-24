@@ -624,6 +624,7 @@ export const STRINGS_ZH_CN = {
             },
             list: {
                 display: '外观',
+                keyboardNavigation: '键盘导航',
                 pinnedNotes: '固定笔记'
             },
             notes: {
@@ -1022,6 +1023,22 @@ export const STRINGS_ZH_CN = {
                     cmdCtrl: 'Cmd/Ctrl 点击',
                     optionAlt: 'Option/Alt 点击'
                 }
+            },
+            enterToOpenFiles: {
+                name: '按 Enter 键打开文件',
+                desc: '仅在列表键盘导航时按 Enter 键打开文件。'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: '按 Shift+Enter 在新标签页、分栏或窗口中打开所选文件。'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: '按 Cmd+Enter 在新标签页、分栏或窗口中打开所选文件。'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: '按 Ctrl+Enter 在新标签页、分栏或窗口中打开所选文件。'
             },
             excludedNotes: {
                 name: '隐藏带属性的笔记 (库配置)',

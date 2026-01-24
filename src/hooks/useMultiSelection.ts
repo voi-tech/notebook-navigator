@@ -20,6 +20,7 @@ import { useCallback } from 'react';
 import { TFile } from 'obsidian';
 import { useSelectionState, useSelectionDispatch } from '../context/SelectionContext';
 import { useServices } from '../context/ServicesContext';
+import { useSettingsState } from '../context/SettingsContext';
 import { useFileOpener } from './useFileOpener';
 import { findFileIndex, getFilesInRange } from '../utils/selectionUtils';
 
@@ -31,6 +32,7 @@ export function useMultiSelection() {
     const selectionState = useSelectionState();
     const selectionDispatch = useSelectionDispatch();
     const { app } = useServices();
+    const settings = useSettingsState();
     const workspace = app.workspace;
     const openFileInWorkspace = useFileOpener();
 
@@ -195,14 +197,21 @@ export function useMultiSelection() {
 
             // Open the file at cursor without changing focus
             // Always open if we deselected the active file, or if cursor moved to a different file
-            if (deselectedActiveFile || !activeFile || activeFile.path !== finalFile.path) {
+            if (!settings.enterToOpenFiles && (deselectedActiveFile || !activeFile || activeFile.path !== finalFile.path)) {
                 openFileInWorkspace(finalFile);
             }
 
             // Return the final index for the caller to handle scrolling
             return finalIndex;
         },
-        [selectionState.selectedFile, selectionState.selectedFiles, selectionDispatch, openFileInWorkspace, workspace]
+        [
+            selectionState.selectedFile,
+            selectionState.selectedFiles,
+            selectionDispatch,
+            openFileInWorkspace,
+            settings.enterToOpenFiles,
+            workspace
+        ]
     );
 
     /**

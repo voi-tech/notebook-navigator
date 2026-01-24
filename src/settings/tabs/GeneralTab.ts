@@ -29,7 +29,7 @@ import {
     PANE_TRANSITION_DURATION_STEP_MS,
     type BackgroundMode
 } from '../../types';
-import type { ListToolbarButtonId, MultiSelectModifier, NavigationToolbarButtonId, VaultTitleOption } from '../types';
+import type { ListToolbarButtonId, NavigationToolbarButtonId, VaultTitleOption } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import { resetHiddenToggleIfNoSources } from '../../utils/exclusionUtils';
 import { InputModal } from '../../modals/InputModal';
@@ -518,24 +518,6 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                 await plugin.saveSettingsAndUpdate();
             })
         );
-
-    if (!Platform.isMobile) {
-        behaviorGroup.addSetting(setting => {
-            setting
-                .setName(strings.settings.items.multiSelectModifier.name)
-                .setDesc(strings.settings.items.multiSelectModifier.desc)
-                .addDropdown(dropdown =>
-                    dropdown
-                        .addOption('cmdCtrl', strings.settings.items.multiSelectModifier.options.cmdCtrl)
-                        .addOption('optionAlt', strings.settings.items.multiSelectModifier.options.optionAlt)
-                        .setValue(plugin.settings.multiSelectModifier)
-                        .onChange(async (value: MultiSelectModifier) => {
-                            plugin.settings.multiSelectModifier = value;
-                            await plugin.saveSettingsAndUpdate();
-                        })
-                );
-        });
-    }
 
     const paneTransitionSetting = behaviorGroup.addSetting(setting => {
         setting.setName(strings.settings.items.paneTransitionDuration.name).setDesc(strings.settings.items.paneTransitionDuration.desc);

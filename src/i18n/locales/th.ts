@@ -625,6 +625,7 @@ export const STRINGS_TH = {
             },
             list: {
                 display: 'ลักษณะ',
+                keyboardNavigation: 'การนำทางด้วยแป้นพิมพ์',
                 pinnedNotes: 'โน้ตที่ปักหมุด'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_TH = {
                     cmdCtrl: 'คลิก Cmd/Ctrl',
                     optionAlt: 'คลิก Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'กด Enter เพื่อเปิดไฟล์',
+                desc: 'เปิดไฟล์เฉพาะเมื่อกด Enter ระหว่างการนำทางด้วยแป้นพิมพ์ในรายการ'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'เปิดไฟล์ที่เลือกในแท็บใหม่ แยก หรือหน้าต่างเมื่อกด Shift+Enter'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'เปิดไฟล์ที่เลือกในแท็บใหม่ แยก หรือหน้าต่างเมื่อกด Cmd+Enter'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'เปิดไฟล์ที่เลือกในแท็บใหม่ แยก หรือหน้าต่างเมื่อกด Ctrl+Enter'
             },
             fileVisibility: {
                 name: 'แสดงประเภทไฟล์ (โปรไฟล์ห้องนิรภัย)',

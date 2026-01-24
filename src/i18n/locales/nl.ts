@@ -627,6 +627,7 @@ export const STRINGS_NL = {
             },
             list: {
                 display: 'Uiterlijk',
+                keyboardNavigation: 'Toetsenbordnavigatie',
                 pinnedNotes: 'Vastgezette notities'
             },
             notes: {
@@ -1027,6 +1028,22 @@ export const STRINGS_NL = {
                     cmdCtrl: 'Cmd/Ctrl klik',
                     optionAlt: 'Option/Alt klik'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Druk op Enter om bestanden te openen',
+                desc: 'Open bestanden alleen door op Enter te drukken tijdens toetsenbordnavigatie in de lijst.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Open het geselecteerde bestand in een nieuw tabblad, splitsing of venster met Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Open het geselecteerde bestand in een nieuw tabblad, splitsing of venster met Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Open het geselecteerde bestand in een nieuw tabblad, splitsing of venster met Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Bestandstypes tonen (kluisprofiel)',

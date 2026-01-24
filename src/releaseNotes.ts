@@ -81,12 +81,13 @@ const RELEASE_NOTES: ReleaseNote[] = [
         new: [
             '==Calendar now supports weekly, monthly, quarterly, and yearly notes!== Configure custom file patterns in Settings > Calendar. Click week numbers, month names, quarter labels, or year to create or open periodic notes.',
             'New commands: ==Open daily note==, ==Open weekly note==, ==Open monthly note==, ==Open quarterly note==, ==Open yearly note==.',
-            'New setting: ==Calendar > Placement==. Display the calendar in the left or right sidebar.',
+            'New setting: ==Calendar > Placement==. Display the calendar in the **left** or **right sidebar**. 🎉',
             'New setting: ==Calendar > Show feature image==. Display feature images for notes in the calendar.',
-            'New setting: ==Notes > Show properties on separate rows==. Display each custom property on its own line.',
+            'New setting: ==Notes > Show properties on separate rows==. Display each custom property on its own line. 🎉',
+            'New setting: ==List pane > Keyboard navigation > Press Enter to open files==. 🎉 Open selected files on Enter. Shift+Enter and Cmd/Ctrl+Enter open in a new tab, split, or window.',
             'New command: ==Search in vault root==. Selects the vault root folder and focuses the search input.',
-            'Public API: Added a new ==Menus API== for extending context menus. Use ==registerFileMenu(callback)== and ==registerFolderMenu(callback)== to add custom menu items.',
-            'New setting: ==Navigation pane > Appearance > Pin banner==. Keep the banner pinned to top or let it scroll with the navigation tree.'
+            'New setting: ==Navigation pane > Appearance > Pin banner==. Keep the banner pinned to top or let it scroll with the navigation tree.',
+            'Public API: Added a new ==Menus API== for extending context menus. Use ==registerFileMenu(callback)== and ==registerFolderMenu(callback)== to add custom menu items.'
         ],
         improved: [
             '==Copy path== now shows a submenu with options: Obsidian URL, from vault folder, from system root.',
@@ -95,6 +96,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         changed: [
             'Replaced ==Property for color== setting with ==Property color map==. Define colors with a simple key=color format using a visual editor.',
+            'Moved the ==Modifier key== setting from ==General== to ==List pane > Keyboard navigation==.',
             'Folders with folder notes no longer show a note icon by default.'
         ],
         fixed: [

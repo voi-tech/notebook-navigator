@@ -625,6 +625,7 @@ export const STRINGS_FA = {
             },
             list: {
                 display: 'ظاهر',
+                keyboardNavigation: 'پیمایش با صفحه‌کلید',
                 pinnedNotes: 'یادداشت‌های سنجاق‌شده'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_FA = {
                     cmdCtrl: 'کلیک Cmd/Ctrl',
                     optionAlt: 'کلیک Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'فشار Enter برای باز کردن فایل‌ها',
+                desc: 'فایل‌ها فقط با فشار دادن Enter در هنگام پیمایش با صفحه‌کلید در لیست باز شوند.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'فایل انتخاب‌شده را در تب، تقسیم یا پنجره جدید با فشار Shift+Enter باز کنید.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'فایل انتخاب‌شده را در تب، تقسیم یا پنجره جدید با فشار Cmd+Enter باز کنید.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'فایل انتخاب‌شده را در تب، تقسیم یا پنجره جدید با فشار Ctrl+Enter باز کنید.'
             },
             fileVisibility: {
                 name: 'نمایش انواع فایل (پروفایل خزانه)',

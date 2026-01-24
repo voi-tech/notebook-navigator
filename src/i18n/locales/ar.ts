@@ -625,6 +625,7 @@ export const STRINGS_AR = {
             },
             list: {
                 display: 'المظهر',
+                keyboardNavigation: 'التنقل بلوحة المفاتيح',
                 pinnedNotes: 'الملاحظات المثبتة'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_AR = {
                     cmdCtrl: 'النقر مع Cmd/Ctrl',
                     optionAlt: 'النقر مع Option/Alt'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'اضغط Enter لفتح الملفات',
+                desc: 'فتح الملفات فقط عند الضغط على Enter أثناء التنقل بلوحة المفاتيح في القائمة.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'افتح الملف المحدد في علامة تبويب جديدة أو تقسيم أو نافذة عند الضغط على Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'افتح الملف المحدد في علامة تبويب جديدة أو تقسيم أو نافذة عند الضغط على Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'افتح الملف المحدد في علامة تبويب جديدة أو تقسيم أو نافذة عند الضغط على Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'إظهار أنواع الملفات (ملف الخزنة)',

@@ -624,6 +624,7 @@ export const STRINGS_ZH_TW = {
             },
             list: {
                 display: '外觀',
+                keyboardNavigation: '鍵盤導覽',
                 pinnedNotes: '釘選筆記'
             },
             notes: {
@@ -1022,6 +1023,22 @@ export const STRINGS_ZH_TW = {
                     cmdCtrl: 'Cmd/Ctrl 點按',
                     optionAlt: 'Option/Alt 點按'
                 }
+            },
+            enterToOpenFiles: {
+                name: '按 Enter 鍵開啟檔案',
+                desc: '僅在清單鍵盤導覽時按 Enter 鍵開啟檔案。'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: '按 Shift+Enter 在新分頁、分割或視窗中開啟所選檔案。'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: '按 Cmd+Enter 在新分頁、分割或視窗中開啟所選檔案。'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: '按 Ctrl+Enter 在新分頁、分割或視窗中開啟所選檔案。'
             },
             excludedNotes: {
                 name: '隱藏帶有屬性的筆記（保險庫設定檔）',

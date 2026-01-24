@@ -626,6 +626,7 @@ export const STRINGS_ES = {
             },
             list: {
                 display: 'Apariencia',
+                keyboardNavigation: 'Navegación con teclado',
                 pinnedNotes: 'Notas fijadas'
             },
             notes: {
@@ -1026,6 +1027,22 @@ export const STRINGS_ES = {
                     cmdCtrl: 'Cmd/Ctrl clic',
                     optionAlt: 'Option/Alt clic'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Pulsar Enter para abrir archivos',
+                desc: 'Abrir archivos solo al pulsar Enter durante la navegación con teclado en la lista.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Abrir el archivo seleccionado en una nueva pestaña, división o ventana al pulsar Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Abrir el archivo seleccionado en una nueva pestaña, división o ventana al pulsar Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Abrir el archivo seleccionado en una nueva pestaña, división o ventana al pulsar Ctrl+Enter.'
             },
             excludedNotes: {
                 name: 'Ocultar notas con propiedades (perfil de bóveda)',

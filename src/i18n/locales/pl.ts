@@ -627,6 +627,7 @@ export const STRINGS_PL = {
             },
             list: {
                 display: 'Wygląd',
+                keyboardNavigation: 'Nawigacja klawiaturą',
                 pinnedNotes: 'Przypięte notatki'
             },
             notes: {
@@ -1026,6 +1027,22 @@ export const STRINGS_PL = {
                     cmdCtrl: 'Cmd/Ctrl klik',
                     optionAlt: 'Option/Alt klik'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Naciśnij Enter, aby otworzyć pliki',
+                desc: 'Otwieraj pliki tylko po naciśnięciu Enter podczas nawigacji klawiaturą na liście.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Otwórz wybrany plik w nowej karcie, podziale lub oknie naciskając Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Otwórz wybrany plik w nowej karcie, podziale lub oknie naciskając Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Otwórz wybrany plik w nowej karcie, podziale lub oknie naciskając Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Pokaż typy plików (profil sejfu)',

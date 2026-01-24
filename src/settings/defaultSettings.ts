@@ -59,7 +59,6 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     // General tab - Behavior
     autoRevealActiveFile: true,
     autoRevealIgnoreRightSidebar: true,
-    multiSelectModifier: 'cmdCtrl',
     paneTransitionDuration: 150,
 
     // General tab - View
@@ -169,6 +168,10 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     keepEmptyTagsProperty: false,
 
     // List pane tab
+    multiSelectModifier: 'cmdCtrl',
+    enterToOpenFiles: false,
+    shiftEnterOpenContext: 'tab',
+    cmdCtrlEnterOpenContext: 'split',
     defaultListMode: 'standard',
     includeDescendantNotes: false,
     defaultFolderSort: 'modified-desc',

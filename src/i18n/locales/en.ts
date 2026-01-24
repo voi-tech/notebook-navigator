@@ -625,6 +625,7 @@ export const STRINGS_EN = {
             },
             list: {
                 display: 'Appearance',
+                keyboardNavigation: 'Keyboard navigation',
                 pinnedNotes: 'Pinned notes'
             },
             notes: {
@@ -1024,6 +1025,22 @@ export const STRINGS_EN = {
                     cmdCtrl: 'Cmd/Ctrl click',
                     optionAlt: 'Option/Alt click'
                 }
+            },
+            enterToOpenFiles: {
+                name: 'Press Enter to open files',
+                desc: 'Open files only when pressing Enter during list keyboard navigation.'
+            },
+            shiftEnterOpenContext: {
+                name: 'Shift+Enter',
+                desc: 'Open selected file in a new tab, split, or window when pressing Shift+Enter.'
+            },
+            cmdEnterOpenContext: {
+                name: 'Cmd+Enter',
+                desc: 'Open selected file in a new tab, split, or window when pressing Cmd+Enter.'
+            },
+            ctrlEnterOpenContext: {
+                name: 'Ctrl+Enter',
+                desc: 'Open selected file in a new tab, split, or window when pressing Ctrl+Enter.'
             },
             fileVisibility: {
                 name: 'Show file types (vault profile)',
