@@ -696,8 +696,21 @@ export const STRINGS_ID = {
                     'created-desc': 'Tanggal dibuat (terbaru di atas)',
                     'created-asc': 'Tanggal dibuat (terlama di atas)',
                     'title-asc': 'Judul (A di atas)',
-                    'title-desc': 'Judul (Z di atas)'
+                    'title-desc': 'Judul (Z di atas)',
+                    'filename-asc': 'Nama file (A di atas)',
+                    'filename-desc': 'Nama file (Z di atas)',
+                    'property-asc': 'Properti (A di atas)',
+                    'property-desc': 'Properti (Z di atas)'
+                },
+                propertyOverride: {
+                    asc: 'Properti ‘{property}’ (A di atas)',
+                    desc: 'Properti ‘{property}’ (Z di atas)'
                 }
+            },
+            propertySortKey: {
+                name: 'Properti pengurutan',
+                desc: 'Digunakan dengan pengurutan Properti. Catatan dengan properti frontmatter ini ditampilkan lebih dulu dan diurutkan berdasarkan nilai properti. Array digabungkan menjadi satu nilai.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Gulir ke file yang dipilih saat perubahan daftar',

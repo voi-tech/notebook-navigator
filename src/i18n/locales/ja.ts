@@ -697,8 +697,21 @@ export const STRINGS_JA = {
                     'created-desc': '作成日時（新しいものが上）',
                     'created-asc': '作成日時（古いものが上）',
                     'title-asc': 'タイトル（昇順）',
-                    'title-desc': 'タイトル（降順）'
+                    'title-desc': 'タイトル（降順）',
+                    'filename-asc': 'ファイル名（昇順）',
+                    'filename-desc': 'ファイル名（降順）',
+                    'property-asc': 'プロパティ（昇順）',
+                    'property-desc': 'プロパティ（降順）'
+                },
+                propertyOverride: {
+                    asc: 'プロパティ ‘{property}’（昇順）',
+                    desc: 'プロパティ ‘{property}’（降順）'
                 }
+            },
+            propertySortKey: {
+                name: 'ソートプロパティ',
+                desc: 'プロパティソートで使用されます。このfrontmatterプロパティを持つノートが最初にリストされ、プロパティの値でソートされます。配列は1つの値に結合されます。',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'リスト変更時に選択ファイルへスクロール',

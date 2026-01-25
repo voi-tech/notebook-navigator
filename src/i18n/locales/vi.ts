@@ -696,8 +696,21 @@ export const STRINGS_VI = {
                     'created-desc': 'Ngày tạo (mới nhất trên)',
                     'created-asc': 'Ngày tạo (cũ nhất trên)',
                     'title-asc': 'Tiêu đề (A trên)',
-                    'title-desc': 'Tiêu đề (Z trên)'
+                    'title-desc': 'Tiêu đề (Z trên)',
+                    'filename-asc': 'Tên tệp (A trên)',
+                    'filename-desc': 'Tên tệp (Z trên)',
+                    'property-asc': 'Thuộc tính (A trên)',
+                    'property-desc': 'Thuộc tính (Z trên)'
+                },
+                propertyOverride: {
+                    asc: 'Thuộc tính ‘{property}’ (A trên)',
+                    desc: 'Thuộc tính ‘{property}’ (Z trên)'
                 }
+            },
+            propertySortKey: {
+                name: 'Thuộc tính sắp xếp',
+                desc: 'Dùng với sắp xếp theo thuộc tính. Ghi chú có thuộc tính frontmatter này được liệt kê trước và sắp xếp theo giá trị thuộc tính. Mảng được kết hợp thành một giá trị.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Cuộn đến tệp đã chọn khi danh sách thay đổi',

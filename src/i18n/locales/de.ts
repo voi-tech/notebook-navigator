@@ -698,8 +698,21 @@ export const STRINGS_DE = {
                     'created-desc': 'Erstellungsdatum (neueste oben)',
                     'created-asc': 'Erstellungsdatum (älteste oben)',
                     'title-asc': 'Titel (A oben)',
-                    'title-desc': 'Titel (Z oben)'
+                    'title-desc': 'Titel (Z oben)',
+                    'filename-asc': 'Dateiname (A oben)',
+                    'filename-desc': 'Dateiname (Z oben)',
+                    'property-asc': 'Eigenschaft (A oben)',
+                    'property-desc': 'Eigenschaft (Z oben)'
+                },
+                propertyOverride: {
+                    asc: 'Eigenschaft ‘{property}’ (A oben)',
+                    desc: 'Eigenschaft ‘{property}’ (Z oben)'
                 }
+            },
+            propertySortKey: {
+                name: 'Sortier-Eigenschaft',
+                desc: 'Wird mit der Eigenschafts-Sortierung verwendet. Notizen mit dieser Frontmatter-Eigenschaft werden zuerst aufgelistet und nach dem Eigenschaftswert sortiert. Arrays werden zu einem Wert zusammengefügt.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Zu ausgewählter Datei bei Listenänderungen scrollen',

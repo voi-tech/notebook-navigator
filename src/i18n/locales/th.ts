@@ -696,8 +696,21 @@ export const STRINGS_TH = {
                     'created-desc': 'วันที่สร้าง (ใหม่สุดบน)',
                     'created-asc': 'วันที่สร้าง (เก่าสุดบน)',
                     'title-asc': 'ชื่อเรื่อง (A บน)',
-                    'title-desc': 'ชื่อเรื่อง (Z บน)'
+                    'title-desc': 'ชื่อเรื่อง (Z บน)',
+                    'filename-asc': 'ชื่อไฟล์ (A บน)',
+                    'filename-desc': 'ชื่อไฟล์ (Z บน)',
+                    'property-asc': 'คุณสมบัติ (A บน)',
+                    'property-desc': 'คุณสมบัติ (Z บน)'
+                },
+                propertyOverride: {
+                    asc: 'คุณสมบัติ ‘{property}’ (A บน)',
+                    desc: 'คุณสมบัติ ‘{property}’ (Z บน)'
                 }
+            },
+            propertySortKey: {
+                name: 'คุณสมบัติสำหรับเรียงลำดับ',
+                desc: 'ใช้กับการเรียงลำดับตามคุณสมบัติ โน้ตที่มีคุณสมบัติ frontmatter นี้จะแสดงก่อนและเรียงตามค่าคุณสมบัติ อาร์เรย์จะรวมเป็นค่าเดียว',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'เลื่อนไปยังไฟล์ที่เลือกเมื่อรายการเปลี่ยนแปลง',

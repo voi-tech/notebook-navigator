@@ -696,8 +696,21 @@ export const STRINGS_PT = {
                     'created-desc': 'Data de criação (mais recente no topo)',
                     'created-asc': 'Data de criação (mais antiga no topo)',
                     'title-asc': 'Título (A no topo)',
-                    'title-desc': 'Título (Z no topo)'
+                    'title-desc': 'Título (Z no topo)',
+                    'filename-asc': 'Nome do ficheiro (A no topo)',
+                    'filename-desc': 'Nome do ficheiro (Z no topo)',
+                    'property-asc': 'Propriedade (A no topo)',
+                    'property-desc': 'Propriedade (Z no topo)'
+                },
+                propertyOverride: {
+                    asc: 'Propriedade ‘{property}’ (A no topo)',
+                    desc: 'Propriedade ‘{property}’ (Z no topo)'
                 }
+            },
+            propertySortKey: {
+                name: 'Propriedade de ordenação',
+                desc: 'Utilizado com a ordenação por propriedade. Notas com esta propriedade frontmatter são listadas primeiro e ordenadas pelo valor da propriedade. Arrays são combinados num único valor.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Deslocar para ficheiro selecionado em alterações da lista',

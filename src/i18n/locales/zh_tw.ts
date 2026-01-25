@@ -694,8 +694,21 @@ export const STRINGS_ZH_TW = {
                     'created-desc': '建立日期（最新在頂部）',
                     'created-asc': '建立日期（最舊在頂部）',
                     'title-asc': '標題（升序）',
-                    'title-desc': '標題（降序）'
+                    'title-desc': '標題（降序）',
+                    'filename-asc': '檔案名稱（升序）',
+                    'filename-desc': '檔案名稱（降序）',
+                    'property-asc': '屬性（升序）',
+                    'property-desc': '屬性（降序）'
+                },
+                propertyOverride: {
+                    asc: '屬性 ‘{property}’（升序）',
+                    desc: '屬性 ‘{property}’（降序）'
                 }
+            },
+            propertySortKey: {
+                name: '排序屬性',
+                desc: '用於屬性排序。具有此 frontmatter 屬性的筆記首先列出，並按屬性值排序。陣列合併為單一值。',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: '列表變更時捲動到選定檔案',

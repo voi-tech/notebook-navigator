@@ -698,8 +698,21 @@ export const STRINGS_NL = {
                     'created-desc': 'Datum gemaakt (nieuwste bovenaan)',
                     'created-asc': 'Datum gemaakt (oudste bovenaan)',
                     'title-asc': 'Titel (A bovenaan)',
-                    'title-desc': 'Titel (Z bovenaan)'
+                    'title-desc': 'Titel (Z bovenaan)',
+                    'filename-asc': 'Bestandsnaam (A bovenaan)',
+                    'filename-desc': 'Bestandsnaam (Z bovenaan)',
+                    'property-asc': 'Eigenschap (A bovenaan)',
+                    'property-desc': 'Eigenschap (Z bovenaan)'
+                },
+                propertyOverride: {
+                    asc: 'Eigenschap ‘{property}’ (A bovenaan)',
+                    desc: 'Eigenschap ‘{property}’ (Z bovenaan)'
                 }
+            },
+            propertySortKey: {
+                name: 'Sorteereigenschap',
+                desc: 'Gebruikt met Eigenschap-sortering. Notities met deze frontmatter-eigenschap worden eerst weergegeven en gesorteerd op de eigenschapswaarde. Arrays worden samengevoegd tot één waarde.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Scroll naar geselecteerd bestand bij lijstwijzigingen',

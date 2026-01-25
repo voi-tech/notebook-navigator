@@ -696,8 +696,21 @@ export const STRINGS_EN = {
                     'created-desc': 'Date created (newest on top)',
                     'created-asc': 'Date created (oldest on top)',
                     'title-asc': 'Title (A on top)',
-                    'title-desc': 'Title (Z on top)'
+                    'title-desc': 'Title (Z on top)',
+                    'filename-asc': 'File name (A on top)',
+                    'filename-desc': 'File name (Z on top)',
+                    'property-asc': 'Property (A on top)',
+                    'property-desc': 'Property (Z on top)'
+                },
+                propertyOverride: {
+                    asc: 'Property ‘{property}’ (A on top)',
+                    desc: 'Property ‘{property}’ (Z on top)'
                 }
+            },
+            propertySortKey: {
+                name: 'Property to sort by',
+                desc: 'Used with Property sort. Notes with this frontmatter property are listed first and sorted by the property value. Arrays are joined into one value.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Scroll to selected file on list changes',

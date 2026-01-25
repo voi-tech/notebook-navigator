@@ -696,8 +696,21 @@ export const STRINGS_TR = {
                     'created-desc': 'Oluşturma tarihi (en yeni üstte)',
                     'created-asc': 'Oluşturma tarihi (en eski üstte)',
                     'title-asc': 'Başlık (A üstte)',
-                    'title-desc': 'Başlık (Z üstte)'
+                    'title-desc': 'Başlık (Z üstte)',
+                    'filename-asc': 'Dosya adı (A üstte)',
+                    'filename-desc': 'Dosya adı (Z üstte)',
+                    'property-asc': 'Özellik (A üstte)',
+                    'property-desc': 'Özellik (Z üstte)'
+                },
+                propertyOverride: {
+                    asc: 'Özellik ‘{property}’ (A üstte)',
+                    desc: 'Özellik ‘{property}’ (Z üstte)'
                 }
+            },
+            propertySortKey: {
+                name: 'Sıralama özelliği',
+                desc: 'Özellik sıralaması ile kullanılır. Bu frontmatter özelliğine sahip notlar önce listelenir ve özellik değerine göre sıralanır. Diziler tek bir değere birleştirilir.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Liste değişikliklerinde seçili dosyaya kaydır',

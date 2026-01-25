@@ -696,8 +696,21 @@ export const STRINGS_KO = {
                     'created-desc': '생성 날짜 (최신 상위)',
                     'created-asc': '생성 날짜 (오래된 상위)',
                     'title-asc': '제목 (가나다 상위)',
-                    'title-desc': '제목 (역순 상위)'
+                    'title-desc': '제목 (역순 상위)',
+                    'filename-asc': '파일 이름 (가나다 상위)',
+                    'filename-desc': '파일 이름 (역순 상위)',
+                    'property-asc': '속성 (가나다 상위)',
+                    'property-desc': '속성 (역순 상위)'
+                },
+                propertyOverride: {
+                    asc: '속성 ‘{property}’ (가나다 상위)',
+                    desc: '속성 ‘{property}’ (역순 상위)'
                 }
+            },
+            propertySortKey: {
+                name: '정렬 속성',
+                desc: '속성 정렬과 함께 사용됩니다. 이 frontmatter 속성이 있는 노트가 먼저 나열되고 속성 값으로 정렬됩니다. 배열은 하나의 값으로 결합됩니다.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: '목록 변경 시 선택된 파일로 스크롤',

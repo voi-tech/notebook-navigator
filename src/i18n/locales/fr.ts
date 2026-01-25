@@ -698,8 +698,21 @@ export const STRINGS_FR = {
                     'created-desc': 'Date de création (plus récente en haut)',
                     'created-asc': 'Date de création (plus ancienne en haut)',
                     'title-asc': 'Titre (A en haut)',
-                    'title-desc': 'Titre (Z en haut)'
+                    'title-desc': 'Titre (Z en haut)',
+                    'filename-asc': 'Nom de fichier (A en haut)',
+                    'filename-desc': 'Nom de fichier (Z en haut)',
+                    'property-asc': 'Propriété (A en haut)',
+                    'property-desc': 'Propriété (Z en haut)'
+                },
+                propertyOverride: {
+                    asc: 'Propriété ‘{property}’ (A en haut)',
+                    desc: 'Propriété ‘{property}’ (Z en haut)'
                 }
+            },
+            propertySortKey: {
+                name: 'Propriété de tri',
+                desc: 'Utilisé avec le tri par propriété. Les notes avec cette propriété frontmatter sont listées en premier et triées par la valeur de la propriété. Les tableaux sont combinés en une seule valeur.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Défiler vers le fichier sélectionné lors des changements de liste',

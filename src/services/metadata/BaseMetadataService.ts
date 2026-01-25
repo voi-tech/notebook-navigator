@@ -24,7 +24,7 @@ import { FolderAppearance, TagAppearance } from '../../hooks/useListPaneAppearan
 import type { ShortcutEntry } from '../../types/shortcuts';
 import { mutateVaultProfileShortcuts } from '../../utils/vaultProfiles';
 import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
-import { ensureRecord, isStringRecordValue } from '../../utils/recordUtils';
+import { ensureRecord, isStringRecordValue, sanitizeRecord } from '../../utils/recordUtils';
 
 /**
  * Type helper for metadata fields in settings
@@ -355,15 +355,15 @@ export abstract class BaseMetadataService {
     protected async setEntitySortOverride(entityType: EntityType, path: string, sortOption: SortOption): Promise<void> {
         await this.saveAndUpdate(settings => {
             if (entityType === ItemType.FOLDER) {
-                // Ensure null prototype before adding sort override
                 const overrides = ensureRecord(settings.folderSortOverrides);
-                overrides[path] = sortOption;
-                settings.folderSortOverrides = overrides;
+                const next = sanitizeRecord(overrides);
+                next[path] = sortOption;
+                settings.folderSortOverrides = next;
             } else {
-                // Ensure null prototype before adding sort override
                 const overrides = ensureRecord(settings.tagSortOverrides);
-                overrides[path] = sortOption;
-                settings.tagSortOverrides = overrides;
+                const next = sanitizeRecord(overrides);
+                next[path] = sortOption;
+                settings.tagSortOverrides = next;
             }
         });
     }
@@ -376,15 +376,17 @@ export abstract class BaseMetadataService {
     protected async removeEntitySortOverride(entityType: EntityType, path: string): Promise<void> {
         if (entityType === ItemType.FOLDER && this.settingsProvider.settings.folderSortOverrides?.[path]) {
             await this.saveAndUpdate(settings => {
-                if (settings.folderSortOverrides) {
-                    delete settings.folderSortOverrides[path];
-                }
+                const overrides = ensureRecord(settings.folderSortOverrides);
+                const next = sanitizeRecord(overrides);
+                delete next[path];
+                settings.folderSortOverrides = next;
             });
         } else if (entityType === ItemType.TAG && this.settingsProvider.settings.tagSortOverrides?.[path]) {
             await this.saveAndUpdate(settings => {
-                if (settings.tagSortOverrides) {
-                    delete settings.tagSortOverrides[path];
-                }
+                const overrides = ensureRecord(settings.tagSortOverrides);
+                const next = sanitizeRecord(overrides);
+                delete next[path];
+                settings.tagSortOverrides = next;
             });
         }
     }

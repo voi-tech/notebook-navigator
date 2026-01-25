@@ -696,8 +696,21 @@ export const STRINGS_IT = {
                     'created-desc': 'Data creazione (più recenti in alto)',
                     'created-asc': 'Data creazione (più vecchie in alto)',
                     'title-asc': 'Titolo (A in alto)',
-                    'title-desc': 'Titolo (Z in alto)'
+                    'title-desc': 'Titolo (Z in alto)',
+                    'filename-asc': 'Nome file (A in alto)',
+                    'filename-desc': 'Nome file (Z in alto)',
+                    'property-asc': 'Proprietà (A in alto)',
+                    'property-desc': 'Proprietà (Z in alto)'
+                },
+                propertyOverride: {
+                    asc: 'Proprietà ‘{property}’ (A in alto)',
+                    desc: 'Proprietà ‘{property}’ (Z in alto)'
                 }
+            },
+            propertySortKey: {
+                name: 'Proprietà di ordinamento',
+                desc: "Utilizzato con l'ordinamento per proprietà. Le note con questa proprietà frontmatter vengono elencate per prime e ordinate per valore della proprietà. Gli array vengono uniti in un unico valore.",
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Scorri al file selezionato quando la lista cambia',

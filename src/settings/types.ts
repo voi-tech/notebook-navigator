@@ -54,10 +54,31 @@ export const SYNC_MODE_SETTING_IDS = [
 export type SyncModeSettingId = (typeof SYNC_MODE_SETTING_IDS)[number];
 
 /** Available sort options for file listing */
-export type SortOption = 'modified-desc' | 'modified-asc' | 'created-desc' | 'created-asc' | 'title-asc' | 'title-desc';
+export type SortOption =
+    | 'modified-desc'
+    | 'modified-asc'
+    | 'created-desc'
+    | 'created-asc'
+    | 'title-asc'
+    | 'title-desc'
+    | 'filename-asc'
+    | 'filename-desc'
+    | 'property-asc'
+    | 'property-desc';
 
 /** Ordered list of sort options for validation and UI choices */
-export const SORT_OPTIONS: SortOption[] = ['modified-desc', 'modified-asc', 'created-desc', 'created-asc', 'title-asc', 'title-desc'];
+export const SORT_OPTIONS: SortOption[] = [
+    'modified-desc',
+    'modified-asc',
+    'created-desc',
+    'created-asc',
+    'title-asc',
+    'title-desc',
+    'filename-asc',
+    'filename-desc',
+    'property-asc',
+    'property-desc'
+];
 
 /** Type guard for validating sort option values */
 export function isSortOption(value: unknown): value is SortOption {
@@ -258,6 +279,7 @@ export interface NotebookNavigatorSettings {
     defaultListMode: ListDisplayMode;
     includeDescendantNotes: boolean;
     defaultFolderSort: SortOption;
+    propertySortKey: string;
     revealFileOnListChanges: boolean;
     listPaneTitle: ListPaneTitleOption;
     noteGrouping: ListNoteGroupingOption;

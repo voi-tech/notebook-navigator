@@ -694,8 +694,21 @@ export const STRINGS_ZH_CN = {
                     'created-desc': '创建日期（最新在顶部）',
                     'created-asc': '创建日期（最旧在顶部）',
                     'title-asc': '标题（升序）',
-                    'title-desc': '标题（降序）'
+                    'title-desc': '标题（降序）',
+                    'filename-asc': '文件名（升序）',
+                    'filename-desc': '文件名（降序）',
+                    'property-asc': '属性（升序）',
+                    'property-desc': '属性（降序）'
+                },
+                propertyOverride: {
+                    asc: '属性 ‘{property}’（升序）',
+                    desc: '属性 ‘{property}’（降序）'
                 }
+            },
+            propertySortKey: {
+                name: '排序属性',
+                desc: '用于属性排序。具有此 frontmatter 属性的笔记首先列出，并按属性值排序。数组合并为单一值。',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: '列表变更时滚动到选定文件',

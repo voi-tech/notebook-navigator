@@ -698,8 +698,21 @@ export const STRINGS_PL = {
                     'created-desc': 'Data utworzenia (najnowsze na górze)',
                     'created-asc': 'Data utworzenia (najstarsze na górze)',
                     'title-asc': 'Tytuł (A na górze)',
-                    'title-desc': 'Tytuł (Z na górze)'
+                    'title-desc': 'Tytuł (Z na górze)',
+                    'filename-asc': 'Nazwa pliku (A na górze)',
+                    'filename-desc': 'Nazwa pliku (Z na górze)',
+                    'property-asc': 'Właściwość (A na górze)',
+                    'property-desc': 'Właściwość (Z na górze)'
+                },
+                propertyOverride: {
+                    asc: 'Właściwość ‘{property}’ (A na górze)',
+                    desc: 'Właściwość ‘{property}’ (Z na górze)'
                 }
+            },
+            propertySortKey: {
+                name: 'Właściwość sortowania',
+                desc: 'Używane z sortowaniem według właściwości. Notatki z tą właściwością frontmatter są wyświetlane jako pierwsze i sortowane według wartości właściwości. Tablice są łączone w jedną wartość.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'Przewiń do wybranego pliku przy zmianach listy',

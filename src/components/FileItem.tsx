@@ -67,7 +67,7 @@ import { getTooltipPlacement } from '../utils/domUtils';
 import { openFileInContext } from '../utils/openFileInContext';
 import { FILE_VISIBILITY, getExtensionSuffix, isImageFile, shouldDisplayFile } from '../utils/fileTypeUtils';
 import { resolveFileDragIconId, resolveFileIconId } from '../utils/fileIconUtils';
-import { getDateField, naturalCompare } from '../utils/sortUtils';
+import { getDateField, isAlphabeticalSortOption, naturalCompare } from '../utils/sortUtils';
 import { getCachedFileTags } from '../utils/tagUtils';
 import {
     areCustomPropertyItemsEqual,
@@ -911,7 +911,7 @@ export const FileItem = React.memo(function FileItem({
 
         const createdTimestamp = getFileCreatedTime(file);
         const modifiedTimestamp = getFileModifiedTime(file);
-        const isAlphabeticalSort = sortOption.startsWith('title');
+        const isAlphabeticalSort = isAlphabeticalSortOption(sortOption);
         const alphabeticalMode = settings.alphabeticalDateMode ?? 'modified';
 
         // Determine which date to show based on sort option and user preference

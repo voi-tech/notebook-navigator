@@ -696,8 +696,21 @@ export const STRINGS_FA = {
                     'created-desc': 'تاریخ ایجاد (جدیدترین بالا)',
                     'created-asc': 'تاریخ ایجاد (قدیمی‌ترین بالا)',
                     'title-asc': 'عنوان (الف بالا)',
-                    'title-desc': 'عنوان (ی بالا)'
+                    'title-desc': 'عنوان (ی بالا)',
+                    'filename-asc': 'نام فایل (الف بالا)',
+                    'filename-desc': 'نام فایل (ی بالا)',
+                    'property-asc': 'ویژگی (الف بالا)',
+                    'property-desc': 'ویژگی (ی بالا)'
+                },
+                propertyOverride: {
+                    asc: 'ویژگی ‘{property}’ (الف بالا)',
+                    desc: 'ویژگی ‘{property}’ (ی بالا)'
                 }
+            },
+            propertySortKey: {
+                name: 'ویژگی مرتب‌سازی',
+                desc: 'با مرتب‌سازی ویژگی استفاده می‌شود. یادداشت‌هایی که این ویژگی frontmatter را دارند ابتدا نمایش داده شده و بر اساس مقدار ویژگی مرتب می‌شوند. آرایه‌ها به یک مقدار تبدیل می‌شوند.',
+                placeholder: 'order'
             },
             revealFileOnListChanges: {
                 name: 'اسکرول به فایل انتخابی هنگام تغییر لیست',
