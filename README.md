@@ -138,23 +138,23 @@ The video has subtitles in 21 languages.
 
 ## 5 Keyboard shortcuts
 
-| Key                                         | Action                                                                                                            |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| ↑/↓                                         | Navigate up/down in current pane                                                                                  |
-| ←                                           | In navigation pane: collapse or go to parent<br>In list pane: switch to navigation pane                           |
-| →                                           | In navigation pane: expand or switch to list pane<br>In list pane: switch to editor                               |
-| Tab                                         | In navigation pane: switch to list pane<br>In list pane: switch to editor<br>In search field: switch to list pane |
-| Shift+Tab                                   | In list pane: switch to navigation pane<br>In search field: switch to navigation pane                             |
-| Enter                                       | In search field: switch to list pane                                                                              |
-| Escape                                      | In search field: close search and focus list pane                                                                 |
-| PageUp/PageDown                             | Scroll up/down in navigation pane and list pane                                                                   |
-| Home/End                                    | Jump to first/last item in current pane                                                                           |
-| Delete (Windows/Linux)<br>Backspace (macOS) | Delete selected item                                                                                              |
-| Cmd/Ctrl+A                                  | Select all notes in current folder                                                                                |
-| Cmd/Ctrl+Click                              | Toggle notes selection                                                                                            |
-| Shift+Click                                 | Select a range of notes                                                                                           |
-| Shift+Home/End                              | Select from current position to first/last item                                                                   |
-| Shift+↑/↓                                   | Extend selection up/down                                                                                          |
+| Key                                         | Action                                                                                                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| ↑/↓                                         | Navigate up/down in current pane                                                                                                            |
+| ←                                           | In navigation pane: collapse or go to parent<br>In list pane: switch to navigation pane                                                     |
+| →                                           | In navigation pane: expand or switch to list pane<br>In list pane: switch to editor                                                         |
+| Tab                                         | In navigation pane: switch to list pane<br>In list pane: switch to editor<br>In search field: switch to list pane                           |
+| Shift+Tab                                   | In list pane: switch to navigation pane<br>In search field: switch to navigation pane                                                       |
+| Enter                                       | In navigation pane: open folder note<br>In list pane: open selected file (when enabled in settings)<br>In search field: switch to list pane |
+| Escape                                      | In search field: close search and focus list pane                                                                                           |
+| PageUp/PageDown                             | Scroll up/down in navigation pane and list pane                                                                                             |
+| Home/End                                    | Jump to first/last item in current pane                                                                                                     |
+| Delete (Windows/Linux)<br>Backspace (macOS) | Delete selected item                                                                                                                        |
+| Cmd/Ctrl+A                                  | Select all notes in current folder                                                                                                          |
+| Cmd/Ctrl+Click                              | Toggle notes selection                                                                                                                      |
+| Shift+Click                                 | Select a range of notes                                                                                                                     |
+| Shift+Home/End                              | Select from current position to first/last item                                                                                             |
+| Shift+↑/↓                                   | Extend selection up/down                                                                                                                    |
 
 **Note:** All keyboard shortcuts can be customized by editing the `keyboardShortcuts` section in `.obsidian/plugins/notebook-navigator/data.json`. You can add VIM-style navigation (h,j,k,l) or assign multiple keys to the same command.
 
