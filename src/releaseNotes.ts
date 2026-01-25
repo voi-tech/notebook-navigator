@@ -87,6 +87,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New command: ==Search in vault root==. Selects the vault root folder and focuses the search input.',
             'New setting: Navigation pane > Appearance > ==Pin banner==. Keep the banner pinned to top or let it scroll with the navigation tree.',
             'New setting: Calendar > ==Show feature image==. Disable to hide feature images in the calendar.',
+            'You can now press <Enter> to open folder notes when a folder with folder note is selected. Shift+Enter opens in a new tab and Cmd/Ctrl+Enter opens to the right.',
             '==New commands==: Open daily note, Open weekly note, Open monthly note, Open quarterly note, Open yearly note.',
             'Public API: Added a new ==Menus API== for extending context menus. Use **registerFileMenu(callback)** and **registerFolderMenu(callback)** to add custom menu items.'
         ],
