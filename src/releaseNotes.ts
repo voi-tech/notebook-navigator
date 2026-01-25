@@ -87,18 +87,18 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New command: ==Search in vault root==. Selects the vault root folder and focuses the search input.',
             'New setting: Navigation pane > Appearance > ==Pin banner==. Keep the banner pinned to top or let it scroll with the navigation tree.',
             'New setting: Calendar > ==Show feature image==. Disable to hide feature images in the calendar.',
-            'You can now press <Enter> to open folder notes when a folder with folder note is selected. Shift+Enter opens in a new tab and Cmd/Ctrl+Enter opens to the right.',
+            'You can now press ==Enter to open folder notes== when a folder with folder note is selected. Shift+Enter opens in a new tab and Cmd/Ctrl+Enter opens to the right (configurable).',
             '==New commands==: Open daily note, Open weekly note, Open monthly note, Open quarterly note, Open yearly note.',
             'Public API: Added a new ==Menus API== for extending context menus. Use **registerFileMenu(callback)** and **registerFolderMenu(callback)** to add custom menu items.'
         ],
         improved: [
-            '==Copy path== now shows a submenu with options: Obsidian URL, from vault folder, from system root.',
-            'Preview text now strips Obsidian ==block IDs== like ^37066f and ^quote-of-the-day.',
-            'Feature image thumbnails now apply ==image orientation== for JPEG, AVIF, HEIC, and HEIF images.'
+            'Calendar > Root folder is now stored per vault profile so you can have different periodic notes for each profile.',
+            'Preview text now strips Obsidian block IDs like ^37066f and ^quote-of-the-day.',
+            'Copy path now shows a submenu with options: Obsidian URL, from vault folder, from system root.',
+            'Feature image thumbnails now apply image orientation for JPEG, AVIF, HEIC, and HEIF images.'
         ],
         changed: [
             'Replaced ==Property for color== setting with ==Property color map==. You can now define colors with a simple **key=color** format using a visual editor. 🎉',
-            'Calendar > ==Root folder== is now stored per vault profile so you can have different periodic notes for each profile.',
             'Folders with folder notes no longer show a note icon by default.'
         ],
         fixed: [
