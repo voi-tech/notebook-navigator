@@ -804,9 +804,25 @@ function getIsobmffDimensions(bytes: Uint8Array, view: DataView): { display: Ras
         let { width, height } = ispeDimensions;
 
         if (clapDimensions && clapDimensions.width > 0 && clapDimensions.height > 0) {
-            if (clapDimensions.width <= width && clapDimensions.height <= height) {
-                width = clapDimensions.width;
-                height = clapDimensions.height;
+            const maxClapOvershootPixels = 1;
+
+            const adjustedWidth =
+                clapDimensions.width <= width
+                    ? clapDimensions.width
+                    : clapDimensions.width - width <= maxClapOvershootPixels
+                      ? width
+                      : null;
+
+            const adjustedHeight =
+                clapDimensions.height <= height
+                    ? clapDimensions.height
+                    : clapDimensions.height - height <= maxClapOvershootPixels
+                      ? height
+                      : null;
+
+            if (adjustedWidth !== null && adjustedHeight !== null) {
+                width = adjustedWidth;
+                height = adjustedHeight;
             }
         }
 

@@ -382,6 +382,16 @@ describe('getImageDimensionsFromBuffer', () => {
         expect(getImageCodedDimensionsFromBuffer(bytes.buffer, 'image/heic')).toEqual({ width: 124, height: 456 });
     });
 
+    it('clamps HEIC/HEIF clap crop values that exceed ispe by 1px', () => {
+        const ispe = box('ispe', fullBox(0, 0, concatBytes([be32(124), be32(456)])));
+        const clap = box('clap', clapPayload(125, 400));
+        const ipco = box('ipco', concatBytes([ispe, clap]));
+        const bytes = concatBytes([ftypBox('avif', ['avif', 'heic', 'mif1']), ipco]);
+
+        expect(getImageDimensionsFromBuffer(bytes.buffer, 'image/heic')).toEqual({ width: 124, height: 400 });
+        expect(getImageDimensionsFromBuffer(bytes.buffer, 'image/heif')).toEqual({ width: 124, height: 400 });
+    });
+
     it('ignores HEIC/HEIF clap crop values that exceed the width', () => {
         const ispe = box('ispe', fullBox(0, 0, concatBytes([be32(5), be32(10)])));
         const clap = box('clap', clapPayload(100, 10));
