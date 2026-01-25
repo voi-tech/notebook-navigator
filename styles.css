@@ -2919,6 +2919,7 @@ body {
 
 .nn-calendar-right-sidebar {
     overflow: auto;
+    --nn-theme-list-bg: var(--nn-theme-mobile-bg);
 }
 
 .nn-calendar-right-sidebar-content {
