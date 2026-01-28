@@ -388,6 +388,14 @@ export const STRINGS_NL = {
                 dismiss: 'om te sluiten'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Sjablonen zoeken...',
+            instructions: {
+                navigate: 'om te navigeren',
+                select: 'om sjabloon te selecteren',
+                dismiss: 'om te sluiten'
+            }
+        },
         navigationBanner: {
             placeholder: 'Afbeeldingen zoeken...',
             instructions: {
@@ -990,15 +998,21 @@ export const STRINGS_NL = {
             },
             calendarCustomRootFolder: {
                 name: 'Hoofdmap',
-                desc: 'Basismap voor periodieke notities. Wijzigt met het geselecteerde kluisprofiel.',
+                desc: 'Basismap voor periodieke notities. Datumpatronen kunnen submappen bevatten. Wijzigt met het geselecteerde kluisprofiel.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Sjabloonmaplocatie',
+                desc: 'De sjabloonbestandskiezer toont notities uit deze map.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Dagelijkse notities',
-                desc: 'Pad formatteren met Moment-datumnotatie.',
+                desc: 'Pad formatteren met Moment-datumnotatie. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen.',
                 momentDescPrefix: 'Pad formatteren met ',
                 momentLinkText: 'Moment-datumnotatie',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Huidige syntaxis: {path}',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledige datum (jaar, maand, dag).'
@@ -1018,6 +1032,9 @@ export const STRINGS_NL = {
             calendarCustomYearPattern: {
                 name: 'Jaarlijkse notities',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledig jaar (jaar).'
+            },
+            calendarTemplateFile: {
+                current: 'Sjabloonbestand: {name}'
             },
             showTooltips: {
                 name: 'Tooltips tonen',

@@ -249,6 +249,12 @@ export interface NotebookNavigatorSettings {
     calendarCustomMonthPattern: string;
     calendarCustomQuarterPattern: string;
     calendarCustomYearPattern: string;
+    calendarTemplateFolder: string;
+    calendarCustomFileTemplate: string | null;
+    calendarCustomWeekTemplate: string | null;
+    calendarCustomMonthTemplate: string | null;
+    calendarCustomQuarterTemplate: string | null;
+    calendarCustomYearTemplate: string | null;
 
     // Navigation pane tab - Appearance
     colorIconOnly: boolean;

@@ -44,6 +44,7 @@ import {
     buildCustomCalendarMomentPattern,
     createCalendarMarkdownFile,
     getCalendarNoteConfig,
+    getCalendarTemplatePath,
     type CalendarNoteConfig,
     type CalendarNoteKind
 } from '../utils/calendarNotes';
@@ -1024,7 +1025,8 @@ export function NavigationPaneCalendar({ onWeekCountChange, layout = 'overlay', 
             const createCustomNote = async () => {
                 let created: TFile;
                 try {
-                    created = await createCalendarMarkdownFile(app, folderPath, fileName);
+                    const templatePath = getCalendarTemplatePath(kind, settings);
+                    created = await createCalendarMarkdownFile(app, folderPath, fileName, templatePath);
                 } catch (error) {
                     console.error('Failed to create calendar note', error);
                     new Notice(strings.common.unknownError);

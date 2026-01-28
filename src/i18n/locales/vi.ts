@@ -387,6 +387,14 @@ export const STRINGS_VI = {
                 dismiss: 'để đóng'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Tìm mẫu...',
+            instructions: {
+                navigate: 'để điều hướng',
+                select: 'để chọn mẫu',
+                dismiss: 'để đóng'
+            }
+        },
         navigationBanner: {
             placeholder: 'Tìm ảnh...',
             instructions: {
@@ -988,15 +996,20 @@ export const STRINGS_VI = {
             },
             calendarCustomRootFolder: {
                 name: 'Thư mục gốc',
-                desc: 'Thư mục cơ sở cho ghi chú định kỳ. Thay đổi theo hồ sơ vault đã chọn.',
+                desc: 'Thư mục cơ sở cho ghi chú định kỳ. Mẫu ngày có thể bao gồm thư mục con. Thay đổi theo hồ sơ vault đã chọn.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Vị trí thư mục mẫu',
+                desc: 'Trình chọn tệp mẫu hiển thị ghi chú từ thư mục này.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Ghi chú hàng ngày',
-                desc: 'Định dạng đường dẫn sử dụng định dạng ngày Moment.',
+                desc: 'Định dạng đường dẫn sử dụng định dạng ngày Moment. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu.',
                 momentDescPrefix: 'Định dạng đường dẫn sử dụng ',
                 momentLinkText: 'định dạng ngày Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix: '. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Cú pháp hiện tại: {path}',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một ngày đầy đủ (năm, tháng, ngày).'
@@ -1016,6 +1029,9 @@ export const STRINGS_VI = {
             calendarCustomYearPattern: {
                 name: 'Ghi chú hàng năm',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một năm đầy đủ (năm).'
+            },
+            calendarTemplateFile: {
+                current: 'Tệp mẫu: {name}'
             },
             showTooltips: {
                 name: 'Hiện chú thích',

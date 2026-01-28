@@ -387,6 +387,14 @@ export const STRINGS_ZH_CN = {
                 dismiss: '取消'
             }
         },
+        calendarTemplate: {
+            placeholder: '搜索模板...',
+            instructions: {
+                navigate: '导航',
+                select: '选择模板',
+                dismiss: '取消'
+            }
+        },
         navigationBanner: {
             placeholder: '搜索图片...',
             instructions: {
@@ -986,15 +994,20 @@ export const STRINGS_ZH_CN = {
             },
             calendarCustomRootFolder: {
                 name: '根文件夹',
-                desc: '周期笔记的基础文件夹。随所选仓库配置文件更改。',
+                desc: '周期笔记的基础文件夹。日期模式可以包含子文件夹。随所选仓库配置文件更改。',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: '模板文件夹位置',
+                desc: '模板文件选择器显示此文件夹中的笔记。',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: '日记',
-                desc: '使用 Moment 日期格式设置路径。',
+                desc: '使用 Moment 日期格式设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。',
                 momentDescPrefix: '使用 ',
                 momentLinkText: 'Moment 日期格式',
-                momentDescSuffix: ' 设置路径。',
+                momentDescSuffix: ' 设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '当前语法：{path}',
                 parsingError: '模式必须能格式化并重新解析为完整日期（年、月、日）。'
@@ -1014,6 +1027,9 @@ export const STRINGS_ZH_CN = {
             calendarCustomYearPattern: {
                 name: '年记',
                 parsingError: '模式必须能格式化并重新解析为完整年份（年）。'
+            },
+            calendarTemplateFile: {
+                current: '模板文件：{name}'
             },
             showTooltips: {
                 name: '显示工具提示',

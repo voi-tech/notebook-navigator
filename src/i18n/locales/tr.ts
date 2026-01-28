@@ -387,6 +387,14 @@ export const STRINGS_TR = {
                 dismiss: 'kapatmak için'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Şablon ara...',
+            instructions: {
+                navigate: 'gezinmek için',
+                select: 'şablon seçmek için',
+                dismiss: 'kapatmak için'
+            }
+        },
         navigationBanner: {
             placeholder: 'Görsel ara...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_TR = {
             },
             calendarCustomRootFolder: {
                 name: 'Kök klasör',
-                desc: 'Periyodik notlar için temel klasör. Seçili kasa profiliyle değişir.',
+                desc: 'Periyodik notlar için temel klasör. Tarih desenleri alt klasörleri içerebilir. Seçili kasa profiliyle değişir.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Şablon klasörü konumu',
+                desc: 'Şablon dosya seçici bu klasördeki notları gösterir.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Günlük notlar',
-                desc: 'Moment tarih biçimini kullanarak yolu biçimlendir.',
+                desc: 'Moment tarih biçimini kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment tarih biçimi',
-                momentDescSuffix: ' kullanarak yolu biçimlendir.',
+                momentDescSuffix:
+                    ' kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Geçerli sözdizimi: {path}',
                 parsingError: 'Desen, tam bir tarih (yıl, ay, gün) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
@@ -1016,6 +1030,9 @@ export const STRINGS_TR = {
             calendarCustomYearPattern: {
                 name: 'Yıllık notlar',
                 parsingError: 'Desen, tam bir yıl (yıl) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
+            },
+            calendarTemplateFile: {
+                current: 'Şablon dosyası: {name}'
             },
             showTooltips: {
                 name: 'İpuçlarını göster',

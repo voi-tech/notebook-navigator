@@ -387,6 +387,14 @@ export const STRINGS_EN = {
                 dismiss: 'to dismiss'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Search templates...',
+            instructions: {
+                navigate: 'to navigate',
+                select: 'to select template',
+                dismiss: 'to dismiss'
+            }
+        },
         navigationBanner: {
             placeholder: 'Search images...',
             instructions: {
@@ -988,15 +996,20 @@ export const STRINGS_EN = {
             },
             calendarCustomRootFolder: {
                 name: 'Root folder (vault profile)',
-                desc: 'Base folder for periodic notes. Changes with the selected vault profile.',
+                desc: 'Base folder for periodic notes. Date patterns can include subfolders. Changes with the selected vault profile.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Template folder location',
+                desc: 'Template file picker shows notes from this folder.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Daily notes',
-                desc: 'Format path using Moment date format.',
+                desc: 'Format path using Moment date format. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template.',
                 momentDescPrefix: 'Format path using ',
                 momentLinkText: 'Moment date format',
-                momentDescSuffix: '.',
+                momentDescSuffix: '. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Current syntax: {path}',
                 parsingError: 'Pattern must format and parse back to a full date (year, month, day).'
@@ -1016,6 +1029,9 @@ export const STRINGS_EN = {
             calendarCustomYearPattern: {
                 name: 'Yearly notes',
                 parsingError: 'Pattern must format and parse back to a full year (year).'
+            },
+            calendarTemplateFile: {
+                current: 'Template file: {name}'
             },
             showTooltips: {
                 name: 'Show tooltips',

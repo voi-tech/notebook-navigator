@@ -387,6 +387,14 @@ export const STRINGS_UK = {
                 dismiss: 'для закриття'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Пошук шаблонів...',
+            instructions: {
+                navigate: 'для навігації',
+                select: 'для вибору шаблону',
+                dismiss: 'для закриття'
+            }
+        },
         navigationBanner: {
             placeholder: 'Пошук зображень...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_UK = {
             },
             calendarCustomRootFolder: {
                 name: 'Коренева папка',
-                desc: 'Базова папка для періодичних нотаток. Змінюється з вибраним профілем сховища.',
+                desc: 'Базова папка для періодичних нотаток. Шаблони дат можуть включати підпапки. Змінюється з вибраним профілем сховища.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Розташування папки шаблонів',
+                desc: 'Вибір файлу шаблону показує нотатки з цієї папки.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Щоденні нотатки',
-                desc: 'Формат шляху з використанням формату дати Moment.',
+                desc: 'Формат шляху з використанням формату дати Moment. Беріть назви підпапок у квадратні дужки, напр. [Work]/YYYY. Натисніть на іконку шаблону, щоб задати шаблон.',
                 momentDescPrefix: 'Формат шляху з використанням ',
                 momentLinkText: 'формату дати Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Беріть назви підпапок у квадратні дужки, напр. [Work]/YYYY. Натисніть на іконку шаблону, щоб задати шаблон.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Поточний синтаксис: {path}',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повна дата (рік, місяць, день).'
@@ -1016,6 +1030,9 @@ export const STRINGS_UK = {
             calendarCustomYearPattern: {
                 name: 'Річні нотатки',
                 parsingError: 'Шаблон має форматуватися і знову розбиратися як повний рік (рік).'
+            },
+            calendarTemplateFile: {
+                current: 'Файл шаблону: {name}'
             },
             showTooltips: {
                 name: 'Показувати підказки',

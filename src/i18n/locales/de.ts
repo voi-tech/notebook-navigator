@@ -387,6 +387,14 @@ export const STRINGS_DE = {
                 dismiss: 'zum Abbrechen'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Vorlagen durchsuchen...',
+            instructions: {
+                navigate: 'zum Navigieren',
+                select: 'zum Auswählen der Vorlage',
+                dismiss: 'zum Abbrechen'
+            }
+        },
         navigationBanner: {
             placeholder: 'Bilder durchsuchen...',
             instructions: {
@@ -990,15 +998,21 @@ export const STRINGS_DE = {
             },
             calendarCustomRootFolder: {
                 name: 'Stammordner',
-                desc: 'Basisordner für periodische Notizen. Ändert sich mit dem ausgewählten Tresorprofil.',
+                desc: 'Basisordner für periodische Notizen. Datumsmuster können Unterordner enthalten. Ändert sich mit dem ausgewählten Tresorprofil.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Vorlagenordner',
+                desc: 'Die Vorlagenauswahl zeigt Notizen aus diesem Ordner.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Tägliche Notizen',
-                desc: 'Pfad mit Moment-Datumsformat formatieren.',
+                desc: 'Pfad mit Moment-Datumsformat formatieren. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen.',
                 momentDescPrefix: 'Pfad formatieren mit ',
                 momentLinkText: 'Moment-Datumsformat',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Aktuelle Syntax: {path}',
                 parsingError: 'Das Muster muss als vollständiges Datum (Jahr, Monat, Tag) formatiert und wieder geparst werden können.'
@@ -1019,6 +1033,9 @@ export const STRINGS_DE = {
             calendarCustomYearPattern: {
                 name: 'Jährliche Notizen',
                 parsingError: 'Das Muster muss als vollständiges Jahr (Jahr) formatiert und wieder geparst werden können.'
+            },
+            calendarTemplateFile: {
+                current: 'Vorlagendatei: {name}'
             },
             showTooltips: {
                 name: 'Tooltips anzeigen',

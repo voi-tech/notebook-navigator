@@ -387,6 +387,14 @@ export const STRINGS_PT = {
                 dismiss: 'para fechar'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Pesquisar modelos...',
+            instructions: {
+                navigate: 'para navegar',
+                select: 'para selecionar o modelo',
+                dismiss: 'para fechar'
+            }
+        },
         navigationBanner: {
             placeholder: 'Pesquisar imagens...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_PT = {
             },
             calendarCustomRootFolder: {
                 name: 'Pasta raiz',
-                desc: 'Pasta base para notas periódicas. Muda com o perfil do cofre selecionado.',
+                desc: 'Pasta base para notas periódicas. Padrões de data podem incluir subpastas. Muda com o perfil do cofre selecionado.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Localização da pasta de modelos',
+                desc: 'O seletor de arquivos de modelo mostra notas desta pasta.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Notas diárias',
-                desc: 'Formatar caminho usando formato de data Moment.',
+                desc: 'Formatar caminho usando formato de data Moment. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo.',
                 momentDescPrefix: 'Formatar caminho usando ',
                 momentLinkText: 'formato de data Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaxe atual: {path}',
                 parsingError: 'O padrão deve ser formatado e analisado novamente como uma data completa (ano, mês, dia).'
@@ -1017,6 +1031,9 @@ export const STRINGS_PT = {
             calendarCustomYearPattern: {
                 name: 'Notas anuais',
                 parsingError: 'O padrão deve ser formatado e analisado novamente como um ano completo (ano).'
+            },
+            calendarTemplateFile: {
+                current: 'Arquivo de modelo: {name}'
             },
             showTooltips: {
                 name: 'Mostrar dicas',

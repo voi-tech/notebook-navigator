@@ -387,6 +387,14 @@ export const STRINGS_TH = {
                 dismiss: 'เพื่อปิด'
             }
         },
+        calendarTemplate: {
+            placeholder: 'ค้นหาเทมเพลต...',
+            instructions: {
+                navigate: 'เพื่อนำทาง',
+                select: 'เพื่อเลือกเทมเพลต',
+                dismiss: 'เพื่อปิด'
+            }
+        },
         navigationBanner: {
             placeholder: 'ค้นหารูปภาพ...',
             instructions: {
@@ -988,15 +996,20 @@ export const STRINGS_TH = {
             },
             calendarCustomRootFolder: {
                 name: 'โฟลเดอร์หลัก',
-                desc: 'โฟลเดอร์ฐานสำหรับบันทึกตามรอบ เปลี่ยนแปลงตามโปรไฟล์ห้องนิรภัยที่เลือก',
+                desc: 'โฟลเดอร์ฐานสำหรับบันทึกตามรอบ รูปแบบวันที่สามารถรวมโฟลเดอร์ย่อยได้ เปลี่ยนแปลงตามโปรไฟล์ห้องนิรภัยที่เลือก',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'ตำแหน่งโฟลเดอร์เทมเพลต',
+                desc: 'ตัวเลือกไฟล์เทมเพลตแสดงโน้ตจากโฟลเดอร์นี้',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'โน้ตรายวัน',
-                desc: 'กำหนดเส้นทางโดยใช้รูปแบบวันที่ Moment',
+                desc: 'กำหนดเส้นทางโดยใช้รูปแบบวันที่ Moment ใส่ชื่อโฟลเดอร์ย่อยในวงเล็บเหลี่ยม เช่น [Work]/YYYY คลิกไอคอนเทมเพลตเพื่อตั้งค่าเทมเพลต',
                 momentDescPrefix: 'กำหนดเส้นทางโดยใช้ ',
                 momentLinkText: 'รูปแบบวันที่ Moment',
-                momentDescSuffix: '',
+                momentDescSuffix: ' ใส่ชื่อโฟลเดอร์ย่อยในวงเล็บเหลี่ยม เช่น [Work]/YYYY คลิกไอคอนเทมเพลตเพื่อตั้งค่าเทมเพลต',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'รูปแบบปัจจุบัน: {path}',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นวันที่แบบเต็ม (ปี เดือน วัน) ได้'
@@ -1016,6 +1029,9 @@ export const STRINGS_TH = {
             calendarCustomYearPattern: {
                 name: 'โน้ตรายปี',
                 parsingError: 'แพทเทิร์นต้องสามารถฟอร์แมตและพาร์สกลับเป็นปีแบบเต็ม (ปี) ได้'
+            },
+            calendarTemplateFile: {
+                current: 'ไฟล์เทมเพลต: {name}'
             },
             showTooltips: {
                 name: 'แสดง tooltips',

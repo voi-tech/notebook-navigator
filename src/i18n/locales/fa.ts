@@ -387,6 +387,14 @@ export const STRINGS_FA = {
                 dismiss: 'برای بستن'
             }
         },
+        calendarTemplate: {
+            placeholder: 'جستجوی قالب‌ها...',
+            instructions: {
+                navigate: 'برای ناوبری',
+                select: 'برای انتخاب قالب',
+                dismiss: 'برای بستن'
+            }
+        },
         navigationBanner: {
             placeholder: 'جستجوی تصویر...',
             instructions: {
@@ -988,15 +996,20 @@ export const STRINGS_FA = {
             },
             calendarCustomRootFolder: {
                 name: 'پوشه ریشه',
-                desc: 'پوشه پایه برای یادداشت‌های دوره‌ای. با پروفایل صندوق انتخاب شده تغییر می‌کند.',
+                desc: 'پوشه پایه برای یادداشت‌های دوره‌ای. الگوهای تاریخ می‌توانند شامل زیرپوشه‌ها باشند. با پروفایل صندوق انتخاب شده تغییر می‌کند.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'محل پوشه قالب',
+                desc: 'انتخابگر فایل قالب یادداشت‌های این پوشه را نمایش می‌دهد.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'یادداشت‌های روزانه',
-                desc: 'قالب‌بندی مسیر با استفاده از فرمت تاریخ Moment.',
+                desc: 'قالب‌بندی مسیر با استفاده از فرمت تاریخ Moment. نام زیرپوشه‌ها را در کروشه قرار دهید، مثال [Work]/YYYY. روی نماد قالب کلیک کنید تا قالب تنظیم شود.',
                 momentDescPrefix: 'قالب‌بندی مسیر با استفاده از ',
                 momentLinkText: 'فرمت تاریخ Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix: '. نام زیرپوشه‌ها را در کروشه قرار دهید، مثال [Work]/YYYY. روی نماد قالب کلیک کنید تا قالب تنظیم شود.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'نحوه نگارش فعلی: {path}',
                 parsingError: 'الگو باید بتواند به یک تاریخ کامل (سال، ماه، روز) قالب‌بندی شود و دوباره به همان تاریخ تجزیه شود.'
@@ -1016,6 +1029,9 @@ export const STRINGS_FA = {
             calendarCustomYearPattern: {
                 name: 'یادداشت‌های سالانه',
                 parsingError: 'الگو باید بتواند به یک سال کامل (سال) قالب‌بندی شود و دوباره تجزیه شود.'
+            },
+            calendarTemplateFile: {
+                current: 'فایل قالب: {name}'
             },
             showTooltips: {
                 name: 'نمایش راهنماها',

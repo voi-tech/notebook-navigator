@@ -81,6 +81,22 @@ export function getCalendarNoteConfig(kind: CalendarNoteKind, settings: Notebook
     }
 }
 
+/** Returns the configured template file path for a calendar note kind, or null if not set. */
+export function getCalendarTemplatePath(kind: CalendarNoteKind, settings: NotebookNavigatorSettings): string | null {
+    switch (kind) {
+        case 'day':
+            return settings.calendarCustomFileTemplate;
+        case 'week':
+            return settings.calendarCustomWeekTemplate;
+        case 'month':
+            return settings.calendarCustomMonthTemplate;
+        case 'quarter':
+            return settings.calendarCustomQuarterTemplate;
+        case 'year':
+            return settings.calendarCustomYearTemplate;
+    }
+}
+
 export function buildCustomCalendarMomentPattern(calendarCustomFilePattern: string, fallbackPattern?: string): string {
     const { folderPattern, filePattern } = splitCalendarCustomPattern(calendarCustomFilePattern, fallbackPattern);
     return folderPattern ? `${folderPattern}/${filePattern}` : filePattern;
@@ -148,7 +164,12 @@ function getCalendarNoteBaseName(fileName: string): string | null {
     return baseName.length > 0 ? baseName : null;
 }
 
-export async function createCalendarMarkdownFile(app: App, folderPath: string, fileName: string): Promise<TFile> {
+export async function createCalendarMarkdownFile(
+    app: App,
+    folderPath: string,
+    fileName: string,
+    templatePath?: string | null
+): Promise<TFile> {
     const baseName = getCalendarNoteBaseName(fileName);
     if (!baseName) {
         throw new Error('Invalid calendar note filename');
@@ -159,5 +180,21 @@ export async function createCalendarMarkdownFile(app: App, folderPath: string, f
         throw new Error('Calendar folder path is not a folder');
     }
 
-    return await app.fileManager.createNewMarkdownFile(folder, baseName);
+    const created = await app.fileManager.createNewMarkdownFile(folder, baseName);
+
+    // Create the note first (fires Obsidian vault "create" for other plugins), then write optional template content.
+    // Note: some plugins (e.g. Templater) handle "create" asynchronously and may read/modify the file after a short delay.
+    if (templatePath) {
+        try {
+            const entry = app.vault.getAbstractFileByPath(templatePath);
+            if (entry instanceof TFile) {
+                const content = await app.vault.read(entry);
+                await app.vault.modify(created, content);
+            }
+        } catch (error) {
+            console.error('Failed to apply calendar template', templatePath, error);
+        }
+    }
+
+    return created;
 }

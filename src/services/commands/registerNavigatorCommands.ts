@@ -34,6 +34,7 @@ import {
     buildCustomCalendarMomentPattern,
     createCalendarMarkdownFile,
     getCalendarNoteConfig,
+    getCalendarTemplatePath,
     type CalendarNoteKind
 } from '../../utils/calendarNotes';
 import { getFolderNote, isFolderNote, isSupportedFolderNoteExtension, type FolderNoteDetectionSettings } from '../../utils/folderNotes';
@@ -372,6 +373,7 @@ async function openFileInActiveLeaf(plugin: NotebookNavigatorPlugin, file: TFile
 async function createAndOpenCustomCalendarNote(plugin: NotebookNavigatorPlugin, kind: CalendarNoteKind, date: MomentInstance) {
     const config = getCalendarNoteConfig(kind, plugin.settings);
     const settings = { calendarCustomRootFolder: getActiveVaultProfile(plugin.settings).periodicNotesFolder };
+    const templatePath = getCalendarTemplatePath(kind, plugin.settings);
 
     const { folderPath, fileName, filePath } = buildCustomCalendarFilePathForPattern(
         date,
@@ -388,7 +390,7 @@ async function createAndOpenCustomCalendarNote(plugin: NotebookNavigatorPlugin, 
 
     let created: TFile;
     try {
-        created = await createCalendarMarkdownFile(plugin.app, folderPath, fileName);
+        created = await createCalendarMarkdownFile(plugin.app, folderPath, fileName, templatePath);
     } catch (error) {
         console.error('Failed to create calendar note', error);
         showNotice(strings.common.unknownError, { variant: 'warning' });

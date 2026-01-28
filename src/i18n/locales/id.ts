@@ -387,6 +387,14 @@ export const STRINGS_ID = {
                 dismiss: 'untuk menutup'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Cari template...',
+            instructions: {
+                navigate: 'untuk navigasi',
+                select: 'untuk memilih template',
+                dismiss: 'untuk menutup'
+            }
+        },
         navigationBanner: {
             placeholder: 'Cari gambar...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_ID = {
             },
             calendarCustomRootFolder: {
                 name: 'Folder root',
-                desc: 'Folder dasar untuk catatan berkala. Berubah dengan profil vault yang dipilih.',
+                desc: 'Folder dasar untuk catatan berkala. Pola tanggal dapat menyertakan subfolder. Berubah dengan profil vault yang dipilih.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Lokasi folder template',
+                desc: 'Pemilih file template menampilkan catatan dari folder ini.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Catatan harian',
-                desc: 'Format jalur menggunakan format tanggal Moment.',
+                desc: 'Format jalur menggunakan format tanggal Moment. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template.',
                 momentDescPrefix: 'Format jalur menggunakan ',
                 momentLinkText: 'format tanggal Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaks saat ini: {path}',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai tanggal lengkap (tahun, bulan, hari).'
@@ -1016,6 +1030,9 @@ export const STRINGS_ID = {
             calendarCustomYearPattern: {
                 name: 'Catatan tahunan',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai tahun lengkap (tahun).'
+            },
+            calendarTemplateFile: {
+                current: 'File template: {name}'
             },
             showTooltips: {
                 name: 'Tampilkan tooltip',

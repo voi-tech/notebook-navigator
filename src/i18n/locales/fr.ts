@@ -387,6 +387,14 @@ export const STRINGS_FR = {
                 dismiss: 'pour annuler'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Rechercher des modèles...',
+            instructions: {
+                navigate: 'pour naviguer',
+                select: 'pour sélectionner le modèle',
+                dismiss: 'pour annuler'
+            }
+        },
         navigationBanner: {
             placeholder: 'Rechercher des images...',
             instructions: {
@@ -990,15 +998,21 @@ export const STRINGS_FR = {
             },
             calendarCustomRootFolder: {
                 name: 'Dossier racine',
-                desc: 'Dossier de base pour les notes périodiques. Change avec le profil de coffre sélectionné.',
+                desc: 'Dossier de base pour les notes périodiques. Les modèles de date peuvent inclure des sous-dossiers. Change avec le profil de coffre sélectionné.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Emplacement du dossier de modèles',
+                desc: 'Le sélecteur de fichiers de modèles affiche les notes de ce dossier.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Notes quotidiennes',
-                desc: 'Formater le chemin en utilisant le format de date Moment.',
+                desc: "Formater le chemin en utilisant le format de date Moment. Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle.",
                 momentDescPrefix: 'Formater le chemin en utilisant le ',
                 momentLinkText: 'format de date Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    ". Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle.",
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Syntaxe actuelle : {path}',
                 parsingError: 'Le modèle doit pouvoir être formaté et ré-analysé comme une date complète (année, mois, jour).'
@@ -1019,6 +1033,9 @@ export const STRINGS_FR = {
             calendarCustomYearPattern: {
                 name: 'Notes annuelles',
                 parsingError: 'Le modèle doit pouvoir être formaté et ré-analysé comme une année complète (année).'
+            },
+            calendarTemplateFile: {
+                current: 'Fichier modèle : {name}'
             },
             showTooltips: {
                 name: 'Afficher les infobulles',

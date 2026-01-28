@@ -386,6 +386,14 @@ export const STRINGS_KO = {
                 dismiss: '닫기'
             }
         },
+        calendarTemplate: {
+            placeholder: '템플릿 검색...',
+            instructions: {
+                navigate: '이동',
+                select: '템플릿 선택',
+                dismiss: '닫기'
+            }
+        },
         navigationBanner: {
             placeholder: '이미지 검색...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_KO = {
             },
             calendarCustomRootFolder: {
                 name: '루트 폴더',
-                desc: '정기 노트의 기본 폴더. 선택한 보관소 프로필에 따라 변경됩니다.',
+                desc: '정기 노트의 기본 폴더. 날짜 패턴에 하위 폴더를 포함할 수 있습니다. 선택한 보관소 프로필에 따라 변경됩니다.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: '템플릿 폴더 위치',
+                desc: '템플릿 파일 선택기가 이 폴더의 노트를 표시합니다.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: '일일 노트',
-                desc: 'Moment 날짜 형식을 사용하여 경로 지정.',
+                desc: 'Moment 날짜 형식을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 날짜 형식',
-                momentDescSuffix: '을 사용하여 경로 지정.',
+                momentDescSuffix:
+                    '을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '현재 구문: {path}',
                 parsingError: '패턴은 전체 날짜(연, 월, 일)로 포맷되고 다시 파싱될 수 있어야 합니다.'
@@ -1016,6 +1030,9 @@ export const STRINGS_KO = {
             calendarCustomYearPattern: {
                 name: '연간 노트',
                 parsingError: '패턴은 전체 연도(연도)로 포맷되고 다시 파싱될 수 있어야 합니다.'
+            },
+            calendarTemplateFile: {
+                current: '템플릿 파일: {name}'
             },
             showTooltips: {
                 name: '도구 설명 표시',

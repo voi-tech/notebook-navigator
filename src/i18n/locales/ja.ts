@@ -387,6 +387,14 @@ export const STRINGS_JA = {
                 dismiss: 'でキャンセル'
             }
         },
+        calendarTemplate: {
+            placeholder: 'テンプレートを検索...',
+            instructions: {
+                navigate: 'でナビゲート',
+                select: 'でテンプレートを選択',
+                dismiss: 'でキャンセル'
+            }
+        },
         navigationBanner: {
             placeholder: '画像を検索...',
             instructions: {
@@ -989,15 +997,21 @@ export const STRINGS_JA = {
             },
             calendarCustomRootFolder: {
                 name: 'ルートフォルダ',
-                desc: '定期ノートの基本フォルダ。選択されたボールトプロファイルで変更されます。',
+                desc: '定期ノートの基本フォルダ。日付パターンにはサブフォルダを含めることができます。選択されたボールトプロファイルで変更されます。',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'テンプレートフォルダの場所',
+                desc: 'テンプレートファイルピッカーはこのフォルダからノートを表示します。',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'デイリーノート',
-                desc: 'Moment 日付フォーマットを使用してパスを指定。',
+                desc: 'Moment 日付フォーマットを使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 日付フォーマット',
-                momentDescSuffix: 'を使用してパスを指定。',
+                momentDescSuffix:
+                    'を使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '現在の構文: {path}',
                 parsingError: 'パターンは完全な日付（年、月、日）としてフォーマットされ、再度パースできる必要があります。'
@@ -1017,6 +1031,9 @@ export const STRINGS_JA = {
             calendarCustomYearPattern: {
                 name: '年次ノート',
                 parsingError: 'パターンは完全な年（年）としてフォーマットされ、再度パースできる必要があります。'
+            },
+            calendarTemplateFile: {
+                current: 'テンプレートファイル: {name}'
             },
             showTooltips: {
                 name: 'ツールチップを表示',

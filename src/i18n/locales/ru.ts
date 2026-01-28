@@ -387,6 +387,14 @@ export const STRINGS_RU = {
                 dismiss: 'для закрытия'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Поиск шаблонов...',
+            instructions: {
+                navigate: 'для навигации',
+                select: 'для выбора шаблона',
+                dismiss: 'для закрытия'
+            }
+        },
         navigationBanner: {
             placeholder: 'Поиск изображений...',
             instructions: {
@@ -989,15 +997,21 @@ export const STRINGS_RU = {
             },
             calendarCustomRootFolder: {
                 name: 'Корневая папка',
-                desc: 'Базовая папка для периодических заметок. Изменяется с выбранным профилем хранилища.',
+                desc: 'Базовая папка для периодических заметок. Шаблоны дат могут включать подпапки. Изменяется с выбранным профилем хранилища.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Расположение папки шаблонов',
+                desc: 'Выбор файла шаблона показывает заметки из этой папки.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Ежедневные заметки',
-                desc: 'Формат пути с использованием формата даты Moment.',
+                desc: 'Формат пути с использованием формата даты Moment. Заключайте названия подпапок в скобки, напр. [Work]/YYYY. Нажмите на значок шаблона, чтобы задать шаблон.',
                 momentDescPrefix: 'Формат пути с использованием ',
                 momentLinkText: 'формата даты Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Заключайте названия подпапок в скобки, напр. [Work]/YYYY. Нажмите на значок шаблона, чтобы задать шаблон.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Текущий синтаксис: {path}',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полная дата (год, месяц, день).'
@@ -1017,6 +1031,9 @@ export const STRINGS_RU = {
             calendarCustomYearPattern: {
                 name: 'Годовые заметки',
                 parsingError: 'Шаблон должен форматироваться и разбираться обратно как полный год (год).'
+            },
+            calendarTemplateFile: {
+                current: 'Файл шаблона: {name}'
             },
             showTooltips: {
                 name: 'Показывать подсказки',

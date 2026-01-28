@@ -122,6 +122,12 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     calendarCustomMonthPattern: '',
     calendarCustomQuarterPattern: '',
     calendarCustomYearPattern: '',
+    calendarTemplateFolder: '',
+    calendarCustomFileTemplate: null,
+    calendarCustomWeekTemplate: null,
+    calendarCustomMonthTemplate: null,
+    calendarCustomQuarterTemplate: null,
+    calendarCustomYearTemplate: null,
 
     // Navigation pane tab - Appearance
     colorIconOnly: false,

@@ -388,6 +388,14 @@ export const STRINGS_PL = {
                 dismiss: 'aby anulować'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Szukaj szablonów...',
+            instructions: {
+                navigate: 'aby nawigować',
+                select: 'aby wybrać szablon',
+                dismiss: 'aby anulować'
+            }
+        },
         navigationBanner: {
             placeholder: 'Wyszukaj obrazy...',
             instructions: {
@@ -990,15 +998,21 @@ export const STRINGS_PL = {
             },
             calendarCustomRootFolder: {
                 name: 'Folder główny',
-                desc: 'Folder bazowy dla notatek okresowych. Zmienia się z wybranym profilem skarbca.',
+                desc: 'Folder bazowy dla notatek okresowych. Wzorce dat mogą zawierać podfoldery. Zmienia się z wybranym profilem skarbca.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Lokalizacja folderu szablonów',
+                desc: 'Wybór pliku szablonu pokazuje notatki z tego folderu.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Notatki dzienne',
-                desc: 'Formatuj ścieżkę używając formatu daty Moment.',
+                desc: 'Formatuj ścieżkę używając formatu daty Moment. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon.',
                 momentDescPrefix: 'Formatuj ścieżkę używając ',
                 momentLinkText: 'formatu daty Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Aktualna składnia: {path}',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełną datę (rok, miesiąc, dzień).'
@@ -1018,6 +1032,9 @@ export const STRINGS_PL = {
             calendarCustomYearPattern: {
                 name: 'Notatki roczne',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełny rok (rok).'
+            },
+            calendarTemplateFile: {
+                current: 'Plik szablonu: {name}'
             },
             showTooltips: {
                 name: 'Pokaż podpowiedzi',

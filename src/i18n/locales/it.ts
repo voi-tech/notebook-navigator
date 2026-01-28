@@ -387,6 +387,14 @@ export const STRINGS_IT = {
                 dismiss: 'per chiudere'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Cerca modelli...',
+            instructions: {
+                navigate: 'per navigare',
+                select: 'per selezionare il modello',
+                dismiss: 'per chiudere'
+            }
+        },
         navigationBanner: {
             placeholder: 'Cerca immagini...',
             instructions: {
@@ -988,15 +996,21 @@ export const STRINGS_IT = {
             },
             calendarCustomRootFolder: {
                 name: 'Cartella radice',
-                desc: 'Cartella base per le note periodiche. Cambia con il profilo del vault selezionato.',
+                desc: 'Cartella base per le note periodiche. I pattern di data possono includere sottocartelle. Cambia con il profilo del vault selezionato.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Posizione cartella modelli',
+                desc: 'Il selettore file modello mostra le note da questa cartella.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Note giornaliere',
-                desc: 'Formatta percorso usando formato data Moment.',
+                desc: "Formatta percorso usando formato data Moment. Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello.",
                 momentDescPrefix: 'Formatta percorso usando ',
                 momentLinkText: 'formato data Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    ". Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello.",
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintassi attuale: {path}',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come una data completa (anno, mese, giorno).'
@@ -1017,6 +1031,9 @@ export const STRINGS_IT = {
             calendarCustomYearPattern: {
                 name: 'Note annuali',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come un anno completo (anno).'
+            },
+            calendarTemplateFile: {
+                current: 'File modello: {name}'
             },
             showTooltips: {
                 name: 'Mostra tooltip',

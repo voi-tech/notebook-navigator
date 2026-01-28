@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { DropdownComponent, Setting } from 'obsidian';
+import { DropdownComponent, ExtraButtonComponent, Setting } from 'obsidian';
 import { getCurrentLanguage, strings } from '../../i18n';
 import { isCalendarPlacement, isCalendarWeekendDays, type CalendarWeeksToShow } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
@@ -43,6 +43,9 @@ import { createSettingGroupFactory } from '../settingGroups';
 import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { createSubSettingsContainer, setElementVisible } from '../subSettings';
 import { getMomentApi } from '../../utils/moment';
+import { runAsyncAction } from '../../utils/async';
+import { CalendarTemplateModal } from '../../modals/CalendarTemplateModal';
+import { FolderPathInputSuggest } from '../../suggest/FolderPathInputSuggest';
 
 const CALENDAR_LOCALE_SYSTEM_DEFAULT = 'system-default';
 
@@ -262,6 +265,23 @@ export function renderCalendarTab(context: SettingsTabContext): void {
     calendarCustomRootFolderSetting.controlEl.addClass('nn-setting-wide-input');
     const calendarCustomRootFolderInputEl = calendarCustomRootFolderSetting.controlEl.querySelector<HTMLInputElement>('input');
 
+    const calendarTemplateFolderSetting = createDebouncedTextSetting(
+        customCalendarSettingsEl,
+        strings.settings.items.calendarTemplateFolder.name,
+        strings.settings.items.calendarTemplateFolder.desc,
+        strings.settings.items.calendarTemplateFolder.placeholder,
+        () => normalizeCalendarCustomRootFolder(plugin.settings.calendarTemplateFolder),
+        value => {
+            plugin.settings.calendarTemplateFolder = normalizeCalendarCustomRootFolder(value);
+        }
+    );
+    calendarTemplateFolderSetting.controlEl.addClass('nn-setting-wide-input');
+    const calendarTemplateFolderInputEl = calendarTemplateFolderSetting.controlEl.querySelector<HTMLInputElement>('input');
+    if (calendarTemplateFolderInputEl) {
+        const folderSuggest = new FolderPathInputSuggest(context.app, calendarTemplateFolderInputEl);
+        calendarTemplateFolderInputEl.addEventListener('click', () => folderSuggest.open());
+    }
+
     const currentLanguage = String(getCurrentLanguage() ?? '').toLowerCase();
     const renderMomentPatternDescription = (container: HTMLElement): void => {
         if (currentLanguage === 'en' || currentLanguage.startsWith('en-')) {
@@ -280,13 +300,29 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         container.createDiv({ text: strings.settings.items.calendarCustomFilePattern.desc });
     };
 
+    /** UI elements and state for a calendar pattern setting with template support. */
+    interface CalendarCustomPatternSetting {
+        setting: Setting;
+        descEl: HTMLElement;
+        exampleEl: HTMLElement;
+        exampleTextEl: HTMLElement;
+        templateEl: HTMLElement;
+        templateTextEl: HTMLElement;
+        templateButton: ExtraButtonComponent | null;
+        inputEl: HTMLInputElement | null;
+        getTemplatePath: () => string | null;
+    }
+
+    /** Creates a calendar pattern setting with template picker button and preview elements. */
     const createCalendarCustomPatternSetting = (params: {
         name: string;
         placeholder: string;
         getValue: () => string;
         setValue: (value: string) => void;
+        getTemplatePath: () => string | null;
+        setTemplatePath: (value: string | null) => void;
         onAfterUpdate?: () => void;
-    }) => {
+    }): CalendarCustomPatternSetting => {
         const setting = createDebouncedTextSetting(
             customCalendarSettingsEl,
             params.name,
@@ -301,13 +337,48 @@ export function renderCalendarTab(context: SettingsTabContext): void {
 
         const descEl = setting.descEl;
         descEl.empty();
-        renderMomentPatternDescription(descEl);
 
         const exampleEl = descEl.createDiv({ cls: 'nn-setting-calendar-pattern-example nn-setting-hidden' });
         const exampleTextEl = exampleEl.createSpan({ cls: 'nn-setting-calendar-pattern-example-text' });
+        const templateEl = descEl.createDiv({ cls: 'nn-setting-calendar-template-file nn-setting-hidden' });
+        const templateTextEl = templateEl.createSpan({ cls: 'nn-setting-calendar-pattern-example-text' });
         const inputEl = setting.controlEl.querySelector<HTMLInputElement>('input');
 
-        return { setting, descEl, exampleEl, exampleTextEl, inputEl };
+        // Template picker button: clears template if set, otherwise opens template selection modal
+        let templateButton: ExtraButtonComponent | null = null;
+        setting.addExtraButton(button => {
+            templateButton = button;
+            button.onClick(() => {
+                const templatePath = params.getTemplatePath();
+                if (templatePath) {
+                    runAsyncAction(async () => {
+                        params.setTemplatePath(null);
+                        renderCalendarIntegrationVisibility();
+                        await plugin.saveSettingsAndUpdate();
+                    });
+                    return;
+                }
+
+                const templateFolder = plugin.settings.calendarTemplateFolder;
+                new CalendarTemplateModal(context.app, templateFolder, async file => {
+                    params.setTemplatePath(file.path);
+                    renderCalendarIntegrationVisibility();
+                    await plugin.saveSettingsAndUpdate();
+                }).open();
+            });
+        });
+
+        return {
+            setting,
+            descEl,
+            exampleEl,
+            exampleTextEl,
+            templateEl,
+            templateTextEl,
+            templateButton,
+            inputEl,
+            getTemplatePath: params.getTemplatePath
+        };
     };
 
     const calendarCustomFilePattern = createCalendarCustomPatternSetting({
@@ -316,6 +387,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         getValue: () => normalizeCalendarCustomFilePattern(plugin.settings.calendarCustomFilePattern),
         setValue: value => {
             plugin.settings.calendarCustomFilePattern = normalizeCalendarCustomFilePattern(value);
+        },
+        getTemplatePath: () => plugin.settings.calendarCustomFileTemplate,
+        setTemplatePath: value => {
+            plugin.settings.calendarCustomFileTemplate = value;
         },
         onAfterUpdate: () => renderCalendarIntegrationVisibility()
     });
@@ -331,6 +406,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         setValue: value => {
             plugin.settings.calendarCustomWeekPattern = normalizeCalendarCustomFilePattern(value, '');
         },
+        getTemplatePath: () => plugin.settings.calendarCustomWeekTemplate,
+        setTemplatePath: value => {
+            plugin.settings.calendarCustomWeekTemplate = value;
+        },
         onAfterUpdate: () => renderCalendarCustomPatternPreviews()
     });
 
@@ -344,6 +423,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         getValue: () => normalizeCalendarCustomFilePattern(plugin.settings.calendarCustomMonthPattern, ''),
         setValue: value => {
             plugin.settings.calendarCustomMonthPattern = normalizeCalendarCustomFilePattern(value, '');
+        },
+        getTemplatePath: () => plugin.settings.calendarCustomMonthTemplate,
+        setTemplatePath: value => {
+            plugin.settings.calendarCustomMonthTemplate = value;
         },
         onAfterUpdate: () => renderCalendarCustomPatternPreviews()
     });
@@ -359,6 +442,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         setValue: value => {
             plugin.settings.calendarCustomQuarterPattern = normalizeCalendarCustomFilePattern(value, '');
         },
+        getTemplatePath: () => plugin.settings.calendarCustomQuarterTemplate,
+        setTemplatePath: value => {
+            plugin.settings.calendarCustomQuarterTemplate = value;
+        },
         onAfterUpdate: () => renderCalendarCustomPatternPreviews()
     });
 
@@ -373,6 +460,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         setValue: value => {
             plugin.settings.calendarCustomYearPattern = normalizeCalendarCustomFilePattern(value, '');
         },
+        getTemplatePath: () => plugin.settings.calendarCustomYearTemplate,
+        setTemplatePath: value => {
+            plugin.settings.calendarCustomYearTemplate = value;
+        },
         onAfterUpdate: () => renderCalendarCustomPatternPreviews()
     });
 
@@ -380,8 +471,48 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         cls: 'setting-item-description nn-setting-hidden nn-setting-warning'
     });
 
+    const calendarCustomPatternInfoSetting = new Setting(customCalendarSettingsEl).setName('').setDesc('');
+    calendarCustomPatternInfoSetting.settingEl.addClass('nn-setting-info-container');
+    calendarCustomPatternInfoSetting.settingEl.addClass('nn-setting-info-centered');
+    calendarCustomPatternInfoSetting.descEl.empty();
+    renderMomentPatternDescription(calendarCustomPatternInfoSetting.descEl);
+
     // Read current input values while typing; the setting values are updated via debounced callbacks.
     const getInputValue = (element: HTMLInputElement | null, fallback: string): string => element?.value ?? fallback;
+
+    const templateTargets = [
+        calendarCustomFilePattern,
+        calendarCustomWeekPattern,
+        calendarCustomMonthPattern,
+        calendarCustomQuarterPattern,
+        calendarCustomYearPattern
+    ] as const;
+
+    /** Extracts the filename from a full file path. */
+    const getTemplateFileName = (value: string): string => {
+        const parts = value.split('/').filter(Boolean);
+        return parts.length > 0 ? parts[parts.length - 1] : value;
+    };
+
+    /** Updates template button icons and displays selected template filenames. */
+    const renderCalendarTemplateIndicators = (): void => {
+        templateTargets.forEach(target => {
+            const templatePath = target.getTemplatePath();
+            const hasTemplate = Boolean(templatePath);
+            // Icon reflects the button action: add template vs clear template.
+            target.templateButton?.setIcon(hasTemplate ? 'file-x' : 'file-plus');
+
+            if (!templatePath) {
+                target.templateTextEl.setText('');
+                setElementVisible(target.templateEl, false);
+                return;
+            }
+
+            const templateName = getTemplateFileName(templatePath);
+            target.templateTextEl.setText(strings.settings.items.calendarTemplateFile.current.replace('{name}', templateName));
+            setElementVisible(target.templateEl, true);
+        });
+    };
 
     /** Updates the preview paths shown under the custom calendar pattern settings */
     const renderCalendarCustomPatternPreviews = (): void => {
@@ -470,6 +601,10 @@ export function renderCalendarTab(context: SettingsTabContext): void {
             calendarCustomRootFolderInputEl.value = activeProfile.periodicNotesFolder;
         }
 
+        if (calendarTemplateFolderInputEl && document.activeElement !== calendarTemplateFolderInputEl) {
+            calendarTemplateFolderInputEl.value = plugin.settings.calendarTemplateFolder;
+        }
+
         const setAllErrorsHidden = () => {
             setElementVisible(calendarCustomFilePatternErrorEl, false);
             setElementVisible(calendarCustomWeekPatternErrorEl, false);
@@ -526,6 +661,7 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         setElementVisible(calendarCustomYearPatternErrorEl, showYearError);
 
         renderCalendarCustomPatternPreviews();
+        renderCalendarTemplateIndicators();
     };
 
     const previewInputs = [

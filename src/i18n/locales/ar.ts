@@ -387,6 +387,14 @@ export const STRINGS_AR = {
                 dismiss: 'للإغلاق'
             }
         },
+        calendarTemplate: {
+            placeholder: 'البحث عن القوالب...',
+            instructions: {
+                navigate: 'للتنقل',
+                select: 'لتحديد القالب',
+                dismiss: 'للإغلاق'
+            }
+        },
         navigationBanner: {
             placeholder: 'البحث عن صور...',
             instructions: {
@@ -988,15 +996,20 @@ export const STRINGS_AR = {
             },
             calendarCustomRootFolder: {
                 name: 'المجلد الجذر',
-                desc: 'المجلد الأساسي للملاحظات الدورية. يتغير مع ملف تعريف الخزنة المحدد.',
+                desc: 'المجلد الأساسي للملاحظات الدورية. يمكن أن تتضمن أنماط التاريخ مجلدات فرعية. يتغير مع ملف تعريف الخزنة المحدد.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'موقع مجلد القوالب',
+                desc: 'يعرض منتقي ملفات القوالب الملاحظات من هذا المجلد.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'الملاحظات اليومية',
-                desc: 'تنسيق المسار باستخدام تنسيق تاريخ Moment.',
+                desc: 'تنسيق المسار باستخدام تنسيق تاريخ Moment. ضع أسماء المجلدات الفرعية بين أقواس معقوفة، مثال [Work]/YYYY. انقر على أيقونة القالب لتعيين قالب.',
                 momentDescPrefix: 'تنسيق المسار باستخدام ',
                 momentLinkText: 'تنسيق تاريخ Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix: '. ضع أسماء المجلدات الفرعية بين أقواس معقوفة، مثال [Work]/YYYY. انقر على أيقونة القالب لتعيين قالب.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'الصيغة الحالية: {path}',
                 parsingError: 'يجب أن يقوم النمط بتنسيق التاريخ ثم تحليله مرة أخرى كتاريخ كامل (السنة، الشهر، اليوم).'
@@ -1016,6 +1029,9 @@ export const STRINGS_AR = {
             calendarCustomYearPattern: {
                 name: 'الملاحظات السنوية',
                 parsingError: 'يجب أن يقوم النمط بتنسيق السنة ثم تحليلها مرة أخرى كسنة كاملة (السنة).'
+            },
+            calendarTemplateFile: {
+                current: 'ملف القالب: {name}'
             },
             showTooltips: {
                 name: 'إظهار التلميحات',

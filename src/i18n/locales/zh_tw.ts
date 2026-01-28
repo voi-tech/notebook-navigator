@@ -387,6 +387,14 @@ export const STRINGS_ZH_TW = {
                 dismiss: '取消'
             }
         },
+        calendarTemplate: {
+            placeholder: '搜尋範本...',
+            instructions: {
+                navigate: '導覽',
+                select: '選擇範本',
+                dismiss: '取消'
+            }
+        },
         navigationBanner: {
             placeholder: '搜尋圖片...',
             instructions: {
@@ -986,15 +994,20 @@ export const STRINGS_ZH_TW = {
             },
             calendarCustomRootFolder: {
                 name: '根資料夾',
-                desc: '週期筆記的基礎資料夾。隨所選儲存庫設定檔更改。',
+                desc: '週期筆記的基礎資料夾。日期模式可以包含子資料夾。隨所選儲存庫設定檔更改。',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: '範本資料夾位置',
+                desc: '範本檔案選擇器顯示此資料夾中的筆記。',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: '日記',
-                desc: '使用 Moment 日期格式設定路徑。',
+                desc: '使用 Moment 日期格式設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。',
                 momentDescPrefix: '使用 ',
                 momentLinkText: 'Moment 日期格式',
-                momentDescSuffix: ' 設定路徑。',
+                momentDescSuffix: ' 設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '目前語法：{path}',
                 parsingError: '模式必須能格式化並重新解析為完整日期（年、月、日）。'
@@ -1014,6 +1027,9 @@ export const STRINGS_ZH_TW = {
             calendarCustomYearPattern: {
                 name: '年記',
                 parsingError: '模式必須能格式化並重新解析為完整年份（年）。'
+            },
+            calendarTemplateFile: {
+                current: '範本檔案：{name}'
             },
             showTooltips: {
                 name: '顯示工具提示',

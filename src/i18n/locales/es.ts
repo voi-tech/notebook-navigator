@@ -387,6 +387,14 @@ export const STRINGS_ES = {
                 dismiss: 'para cancelar'
             }
         },
+        calendarTemplate: {
+            placeholder: 'Buscar plantillas...',
+            instructions: {
+                navigate: 'para navegar',
+                select: 'para seleccionar la plantilla',
+                dismiss: 'para cancelar'
+            }
+        },
         navigationBanner: {
             placeholder: 'Buscar imágenes...',
             instructions: {
@@ -989,15 +997,21 @@ export const STRINGS_ES = {
             },
             calendarCustomRootFolder: {
                 name: 'Carpeta raíz',
-                desc: 'Carpeta base para notas periódicas. Cambia con el perfil de bóveda seleccionado.',
+                desc: 'Carpeta base para notas periódicas. Los patrones de fecha pueden incluir subcarpetas. Cambia con el perfil de bóveda seleccionado.',
                 placeholder: 'Personal/Diary'
+            },
+            calendarTemplateFolder: {
+                name: 'Ubicación de carpeta de plantillas',
+                desc: 'El selector de archivos de plantilla muestra notas de esta carpeta.',
+                placeholder: 'Templates'
             },
             calendarCustomFilePattern: {
                 name: 'Notas diarias',
-                desc: 'Formatear ruta usando formato de fecha de Moment.',
+                desc: 'Formatear ruta usando formato de fecha de Moment. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla.',
                 momentDescPrefix: 'Formatear ruta usando ',
                 momentLinkText: 'formato de fecha Moment',
-                momentDescSuffix: '.',
+                momentDescSuffix:
+                    '. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaxis actual: {path}',
                 parsingError: 'El patrón debe formatear y volver a analizarse como una fecha completa (año, mes, día).'
@@ -1017,6 +1031,9 @@ export const STRINGS_ES = {
             calendarCustomYearPattern: {
                 name: 'Notas anuales',
                 parsingError: 'El patrón debe formatear y volver a analizarse como un año completo (año).'
+            },
+            calendarTemplateFile: {
+                current: 'Archivo de plantilla: {name}'
             },
             showTooltips: {
                 name: 'Mostrar tooltips',
