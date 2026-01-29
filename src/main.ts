@@ -1266,11 +1266,20 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     }
 
     public setCalendarPlacement(placement: CalendarPlacement): void {
+        const previousPlacement = this.settings.calendarPlacement;
+        if (previousPlacement === placement) {
+            return;
+        }
+
         this.updateSettingAndMirrorToLocalStorage({
             settingId: 'calendarPlacement',
             localStorageKey: this.keys.calendarPlacementKey,
             nextValue: placement
         });
+
+        if (previousPlacement === 'right-sidebar' && placement === 'left-sidebar') {
+            this.setShowCalendar(true);
+        }
     }
 
     /**

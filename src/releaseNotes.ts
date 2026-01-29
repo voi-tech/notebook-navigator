@@ -82,7 +82,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Calendar periodic notes can now use template files (daily, weekly, monthly, quarterly, yearly). Configure templates in Settings > Calendar.'
         ],
         improved: ['Weekly periodic note patterns now accept nested year/quarter/month/week folder paths.'],
-        changed: ['Due to issues with React native, scrollbars and multiple themes, UI panels are no longer shown with transparency in front of the list scrollers.'],
+        changed: [
+            'Due to issues with React native, scrollbars and multiple themes, UI panels are no longer shown with transparency in front of the list scrollers.'
+        ],
         fixed: []
     },
     {
