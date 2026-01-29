@@ -658,9 +658,10 @@ export class FeatureImageContentProvider extends BaseContentProvider {
 
             // Fallback decoding loads the full image into memory, so apply stricter limits.
             if (pixelCount > maxFallbackPixels) {
+                const fallbackReason = typeof createImageBitmap === 'undefined' ? 'createImageBitmap unavailable' : 'resize bitmap failed';
                 this.thumbnailRuntime.logOnce(
                     `featureImage-fallback-skip:${effectiveMimeType}:${codedDimensions.width}x${codedDimensions.height}:${source}`,
-                    `[${source}] Skipping ${effectiveMimeType} (${codedDimensions.width}x${codedDimensions.height}) - thumbnail decode fallback disabled for large images`
+                    `[${source}] Skipping ${effectiveMimeType} (${codedDimensions.width}x${codedDimensions.height}, ${pixelCount} px) - ${fallbackReason}; fallback decode capped at ${maxFallbackPixels} px`
                 );
                 return null;
             }
