@@ -207,6 +207,19 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
+        id: nn-calendar-right-sidebar-date-placement
+        title: Right sidebar date placement
+        description: Position of day numbers in the right sidebar calendar.
+        type: variable-select
+        default: flex-end
+        options:
+          -
+            label: Bottom right
+            value: flex-end
+          -
+            label: Centered
+            value: center
+    -
         id: nn-nav-pane-heading
         title: Navigation pane (folders, tags, shortcuts)
         description: Customize the background and items within the navigation pane.

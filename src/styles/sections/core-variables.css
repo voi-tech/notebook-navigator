@@ -175,6 +175,7 @@ body {
     --nn-theme-calendar-day-today-color: var(--nn-theme-calendar-day-has-note-color);
     --nn-theme-calendar-day-today-bg: var(--color-red);
     --nn-theme-calendar-day-today-accent: var(--color-red);
+    --nn-calendar-right-sidebar-date-placement: flex-end;
 
     /* -- Folder & Tag Items -- */
     --nn-theme-navitem-chevron-color: var(--nn-theme-foreground-muted);

@@ -202,6 +202,7 @@ body {
     --nn-theme-calendar-day-today-color: var(--nn-theme-calendar-day-has-note-color);
     --nn-theme-calendar-day-today-bg: var(--color-red);
     --nn-theme-calendar-day-today-accent: var(--color-red);
+    --nn-calendar-right-sidebar-date-placement: flex-end;
 
     /* -- Folder & Tag Items -- */
     --nn-theme-navitem-chevron-color: var(--nn-theme-foreground-muted);
@@ -2964,9 +2965,9 @@ body {
     aspect-ratio: 1 / 1;
     border-radius: 0;
     border: none !important;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 0 !important;
+    align-items: var(--nn-calendar-right-sidebar-date-placement, flex-end);
+    justify-content: var(--nn-calendar-right-sidebar-date-placement, flex-end);
+    padding: 4px !important;
     border-top: 1px solid var(--background-modifier-border) !important;
     border-left: 1px solid var(--background-modifier-border) !important;
 }
@@ -2991,8 +2992,7 @@ body {
 
 .nn-calendar-right-sidebar .nn-navigation-calendar[data-layout='panel'] .nn-navigation-calendar-day-number {
     font-weight: 400;
-    padding-right: 4px;
-    padding-bottom: 4px;
+    padding: 0;
 }
 
 .nn-calendar-right-sidebar
@@ -7207,6 +7207,19 @@ settings:
         format: hex
         default-light: '#'
         default-dark: '#'
+    -
+        id: nn-calendar-right-sidebar-date-placement
+        title: Right sidebar date placement
+        description: Position of day numbers in the right sidebar calendar.
+        type: variable-select
+        default: flex-end
+        options:
+          -
+            label: Bottom right
+            value: flex-end
+          -
+            label: Centered
+            value: center
     -
         id: nn-nav-pane-heading
         title: Navigation pane (folders, tags, shortcuts)
