@@ -79,8 +79,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-01-30',
         showOnUpdate: true,
         new: [
-            '--Periodic notes can now use template files-- (daily, weekly, monthly, quarterly, yearly). Configure templates in Settings > Calendar.',
-            'New iOS / iPadOS setting: Settings > General > --Use floating toolbars-- on iOS/iPadOS. Default enabled. Disable to use fixed toolbars on iOS/iPadOS.'
+            '==Periodic notes can now use template files== (daily, weekly, monthly, quarterly, yearly). Configure templates in Settings > Calendar.',
+            'New iOS / iPadOS setting: Settings > General > ==Use floating toolbars== on iOS/iPadOS. Default enabled. Disable to use fixed toolbars on iOS/iPadOS.',
+            'New Style setting: Calendar > ==Right sidebar date placement==. You can choose to show dates in the calendar in the right sidepane bottom right (default) or centered.'
         ],
         improved: [
             'Weekly periodic note patterns now accept nested year/quarter/month/week folder paths.',
