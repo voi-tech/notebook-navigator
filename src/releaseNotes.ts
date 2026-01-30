@@ -85,7 +85,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         changed: [
             'Due to issues with React native, scrollbars and multiple themes, UI panels are no longer shown with transparency in front of the list scrollers.'
         ],
-        fixed: []
+        fixed: ['Fixed some customized user icons were not applying consistently to all UI elements.']
     },
     {
         version: '2.2.0',

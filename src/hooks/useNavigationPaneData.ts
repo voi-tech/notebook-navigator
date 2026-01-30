@@ -189,7 +189,7 @@ function decorateNavigationItems(
             const tagColorData = metadataService.getTagColorData(item.tagPath);
             return {
                 ...item,
-                icon: metadataService.getTagIcon(item.tagPath) || 'lucide-tags',
+                icon: metadataService.getTagIcon(item.tagPath) || resolveUXIcon(settings.interfaceIcons, 'nav-tag'),
                 color: tagColorData.color,
                 backgroundColor: tagColorData.background
             };
@@ -588,7 +588,7 @@ export function useNavigationPaneData({
         if (visibleTagTree.size === 0) {
             if (settings.showAllTagsFolder) {
                 const folderId = 'tags-root';
-                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags', {
+                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: shouldIncludeUntagged,
                     showFileCount: settings.showNoteCount,
@@ -684,7 +684,7 @@ export function useNavigationPaneData({
         if (settings.showAllTagsFolder) {
             if (hasContent) {
                 const folderId = 'tags-root';
-                addVirtualFolder(folderId, strings.tagList.tags, 'lucide-tags', {
+                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: tagsVirtualFolderHasChildren,
                     showFileCount: settings.showNoteCount,
@@ -729,6 +729,7 @@ export function useNavigationPaneData({
     }, [
         settings.showTags,
         settings.showAllTagsFolder,
+        settings.interfaceIcons,
         showHiddenItems,
         settings.showUntagged,
         hiddenTagMatcher,
