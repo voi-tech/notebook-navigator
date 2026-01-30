@@ -559,9 +559,9 @@ export function renderGeneralTab(context: SettingsTabContext): void {
 
     addSettingSyncModeToggle({ setting: paneTransitionSetting, plugin, settingId: 'paneTransitionDuration' });
 
-    const keyboardNavigationGroup = createGroup(strings.settings.groups.general.keyboardNavigation);
-
     if (!Platform.isMobile) {
+        const keyboardNavigationGroup = createGroup(strings.settings.groups.general.keyboardNavigation);
+
         keyboardNavigationGroup.addSetting(setting => {
             setting
                 .setName(strings.settings.items.multiSelectModifier.name)
@@ -577,59 +577,59 @@ export function renderGeneralTab(context: SettingsTabContext): void {
                         })
                 );
         });
+
+        const enterToOpenSetting = keyboardNavigationGroup.addSetting(setting => {
+            setting.setName(strings.settings.items.enterToOpenFiles.name).setDesc(strings.settings.items.enterToOpenFiles.desc);
+        });
+
+        const enterToOpenSettingsEl = wireToggleSettingWithSubSettings(
+            enterToOpenSetting,
+            () => plugin.settings.enterToOpenFiles,
+            async value => {
+                plugin.settings.enterToOpenFiles = value;
+                await plugin.saveSettingsAndUpdate();
+            }
+        );
+
+        const normalizeOpenContext = (value: string): FileOpenContext => {
+            if (value === 'split' || value === 'window') {
+                return value;
+            }
+            return 'tab';
+        };
+
+        new Setting(enterToOpenSettingsEl)
+            .setName(strings.settings.items.shiftEnterOpenContext.name)
+            .setDesc(strings.settings.items.shiftEnterOpenContext.desc)
+            .addDropdown(dropdown =>
+                dropdown
+                    .addOption('tab', strings.contextMenu.file.openInNewTab)
+                    .addOption('split', strings.contextMenu.file.openToRight)
+                    .addOption('window', strings.contextMenu.file.openInNewWindow)
+                    .setValue(plugin.settings.shiftEnterOpenContext)
+                    .onChange(async value => {
+                        plugin.settings.shiftEnterOpenContext = normalizeOpenContext(value);
+                        await plugin.saveSettingsAndUpdate();
+                    })
+            );
+
+        const cmdCtrlStrings = Platform.isMacOS ? strings.settings.items.cmdEnterOpenContext : strings.settings.items.ctrlEnterOpenContext;
+
+        new Setting(enterToOpenSettingsEl)
+            .setName(cmdCtrlStrings.name)
+            .setDesc(cmdCtrlStrings.desc)
+            .addDropdown(dropdown =>
+                dropdown
+                    .addOption('tab', strings.contextMenu.file.openInNewTab)
+                    .addOption('split', strings.contextMenu.file.openToRight)
+                    .addOption('window', strings.contextMenu.file.openInNewWindow)
+                    .setValue(plugin.settings.cmdCtrlEnterOpenContext)
+                    .onChange(async value => {
+                        plugin.settings.cmdCtrlEnterOpenContext = normalizeOpenContext(value);
+                        await plugin.saveSettingsAndUpdate();
+                    })
+            );
     }
-
-    const enterToOpenSetting = keyboardNavigationGroup.addSetting(setting => {
-        setting.setName(strings.settings.items.enterToOpenFiles.name).setDesc(strings.settings.items.enterToOpenFiles.desc);
-    });
-
-    const enterToOpenSettingsEl = wireToggleSettingWithSubSettings(
-        enterToOpenSetting,
-        () => plugin.settings.enterToOpenFiles,
-        async value => {
-            plugin.settings.enterToOpenFiles = value;
-            await plugin.saveSettingsAndUpdate();
-        }
-    );
-
-    const normalizeOpenContext = (value: string): FileOpenContext => {
-        if (value === 'split' || value === 'window') {
-            return value;
-        }
-        return 'tab';
-    };
-
-    new Setting(enterToOpenSettingsEl)
-        .setName(strings.settings.items.shiftEnterOpenContext.name)
-        .setDesc(strings.settings.items.shiftEnterOpenContext.desc)
-        .addDropdown(dropdown =>
-            dropdown
-                .addOption('tab', strings.contextMenu.file.openInNewTab)
-                .addOption('split', strings.contextMenu.file.openToRight)
-                .addOption('window', strings.contextMenu.file.openInNewWindow)
-                .setValue(plugin.settings.shiftEnterOpenContext)
-                .onChange(async value => {
-                    plugin.settings.shiftEnterOpenContext = normalizeOpenContext(value);
-                    await plugin.saveSettingsAndUpdate();
-                })
-        );
-
-    const cmdCtrlStrings = Platform.isMacOS ? strings.settings.items.cmdEnterOpenContext : strings.settings.items.ctrlEnterOpenContext;
-
-    new Setting(enterToOpenSettingsEl)
-        .setName(cmdCtrlStrings.name)
-        .setDesc(cmdCtrlStrings.desc)
-        .addDropdown(dropdown =>
-            dropdown
-                .addOption('tab', strings.contextMenu.file.openInNewTab)
-                .addOption('split', strings.contextMenu.file.openToRight)
-                .addOption('window', strings.contextMenu.file.openInNewWindow)
-                .setValue(plugin.settings.cmdCtrlEnterOpenContext)
-                .onChange(async value => {
-                    plugin.settings.cmdCtrlEnterOpenContext = normalizeOpenContext(value);
-                    await plugin.saveSettingsAndUpdate();
-                })
-        );
 
     if (!Platform.isMobile) {
         const desktopAppearanceGroup = createGroup(strings.settings.groups.general.desktopAppearance);
