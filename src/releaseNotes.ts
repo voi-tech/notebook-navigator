@@ -89,7 +89,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Folders and tags now show tooltips for truncated names on desktop devices, similar to how shortcuts and recent files works.'
         ],
         changed: [
-            'Due to issues with React native, scrollbar positioning and multiple themes, **the UI panels are no longer shown with transparency** in front of the list scrollers.'
+            'Due to issues with React native, scrollbar positioning and multiple themes, ==the UI panels are no longer shown with transparency== in front of the list scrollers. Notebook Navigator now again works fine with themes like Baseline and Cupertino.'
         ],
         fixed: [
             'Fixed an issue where some customized user icons were not applying consistently to all UI elements.',
