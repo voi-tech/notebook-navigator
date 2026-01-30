@@ -515,7 +515,11 @@
 
 .nn-calendar-right-sidebar {
     overflow: auto;
-    --nn-theme-list-bg: var(--nn-theme-mobile-bg);
+    background-color: var(--background-primary);
+}
+
+.is-mobile .nn-calendar-right-sidebar {
+    background-color: var(--mobile-sidebar-background);
 }
 
 .nn-calendar-right-sidebar-content {

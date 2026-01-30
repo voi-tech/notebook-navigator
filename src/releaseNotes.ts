@@ -81,13 +81,17 @@ const RELEASE_NOTES: ReleaseNote[] = [
         new: [
             'Calendar periodic notes can now use template files (daily, weekly, monthly, quarterly, yearly). Configure templates in Settings > Calendar.'
         ],
-        improved: ['Weekly periodic note patterns now accept nested year/quarter/month/week folder paths.'],
+        improved: ['Weekly periodic note patterns now accept nested year/quarter/month/week folder paths.',
+            'Greatly improved keyboard performance in list pane when scrolling through large lists by holding the UP or DOWN key.'
+        ],
         changed: [
             'Due to issues with React native, scrollbars and multiple themes, UI panels are no longer shown with transparency in front of the list scrollers.'
         ],
         fixed: [
             'Fixed an issue where some customized user icons were not applying consistently to all UI elements.',
-            'Increased image size limit on mobile devices for feature image thumbnails from 15 MB to 50 MB.']
+            'Increased image size limit on mobile devices for feature image thumbnails from 15 MB to 50 MB.',
+            'Right sidebar now properly sets background color to --background-primary on desktop for theme support.'
+        ]
     },
     {
         version: '2.2.0',
