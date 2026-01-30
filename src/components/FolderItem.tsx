@@ -130,6 +130,8 @@ export const FolderItem = React.memo(function FolderItem({
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
     const folderRef = useRef<HTMLDivElement>(null);
+    const folderNameRef = useRef<HTMLSpanElement>(null);
+    const tooltipStateRef = useRef<string>('');
 
     const chevronRef = React.useRef<HTMLDivElement>(null);
     const iconRef = React.useRef<HTMLSpanElement>(null);
@@ -201,6 +203,7 @@ export const FolderItem = React.memo(function FolderItem({
     }, [folder, settings, noteCounts.current, vaultChangeVersion]);
 
     const isRootFolder = folder.path === '/';
+    const displayName = isRootFolder ? settings.customVaultName || app.vault.getName() : folder.name;
     const shouldShowFolderIcon = settings.showFolderIcons || isRootFolder;
 
     const dragIconId = useMemo(() => {
@@ -310,6 +313,59 @@ export const FolderItem = React.memo(function FolderItem({
         });
     }, [folder.path, folder.name, folderStats.fileCount, folderStats.folderCount, settings, isMobile]);
 
+    // Add tooltip showing the full folder name when the label is truncated (desktop only)
+    useEffect(() => {
+        const rowElement = folderRef.current;
+        const labelElement = folderNameRef.current;
+        if (!rowElement || !labelElement) {
+            return;
+        }
+
+        // Skip tooltips on mobile
+        if (isMobile) {
+            return;
+        }
+
+        // Skip truncated-name tooltips when full tooltips are enabled
+        if (settings.showTooltips) {
+            return;
+        }
+
+        const updateTooltip = () => {
+            const isTruncated = labelElement.scrollWidth > labelElement.clientWidth;
+            const tooltipText = isTruncated ? displayName : '';
+
+            if (tooltipStateRef.current === tooltipText) {
+                return;
+            }
+
+            tooltipStateRef.current = tooltipText;
+            if (tooltipText.length === 0) {
+                setTooltip(rowElement, '');
+                return;
+            }
+
+            setTooltip(rowElement, tooltipText, {
+                placement: getTooltipPlacement()
+            });
+        };
+
+        updateTooltip();
+
+        if (typeof ResizeObserver === 'undefined') {
+            return;
+        }
+
+        const observer = new ResizeObserver(() => {
+            updateTooltip();
+        });
+        observer.observe(labelElement);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [displayName, isMobile, settings.showTooltips]);
+
     useEffect(() => {
         if (chevronRef.current) {
             const iconService = getIconService();
@@ -404,8 +460,9 @@ export const FolderItem = React.memo(function FolderItem({
                     style={applyColorToName ? { color: customColor } : undefined}
                     onClick={handleNameClick}
                     onMouseDown={handleNameMouseDown}
+                    ref={folderNameRef}
                 >
-                    {isRootFolder ? settings.customVaultName || app.vault.getName() : folder.name}
+                    {displayName}
                 </span>
                 <span className="nn-navitem-spacer" />
                 {shouldDisplayCount && <span className="nn-navitem-count">{noteCountDisplay.label}</span>}
