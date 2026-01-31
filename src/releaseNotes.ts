@@ -75,6 +75,20 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.2.2',
+        date: '2026-01-31',
+        showOnUpdate: false,
+        new: [
+        ],
+        improved: [
+        ],
+        changed: [
+        ],
+        fixed: [
+            'Removed tooltips for truncated items in navigation pane since it caused performance issues. If you want to show tooltips, enable it from Settings > General > Show tooltips.'
+        ]
+    },
+    {
         version: '2.2.1',
         date: '2026-01-30',
         showOnUpdate: true,

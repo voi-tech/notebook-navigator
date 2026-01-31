@@ -50,8 +50,6 @@
  */
 
 import React, { forwardRef, useMemo, useCallback } from 'react';
-import { setTooltip } from 'obsidian';
-import { useServices } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
 import { useContextMenu } from '../hooks/useContextMenu';
@@ -59,7 +57,6 @@ import { getIconService, useIconServiceVersion } from '../services/icons';
 import { ItemType } from '../types';
 import { TagTreeNode } from '../types/storage';
 import type { NoteCountInfo } from '../types/noteCounts';
-import { getTooltipPlacement } from '../utils/domUtils';
 import { buildNoteCountDisplay } from '../utils/noteCountFormatting';
 import { buildSearchMatchContentClass } from '../utils/searchHighlight';
 import { getTotalNoteCount } from '../utils/tagTree';
@@ -127,7 +124,6 @@ export const TagTreeItem = React.memo(
         },
         ref
     ) {
-        const { isMobile } = useServices();
         const settings = useSettingsState();
         const uxPreferences = useUXPreferences();
         const includeDescendantNotes = uxPreferences.includeDescendantNotes;
@@ -135,8 +131,6 @@ export const TagTreeItem = React.memo(
         const iconRef = React.useRef<HTMLSpanElement>(null);
         const iconVersion = useIconServiceVersion();
         const itemRef = React.useRef<HTMLDivElement>(null);
-        const nameRef = React.useRef<HTMLSpanElement>(null);
-        const tooltipStateRef = React.useRef<string>('');
 
         // Compute note counts - use provided counts or calculate from tag node
         const resolvedCounts = React.useMemo<NoteCountInfo>(() => {
@@ -246,54 +240,6 @@ export const TagTreeItem = React.memo(
             }
         }, [tagIcon, settings.showTagIcons, iconVersion, settings.interfaceIcons]);
 
-        // Add tooltip showing the full tag name when the label is truncated (desktop only)
-        React.useEffect(() => {
-            const rowElement = itemRef.current;
-            const labelElement = nameRef.current;
-            if (!rowElement || !labelElement) {
-                return;
-            }
-
-            // Skip tooltips on mobile
-            if (isMobile) {
-                return;
-            }
-
-            const updateTooltip = () => {
-                const isTruncated = labelElement.scrollWidth > labelElement.clientWidth;
-                const tooltipText = isTruncated ? tagNode.name : '';
-
-                if (tooltipStateRef.current === tooltipText) {
-                    return;
-                }
-
-                tooltipStateRef.current = tooltipText;
-                if (tooltipText.length === 0) {
-                    setTooltip(rowElement, '');
-                    return;
-                }
-
-                setTooltip(rowElement, tooltipText, {
-                    placement: getTooltipPlacement()
-                });
-            };
-
-            updateTooltip();
-
-            if (typeof ResizeObserver === 'undefined') {
-                return;
-            }
-
-            const observer = new ResizeObserver(() => {
-                updateTooltip();
-            });
-            observer.observe(labelElement);
-
-            return () => {
-                observer.disconnect();
-            };
-        }, [isMobile, tagNode.name]);
-
         // Set up forwarded ref
         React.useImperativeHandle(ref, () => itemRef.current as HTMLDivElement);
 
@@ -349,7 +295,7 @@ export const TagTreeItem = React.memo(
                     {settings.showTagIcons && (
                         <span className="nn-navitem-icon" ref={iconRef} style={tagColor ? { color: tagColor } : undefined} />
                     )}
-                    <span className={tagNameClassName} style={applyColorToName ? { color: tagColor } : undefined} ref={nameRef}>
+                    <span className={tagNameClassName} style={applyColorToName ? { color: tagColor } : undefined}>
                         {tagNode.name}
                     </span>
                     <span className="nn-navitem-spacer" />
