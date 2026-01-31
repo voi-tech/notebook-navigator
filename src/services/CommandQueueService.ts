@@ -19,6 +19,8 @@
 import { App, TFile, TFolder } from 'obsidian';
 import type { PaneType } from 'obsidian';
 
+const RECENT_BACKGROUND_OPEN_MARKER_TTL_MS = 250;
+
 /**
  * Types of operations that can be tracked by the command queue
  */
@@ -130,8 +132,17 @@ export class CommandQueueService {
     private activeCounts = new Map<OperationType, number>();
     private openActiveFileQueue: Promise<void> = Promise.resolve();
     private latestOpenActiveFileOperationId: string | null = null;
+    private recentBackgroundOpenByPath = new Map<string, number>();
 
     constructor(private app: App) {}
+
+    private cleanupRecentBackgroundOpens(now: number): void {
+        for (const [path, openedAt] of this.recentBackgroundOpenByPath) {
+            if (now - openedAt > RECENT_BACKGROUND_OPEN_MARKER_TTL_MS) {
+                this.recentBackgroundOpenByPath.delete(path);
+            }
+        }
+    }
 
     /**
      * Generate a unique operation ID
@@ -261,6 +272,15 @@ export class CommandQueueService {
 
                 return operation.active === false;
             }
+        }
+
+        const now = Date.now();
+        const openedAt = this.recentBackgroundOpenByPath.get(filePath);
+        if (openedAt !== undefined) {
+            if (now - openedAt <= RECENT_BACKGROUND_OPEN_MARKER_TTL_MS) {
+                return true;
+            }
+            this.recentBackgroundOpenByPath.delete(filePath);
         }
 
         return false;
@@ -486,6 +506,11 @@ export class CommandQueueService {
 
             try {
                 await openFile();
+                if (active === false) {
+                    const now = Date.now();
+                    this.recentBackgroundOpenByPath.set(file.path, now);
+                    this.cleanupRecentBackgroundOpens(now);
+                }
                 // Clear tracking if this is still the latest
                 if (this.latestOpenActiveFileOperationId === operationId) {
                     this.latestOpenActiveFileOperationId = null;

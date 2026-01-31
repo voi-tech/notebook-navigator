@@ -16,13 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from 'obsidian';
 import { CommandQueueService } from '../../src/services/CommandQueueService';
 import { shouldSkipNavigatorAutoReveal } from '../../src/utils/autoRevealUtils';
 import { createTestTFile } from './createTestTFile';
 
 describe('shouldSkipNavigatorAutoReveal', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(0);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('skips auto-reveal for navigator preview opens (active: false)', async () => {
         const app = new App();
         const commandQueue = new CommandQueueService(app);
@@ -56,6 +65,8 @@ describe('shouldSkipNavigatorAutoReveal', () => {
             await openTask;
         }
 
+        expect(commandQueue.isOpeningActiveFileInBackground(file.path)).toBe(true);
+        vi.advanceTimersByTime(500);
         expect(commandQueue.isOpeningActiveFileInBackground(file.path)).toBe(false);
     });
 

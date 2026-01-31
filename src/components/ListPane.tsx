@@ -45,7 +45,7 @@
  */
 
 import React, { useCallback, useRef, useEffect, useImperativeHandle, forwardRef, useState, useMemo } from 'react';
-import { TFile, Platform, requireApiVersion } from 'obsidian';
+import { TFile, Platform, requireApiVersion, debounce } from 'obsidian';
 import { Virtualizer } from '@tanstack/react-virtual';
 import { useSelectionState, useSelectionDispatch, resolvePrimarySelectedFile } from '../context/SelectionContext';
 import { useServices } from '../context/ServicesContext';
@@ -106,6 +106,8 @@ export interface SelectFileOptions {
     markKeyboardNavigation?: boolean;
     /** Mark the selection as user-initiated to track explicit user actions */
     markUserSelection?: boolean;
+    /** Debounce opening the file after selection */
+    debounceOpen?: boolean;
     /** Skip opening the file after selection */
     suppressOpen?: boolean;
 }
@@ -356,6 +358,49 @@ export const ListPane = React.memo(
         // Track if the file selection is from user click vs auto-selection
         const isUserSelectionRef = useRef(false);
 
+        /**
+         * Debounced keyboard preview-open pipeline (ArrowUp/ArrowDown/PageUp/PageDown).
+         *
+         * `useListPaneKeyboard` updates selection on keydown, but opening the file is handled here so
+         * ListPane can debounce workspace leaf updates during rapid navigation.
+         *
+         * - `keyboardOpenPendingRef` tracks whether a debounced open is currently scheduled.
+         * - `keyboardOpenFileRef` stores the file that should be opened when navigation settles.
+         * - `keyboardOpenRequestIdRef` invalidates older scheduled opens when selection changes.
+         *
+         * The debouncer uses `resetTimer: true` so repeated keydown events keep pushing the open out
+         * until the user stops navigating. `commitKeyboardSelectionOpen` cancels the timer and opens
+         * immediately on keyup.
+         *
+         * Safety: if selection changes from any other path (e.g. auto-reveal), cancel pending opens
+         * so a stale debounced open cannot override the current selection.
+         */
+        const keyboardOpenPendingRef = useRef(false);
+        const keyboardOpenRequestIdRef = useRef(0);
+        const keyboardOpenFileRef = useRef<TFile | null>(null);
+
+        const debouncedOpenFileInWorkspace = useMemo(() => {
+            return debounce(
+                (file: TFile, requestId: number) => {
+                    if (requestId !== keyboardOpenRequestIdRef.current) {
+                        return;
+                    }
+
+                    keyboardOpenPendingRef.current = false;
+                    keyboardOpenFileRef.current = null;
+                    openFileInWorkspace(file);
+                },
+                TIMEOUTS.DEBOUNCE_KEYBOARD_FILE_OPEN,
+                true
+            );
+        }, [openFileInWorkspace]);
+
+        useEffect(() => {
+            return () => {
+                debouncedOpenFileInWorkspace.cancel();
+            };
+        }, [debouncedOpenFileInWorkspace]);
+
         // Keep track of the last selected file path to maintain visual selection during transitions
         const lastSelectedFilePathRef = useRef<string | null>(null);
 
@@ -383,13 +428,98 @@ export const ListPane = React.memo(
                     selectionDispatch({ type: 'SET_KEYBOARD_NAVIGATION', isKeyboardNavigation: true });
                 }
 
-                // Open file in the active leaf without moving focus
-                if (!options?.suppressOpen) {
-                    openFileInWorkspace(file);
+                if (options?.suppressOpen) {
+                    keyboardOpenRequestIdRef.current += 1;
+                    keyboardOpenPendingRef.current = false;
+                    keyboardOpenFileRef.current = null;
+                    debouncedOpenFileInWorkspace.cancel();
+                    return;
                 }
+
+                // Open file in the active leaf without moving focus
+                if (options?.debounceOpen) {
+                    keyboardOpenRequestIdRef.current += 1;
+                    const requestId = keyboardOpenRequestIdRef.current;
+                    keyboardOpenPendingRef.current = true;
+                    keyboardOpenFileRef.current = file;
+                    debouncedOpenFileInWorkspace(file, requestId);
+                    return;
+                }
+
+                keyboardOpenRequestIdRef.current += 1;
+                keyboardOpenPendingRef.current = false;
+                keyboardOpenFileRef.current = null;
+                debouncedOpenFileInWorkspace.cancel();
+                openFileInWorkspace(file);
             },
-            [selectionDispatch, openFileInWorkspace]
+            [selectionDispatch, openFileInWorkspace, debouncedOpenFileInWorkspace]
         );
+
+        const scheduleKeyboardSelectionOpen = useCallback(() => {
+            if (settings.enterToOpenFiles) {
+                return;
+            }
+
+            // Used when navigation keys are pressed but selection cannot move (e.g. at the top/bottom).
+            // This keeps the pending debounced open aligned with the current selection.
+            const primarySelectedFile = resolvePrimarySelectedFile(app, selectionState);
+            const fileToOpen = primarySelectedFile ?? keyboardOpenFileRef.current;
+            if (!fileToOpen) {
+                return;
+            }
+
+            keyboardOpenRequestIdRef.current += 1;
+            const requestId = keyboardOpenRequestIdRef.current;
+
+            keyboardOpenPendingRef.current = true;
+            keyboardOpenFileRef.current = fileToOpen;
+            debouncedOpenFileInWorkspace(fileToOpen, requestId);
+        }, [app, selectionState, settings.enterToOpenFiles, debouncedOpenFileInWorkspace]);
+
+        const commitKeyboardSelectionOpen = useCallback(() => {
+            if (settings.enterToOpenFiles) {
+                return;
+            }
+
+            if (!keyboardOpenPendingRef.current) {
+                return;
+            }
+
+            const selectedFileToOpen = keyboardOpenFileRef.current ?? resolvePrimarySelectedFile(app, selectionState);
+            if (!selectedFileToOpen) {
+                return;
+            }
+
+            keyboardOpenRequestIdRef.current += 1;
+            keyboardOpenPendingRef.current = false;
+            keyboardOpenFileRef.current = null;
+            debouncedOpenFileInWorkspace.cancel();
+            openFileInWorkspace(selectedFileToOpen);
+        }, [app, selectionState, settings.enterToOpenFiles, debouncedOpenFileInWorkspace, openFileInWorkspace]);
+
+        const primarySelectedFilePathForKeyboardOpen = useMemo(() => {
+            if (selectionState.selectedFile) {
+                return selectionState.selectedFile.path;
+            }
+            const iterator = selectionState.selectedFiles.values().next();
+            return iterator.done ? null : iterator.value;
+        }, [selectionState.selectedFile, selectionState.selectedFiles]);
+
+        useEffect(() => {
+            if (!keyboardOpenPendingRef.current) {
+                return;
+            }
+
+            const pendingFilePath = keyboardOpenFileRef.current?.path ?? null;
+            if (!pendingFilePath || pendingFilePath !== primarySelectedFilePathForKeyboardOpen) {
+                // Selection changed while a debounced open was pending.
+                // Invalidate and cancel so we don't open a file that is no longer selected.
+                keyboardOpenRequestIdRef.current += 1;
+                keyboardOpenPendingRef.current = false;
+                keyboardOpenFileRef.current = null;
+                debouncedOpenFileInWorkspace.cancel();
+            }
+        }, [primarySelectedFilePathForKeyboardOpen, debouncedOpenFileInWorkspace]);
 
         // Track render count
         const renderCountRef = useRef(0);
@@ -1017,7 +1147,14 @@ export const ListPane = React.memo(
             pathToIndex: filePathToIndex,
             files,
             fileIndexMap,
-            onSelectFile: file => selectFileFromList(file, { markKeyboardNavigation: true, suppressOpen: settings.enterToOpenFiles })
+            onSelectFile: (file, options) =>
+                selectFileFromList(file, {
+                    markKeyboardNavigation: true,
+                    suppressOpen: settings.enterToOpenFiles || options?.suppressOpen,
+                    debounceOpen: options?.debounceOpen
+                }),
+            onScheduleKeyboardOpen: scheduleKeyboardSelectionOpen,
+            onCommitKeyboardOpen: commitKeyboardSelectionOpen
         });
 
         // Determine if we're showing empty state

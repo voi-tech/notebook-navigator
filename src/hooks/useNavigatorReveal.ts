@@ -714,14 +714,9 @@ export function useNavigatorReveal({
         };
 
         const handleFileOpen = (file: TFile | null) => {
-            // `isOpeningActiveFileInBackground` only detects operations that are still tracked as in-flight.
-            // If Obsidian emits `file-open` after `leaf.openFile(...)` resolves (e.g. in a later macrotask),
-            // the command queue may have already cleared the operation and this will return false.
-            //
-            // In that timing, auto-reveal may run for a navigator preview open during rapid navigation.
-            // If that is observed, track preview opens with a short-lived marker (e.g. remember the file
-            // path until the next tick or the next matching `file-open`) instead of relying only on the
-            // current `activeOperations` state.
+            // `isOpeningActiveFileInBackground` detects preview opens (`active: false`) while the open is in-flight,
+            // and for a short time after completion to cover cases where Obsidian emits `file-open` after
+            // `leaf.openFile(...)` resolves (e.g. in a later macrotask).
             const ignoreNavigatorPreviewOpen = file instanceof TFile && commandQueue.isOpeningActiveFileInBackground(file.path);
             scheduleDetectActiveFileChange(file, ignoreNavigatorPreviewOpen);
         };
