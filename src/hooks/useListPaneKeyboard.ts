@@ -72,6 +72,8 @@ interface UseListPaneKeyboardProps {
     onSelectFile: (file: TFile, options?: { markKeyboardNavigation?: boolean; suppressOpen?: boolean; debounceOpen?: boolean }) => void;
     /** Keep debounced open aligned when selection cannot move (e.g. ArrowDown at end of list) */
     onScheduleKeyboardOpen?: () => void;
+    /** Schedule a debounced open for a specific file (used for Shift+Arrow multi-selection) */
+    onScheduleKeyboardOpenForFile?: (file: TFile) => void;
     /** Commit selection by opening the currently selected file */
     onCommitKeyboardOpen?: () => void;
 }
@@ -89,6 +91,7 @@ export function useListPaneKeyboard({
     fileIndexMap,
     onSelectFile,
     onScheduleKeyboardOpen,
+    onScheduleKeyboardOpenForFile,
     onCommitKeyboardOpen
 }: UseListPaneKeyboardProps) {
     const { app, commandQueue, isMobile, tagTreeService } = useServices();
@@ -240,12 +243,29 @@ export function useListPaneKeyboard({
                 return;
             }
 
+            const openFileFromShiftSelection = (file: TFile, shouldDebounceOpen: boolean) => {
+                // Debounce workspace opens while holding ArrowUp/ArrowDown so keyup can commit the final selection.
+                if (shouldDebounceOpen && onScheduleKeyboardOpenForFile) {
+                    onScheduleKeyboardOpenForFile(file);
+                    return;
+                }
+                openFileInWorkspace(file);
+            };
+
             if (matchesShortcut(e, shortcuts, KeyboardShortcutAction.LIST_EXTEND_SELECTION_DOWN)) {
                 e.preventDefault();
                 if (!isMobile && selectionState.selectedFile?.path) {
                     const currentFileIndex = fileIndexMap.get(selectionState.selectedFile.path);
                     if (currentFileIndex !== undefined && currentFileIndex !== -1) {
-                        const finalFileIndex = multiSelection.handleShiftArrowSelection('down', currentFileIndex, files);
+                        // Only debounce workspace opens for physical arrow keys so keyup can commit the final selection.
+                        const shouldDebounceOpen = e.key === 'ArrowDown';
+                        const finalFileIndex = multiSelection.handleShiftArrowSelection('down', currentFileIndex, files, {
+                            openFile: file => openFileFromShiftSelection(file, shouldDebounceOpen)
+                        });
+                        if (finalFileIndex === -1 && shouldDebounceOpen) {
+                            // No movement possible (end of list). Keep the pending debounced open aligned with the current selection.
+                            onScheduleKeyboardOpen?.();
+                        }
                         if (finalFileIndex >= 0) {
                             const finalFile = files[finalFileIndex];
                             const itemIndex = pathToIndex.get(finalFile.path);
@@ -263,7 +283,15 @@ export function useListPaneKeyboard({
                 if (!isMobile && selectionState.selectedFile?.path) {
                     const currentFileIndex = fileIndexMap.get(selectionState.selectedFile.path);
                     if (currentFileIndex !== undefined && currentFileIndex !== -1) {
-                        const finalFileIndex = multiSelection.handleShiftArrowSelection('up', currentFileIndex, files);
+                        // Only debounce workspace opens for physical arrow keys so keyup can commit the final selection.
+                        const shouldDebounceOpen = e.key === 'ArrowUp';
+                        const finalFileIndex = multiSelection.handleShiftArrowSelection('up', currentFileIndex, files, {
+                            openFile: file => openFileFromShiftSelection(file, shouldDebounceOpen)
+                        });
+                        if (finalFileIndex === -1 && shouldDebounceOpen) {
+                            // No movement possible (top of list). Keep the pending debounced open aligned with the current selection.
+                            onScheduleKeyboardOpen?.();
+                        }
                         if (finalFileIndex >= 0) {
                             const finalFile = files[finalFileIndex];
                             const itemIndex = pathToIndex.get(finalFile.path);
@@ -482,7 +510,8 @@ export function useListPaneKeyboard({
             includeDescendantNotes,
             showHiddenItems,
             openFileInWorkspace,
-            onScheduleKeyboardOpen
+            onScheduleKeyboardOpen,
+            onScheduleKeyboardOpenForFile
         ]
     );
 
@@ -492,7 +521,8 @@ export function useListPaneKeyboard({
                 return;
             }
 
-            if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) {
+            // Shift is allowed so Shift+Arrow range selection can commit the final debounced open on keyup.
+            if (e.ctrlKey || e.metaKey || e.altKey) {
                 return;
             }
 

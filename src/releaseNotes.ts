@@ -79,7 +79,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-01-31',
         showOnUpdate: false,
         new: [],
-        improved: ['Further optimizations to keyboard navigation performance when holding down UP, DOWN, PAGE UP, or PAGE DOWN keys. It now debounces updates to improve performance even more.'],
+        improved: [
+            'Further optimizations to keyboard navigation performance when holding down UP, DOWN, PAGE UP, or PAGE DOWN keys. It now debounces updates to improve performance even more.'
+        ],
         changed: [],
         fixed: [
             'Removed tooltips for truncated items in navigation pane since it caused performance issues. If you want to show tooltips, enable it from Settings > General > Show tooltips.'

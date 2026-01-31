@@ -455,6 +455,21 @@ export const ListPane = React.memo(
             [selectionDispatch, openFileInWorkspace, debouncedOpenFileInWorkspace]
         );
 
+        const scheduleKeyboardOpen = useCallback(
+            (file: TFile) => {
+                // Schedules a debounced open for the current keyboard selection.
+                // Incrementing the request id invalidates previously scheduled opens.
+                // The open is committed on keyup by `useListPaneKeyboard`.
+                keyboardOpenRequestIdRef.current += 1;
+                const requestId = keyboardOpenRequestIdRef.current;
+
+                keyboardOpenPendingRef.current = true;
+                keyboardOpenFileRef.current = file;
+                debouncedOpenFileInWorkspace(file, requestId);
+            },
+            [debouncedOpenFileInWorkspace]
+        );
+
         const scheduleKeyboardSelectionOpen = useCallback(() => {
             if (settings.enterToOpenFiles) {
                 return;
@@ -468,13 +483,21 @@ export const ListPane = React.memo(
                 return;
             }
 
-            keyboardOpenRequestIdRef.current += 1;
-            const requestId = keyboardOpenRequestIdRef.current;
+            scheduleKeyboardOpen(fileToOpen);
+        }, [app, selectionState, settings.enterToOpenFiles, scheduleKeyboardOpen]);
 
-            keyboardOpenPendingRef.current = true;
-            keyboardOpenFileRef.current = fileToOpen;
-            debouncedOpenFileInWorkspace(fileToOpen, requestId);
-        }, [app, selectionState, settings.enterToOpenFiles, debouncedOpenFileInWorkspace]);
+        const scheduleKeyboardSelectionOpenForFile = useCallback(
+            (file: TFile) => {
+                if (settings.enterToOpenFiles) {
+                    return;
+                }
+
+                // Used when the selection cursor moves without calling `selectFileAtIndex()` with `debounceOpen`,
+                // such as Shift+Arrow range selection.
+                scheduleKeyboardOpen(file);
+            },
+            [settings.enterToOpenFiles, scheduleKeyboardOpen]
+        );
 
         const commitKeyboardSelectionOpen = useCallback(() => {
             if (settings.enterToOpenFiles) {
@@ -1154,6 +1177,7 @@ export const ListPane = React.memo(
                     debounceOpen: options?.debounceOpen
                 }),
             onScheduleKeyboardOpen: scheduleKeyboardSelectionOpen,
+            onScheduleKeyboardOpenForFile: scheduleKeyboardSelectionOpenForFile,
             onCommitKeyboardOpen: commitKeyboardSelectionOpen
         });
 
