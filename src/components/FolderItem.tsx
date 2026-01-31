@@ -174,12 +174,26 @@ export const FolderItem = React.memo(function FolderItem({
 
     // Merge provided count info with default values to ensure all properties are present
     const noteCounts: NoteCountInfo = countInfo ?? { current: 0, descendants: 0, total: 0 };
-    // Determine if we should show separate counts (e.g., "2 + 5") or combined count (e.g., "7")
+
+    const folderTreeSortOverrides = settings.folderTreeSortOverrides;
+    const hasChildSortOrderOverride = Boolean(
+        folderTreeSortOverrides && Object.prototype.hasOwnProperty.call(folderTreeSortOverrides, folder.path)
+    );
+    const childSortOrderOverride = hasChildSortOrderOverride ? folderTreeSortOverrides?.[folder.path] : undefined;
+    const sortOrderIndicator = childSortOrderOverride === 'alpha-desc' ? '↓' : childSortOrderOverride === 'alpha-asc' ? '↑' : undefined;
+
+    // Determine if we should show separate counts (e.g., "2 • 5") or combined count (e.g., "7")
     const useSeparateCounts = includeDescendantNotes && settings.separateNoteCounts;
     // Build formatted display object with label and visibility flags
-    const noteCountDisplay = buildNoteCountDisplay(noteCounts, includeDescendantNotes, useSeparateCounts);
-    // Check if count should be displayed based on settings and count values
-    const shouldDisplayCount = settings.showNoteCount && noteCountDisplay.shouldDisplay;
+    const noteCountDisplay = buildNoteCountDisplay(noteCounts, includeDescendantNotes, useSeparateCounts, sortOrderIndicator ?? '•');
+    const noteCountLabel =
+        !useSeparateCounts && sortOrderIndicator && noteCountDisplay.shouldDisplay
+            ? `${sortOrderIndicator} ${noteCountDisplay.label}`
+            : sortOrderIndicator && !noteCountDisplay.shouldDisplay
+              ? sortOrderIndicator
+              : noteCountDisplay.label;
+    // Render count badge when note counts are enabled and there is either a count or a sort override indicator
+    const shouldDisplayCount = settings.showNoteCount && (noteCountDisplay.shouldDisplay || Boolean(sortOrderIndicator));
 
     // Check if folder has children - not memoized because Obsidian mutates the children array
     // The hasSubfolders function handles the logic of whether to show all or only visible subfolders
@@ -409,7 +423,7 @@ export const FolderItem = React.memo(function FolderItem({
                     {displayName}
                 </span>
                 <span className="nn-navitem-spacer" />
-                {shouldDisplayCount && <span className="nn-navitem-count">{noteCountDisplay.label}</span>}
+                {shouldDisplayCount && <span className="nn-navitem-count">{noteCountLabel}</span>}
             </div>
         </div>
     );
