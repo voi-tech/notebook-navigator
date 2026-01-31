@@ -994,7 +994,7 @@ export const STRINGS_PL = {
                 name: 'Źródło notatek dziennych',
                 desc: 'Źródło notatek kalendarza.',
                 options: {
-                    dailyNotes: 'Notatki dzienne',
+                    dailyNotes: 'Notatki dzienne (wtyczka główna)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

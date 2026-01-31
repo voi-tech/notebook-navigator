@@ -994,7 +994,7 @@ export const STRINGS_NL = {
                 name: 'Dagelijkse notitie bron',
                 desc: 'Bron voor kalendernotities.',
                 options: {
-                    dailyNotes: 'Dagelijkse notities',
+                    dailyNotes: 'Dagelijkse notities (core plug-in)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

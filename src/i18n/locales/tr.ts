@@ -992,7 +992,7 @@ export const STRINGS_TR = {
                 name: 'Günlük not kaynağı',
                 desc: 'Takvim notları için kaynak.',
                 options: {
-                    dailyNotes: 'Günlük notlar',
+                    dailyNotes: 'Günlük notlar (çekirdek eklenti)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

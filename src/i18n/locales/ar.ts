@@ -992,7 +992,7 @@ export const STRINGS_AR = {
                 name: 'مصدر الملاحظات اليومية',
                 desc: 'مصدر ملاحظات التقويم.',
                 options: {
-                    dailyNotes: 'الملاحظات اليومية',
+                    dailyNotes: 'الملاحظات اليومية (المكوّن الإضافي الأساسي)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

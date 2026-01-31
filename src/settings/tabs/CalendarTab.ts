@@ -502,6 +502,9 @@ export function renderCalendarTab(context: SettingsTabContext): void {
             const hasTemplate = Boolean(templatePath);
             // Icon reflects the button action: add template vs clear template.
             target.templateButton?.setIcon(hasTemplate ? 'file-x' : 'file-plus');
+            if (target.templateButton) {
+                target.templateButton.extraSettingsEl.style.color = hasTemplate ? 'var(--text-normal)' : 'var(--text-muted)';
+            }
 
             if (!templatePath) {
                 target.templateTextEl.setText('');

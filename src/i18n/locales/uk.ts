@@ -992,7 +992,7 @@ export const STRINGS_UK = {
                 name: 'Джерело щоденних нотаток',
                 desc: 'Джерело для нотаток календаря.',
                 options: {
-                    dailyNotes: 'Щоденні нотатки',
+                    dailyNotes: 'Щоденні нотатки (основний плагін)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

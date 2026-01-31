@@ -990,7 +990,7 @@ export const STRINGS_ZH_TW = {
                 name: '日記來源',
                 desc: '行事曆筆記的來源。',
                 options: {
-                    dailyNotes: '日記',
+                    dailyNotes: '日記（核心外掛）',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

@@ -992,7 +992,7 @@ export const STRINGS_KO = {
                 name: '데일리 노트 소스',
                 desc: '캘린더 노트 소스.',
                 options: {
-                    dailyNotes: '데일리 노트',
+                    dailyNotes: '데일리 노트(코어 플러그인)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

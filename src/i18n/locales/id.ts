@@ -992,7 +992,7 @@ export const STRINGS_ID = {
                 name: 'Sumber catatan harian',
                 desc: 'Sumber untuk catatan kalender.',
                 options: {
-                    dailyNotes: 'Catatan harian',
+                    dailyNotes: 'Catatan harian (plugin inti)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

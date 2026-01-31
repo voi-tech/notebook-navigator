@@ -119,7 +119,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     calendarConfirmBeforeCreate: true,
 
     // Calendar tab - Calendar integration
-    calendarIntegrationMode: 'daily-notes',
+    calendarIntegrationMode: 'notebook-navigator',
     calendarCustomFilePattern: DEFAULT_CALENDAR_CUSTOM_FILE_PATTERN,
     calendarCustomWeekPattern: '',
     calendarCustomMonthPattern: '',

@@ -992,7 +992,7 @@ export const STRINGS_VI = {
                 name: 'Nguồn ghi chú hàng ngày',
                 desc: 'Nguồn cho ghi chú lịch.',
                 options: {
-                    dailyNotes: 'Ghi chú hàng ngày',
+                    dailyNotes: 'Ghi chú hàng ngày (plugin lõi)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

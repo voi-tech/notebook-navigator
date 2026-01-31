@@ -990,7 +990,7 @@ export const STRINGS_ZH_CN = {
                 name: '日记来源',
                 desc: '日历笔记的来源。',
                 options: {
-                    dailyNotes: '日记',
+                    dailyNotes: '日记（核心插件）',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

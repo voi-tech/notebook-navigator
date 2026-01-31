@@ -992,7 +992,7 @@ export const STRINGS_EN = {
                 name: 'Daily note source',
                 desc: 'Source for calendar notes.',
                 options: {
-                    dailyNotes: 'Daily notes',
+                    dailyNotes: 'Daily notes (core plug-in)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

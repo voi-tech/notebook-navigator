@@ -993,7 +993,7 @@ export const STRINGS_JA = {
                 name: 'デイリーノートのソース',
                 desc: 'カレンダーノートのソース。',
                 options: {
-                    dailyNotes: 'デイリーノート',
+                    dailyNotes: 'デイリーノート（コアプラグイン）',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

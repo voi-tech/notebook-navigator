@@ -992,7 +992,7 @@ export const STRINGS_PT = {
                 name: 'Fonte de notas diárias',
                 desc: 'Fonte para notas do calendário.',
                 options: {
-                    dailyNotes: 'Notas diárias',
+                    dailyNotes: 'Notas diárias (plug-in principal)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

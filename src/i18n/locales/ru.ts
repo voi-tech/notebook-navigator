@@ -993,7 +993,7 @@ export const STRINGS_RU = {
                 name: 'Источник ежедневных заметок',
                 desc: 'Источник для заметок календаря.',
                 options: {
-                    dailyNotes: 'Ежедневные заметки',
+                    dailyNotes: 'Ежедневные заметки (основной плагин)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

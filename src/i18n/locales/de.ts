@@ -994,7 +994,7 @@ export const STRINGS_DE = {
                 name: 'Tagesnotiz-Quelle',
                 desc: 'Quelle für Kalendernotizen.',
                 options: {
-                    dailyNotes: 'Tägliche Notizen',
+                    dailyNotes: 'Tägliche Notizen (Core-Plug-in)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

@@ -992,7 +992,7 @@ export const STRINGS_TH = {
                 name: 'แหล่งที่มาบันทึกรายวัน',
                 desc: 'แหล่งที่มาสำหรับบันทึกปฏิทิน',
                 options: {
-                    dailyNotes: 'บันทึกรายวัน',
+                    dailyNotes: 'บันทึกรายวัน (ปลั๊กอินหลัก)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {

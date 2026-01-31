@@ -992,7 +992,7 @@ export const STRINGS_FA = {
                 name: 'منبع یادداشت روزانه',
                 desc: 'منبع یادداشت‌های تقویم.',
                 options: {
-                    dailyNotes: 'یادداشت‌های روزانه',
+                    dailyNotes: 'یادداشت‌های روزانه (پلاگین اصلی)',
                     notebookNavigator: 'Notebook Navigator'
                 },
                 info: {
