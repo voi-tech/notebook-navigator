@@ -86,7 +86,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Same with the list pane - if you hide all toolbar buttons and do not show folder name in header, this toolbar area is also hidden to save space.'
         ],
         improved: [
-            'Further optimizations to keyboard navigation performance when holding down UP, DOWN, PAGE UP, or PAGE DOWN keys in the list pane. It now debounces updates to improve performance even more, try it and let me know if you like it!'
+            'Further optimizations to keyboard navigation performance when holding down UP, DOWN, PAGE UP, or PAGE DOWN keys in the list pane. Notebook Navigator now debounces visual updates to improve performance even more, try it and let me know if you like it!'
         ],
         changed: [],
         fixed: [
