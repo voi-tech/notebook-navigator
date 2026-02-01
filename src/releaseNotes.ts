@@ -75,6 +75,14 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.2.3',
+        date: '2026-02-01',
+        showOnUpdate: false,
+        fixed: [
+            'Fixed an issue introduced in 2.2 where drag-moving a note to another folder could clear its feature image and preview text in the list pane.'
+        ]
+    },
+    {
         version: '2.2.2',
         date: '2026-01-31',
         showOnUpdate: false,
