@@ -1217,14 +1217,16 @@ export const STRINGS_KO = {
                 desc: '날짜 표시 형식 (date-fns 형식 사용).',
                 placeholder: 'MMM d, yyyy',
                 help: '일반적인 형식:\nMMM d, yyyy = 5월 25, 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\n토큰:\nyyyy/yy = 년도\nMMMM/MMM/MM = 월\ndd/d = 일\nEEEE/EEE = 요일',
-                helpTooltip: '형식 참조를 보려면 클릭'
+                helpTooltip: 'date-fns 형식',
+                dateFnsLinkText: 'date-fns 형식'
             },
             timeFormat: {
                 name: '시간 형식',
                 desc: '시간 표시 형식 (date-fns 형식 사용).',
                 placeholder: 'h:mm a',
                 help: '일반적인 형식:\nh:mm a = 2:30 PM (12시간)\nHH:mm = 14:30 (24시간)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\n토큰:\nHH/H = 24시간\nhh/h = 12시간\nmm = 분\nss = 초\na = AM/PM',
-                helpTooltip: '형식 참조를 보려면 클릭'
+                helpTooltip: 'date-fns 형식',
+                dateFnsLinkText: 'date-fns 형식'
             },
             showFilePreview: {
                 name: '노트 미리보기 표시',
@@ -1528,7 +1530,8 @@ export const STRINGS_KO = {
             frontmatterDateFormat: {
                 name: '타임스탬프 형식',
                 desc: 'frontmatter에서 타임스탬프를 구문 분석하는 데 사용되는 형식입니다. ISO 8601 형식을 사용하려면 비워 두세요',
-                helpTooltip: 'date-fns 형식 문서 참조',
+                helpTooltip: 'date-fns 형식',
+                dateFnsLinkText: 'date-fns 형식',
                 help: "일반적인 형식:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

@@ -1218,14 +1218,16 @@ export const STRINGS_ID = {
                 desc: 'Format untuk menampilkan tanggal (menggunakan format date-fns).',
                 placeholder: 'd MMM yyyy',
                 help: 'Format umum:\nd MMM yyyy = 25 Mei 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nToken:\nyyyy/yy = tahun\nMMMM/MMM/MM = bulan\ndd/d = hari\nEEEE/EEE = hari kerja',
-                helpTooltip: 'Klik untuk referensi format'
+                helpTooltip: 'Format menggunakan date-fns',
+                dateFnsLinkText: 'format date-fns'
             },
             timeFormat: {
                 name: 'Format waktu',
                 desc: 'Format untuk menampilkan waktu (menggunakan format date-fns).',
                 placeholder: 'HH:mm',
                 help: 'Format umum:\nHH:mm = 14:30 (24 jam)\nh:mm a = 2:30 PM (12 jam)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nToken:\nHH/H = 24 jam\nhh/h = 12 jam\nmm = menit\nss = detik\na = AM/PM',
-                helpTooltip: 'Klik untuk referensi format'
+                helpTooltip: 'Format menggunakan date-fns',
+                dateFnsLinkText: 'format date-fns'
             },
             showFilePreview: {
                 name: 'Tampilkan pratinjau catatan',
@@ -1529,7 +1531,8 @@ export const STRINGS_ID = {
             frontmatterDateFormat: {
                 name: 'Format timestamp',
                 desc: 'Format yang digunakan untuk mengurai timestamp di frontmatter. Biarkan kosong untuk menggunakan format ISO 8601',
-                helpTooltip: 'Lihat dokumentasi format date-fns',
+                helpTooltip: 'Format menggunakan date-fns',
+                dateFnsLinkText: 'format date-fns',
                 help: "Format umum:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

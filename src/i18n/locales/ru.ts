@@ -1219,14 +1219,16 @@ export const STRINGS_RU = {
                 desc: 'Формат отображения дат (использует формат date-fns).',
                 placeholder: 'd MMMM yyyy',
                 help: 'Распространённые форматы:\nd MMMM yyyy = 25 мая 2022\ndd.MM.yyyy = 25.05.2022\nyyyy-MM-dd = 2022-05-25\n\nТокены:\nyyyy/yy = год\nMMMM/MMM/MM = месяц\ndd/d = день\nEEEE/EEE = день недели',
-                helpTooltip: 'Нажмите для справки по формату'
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns'
             },
             timeFormat: {
                 name: 'Формат времени',
                 desc: 'Формат отображения времени (использует формат date-fns).',
                 placeholder: 'HH:mm',
                 help: 'Распространённые форматы:\nHH:mm = 14:30 (24-часовой)\nh:mm a = 2:30 PM (12-часовой)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nТокены:\nHH/H = 24-часовой\nhh/h = 12-часовой\nmm = минуты\nss = секунды\na = AM/PM',
-                helpTooltip: 'Нажмите для справки по формату'
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns'
             },
             showFilePreview: {
                 name: 'Показывать превью заметки',
@@ -1531,7 +1533,8 @@ export const STRINGS_RU = {
             frontmatterDateFormat: {
                 name: 'Формат временной метки',
                 desc: 'Формат для разбора временных меток во frontmatter. Оставьте пустым для использования формата ISO 8601',
-                helpTooltip: 'См. документацию формата date-fns',
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns',
                 help: "Распространённые форматы:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

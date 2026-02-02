@@ -20,6 +20,7 @@ import type { App, Setting } from 'obsidian';
 import type NotebookNavigatorPlugin from '../../main';
 
 export type AddSettingFunction = (createSetting: (setting: Setting) => void) => Setting;
+export type SettingDescription = string | DocumentFragment;
 
 /**
  * Factory function type for creating debounced text settings
@@ -28,7 +29,7 @@ export type AddSettingFunction = (createSetting: (setting: Setting) => void) => 
 export type DebouncedTextSettingFactory = (
     container: HTMLElement,
     name: string,
-    desc: string,
+    desc: SettingDescription,
     placeholder: string,
     getValue: () => string,
     setValue: (value: string) => void,
@@ -40,7 +41,7 @@ export type DebouncedTextSettingFactory = (
 export type DebouncedTextSettingConfigurer = (
     setting: Setting,
     name: string,
-    desc: string,
+    desc: SettingDescription,
     placeholder: string,
     getValue: () => string,
     setValue: (value: string) => void,
@@ -59,7 +60,7 @@ export interface DebouncedTextAreaSettingOptions {
 export type DebouncedTextAreaSettingFactory = (
     container: HTMLElement,
     name: string,
-    desc: string,
+    desc: SettingDescription,
     placeholder: string,
     getValue: () => string,
     setValue: (value: string) => void,
@@ -70,7 +71,7 @@ export type DebouncedTextAreaSettingFactory = (
 export type DebouncedTextAreaSettingConfigurer = (
     setting: Setting,
     name: string,
-    desc: string,
+    desc: SettingDescription,
     placeholder: string,
     getValue: () => string,
     setValue: (value: string) => void,

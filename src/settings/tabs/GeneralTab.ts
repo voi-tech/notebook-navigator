@@ -17,7 +17,7 @@
  */
 
 import { ButtonComponent, DropdownComponent, Platform, Setting, SliderComponent } from 'obsidian';
-import { getWelcomeVideoBaseUrl, SUPPORT_BUY_ME_A_COFFEE_URL, SUPPORT_SPONSOR_URL } from '../../constants/urls';
+import { DATE_FNS_FORMAT_DOCS_URL, getWelcomeVideoBaseUrl, SUPPORT_BUY_ME_A_COFFEE_URL, SUPPORT_SPONSOR_URL } from '../../constants/urls';
 import { HomepageModal } from '../../modals/HomepageModal';
 import { strings } from '../../i18n';
 import { showNotice } from '../../utils/noticeUtils';
@@ -59,6 +59,7 @@ import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { createSettingGroupFactory } from '../settingGroups';
 import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { createSubSettingsContainer, setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
+import { createSettingDescriptionWithExternalLink } from './externalLink';
 
 /** Renders the general settings tab */
 export function renderGeneralTab(context: SettingsTabContext): void {
@@ -924,7 +925,10 @@ export function renderGeneralTab(context: SettingsTabContext): void {
         configureDebouncedTextSetting(
             setting,
             strings.settings.items.dateFormat.name,
-            strings.settings.items.dateFormat.desc,
+            createSettingDescriptionWithExternalLink({
+                text: strings.settings.items.dateFormat.desc,
+                link: { text: strings.settings.items.dateFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+            }),
             strings.settings.items.dateFormat.placeholder,
             () => plugin.settings.dateFormat,
             value => {
@@ -946,7 +950,10 @@ export function renderGeneralTab(context: SettingsTabContext): void {
         configureDebouncedTextSetting(
             setting,
             strings.settings.items.timeFormat.name,
-            strings.settings.items.timeFormat.desc,
+            createSettingDescriptionWithExternalLink({
+                text: strings.settings.items.timeFormat.desc,
+                link: { text: strings.settings.items.timeFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+            }),
             strings.settings.items.timeFormat.placeholder,
             () => plugin.settings.timeFormat,
             value => {

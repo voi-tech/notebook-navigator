@@ -18,6 +18,7 @@
 
 import { Setting, ButtonComponent, App, TAbstractFile, TFile } from 'obsidian';
 import { strings } from '../../i18n';
+import { DATE_FNS_FORMAT_DOCS_URL } from '../../constants/urls';
 import { showNotice } from '../../utils/noticeUtils';
 import { ISO_DATE_FORMAT } from '../../utils/dateUtils';
 import { TIMEOUTS } from '../../types/obsidian-extended';
@@ -39,6 +40,7 @@ import {
     type PropertyColorMapParseResult
 } from '../../utils/propertyColorMapFormat';
 import { formatCommaSeparatedList, normalizeCommaSeparatedList, parseCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
+import { createSettingDescriptionWithExternalLink } from './externalLink';
 
 /**
  * Type guard to check if a file is a markdown file
@@ -278,7 +280,10 @@ export function renderNotesTab(context: SettingsTabContext): void {
         .createDebouncedTextSetting(
             frontmatterSettingsEl,
             strings.settings.items.frontmatterDateFormat.name,
-            strings.settings.items.frontmatterDateFormat.desc,
+            createSettingDescriptionWithExternalLink({
+                text: strings.settings.items.frontmatterDateFormat.desc,
+                link: { text: strings.settings.items.frontmatterDateFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+            }),
             ISO_DATE_FORMAT,
             () => plugin.settings.frontmatterDateFormat,
             value => {

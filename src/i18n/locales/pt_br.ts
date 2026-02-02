@@ -1217,14 +1217,16 @@ export const STRINGS_PT_BR = {
                 desc: 'Formato para exibir datas (usa formato date-fns).',
                 placeholder: 'MMM d, yyyy',
                 help: 'Formatos comuns:\nMMM d, yyyy = Mai 25, 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nTokens:\nyyyy/yy = ano\nMMMM/MMM/MM = mês\ndd/d = dia\nEEEE/EEE = dia da semana',
-                helpTooltip: 'Clique para referência de formato'
+                helpTooltip: 'Formato usando date-fns',
+                dateFnsLinkText: 'formato date-fns'
             },
             timeFormat: {
                 name: 'Formato de hora',
                 desc: 'Formato para exibir horas (usa formato date-fns).',
                 placeholder: 'h:mm a',
                 help: 'Formatos comuns:\nh:mm a = 2:30 PM (12 horas)\nHH:mm = 14:30 (24 horas)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\nTokens:\nHH/H = 24 horas\nhh/h = 12 horas\nmm = minutos\nss = segundos\na = AM/PM',
-                helpTooltip: 'Clique para referência de formato'
+                helpTooltip: 'Formato usando date-fns',
+                dateFnsLinkText: 'formato date-fns'
             },
             showFilePreview: {
                 name: 'Mostrar visualização de nota',
@@ -1528,7 +1530,8 @@ export const STRINGS_PT_BR = {
             frontmatterDateFormat: {
                 name: 'Formato de timestamp',
                 desc: 'Formato usado para analisar timestamps no frontmatter. Deixe em branco para usar formato ISO 8601',
-                helpTooltip: 'Veja documentação de formato date-fns',
+                helpTooltip: 'Formato usando date-fns',
+                dateFnsLinkText: 'formato date-fns',
                 help: "Formatos comuns:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

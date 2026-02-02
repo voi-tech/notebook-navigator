@@ -18,6 +18,7 @@
 
 import { DropdownComponent, ExtraButtonComponent, Setting } from 'obsidian';
 import { getCurrentLanguage, strings } from '../../i18n';
+import { MOMENT_FORMAT_DOCS_URL } from '../../constants/urls';
 import { isCalendarPlacement, isCalendarWeekendDays, type CalendarWeeksToShow } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import {
@@ -47,6 +48,7 @@ import { getMomentApi, resolveMomentLocale, type MomentInstance } from '../../ut
 import { runAsyncAction } from '../../utils/async';
 import { CalendarTemplateModal } from '../../modals/CalendarTemplateModal';
 import { FolderPathInputSuggest } from '../../suggest/FolderPathInputSuggest';
+import { createInlineExternalLinkText } from './externalLink';
 
 const CALENDAR_LOCALE_SYSTEM_DEFAULT = 'system-default';
 
@@ -283,24 +285,6 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         calendarTemplateFolderInputEl.addEventListener('click', () => folderSuggest.open());
     }
 
-    const currentLanguage = String(getCurrentLanguage() ?? '').toLowerCase();
-    const renderMomentPatternDescription = (container: HTMLElement): void => {
-        if (currentLanguage === 'en' || currentLanguage.startsWith('en-')) {
-            const descriptionEl = container.createDiv();
-            descriptionEl.appendText(strings.settings.items.calendarCustomFilePattern.momentDescPrefix);
-            const linkEl = descriptionEl.createEl('a', {
-                text: strings.settings.items.calendarCustomFilePattern.momentLinkText,
-                href: 'https://momentjs.com/docs/#/displaying/format/'
-            });
-            linkEl.setAttr('rel', 'noopener noreferrer');
-            linkEl.setAttr('target', '_blank');
-            descriptionEl.appendText(strings.settings.items.calendarCustomFilePattern.momentDescSuffix);
-            return;
-        }
-
-        container.createDiv({ text: strings.settings.items.calendarCustomFilePattern.desc });
-    };
-
     /** UI elements and state for a calendar pattern setting with template support. */
     interface CalendarCustomPatternSetting {
         setting: Setting;
@@ -476,7 +460,13 @@ export function renderCalendarTab(context: SettingsTabContext): void {
     calendarCustomPatternInfoSetting.settingEl.addClass('nn-setting-info-container');
     calendarCustomPatternInfoSetting.settingEl.addClass('nn-setting-info-centered');
     calendarCustomPatternInfoSetting.descEl.empty();
-    renderMomentPatternDescription(calendarCustomPatternInfoSetting.descEl);
+    calendarCustomPatternInfoSetting.descEl.append(
+        createInlineExternalLinkText({
+            prefix: strings.settings.items.calendarCustomFilePattern.momentDescPrefix,
+            link: { text: strings.settings.items.calendarCustomFilePattern.momentLinkText, href: MOMENT_FORMAT_DOCS_URL },
+            suffix: strings.settings.items.calendarCustomFilePattern.momentDescSuffix
+        })
+    );
 
     // Read current input values while typing; the setting values are updated via debounced callbacks.
     const getInputValue = (element: HTMLInputElement | null, fallback: string): string => element?.value ?? fallback;

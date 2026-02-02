@@ -1214,14 +1214,16 @@ export const STRINGS_ZH_TW = {
                 desc: '用於顯示日期的格式（使用 date-fns 格式）。',
                 placeholder: 'yyyy年M月d日',
                 help: '常用格式：\nyyyy年M月d日 = 2022年5月25日\nyyyy-MM-dd = 2022-05-25\nMM/dd/yyyy = 05/25/2022\n\n標記：\nyyyy/yy = 年\nMMMM/MMM/MM/M = 月\ndd/d = 日\nEEEE/EEE = 星期',
-                helpTooltip: '點按查看格式參考'
+                helpTooltip: '使用 date-fns 格式',
+                dateFnsLinkText: 'date-fns 格式'
             },
             timeFormat: {
                 name: '時間格式',
                 desc: '用於顯示時間的格式（使用 date-fns 格式）。',
                 placeholder: 'HH:mm',
                 help: '常用格式：\nHH:mm = 14:30（24小時制）\nh:mm a = 2:30 PM（12小時制）\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\n標記：\nHH/H = 24小時制\nhh/h = 12小時制\nmm = 分鐘\nss = 秒\na = 上午/下午',
-                helpTooltip: '點按查看格式參考'
+                helpTooltip: '使用 date-fns 格式',
+                dateFnsLinkText: 'date-fns 格式'
             },
             showFilePreview: {
                 name: '顯示筆記預覽',
@@ -1525,7 +1527,8 @@ export const STRINGS_ZH_TW = {
             frontmatterDateFormat: {
                 name: '時間戳記格式',
                 desc: '用於解析前置中時間戳記的格式。留空使用 ISO 8601 格式',
-                helpTooltip: '查看 date-fns 格式文件',
+                helpTooltip: '使用 date-fns 格式',
+                dateFnsLinkText: 'date-fns 格式',
                 help: "常用格式:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

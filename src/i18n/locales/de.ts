@@ -1221,14 +1221,16 @@ export const STRINGS_DE = {
                 desc: 'Format für die Datumsanzeige (verwendet date-fns Format).',
                 placeholder: 'dd.MM.yyyy',
                 help: 'Gängige Formate:\ndd.MM.yyyy = 25.05.2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nTokens:\nyyyy/yy = Jahr\nMMMM/MMM/MM = Monat\ndd/d = Tag\nEEEE/EEE = Wochentag',
-                helpTooltip: 'Klicken für Formatreferenz'
+                helpTooltip: 'Format mit date-fns',
+                dateFnsLinkText: 'date-fns-Format'
             },
             timeFormat: {
                 name: 'Zeitformat',
                 desc: 'Format für die Zeitanzeige (verwendet date-fns Format).',
                 placeholder: 'HH:mm',
                 help: 'Gängige Formate:\nHH:mm = 14:30 (24-Stunden)\nh:mm a = 2:30 PM (12-Stunden)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nTokens:\nHH/H = 24-Stunden\nhh/h = 12-Stunden\nmm = Minuten\nss = Sekunden\na = AM/PM',
-                helpTooltip: 'Klicken für Formatreferenz'
+                helpTooltip: 'Format mit date-fns',
+                dateFnsLinkText: 'date-fns-Format'
             },
             showFilePreview: {
                 name: 'Notizenvorschau anzeigen',
@@ -1531,7 +1533,8 @@ export const STRINGS_DE = {
             frontmatterDateFormat: {
                 name: 'Zeitstempelformat',
                 desc: 'Format zum Parsen von Zeitstempeln im Frontmatter. Leer lassen, um ISO 8601-Format zu verwenden',
-                helpTooltip: 'Siehe date-fns Formatdokumentation',
+                helpTooltip: 'Format mit date-fns',
+                dateFnsLinkText: 'date-fns-Format',
                 help: "Häufige Formate:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

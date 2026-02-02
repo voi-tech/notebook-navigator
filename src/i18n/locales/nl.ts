@@ -1221,14 +1221,16 @@ export const STRINGS_NL = {
                 desc: 'Formaat voor het weergeven van datums (gebruikt date-fns formaat).',
                 placeholder: 'd MMM yyyy',
                 help: 'Veelvoorkomende formaten:\nd MMM yyyy = 25 mei 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nTokens:\nyyyy/yy = jaar\nMMMM/MMM/MM = maand\ndd/d = dag\nEEEE/EEE = weekdag',
-                helpTooltip: 'Klik voor formaatverwijzing'
+                helpTooltip: 'Formaat met date-fns',
+                dateFnsLinkText: 'date-fns-formaat'
             },
             timeFormat: {
                 name: 'Tijdformaat',
                 desc: 'Formaat voor het weergeven van tijden (gebruikt date-fns formaat).',
                 placeholder: 'HH:mm',
                 help: 'Veelvoorkomende formaten:\nHH:mm = 14:30 (24-uurs)\nh:mm a = 2:30 PM (12-uurs)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nTokens:\nHH/H = 24-uurs\nhh/h = 12-uurs\nmm = minuten\nss = seconden\na = AM/PM',
-                helpTooltip: 'Klik voor formaatverwijzing'
+                helpTooltip: 'Formaat met date-fns',
+                dateFnsLinkText: 'date-fns-formaat'
             },
             showFilePreview: {
                 name: 'Notitievoorbeeld tonen',
@@ -1533,7 +1535,8 @@ export const STRINGS_NL = {
             frontmatterDateFormat: {
                 name: 'Tijdstempelformaat',
                 desc: 'Formaat gebruikt om tijdstempels in frontmatter te parseren. Laat leeg om ISO 8601 formaat te gebruiken',
-                helpTooltip: 'Zie date-fns formaatdocumentatie',
+                helpTooltip: 'Formaat met date-fns',
+                dateFnsLinkText: 'date-fns-formaat',
                 help: "Veelvoorkomende formaten:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

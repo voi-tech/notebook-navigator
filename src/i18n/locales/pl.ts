@@ -1220,14 +1220,16 @@ export const STRINGS_PL = {
                 desc: 'Format wyświetlania dat (używa formatu date-fns).',
                 placeholder: 'dd.MM.yyyy',
                 help: 'Popularne formaty:\ndd.MM.yyyy = 25.05.2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nTokeny:\nyyyy/yy = rok\nMMMM/MMM/MM = miesiąc\ndd/d = dzień\nEEEE/EEE = dzień tygodnia',
-                helpTooltip: 'Kliknij po informacje o formatowaniu'
+                helpTooltip: 'Format z date-fns',
+                dateFnsLinkText: 'format date-fns'
             },
             timeFormat: {
                 name: 'Format czasu',
                 desc: 'Format wyświetlania czasu (używa formatu date-fns).',
                 placeholder: 'HH:mm',
                 help: 'Popularne formaty:\nHH:mm = 14:30 (24-godzinny)\nh:mm a = 2:30 PM (12-godzinny)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nTokeny:\nHH/H = 24-godzinny\nhh/h = 12-godzinny\nmm = minuty\nss = sekundy\na = AM/PM',
-                helpTooltip: 'Kliknij po informacje o formatowaniu'
+                helpTooltip: 'Format z date-fns',
+                dateFnsLinkText: 'format date-fns'
             },
             showFilePreview: {
                 name: 'Pokaż podgląd notatki',
@@ -1532,7 +1534,8 @@ export const STRINGS_PL = {
             frontmatterDateFormat: {
                 name: 'Format znacznika czasu',
                 desc: 'Format używany do parsowania znaczników czasu w frontmatter. Zostaw puste aby użyć formatu ISO 8601',
-                helpTooltip: 'Zobacz dokumentację formatu date-fns',
+                helpTooltip: 'Format z date-fns',
+                dateFnsLinkText: 'format date-fns',
                 help: "Popularne formaty:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

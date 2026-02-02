@@ -37,7 +37,12 @@ import { renderNotesTab } from './settings/tabs/NotesTab';
 import { renderIconPacksTab } from './settings/tabs/IconPacksTab';
 import { renderHotkeysSearchTab } from './settings/tabs/HotkeysSearchTab';
 import { renderAdvancedTab } from './settings/tabs/AdvancedTab';
-import type { AddSettingFunction, DebouncedTextAreaSettingOptions, SettingsTabContext } from './settings/tabs/SettingsTabContext';
+import type {
+    AddSettingFunction,
+    DebouncedTextAreaSettingOptions,
+    SettingsTabContext,
+    SettingDescription
+} from './settings/tabs/SettingsTabContext';
 import { runAsyncAction } from './utils/async';
 import { NOTEBOOK_NAVIGATOR_ICON_ID } from './constants/notebookNavigatorIcon';
 import { getDBInstanceOrNull } from './storage/fileOperations';
@@ -218,7 +223,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
     private createDebouncedTextSetting(
         container: HTMLElement,
         name: string,
-        desc: string,
+        desc: SettingDescription,
         placeholder: string,
         getValue: () => string,
         setValue: (value: string) => void,
@@ -240,7 +245,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
     private configureDebouncedTextSetting(
         setting: Setting,
         name: string,
-        desc: string,
+        desc: SettingDescription,
         placeholder: string,
         getValue: () => string,
         setValue: (value: string) => void,
@@ -284,7 +289,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
     private createDebouncedTextAreaSetting(
         container: HTMLElement,
         name: string,
-        desc: string,
+        desc: SettingDescription,
         placeholder: string,
         getValue: () => string,
         setValue: (value: string) => void,
@@ -296,7 +301,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
     private configureDebouncedTextAreaSetting(
         setting: Setting,
         name: string,
-        desc: string,
+        desc: SettingDescription,
         placeholder: string,
         getValue: () => string,
         setValue: (value: string) => void,

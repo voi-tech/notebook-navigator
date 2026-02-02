@@ -1218,14 +1218,16 @@ export const STRINGS_UK = {
                 desc: 'Формат для відображення дат (використовує формат date-fns).',
                 placeholder: 'd MMM yyyy',
                 help: 'Поширені формати:\nd MMM yyyy = 25 тра 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nТокени:\nyyyy/yy = рік\nMMMM/MMM/MM = місяць\ndd/d = день\nEEEE/EEE = день тижня',
-                helpTooltip: 'Натисніть для довідки по форматах'
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns'
             },
             timeFormat: {
                 name: 'Формат часу',
                 desc: 'Формат для відображення часу (використовує формат date-fns).',
                 placeholder: 'HH:mm',
                 help: 'Поширені формати:\nh:mm a = 2:30 PM (12-годинний)\nHH:mm = 14:30 (24-годинний)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\nТокени:\nHH/H = 24-годинний\nhh/h = 12-годинний\nmm = хвилини\nss = секунди\na = AM/PM',
-                helpTooltip: 'Натисніть для довідки по форматах'
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns'
             },
             showFilePreview: {
                 name: 'Показувати попередній перегляд нотатки',
@@ -1530,7 +1532,8 @@ export const STRINGS_UK = {
             frontmatterDateFormat: {
                 name: 'Формат часової мітки',
                 desc: 'Формат для розбору часових міток у frontmatter. Залиште порожнім для використання формату ISO 8601',
-                helpTooltip: 'Див. документацію формату date-fns',
+                helpTooltip: 'Формат date-fns',
+                dateFnsLinkText: 'формат date-fns',
                 help: "Поширені формати:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {

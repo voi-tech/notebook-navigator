@@ -1216,14 +1216,16 @@ export const STRINGS_TH = {
                 desc: 'รูปแบบสำหรับแสดงวันที่ (ใช้รูปแบบ date-fns)',
                 placeholder: 'd MMM yyyy',
                 help: 'รูปแบบทั่วไป:\nd MMM yyyy = 25 พ.ค. 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nโทเคน:\nyyyy/yy = ปี\nMMMM/MMM/MM = เดือน\ndd/d = วัน\nEEEE/EEE = วันในสัปดาห์',
-                helpTooltip: 'คลิกเพื่อดูข้อมูลอ้างอิงรูปแบบ'
+                helpTooltip: 'รูปแบบโดยใช้ date-fns',
+                dateFnsLinkText: 'รูปแบบ date-fns'
             },
             timeFormat: {
                 name: 'รูปแบบเวลา',
                 desc: 'รูปแบบสำหรับแสดงเวลา (ใช้รูปแบบ date-fns)',
                 placeholder: 'HH:mm',
                 help: 'รูปแบบทั่วไป:\nHH:mm = 14:30 (24 ชั่วโมง)\nh:mm a = 2:30 PM (12 ชั่วโมง)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nโทเคน:\nHH/H = 24 ชั่วโมง\nhh/h = 12 ชั่วโมง\nmm = นาที\nss = วินาที\na = AM/PM',
-                helpTooltip: 'คลิกเพื่อดูข้อมูลอ้างอิงรูปแบบ'
+                helpTooltip: 'รูปแบบโดยใช้ date-fns',
+                dateFnsLinkText: 'รูปแบบ date-fns'
             },
             showFilePreview: {
                 name: 'แสดงตัวอย่างโน้ต',
@@ -1527,7 +1529,8 @@ export const STRINGS_TH = {
             frontmatterDateFormat: {
                 name: 'รูปแบบ timestamp',
                 desc: 'รูปแบบที่ใช้แยกวิเคราะห์ timestamp ใน frontmatter เว้นว่างเพื่อใช้รูปแบบ ISO 8601',
-                helpTooltip: 'ดูเอกสารรูปแบบ date-fns',
+                helpTooltip: 'รูปแบบโดยใช้ date-fns',
+                dateFnsLinkText: 'รูปแบบ date-fns',
                 help: "รูปแบบทั่วไป:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
             },
             supportDevelopment: {
