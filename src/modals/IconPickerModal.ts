@@ -460,7 +460,10 @@ export class IconPickerModal extends Modal {
                     displayName,
                     preview: parsed.identifier
                 };
-                this.createIconItem(iconDef, grid, provider);
+                const iconItem = this.createIconItem(iconDef, grid, provider);
+                if (iconItem) {
+                    this.addRecentIconRemoveButton(iconItem, iconId);
+                }
                 rendered += 1;
                 return;
             }
@@ -477,7 +480,10 @@ export class IconPickerModal extends Modal {
                 return;
             }
 
-            this.createIconItem(iconDef, grid, provider);
+            const iconItem = this.createIconItem(iconDef, grid, provider);
+            if (iconItem) {
+                this.addRecentIconRemoveButton(iconItem, iconId);
+            }
             rendered += 1;
         });
 
@@ -489,6 +495,60 @@ export class IconPickerModal extends Modal {
         }
 
         return true;
+    }
+
+    private addRecentIconRemoveButton(iconItem: HTMLElement, iconId: string): void {
+        const removeButton = iconItem.createEl('button', {
+            cls: 'nn-icon-recent-remove-button',
+            attr: {
+                type: 'button',
+                'aria-label': strings.modals.iconPicker.removeIcon,
+                title: strings.modals.iconPicker.removeIcon
+            }
+        });
+        removeButton.createSpan({ text: '×', cls: 'nn-icon-recent-remove-glyph', attr: { 'aria-hidden': 'true' } });
+
+        this.domDisposers.push(
+            addAsyncEventListener(removeButton, 'click', event => {
+                event.stopPropagation();
+                event.preventDefault();
+                this.removeRecentIcon(iconId);
+            })
+        );
+    }
+
+    private removeRecentIcon(iconId: string): void {
+        const parsed = this.iconService.parseIconId(iconId);
+        const providerId = parsed.provider;
+
+        const recentIconsMap = this.settingsProvider.getRecentIcons();
+        const providerValue = recentIconsMap[providerId];
+        const hasInvalidType = providerValue !== undefined && !Array.isArray(providerValue);
+
+        if (hasInvalidType) {
+            delete recentIconsMap[providerId];
+            this.settingsProvider.setRecentIcons(recentIconsMap);
+            this.updateResults();
+            return;
+        }
+
+        const providerIcons = Array.isArray(providerValue) ? providerValue : [];
+        const index = providerIcons.indexOf(iconId);
+        if (index < 0) {
+            return;
+        }
+
+        const updatedProviderIcons = [...providerIcons];
+        updatedProviderIcons.splice(index, 1);
+
+        if (updatedProviderIcons.length === 0) {
+            delete recentIconsMap[providerId];
+        } else {
+            recentIconsMap[providerId] = updatedProviderIcons;
+        }
+
+        this.settingsProvider.setRecentIcons(recentIconsMap);
+        this.updateResults();
     }
 
     /**
@@ -507,7 +567,7 @@ export class IconPickerModal extends Modal {
         emptyMessage.setText(isSearch ? strings.modals.iconPicker.emptyStateNoResults : strings.modals.iconPicker.emptyStateSearch);
     }
 
-    private createIconItem(iconDef: IconDefinition, container: HTMLElement, provider?: IconProvider) {
+    private createIconItem(iconDef: IconDefinition, container: HTMLElement, provider?: IconProvider): HTMLDivElement | null {
         let resolvedProvider = provider;
         let fullIconId = iconDef.id;
 
@@ -517,7 +577,7 @@ export class IconPickerModal extends Modal {
             const parsed = this.iconService.parseIconId(iconDef.id);
             resolvedProvider = this.iconService.getProvider(parsed.provider);
             if (!resolvedProvider) {
-                return;
+                return null;
             }
             fullIconId = iconDef.id;
         }
@@ -542,6 +602,7 @@ export class IconPickerModal extends Modal {
 
         // Make focusable
         iconItem.setAttribute('tabindex', '0');
+        return iconItem;
     }
 
     /**
