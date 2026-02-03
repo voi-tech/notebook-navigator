@@ -143,6 +143,7 @@ export class IconPickerModal extends Modal {
 
         // Create results container
         this.resultsContainer = contentEl.createDiv('nn-icon-results-container');
+        this.domDisposers.push(addAsyncEventListener(this.resultsContainer, 'click', event => this.handleResultsClick(event)));
         this.createProviderLinkRow();
         this.updateProviderLink(this.currentProvider);
 
@@ -185,6 +186,36 @@ export class IconPickerModal extends Modal {
 
         // Show initial results
         this.updateResults();
+    }
+
+    private async handleResultsClick(event: MouseEvent): Promise<void> {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+            return;
+        }
+
+        const removeButton = target.closest<HTMLButtonElement>('.nn-icon-recent-remove-button');
+        if (removeButton) {
+            event.stopPropagation();
+            event.preventDefault();
+            const iconId = removeButton.getAttribute('data-recent-icon-id');
+            if (iconId) {
+                this.removeRecentIcon(iconId);
+            }
+            return;
+        }
+
+        const iconItem = target.closest<HTMLElement>('.nn-icon-item');
+        if (!iconItem) {
+            return;
+        }
+
+        const iconId = iconItem.getAttribute('data-icon-id');
+        if (!iconId) {
+            return;
+        }
+
+        await this.selectIcon(iconId);
     }
 
     private createProviderTabs() {
@@ -503,18 +534,11 @@ export class IconPickerModal extends Modal {
             attr: {
                 type: 'button',
                 'aria-label': strings.modals.iconPicker.removeIcon,
-                title: strings.modals.iconPicker.removeIcon
+                title: strings.modals.iconPicker.removeIcon,
+                'data-recent-icon-id': iconId
             }
         });
         removeButton.createSpan({ text: '×', cls: 'nn-icon-recent-remove-glyph', attr: { 'aria-hidden': 'true' } });
-
-        this.domDisposers.push(
-            addAsyncEventListener(removeButton, 'click', event => {
-                event.stopPropagation();
-                event.preventDefault();
-                this.removeRecentIcon(iconId);
-            })
-        );
     }
 
     private removeRecentIcon(iconId: string): void {
@@ -597,8 +621,6 @@ export class IconPickerModal extends Modal {
         // Icon name
         const iconName = iconItem.createDiv('nn-icon-item-name');
         iconName.setText(iconDef.displayName);
-
-        this.domDisposers.push(addAsyncEventListener(iconItem, 'click', () => this.selectIcon(fullIconId)));
 
         // Make focusable
         iconItem.setAttribute('tabindex', '0');
