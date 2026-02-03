@@ -79,6 +79,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-02-09',
         showOnUpdate: true,
         new: ['==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.'],
+        improved: [
+            'You can now remove icons from the recently used icons list.'
+        ],
         changed: []
     },
     {
