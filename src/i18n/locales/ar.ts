@@ -1223,19 +1223,19 @@ export const STRINGS_AR = {
             },
             dateFormat: {
                 name: 'تنسيق التاريخ',
-                desc: 'تنسيق عرض التواريخ (يستخدم تنسيق date-fns).',
-                placeholder: 'd MMM yyyy',
-                help: 'التنسيقات الشائعة:\nMMM d, yyyy = 25 مايو 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nالرموز:\nyyyy/yy = السنة\nMMMM/MMM/MM = الشهر\ndd/d = اليوم\nEEEE/EEE = يوم الأسبوع',
-                helpTooltip: 'تنسيق باستخدام date-fns',
-                dateFnsLinkText: 'تنسيق date-fns'
+                desc: 'تنسيق عرض التواريخ (يستخدم تنسيق Moment).',
+                placeholder: 'D MMM YYYY',
+                help: 'التنسيقات الشائعة:\nD MMM YYYY = 25 مايو 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nالرموز:\nYYYY/YY = السنة\nMMMM/MMM/MM = الشهر\nDD/D = اليوم\ndddd/ddd = يوم الأسبوع',
+                helpTooltip: 'تنسيق باستخدام Moment',
+                momentLinkText: 'تنسيق Moment'
             },
             timeFormat: {
                 name: 'تنسيق الوقت',
-                desc: 'تنسيق عرض الأوقات (يستخدم تنسيق date-fns).',
+                desc: 'تنسيق عرض الأوقات (يستخدم تنسيق Moment).',
                 placeholder: 'h:mm a',
                 help: 'التنسيقات الشائعة:\nh:mm a = 2:30 م (12 ساعة)\nHH:mm = 14:30 (24 ساعة)\nh:mm:ss a = 2:30:45 م\nHH:mm:ss = 14:30:45\n\nالرموز:\nHH/H = 24 ساعة\nhh/h = 12 ساعة\nmm = الدقائق\nss = الثواني\na = ص/م',
-                helpTooltip: 'تنسيق باستخدام date-fns',
-                dateFnsLinkText: 'تنسيق date-fns'
+                helpTooltip: 'تنسيق باستخدام Moment',
+                momentLinkText: 'تنسيق Moment'
             },
             showFilePreview: {
                 name: 'إظهار معاينة الملاحظة',
@@ -1538,10 +1538,10 @@ export const STRINGS_AR = {
             },
             frontmatterDateFormat: {
                 name: 'تنسيق الطابع الزمني',
-                desc: 'التنسيق المستخدم لتحليل الطوابع الزمنية في البيانات الأمامية. اتركه فارغًا لاستخدام تنسيق ISO 8601',
-                helpTooltip: 'تنسيق باستخدام date-fns',
-                dateFnsLinkText: 'تنسيق date-fns',
-                help: "التنسيقات الشائعة:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'التنسيق المستخدم لتحليل الطوابع الزمنية في البيانات الأمامية. اتركه فارغًا لاستخدام تحليل ISO 8601.',
+                helpTooltip: 'تنسيق باستخدام Moment',
+                momentLinkText: 'تنسيق Moment',
+                help: 'التنسيقات الشائعة:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'دعم التطوير',

@@ -1224,19 +1224,19 @@ export const STRINGS_TR = {
             },
             dateFormat: {
                 name: 'Tarih formatı',
-                desc: 'Tarihleri görüntüleme formatı (date-fns formatı kullanır).',
-                placeholder: 'd MMM yyyy',
-                help: 'Yaygın formatlar:\nd MMM yyyy = 25 May 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nSimgeler:\nyyyy/yy = yıl\nMMMM/MMM/MM = ay\ndd/d = gün\nEEEE/EEE = haftanın günü',
-                helpTooltip: 'date-fns formatı',
-                dateFnsLinkText: 'date-fns formatı'
+                desc: 'Tarihleri görüntüleme formatı (Moment formatı kullanır).',
+                placeholder: 'D MMM YYYY',
+                help: 'Yaygın formatlar:\nD MMM YYYY = 25 May 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nSimgeler:\nYYYY/YY = yıl\nMMMM/MMM/MM = ay\nDD/D = gün\ndddd/ddd = haftanın günü',
+                helpTooltip: 'Moment formatı',
+                momentLinkText: 'Moment formatı'
             },
             timeFormat: {
                 name: 'Saat formatı',
-                desc: 'Saatleri görüntüleme formatı (date-fns formatı kullanır).',
+                desc: 'Saatleri görüntüleme formatı (Moment formatı kullanır).',
                 placeholder: 'HH:mm',
                 help: 'Yaygın formatlar:\nh:mm a = 2:30 PM (12 saat)\nHH:mm = 14:30 (24 saat)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\nSimgeler:\nHH/H = 24 saat\nhh/h = 12 saat\nmm = dakika\nss = saniye\na = ÖÖ/ÖS',
-                helpTooltip: 'date-fns formatı',
-                dateFnsLinkText: 'date-fns formatı'
+                helpTooltip: 'Moment formatı',
+                momentLinkText: 'Moment formatı'
             },
             showFilePreview: {
                 name: 'Not önizlemesini göster',
@@ -1539,10 +1539,10 @@ export const STRINGS_TR = {
             },
             frontmatterDateFormat: {
                 name: 'Zaman damgası formatı',
-                desc: "Frontmatter'daki zaman damgalarını ayrıştırmak için kullanılan format. ISO 8601 formatını kullanmak için boş bırakın",
-                helpTooltip: 'date-fns formatı',
-                dateFnsLinkText: 'date-fns formatı',
-                help: "Yaygın formatlar:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: "Frontmatter'daki zaman damgalarını ayrıştırmak için kullanılan format. ISO 8601 ayrıştırmasını kullanmak için boş bırakın.",
+                helpTooltip: 'Moment formatı',
+                momentLinkText: 'Moment formatı',
+                help: 'Yaygın formatlar:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Geliştirmeyi destekleyin',

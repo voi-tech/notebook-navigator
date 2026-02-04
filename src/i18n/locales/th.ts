@@ -1223,19 +1223,19 @@ export const STRINGS_TH = {
             },
             dateFormat: {
                 name: 'รูปแบบวันที่',
-                desc: 'รูปแบบสำหรับแสดงวันที่ (ใช้รูปแบบ date-fns)',
-                placeholder: 'd MMM yyyy',
-                help: 'รูปแบบทั่วไป:\nd MMM yyyy = 25 พ.ค. 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nโทเคน:\nyyyy/yy = ปี\nMMMM/MMM/MM = เดือน\ndd/d = วัน\nEEEE/EEE = วันในสัปดาห์',
-                helpTooltip: 'รูปแบบโดยใช้ date-fns',
-                dateFnsLinkText: 'รูปแบบ date-fns'
+                desc: 'รูปแบบสำหรับแสดงวันที่ (ใช้รูปแบบ Moment)',
+                placeholder: 'D MMM YYYY',
+                help: 'รูปแบบทั่วไป:\nD MMM YYYY = 25 พ.ค. 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nโทเคน:\nYYYY/YY = ปี\nMMMM/MMM/MM = เดือน\nDD/D = วัน\ndddd/ddd = วันในสัปดาห์',
+                helpTooltip: 'รูปแบบโดยใช้ Moment',
+                momentLinkText: 'รูปแบบ Moment'
             },
             timeFormat: {
                 name: 'รูปแบบเวลา',
-                desc: 'รูปแบบสำหรับแสดงเวลา (ใช้รูปแบบ date-fns)',
+                desc: 'รูปแบบสำหรับแสดงเวลา (ใช้รูปแบบ Moment)',
                 placeholder: 'HH:mm',
                 help: 'รูปแบบทั่วไป:\nHH:mm = 14:30 (24 ชั่วโมง)\nh:mm a = 2:30 PM (12 ชั่วโมง)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nโทเคน:\nHH/H = 24 ชั่วโมง\nhh/h = 12 ชั่วโมง\nmm = นาที\nss = วินาที\na = AM/PM',
-                helpTooltip: 'รูปแบบโดยใช้ date-fns',
-                dateFnsLinkText: 'รูปแบบ date-fns'
+                helpTooltip: 'รูปแบบโดยใช้ Moment',
+                momentLinkText: 'รูปแบบ Moment'
             },
             showFilePreview: {
                 name: 'แสดงตัวอย่างโน้ต',
@@ -1539,9 +1539,9 @@ export const STRINGS_TH = {
             frontmatterDateFormat: {
                 name: 'รูปแบบ timestamp',
                 desc: 'รูปแบบที่ใช้แยกวิเคราะห์ timestamp ใน frontmatter เว้นว่างเพื่อใช้รูปแบบ ISO 8601',
-                helpTooltip: 'รูปแบบโดยใช้ date-fns',
-                dateFnsLinkText: 'รูปแบบ date-fns',
-                help: "รูปแบบทั่วไป:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                helpTooltip: 'รูปแบบโดยใช้ Moment',
+                momentLinkText: 'รูปแบบ Moment',
+                help: 'รูปแบบทั่วไป:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'สนับสนุนการพัฒนา',

@@ -83,7 +83,9 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.'
         ],
         improved: ['You can now remove icons from the recently used icons list.'],
-        changed: []
+        changed: [
+            'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
+        ]
     },
     {
         version: '2.2.3',

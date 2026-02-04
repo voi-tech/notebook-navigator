@@ -97,7 +97,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     useFloatingToolbars: true,
 
     // General tab - Formatting
-    dateFormat: 'MMM d, yyyy',
+    dateFormat: 'MMM D, YYYY',
     timeFormat: 'h:mm a',
 
     // Navigation pane tab - Behavior

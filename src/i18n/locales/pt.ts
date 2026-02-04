@@ -1227,19 +1227,19 @@ export const STRINGS_PT = {
             },
             dateFormat: {
                 name: 'Formato de data',
-                desc: 'Formato para exibir datas (usa formato date-fns).',
-                placeholder: 'd MMM yyyy',
-                help: 'Formatos comuns:\nd MMM yyyy = 25 Mai 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nTokens:\nyyyy/yy = ano\nMMMM/MMM/MM = mês\ndd/d = dia\nEEEE/EEE = dia da semana',
-                helpTooltip: 'Formato usando date-fns',
-                dateFnsLinkText: 'formato date-fns'
+                desc: 'Formato para exibir datas (usa formato Moment).',
+                placeholder: 'D MMM YYYY',
+                help: 'Formatos comuns:\nD MMM YYYY = 25 Mai 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nTokens:\nYYYY/YY = ano\nMMMM/MMM/MM = mês\nDD/D = dia\ndddd/ddd = dia da semana',
+                helpTooltip: 'Formato usando Moment',
+                momentLinkText: 'formato Moment'
             },
             timeFormat: {
                 name: 'Formato de hora',
-                desc: 'Formato para exibir horas (usa formato date-fns).',
+                desc: 'Formato para exibir horas (usa formato Moment).',
                 placeholder: 'HH:mm',
                 help: 'Formatos comuns:\nh:mm a = 2:30 PM (12 horas)\nHH:mm = 14:30 (24 horas)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\nTokens:\nHH/H = 24 horas\nhh/h = 12 horas\nmm = minutos\nss = segundos\na = AM/PM',
-                helpTooltip: 'Formato usando date-fns',
-                dateFnsLinkText: 'formato date-fns'
+                helpTooltip: 'Formato usando Moment',
+                momentLinkText: 'formato Moment'
             },
             showFilePreview: {
                 name: 'Mostrar pré-visualização da nota',
@@ -1543,10 +1543,10 @@ export const STRINGS_PT = {
             },
             frontmatterDateFormat: {
                 name: 'Formato de timestamp',
-                desc: 'Formato usado para analisar timestamps no frontmatter. Deixe vazio para usar formato ISO 8601',
-                helpTooltip: 'Formato usando date-fns',
-                dateFnsLinkText: 'formato date-fns',
-                help: "Formatos comuns:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'Formato usado para analisar timestamps no frontmatter. Deixe vazio para usar parsing ISO 8601.',
+                helpTooltip: 'Formato usando Moment',
+                momentLinkText: 'formato Moment',
+                help: 'Formatos comuns:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Apoiar desenvolvimento',

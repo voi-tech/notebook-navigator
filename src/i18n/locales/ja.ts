@@ -1227,19 +1227,19 @@ export const STRINGS_JA = {
             },
             dateFormat: {
                 name: '日付形式',
-                desc: '日付表示の形式（date-fns形式を使用）。',
-                placeholder: 'yyyy年M月d日',
-                help: '一般的な形式：\nyyyy年M月d日 = 2022年5月25日\nyyyy-MM-dd = 2022-05-25\nMM/dd/yyyy = 05/25/2022\n\nトークン：\nyyyy/yy = 年\nMMMM/MMM/MM/M = 月\ndd/d = 日\nEEEE/EEE = 曜日',
-                helpTooltip: 'date-fns形式',
-                dateFnsLinkText: 'date-fns フォーマット'
+                desc: '日付表示の形式（Moment形式を使用）。',
+                placeholder: 'YYYY年M月D日',
+                help: '一般的な形式：\nYYYY年M月D日 = 2022年5月25日\nYYYY-MM-DD = 2022-05-25\nMM/DD/YYYY = 05/25/2022\n\nトークン：\nYYYY/YY = 年\nMMMM/MMM/MM/M = 月\nDD/D = 日\ndddd/ddd = 曜日',
+                helpTooltip: 'Moment形式',
+                momentLinkText: 'Moment フォーマット'
             },
             timeFormat: {
                 name: '時刻形式',
-                desc: '時刻を表示する形式（date-fns形式を使用）。',
+                desc: '時刻を表示する形式（Moment形式を使用）。',
                 placeholder: 'HH:mm',
                 help: '一般的な形式：\nHH:mm = 14:30（24時間制）\nh:mm a = 2:30 PM（12時間制）\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nトークン：\nHH/H = 24時間制\nhh/h = 12時間制\nmm = 分\nss = 秒\na = AM/PM',
-                helpTooltip: 'date-fns形式',
-                dateFnsLinkText: 'date-fns フォーマット'
+                helpTooltip: 'Moment形式',
+                momentLinkText: 'Moment フォーマット'
             },
             showFilePreview: {
                 name: 'ノートプレビューを表示',
@@ -1542,10 +1542,10 @@ export const STRINGS_JA = {
             },
             frontmatterDateFormat: {
                 name: 'タイムスタンプ形式',
-                desc: 'フロントマター内のタイムスタンプを解析するために使用される形式。空のままにするとISO 8601形式を使用',
-                helpTooltip: 'date-fns形式',
-                dateFnsLinkText: 'date-fns フォーマット',
-                help: "一般的な形式:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'フロントマター内のタイムスタンプを解析するために使用される形式。空のままにするとISO 8601解析を使用。',
+                helpTooltip: 'Moment形式',
+                momentLinkText: 'Moment フォーマット',
+                help: '一般的な形式:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: '開発をサポート',

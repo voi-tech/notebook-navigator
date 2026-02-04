@@ -19,7 +19,6 @@
 import React, { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Menu, Notice, TFile } from 'obsidian';
-import { getWeek, getWeekYear } from 'date-fns';
 import { getCurrentLanguage, strings } from '../i18n';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { useServices } from '../context/ServicesContext';
@@ -35,7 +34,6 @@ import {
     getDailyNoteSettings as getCoreDailyNoteSettings
 } from '../utils/dailyNotes';
 import { getMomentApi, resolveMomentLocale, type MomentInstance } from '../utils/moment';
-import { getCalendarWeekConfig } from '../utils/dateFnsLocale';
 import { ServiceIcon } from './ServiceIcon';
 import { useFileOpener } from '../hooks/useFileOpener';
 import { extractFrontmatterName } from '../utils/metadataExtractor';
@@ -210,7 +208,7 @@ function getDayOfWeek(date: MomentInstance): number {
 }
 
 function startOfWeek(date: MomentInstance, weekStartsOn: number): MomentInstance {
-    // Compute week starts using date-fns locale rules (first day of week) while keeping moment for date math/formatting.
+    // Compute week start using the configured first day of week while keeping Moment for date math/formatting.
     const dayOfWeek = getDayOfWeek(date);
     const diff = (dayOfWeek - weekStartsOn + 7) % 7;
     return date.clone().subtract(diff, 'day').startOf('day');
@@ -394,8 +392,14 @@ export function NavigationPaneCalendar({
         return resolveMomentLocale(requested, momentApi, displayLocale);
     }, [displayLocale, momentApi, settings.calendarLocale]);
 
-    const weekConfig = useMemo(() => getCalendarWeekConfig(calendarRulesLocale), [calendarRulesLocale]);
-    const weekStartsOn = weekConfig.weekStartsOn;
+    const weekStartsOn = useMemo(() => {
+        if (!momentApi) {
+            return 1;
+        }
+        const localeData = momentApi().locale(calendarRulesLocale).localeData();
+        const firstDay = localeData.firstDayOfWeek();
+        return typeof firstDay === 'number' && Number.isInteger(firstDay) && firstDay >= 0 && firstDay <= 6 ? firstDay : 1;
+    }, [calendarRulesLocale, momentApi]);
 
     const weekdays = useMemo(() => {
         if (!momentApi) {
@@ -493,8 +497,9 @@ export function NavigationPaneCalendar({
         const visibleWeeks: CalendarWeek[] = [];
         for (let weekOffset = 0; weekOffset < weekCount; weekOffset++) {
             const weekStart = windowStart.clone().add(weekOffset, 'week');
-            const weekNumber = getWeek(weekStart.toDate(), weekConfig);
-            const weekYear = getWeekYear(weekStart.toDate(), weekConfig);
+            const weekMoment = weekStart.clone().locale(calendarRulesLocale);
+            const weekNumber = weekMoment.week();
+            const weekYear = weekMoment.weekYear();
 
             const days: CalendarDay[] = [];
             for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
@@ -524,6 +529,7 @@ export function NavigationPaneCalendar({
         return visibleWeeks;
     }, [
         app,
+        calendarRulesLocale,
         cursorDate,
         dailyNoteSettings,
         momentApi,
@@ -531,7 +537,6 @@ export function NavigationPaneCalendar({
         settings.calendarIntegrationMode,
         weeksToShowSetting,
         customCalendarDayPathBuilder,
-        weekConfig,
         weekStartsOn
     ]);
 

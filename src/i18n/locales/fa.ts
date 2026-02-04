@@ -1223,19 +1223,19 @@ export const STRINGS_FA = {
             },
             dateFormat: {
                 name: 'قالب تاریخ',
-                desc: 'قالب نمایش تاریخ‌ها (از قالب date-fns استفاده می‌کند).',
-                placeholder: 'yyyy/MM/dd',
-                help: 'قالب‌های رایج:\nyyyy/MM/dd = ۱۴۰۱/۰۵/۲۵\ndd/MM/yyyy = ۲۵/۰۵/۲۰۲۲\nyyyy-MM-dd = 2022-05-25\n\nتوکن‌ها:\nyyyy/yy = سال\nMMMM/MMM/MM = ماه\ndd/d = روز\nEEEE/EEE = روز هفته',
-                helpTooltip: 'قالب با استفاده از date-fns',
-                dateFnsLinkText: 'قالب date-fns'
+                desc: 'قالب نمایش تاریخ‌ها (از قالب Moment استفاده می‌کند).',
+                placeholder: 'YYYY/MM/DD',
+                help: 'قالب‌های رایج:\nYYYY/MM/DD = ۱۴۰۱/۰۵/۲۵\nDD/MM/YYYY = ۲۵/۰۵/۲۰۲۲\nYYYY-MM-DD = 2022-05-25\n\nتوکن‌ها:\nYYYY/YY = سال\nMMMM/MMM/MM = ماه\nDD/D = روز\ndddd/ddd = روز هفته',
+                helpTooltip: 'قالب با استفاده از Moment',
+                momentLinkText: 'قالب Moment'
             },
             timeFormat: {
                 name: 'قالب زمان',
-                desc: 'قالب نمایش زمان‌ها (از قالب date-fns استفاده می‌کند).',
+                desc: 'قالب نمایش زمان‌ها (از قالب Moment استفاده می‌کند).',
                 placeholder: 'HH:mm',
                 help: 'قالب‌های رایج:\nHH:mm = ۱۴:۳۰ (۲۴ ساعته)\nh:mm a = 2:30 PM (۱۲ ساعته)\nHH:mm:ss = ۱۴:۳۰:۴۵\nh:mm:ss a = 2:30:45 PM\n\nتوکن‌ها:\nHH/H = ۲۴ ساعته\nhh/h = ۱۲ ساعته\nmm = دقیقه\nss = ثانیه\na = صبح/عصر',
-                helpTooltip: 'قالب با استفاده از date-fns',
-                dateFnsLinkText: 'قالب date-fns'
+                helpTooltip: 'قالب با استفاده از Moment',
+                momentLinkText: 'قالب Moment'
             },
             showFilePreview: {
                 name: 'نمایش پیش‌نمایش یادداشت',
@@ -1538,10 +1538,10 @@ export const STRINGS_FA = {
             },
             frontmatterDateFormat: {
                 name: 'قالب زمان',
-                desc: 'قالب استفاده‌شده برای تجزیه زمان‌ها در فرانت‌متر. برای استفاده از قالب ISO 8601 خالی بگذارید',
-                helpTooltip: 'قالب با استفاده از date-fns',
-                dateFnsLinkText: 'قالب date-fns',
-                help: "قالب‌های رایج:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'قالب استفاده‌شده برای تجزیه زمان‌ها در فرانت‌متر. برای استفاده از تجزیه ISO 8601 خالی بگذارید.',
+                helpTooltip: 'قالب با استفاده از Moment',
+                momentLinkText: 'قالب Moment',
+                help: 'قالب‌های رایج:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'حمایت از توسعه',

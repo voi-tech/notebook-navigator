@@ -1222,19 +1222,19 @@ export const STRINGS_ZH_CN = {
             },
             dateFormat: {
                 name: '日期格式',
-                desc: '用于显示日期的格式（使用 date-fns 格式）。',
-                placeholder: 'yyyy年M月d日',
-                help: '常用格式：\nyyyy年M月d日 = 2022年5月25日\nyyyy-MM-dd = 2022-05-25\nMM/dd/yyyy = 05/25/2022\n\n标记：\nyyyy/yy = 年\nMMMM/MMM/MM/M = 月\ndd/d = 日\nEEEE/EEE = 星期',
-                helpTooltip: '使用 date-fns 格式',
-                dateFnsLinkText: 'date-fns 格式'
+                desc: '用于显示日期的格式（使用 Moment 格式）。',
+                placeholder: 'YYYY年M月D日',
+                help: '常用格式：\nYYYY年M月D日 = 2022年5月25日\nYYYY-MM-DD = 2022-05-25\nMM/DD/YYYY = 05/25/2022\n\n标记：\nYYYY/YY = 年\nMMMM/MMM/MM/M = 月\nDD/D = 日\ndddd/ddd = 星期',
+                helpTooltip: '使用 Moment 格式',
+                momentLinkText: 'Moment 格式'
             },
             timeFormat: {
                 name: '时间格式',
-                desc: '用于显示时间的格式（使用 date-fns 格式）。',
+                desc: '用于显示时间的格式（使用 Moment 格式）。',
                 placeholder: 'HH:mm',
-                help: '常用格式：\nHH:mm = 14:30（24小时制）\nh:mm a = 2:30 PM（12小时制）\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\n标记：\nHH/H = 24小时制\nhh/h = 12小时制\nmm = 分钟\nss = 秒\na = 上午/下午',
-                helpTooltip: '使用 date-fns 格式',
-                dateFnsLinkText: 'date-fns 格式'
+                help: '常用格式：\nHH:mm = 14:30（24小时制）\nAh:mm = 下午2:30（12小时制）\nHH:mm:ss = 14:30:45\nAh:mm:ss = 下午2:30:45\n\n标记：\nHH/H = 24小时制\nhh/h = 12小时制\nmm = 分钟\nss = 秒\nA = 上午/下午',
+                helpTooltip: '使用 Moment 格式',
+                momentLinkText: 'Moment 格式'
             },
             showFilePreview: {
                 name: '显示笔记预览',
@@ -1537,10 +1537,10 @@ export const STRINGS_ZH_CN = {
             },
             frontmatterDateFormat: {
                 name: '时间戳格式',
-                desc: '用于解析前言中时间戳的格式。留空使用 ISO 8601 格式',
-                helpTooltip: '使用 date-fns 格式',
-                dateFnsLinkText: 'date-fns 格式',
-                help: "常用格式:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: '用于解析前言中时间戳的格式。留空使用 ISO 8601 解析。',
+                helpTooltip: '使用 Moment 格式',
+                momentLinkText: 'Moment 格式',
+                help: '常用格式:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: '支持开发',

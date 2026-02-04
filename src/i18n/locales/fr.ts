@@ -1230,19 +1230,19 @@ export const STRINGS_FR = {
             },
             dateFormat: {
                 name: 'Format de date',
-                desc: 'Format pour afficher les dates (utilise le format date-fns).',
-                placeholder: 'd MMMM yyyy',
-                help: 'Formats courants :\nd MMMM yyyy = 25 mai 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nJetons :\nyyyy/yy = année\nMMMM/MMM/MM = mois\ndd/d = jour\nEEEE/EEE = jour de la semaine',
-                helpTooltip: 'Format avec date-fns',
-                dateFnsLinkText: 'format date-fns'
+                desc: 'Format pour afficher les dates (utilise le format Moment).',
+                placeholder: 'D MMMM YYYY',
+                help: 'Formats courants :\nD MMMM YYYY = 25 mai 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nJetons :\nYYYY/YY = année\nMMMM/MMM/MM = mois\nDD/D = jour\ndddd/ddd = jour de la semaine',
+                helpTooltip: 'Format avec Moment',
+                momentLinkText: 'format Moment'
             },
             timeFormat: {
                 name: "Format d'heure",
-                desc: 'Format pour afficher les heures (utilise le format date-fns).',
+                desc: 'Format pour afficher les heures (utilise le format Moment).',
                 placeholder: 'HH:mm',
                 help: 'Formats courants :\nHH:mm = 14:30 (24 heures)\nh:mm a = 2:30 PM (12 heures)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nJetons :\nHH/H = 24 heures\nhh/h = 12 heures\nmm = minutes\nss = secondes\na = AM/PM',
-                helpTooltip: 'Format avec date-fns',
-                dateFnsLinkText: 'format date-fns'
+                helpTooltip: 'Format avec Moment',
+                momentLinkText: 'format Moment'
             },
             showFilePreview: {
                 name: "Afficher l'aperçu de la note",
@@ -1546,10 +1546,10 @@ export const STRINGS_FR = {
             },
             frontmatterDateFormat: {
                 name: "Format d'horodatage",
-                desc: 'Format utilisé pour analyser les horodatages dans le frontmatter. Laisser vide pour utiliser le format ISO 8601',
-                helpTooltip: 'Format avec date-fns',
-                dateFnsLinkText: 'format date-fns',
-                help: "Formats courants :\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'Format utilisé pour analyser les horodatages dans le frontmatter. Laisser vide pour utiliser le parsing ISO 8601.',
+                helpTooltip: 'Format avec Moment',
+                momentLinkText: 'format Moment',
+                help: 'Formats courants :\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Soutenir le développement',

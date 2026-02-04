@@ -1225,19 +1225,19 @@ export const STRINGS_ID = {
             },
             dateFormat: {
                 name: 'Format tanggal',
-                desc: 'Format untuk menampilkan tanggal (menggunakan format date-fns).',
-                placeholder: 'd MMM yyyy',
-                help: 'Format umum:\nd MMM yyyy = 25 Mei 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nToken:\nyyyy/yy = tahun\nMMMM/MMM/MM = bulan\ndd/d = hari\nEEEE/EEE = hari kerja',
-                helpTooltip: 'Format menggunakan date-fns',
-                dateFnsLinkText: 'format date-fns'
+                desc: 'Format untuk menampilkan tanggal (menggunakan format Moment).',
+                placeholder: 'D MMM YYYY',
+                help: 'Format umum:\nD MMM YYYY = 25 Mei 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nToken:\nYYYY/YY = tahun\nMMMM/MMM/MM = bulan\nDD/D = hari\ndddd/ddd = hari kerja',
+                helpTooltip: 'Format menggunakan Moment',
+                momentLinkText: 'format Moment'
             },
             timeFormat: {
                 name: 'Format waktu',
-                desc: 'Format untuk menampilkan waktu (menggunakan format date-fns).',
+                desc: 'Format untuk menampilkan waktu (menggunakan format Moment).',
                 placeholder: 'HH:mm',
                 help: 'Format umum:\nHH:mm = 14:30 (24 jam)\nh:mm a = 2:30 PM (12 jam)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nToken:\nHH/H = 24 jam\nhh/h = 12 jam\nmm = menit\nss = detik\na = AM/PM',
-                helpTooltip: 'Format menggunakan date-fns',
-                dateFnsLinkText: 'format date-fns'
+                helpTooltip: 'Format menggunakan Moment',
+                momentLinkText: 'format Moment'
             },
             showFilePreview: {
                 name: 'Tampilkan pratinjau catatan',
@@ -1541,9 +1541,9 @@ export const STRINGS_ID = {
             frontmatterDateFormat: {
                 name: 'Format timestamp',
                 desc: 'Format yang digunakan untuk mengurai timestamp di frontmatter. Biarkan kosong untuk menggunakan format ISO 8601',
-                helpTooltip: 'Format menggunakan date-fns',
-                dateFnsLinkText: 'format date-fns',
-                help: "Format umum:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                helpTooltip: 'Format menggunakan Moment',
+                momentLinkText: 'format Moment',
+                help: 'Format umum:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Dukung pengembangan',

@@ -19,6 +19,7 @@
 import { Platform, Plugin, TFile, FileView, TFolder, WorkspaceLeaf, addIcon } from 'obsidian';
 import { NotebookNavigatorSettings, DEFAULT_SETTINGS, NotebookNavigatorSettingTab } from './settings';
 import { migrateRecentColors, migrateReleaseCheckState } from './settings/migrations/localPreferences';
+import { migrateMomentDateFormats } from './settings/migrations/momentFormats';
 import {
     applyExistingUserDefaults,
     applyLegacyPeriodicNotesFolderMigration,
@@ -444,6 +445,13 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         this.sanitizeSettingsRecords();
 
+        const migratedMomentFormats = migrateMomentDateFormats({
+            settings: this.settings,
+            defaultDateFormat: getDefaultDateFormat(),
+            defaultTimeFormat: getDefaultTimeFormat(),
+            defaultSettings: DEFAULT_SETTINGS
+        });
+
         // Set language-specific date/time formats if not already set
         if (!this.settings.dateFormat) {
             this.settings.dateFormat = getDefaultDateFormat();
@@ -520,7 +528,8 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         syncModeRegistry.vaultProfile.resolveOnLoad({ storedData });
         this.refreshMatcherCachesIfNeeded();
 
-        const needsPersistedCleanup = migratedReleaseState || migratedRecentColors || hadLocalValuesInSettings || uiScaleMigrated;
+        const needsPersistedCleanup =
+            migratedReleaseState || migratedRecentColors || hadLocalValuesInSettings || uiScaleMigrated || migratedMomentFormats;
 
         if (needsPersistedCleanup) {
             await this.saveData(this.getPersistableSettings());

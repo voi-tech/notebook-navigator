@@ -17,7 +17,7 @@
  */
 
 import { ButtonComponent, DropdownComponent, Platform, Setting, SliderComponent } from 'obsidian';
-import { DATE_FNS_FORMAT_DOCS_URL, getWelcomeVideoBaseUrl, SUPPORT_BUY_ME_A_COFFEE_URL, SUPPORT_SPONSOR_URL } from '../../constants/urls';
+import { MOMENT_FORMAT_DOCS_URL, getWelcomeVideoBaseUrl, SUPPORT_BUY_ME_A_COFFEE_URL, SUPPORT_SPONSOR_URL } from '../../constants/urls';
 import { HomepageModal } from '../../modals/HomepageModal';
 import { strings } from '../../i18n';
 import { showNotice } from '../../utils/noticeUtils';
@@ -927,12 +927,12 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             strings.settings.items.dateFormat.name,
             createSettingDescriptionWithExternalLink({
                 text: strings.settings.items.dateFormat.desc,
-                link: { text: strings.settings.items.dateFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+                link: { text: strings.settings.items.dateFormat.momentLinkText, href: MOMENT_FORMAT_DOCS_URL }
             }),
             strings.settings.items.dateFormat.placeholder,
             () => plugin.settings.dateFormat,
             value => {
-                plugin.settings.dateFormat = value || 'MMM d, yyyy';
+                plugin.settings.dateFormat = value || 'MMM D, YYYY';
             }
         );
     });
@@ -952,7 +952,7 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             strings.settings.items.timeFormat.name,
             createSettingDescriptionWithExternalLink({
                 text: strings.settings.items.timeFormat.desc,
-                link: { text: strings.settings.items.timeFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+                link: { text: strings.settings.items.timeFormat.momentLinkText, href: MOMENT_FORMAT_DOCS_URL }
             }),
             strings.settings.items.timeFormat.placeholder,
             () => plugin.settings.timeFormat,

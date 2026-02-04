@@ -1223,19 +1223,19 @@ export const STRINGS_VI = {
             },
             dateFormat: {
                 name: 'Định dạng ngày',
-                desc: 'Định dạng hiển thị ngày (dùng định dạng date-fns).',
-                placeholder: 'd MMM yyyy',
-                help: 'Định dạng phổ biến:\nd MMM yyyy = 25 Th5 2022\ndd/MM/yyyy = 25/05/2022\nyyyy-MM-dd = 2022-05-25\n\nToken:\nyyyy/yy = năm\nMMMM/MMM/MM = tháng\ndd/d = ngày\nEEEE/EEE = thứ',
-                helpTooltip: 'Định dạng với date-fns',
-                dateFnsLinkText: 'định dạng date-fns'
+                desc: 'Định dạng hiển thị ngày (dùng định dạng Moment).',
+                placeholder: 'D MMM YYYY',
+                help: 'Định dạng phổ biến:\nD MMM YYYY = 25 Th5 2022\nDD/MM/YYYY = 25/05/2022\nYYYY-MM-DD = 2022-05-25\n\nToken:\nYYYY/YY = năm\nMMMM/MMM/MM = tháng\nDD/D = ngày\ndddd/ddd = thứ',
+                helpTooltip: 'Định dạng với Moment',
+                momentLinkText: 'định dạng Moment'
             },
             timeFormat: {
                 name: 'Định dạng giờ',
-                desc: 'Định dạng hiển thị giờ (dùng định dạng date-fns).',
+                desc: 'Định dạng hiển thị giờ (dùng định dạng Moment).',
                 placeholder: 'HH:mm',
                 help: 'Định dạng phổ biến:\nh:mm a = 2:30 PM (12 giờ)\nHH:mm = 14:30 (24 giờ)\nh:mm:ss a = 2:30:45 PM\nHH:mm:ss = 14:30:45\n\nToken:\nHH/H = 24 giờ\nhh/h = 12 giờ\nmm = phút\nss = giây\na = SA/CH',
-                helpTooltip: 'Định dạng với date-fns',
-                dateFnsLinkText: 'định dạng date-fns'
+                helpTooltip: 'Định dạng với Moment',
+                momentLinkText: 'định dạng Moment'
             },
             showFilePreview: {
                 name: 'Hiện xem trước ghi chú',
@@ -1539,9 +1539,9 @@ export const STRINGS_VI = {
             frontmatterDateFormat: {
                 name: 'Định dạng dấu thời gian',
                 desc: 'Định dạng dùng để phân tích dấu thời gian trong frontmatter. Để trống để dùng định dạng ISO 8601',
-                helpTooltip: 'Định dạng với date-fns',
-                dateFnsLinkText: 'định dạng date-fns',
-                help: "Định dạng phổ biến:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                helpTooltip: 'Định dạng với Moment',
+                momentLinkText: 'định dạng Moment',
+                help: 'Định dạng phổ biến:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Hỗ trợ phát triển',

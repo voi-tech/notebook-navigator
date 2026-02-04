@@ -18,7 +18,7 @@
 
 import { Setting, ButtonComponent, App, TAbstractFile, TFile } from 'obsidian';
 import { strings } from '../../i18n';
-import { DATE_FNS_FORMAT_DOCS_URL } from '../../constants/urls';
+import { MOMENT_FORMAT_DOCS_URL } from '../../constants/urls';
 import { showNotice } from '../../utils/noticeUtils';
 import { ISO_DATE_FORMAT } from '../../utils/dateUtils';
 import { TIMEOUTS } from '../../types/obsidian-extended';
@@ -282,7 +282,7 @@ export function renderNotesTab(context: SettingsTabContext): void {
             strings.settings.items.frontmatterDateFormat.name,
             createSettingDescriptionWithExternalLink({
                 text: strings.settings.items.frontmatterDateFormat.desc,
-                link: { text: strings.settings.items.frontmatterDateFormat.dateFnsLinkText, href: DATE_FNS_FORMAT_DOCS_URL }
+                link: { text: strings.settings.items.frontmatterDateFormat.momentLinkText, href: MOMENT_FORMAT_DOCS_URL }
             }),
             ISO_DATE_FORMAT,
             () => plugin.settings.frontmatterDateFormat,

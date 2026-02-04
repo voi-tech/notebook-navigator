@@ -132,20 +132,20 @@ export const strings: TranslationStrings = LANGUAGE_MAP[getObsidianLanguage()];
 
 /**
  * Get the default date format for the current language
- * Falls back to 'MMM d, yyyy' if not found
+ * Uses Moment format tokens
  */
 export function getDefaultDateFormat(): string {
     const lang = getObsidianLanguage();
     const localeStrings = LANGUAGE_MAP[lang] || LANGUAGE_MAP.en;
-    return localeStrings.settings.items.dateFormat.placeholder;
+    return localeStrings.settings.items.dateFormat.placeholder || 'MMM D, YYYY';
 }
 
 /**
  * Get the default time format for the current language
- * Falls back to 'h:mm a' if not found
+ * Uses Moment format tokens
  */
 export function getDefaultTimeFormat(): string {
     const lang = getObsidianLanguage();
     const localeStrings = LANGUAGE_MAP[lang] || LANGUAGE_MAP.en;
-    return localeStrings.settings.items.timeFormat.placeholder;
+    return localeStrings.settings.items.timeFormat.placeholder || 'h:mm a';
 }

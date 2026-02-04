@@ -59,7 +59,6 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@tanstack/react-virtual": "^3.13.12",
-    "date-fns": "^4.1.0",
     "emojilib": "^4.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

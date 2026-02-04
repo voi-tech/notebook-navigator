@@ -1226,19 +1226,19 @@ export const STRINGS_RU = {
             },
             dateFormat: {
                 name: 'Формат даты',
-                desc: 'Формат отображения дат (использует формат date-fns).',
-                placeholder: 'd MMMM yyyy',
-                help: 'Распространённые форматы:\nd MMMM yyyy = 25 мая 2022\ndd.MM.yyyy = 25.05.2022\nyyyy-MM-dd = 2022-05-25\n\nТокены:\nyyyy/yy = год\nMMMM/MMM/MM = месяц\ndd/d = день\nEEEE/EEE = день недели',
-                helpTooltip: 'Формат date-fns',
-                dateFnsLinkText: 'формат date-fns'
+                desc: 'Формат отображения дат (использует формат Moment).',
+                placeholder: 'D MMMM YYYY',
+                help: 'Распространённые форматы:\nD MMMM YYYY = 25 мая 2022\nDD.MM.YYYY = 25.05.2022\nYYYY-MM-DD = 2022-05-25\n\nТокены:\nYYYY/YY = год\nMMMM/MMM/MM = месяц\nDD/D = день\ndddd/ddd = день недели',
+                helpTooltip: 'Формат Moment',
+                momentLinkText: 'формат Moment'
             },
             timeFormat: {
                 name: 'Формат времени',
-                desc: 'Формат отображения времени (использует формат date-fns).',
+                desc: 'Формат отображения времени (использует формат Moment).',
                 placeholder: 'HH:mm',
                 help: 'Распространённые форматы:\nHH:mm = 14:30 (24-часовой)\nh:mm a = 2:30 PM (12-часовой)\nHH:mm:ss = 14:30:45\nh:mm:ss a = 2:30:45 PM\n\nТокены:\nHH/H = 24-часовой\nhh/h = 12-часовой\nmm = минуты\nss = секунды\na = AM/PM',
-                helpTooltip: 'Формат date-fns',
-                dateFnsLinkText: 'формат date-fns'
+                helpTooltip: 'Формат Moment',
+                momentLinkText: 'формат Moment'
             },
             showFilePreview: {
                 name: 'Показывать превью заметки',
@@ -1542,10 +1542,10 @@ export const STRINGS_RU = {
             },
             frontmatterDateFormat: {
                 name: 'Формат временной метки',
-                desc: 'Формат для разбора временных меток во frontmatter. Оставьте пустым для использования формата ISO 8601',
-                helpTooltip: 'Формат date-fns',
-                dateFnsLinkText: 'формат date-fns',
-                help: "Распространённые форматы:\nyyyy-MM-dd'T'HH:mm:ss → 2025-01-04T14:30:45\nyyyy-MM-dd'T'HH:mm:ssXXX → 2025-08-07T16:53:39+02:00\ndd/MM/yyyy HH:mm:ss → 04/01/2025 14:30:45\nMM/dd/yyyy h:mm:ss a → 01/04/2025 2:30:45 PM"
+                desc: 'Формат для разбора временных меток во frontmatter. Оставьте пустым для использования парсинга ISO 8601.',
+                helpTooltip: 'Формат Moment',
+                momentLinkText: 'формат Moment',
+                help: 'Распространённые форматы:\nYYYY-MM-DD[T]HH:mm:ss → 2025-01-04T14:30:45\nYYYY-MM-DD[T]HH:mm:ssZ → 2025-08-07T16:53:39+02:00\nDD/MM/YYYY HH:mm:ss → 04/01/2025 14:30:45\nMM/DD/YYYY h:mm:ss a → 01/04/2025 2:30:45 PM'
             },
             supportDevelopment: {
                 name: 'Поддержать разработку',
