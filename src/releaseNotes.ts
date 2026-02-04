@@ -78,7 +78,10 @@ const RELEASE_NOTES: ReleaseNote[] = [
         version: '2.2.4',
         date: '2026-02-09',
         showOnUpdate: true,
-        new: ['==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.'],
+        new: [
+            '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
+            'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.'
+        ],
         improved: ['You can now remove icons from the recently used icons list.'],
         changed: []
     },

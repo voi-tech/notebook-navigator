@@ -958,7 +958,10 @@ export const NotebookNavigatorComponent = React.memo(
               : { width: `${paneSize}px`, height: '100%' };
 
         const shouldRenderSinglePaneCalendar =
-            uiState.singlePane && uxPreferences.showCalendar && settings.calendarPlacement === 'left-sidebar';
+            uiState.singlePane &&
+            uxPreferences.showCalendar &&
+            settings.calendarPlacement === 'left-sidebar' &&
+            settings.calendarLeftPlacement === 'below';
 
         return (
             <div className="nn-scale-wrapper" data-ui-scale={scaleWrapperDataAttr} style={scaleWrapperStyle}>

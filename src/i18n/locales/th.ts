@@ -632,6 +632,7 @@ export const STRINGS_TH = {
             navigation: {
                 appearance: 'ลักษณะ',
                 shortcutsAndRecent: 'ทางลัดและรายการล่าสุด',
+                leftSidebar: 'แถบด้านซ้าย',
                 calendarIntegration: 'การรวมปฏิทิน'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_TH = {
                 options: {
                     leftSidebar: 'แถบด้านซ้าย',
                     rightSidebar: 'แถบด้านขวา'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'ตำแหน่งแผงเดี่ยว',
+                desc: 'ตำแหน่งที่แสดงปฏิทินในโหมดแผงเดี่ยว',
+                options: {
+                    navigationPane: 'แผงนำทาง',
+                    below: 'ใต้แผง'
                 }
             },
             calendarLocale: {

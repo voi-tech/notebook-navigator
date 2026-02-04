@@ -632,6 +632,7 @@ export const STRINGS_IT = {
             navigation: {
                 appearance: 'Aspetto',
                 shortcutsAndRecent: 'Scorciatoie ed elementi recenti',
+                leftSidebar: 'Barra laterale sinistra',
                 calendarIntegration: 'Integrazione calendario'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_IT = {
                 options: {
                     leftSidebar: 'Barra laterale sinistra',
                     rightSidebar: 'Barra laterale destra'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Posizione pannello singolo',
+                desc: 'Dove viene mostrato il calendario in modalità pannello singolo.',
+                options: {
+                    navigationPane: 'Pannello di navigazione',
+                    below: 'Sotto i pannelli'
                 }
             },
             calendarLocale: {

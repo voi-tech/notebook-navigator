@@ -632,6 +632,7 @@ export const STRINGS_KO = {
             navigation: {
                 appearance: '모양',
                 shortcutsAndRecent: '바로가기 및 최근 항목',
+                leftSidebar: '왼쪽 사이드바',
                 calendarIntegration: '캘린더 연동'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_KO = {
                 options: {
                     leftSidebar: '왼쪽 사이드바',
                     rightSidebar: '오른쪽 사이드바'
+                }
+            },
+            calendarLeftPlacement: {
+                name: '단일 창 배치',
+                desc: '단일 창 모드에서 캘린더가 표시되는 위치입니다.',
+                options: {
+                    navigationPane: '탐색 창',
+                    below: '창 아래'
                 }
             },
             calendarLocale: {

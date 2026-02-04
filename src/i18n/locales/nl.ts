@@ -634,6 +634,7 @@ export const STRINGS_NL = {
             navigation: {
                 appearance: 'Uiterlijk',
                 shortcutsAndRecent: 'Snelkoppelingen en recente items',
+                leftSidebar: 'Linkerzijbalk',
                 calendarIntegration: 'Kalenderintegratie'
             },
             list: {
@@ -943,6 +944,14 @@ export const STRINGS_NL = {
                 options: {
                     leftSidebar: 'Linker zijbalk',
                     rightSidebar: 'Rechter zijbalk'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Enkele paneel plaatsing',
+                desc: 'Waar de kalender wordt weergegeven in enkele paneelmodus.',
+                options: {
+                    navigationPane: 'Navigatiepaneel',
+                    below: 'Onder panelen'
                 }
             },
             calendarLocale: {

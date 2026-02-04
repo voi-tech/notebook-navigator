@@ -632,6 +632,7 @@ export const STRINGS_AR = {
             navigation: {
                 appearance: 'المظهر',
                 shortcutsAndRecent: 'الاختصارات والعناصر الأخيرة',
+                leftSidebar: 'الشريط الجانبي الأيسر',
                 calendarIntegration: 'تكامل التقويم'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_AR = {
                 options: {
                     leftSidebar: 'الشريط الجانبي الأيمن', // RTL: "Left sidebar" → "Right sidebar" (appears on right in RTL)
                     rightSidebar: 'الشريط الجانبي الأيسر' // RTL: "Right sidebar" → "Left sidebar" (appears on left in RTL)
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'موضع الجزء الفردي',
+                desc: 'مكان عرض التقويم في وضع الجزء الفردي.',
+                options: {
+                    navigationPane: 'جزء التنقل',
+                    below: 'أسفل الأجزاء'
                 }
             },
             calendarLocale: {

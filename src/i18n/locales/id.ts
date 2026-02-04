@@ -632,6 +632,7 @@ export const STRINGS_ID = {
             navigation: {
                 appearance: 'Tampilan',
                 shortcutsAndRecent: 'Pintasan & item terbaru',
+                leftSidebar: 'Bilah sisi kiri',
                 calendarIntegration: 'Integrasi kalender'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_ID = {
                 options: {
                     leftSidebar: 'Sidebar kiri',
                     rightSidebar: 'Sidebar kanan'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Penempatan panel tunggal',
+                desc: 'Tempat kalender ditampilkan dalam mode panel tunggal.',
+                options: {
+                    navigationPane: 'Panel navigasi',
+                    below: 'Di bawah panel'
                 }
             },
             calendarLocale: {

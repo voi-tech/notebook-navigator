@@ -62,4 +62,28 @@ describe('DateUtils.parseFrontmatterDate', () => {
 
         expect(new Date(timestamp).getHours()).toBe(3);
     });
+
+    it('parses ISO 8601 with timezone offset when dateFormat is empty', () => {
+        const value = '2026-02-04T17:33:04+01:00';
+        const timestamp = DateUtils.parseFrontmatterDate(value, '');
+
+        expect(timestamp).toBeDefined();
+        if (timestamp === undefined) {
+            throw new Error('Expected timestamp to be defined');
+        }
+
+        expect(timestamp).toBe(Date.parse(value));
+    });
+
+    it('parses ISO 8601 without timezone as local time when dateFormat is empty', () => {
+        const value = '2026-02-04T17:33:04';
+        const timestamp = DateUtils.parseFrontmatterDate(value, '');
+
+        expect(timestamp).toBeDefined();
+        if (timestamp === undefined) {
+            throw new Error('Expected timestamp to be defined');
+        }
+
+        expect(timestamp).toBe(new Date(2026, 1, 4, 17, 33, 4).getTime());
+    });
 });

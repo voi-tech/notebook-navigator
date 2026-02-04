@@ -47,6 +47,7 @@ export const SYNC_MODE_SETTING_IDS = [
     'navItemHeight',
     'navItemHeightScaleText',
     'calendarPlacement',
+    'calendarLeftPlacement',
     'calendarWeeksToShow',
     'compactItemHeight',
     'compactItemHeightScaleText',
@@ -128,6 +129,13 @@ export type CalendarPlacement = 'left-sidebar' | 'right-sidebar';
 
 export function isCalendarPlacement(value: unknown): value is CalendarPlacement {
     return value === 'left-sidebar' || value === 'right-sidebar';
+}
+
+/** Where the left-sidebar calendar is shown in single-pane mode. */
+export type CalendarLeftPlacement = 'navigation' | 'below';
+
+export function isCalendarLeftPlacement(value: unknown): value is CalendarLeftPlacement {
+    return value === 'navigation' || value === 'below';
 }
 
 /** Which days are highlighted as weekend days in the calendar UI. */
@@ -247,12 +255,13 @@ export interface NotebookNavigatorSettings {
     calendarPlacement: CalendarPlacement;
     calendarLocale: string;
     calendarWeekendDays: CalendarWeekendDays;
+    calendarConfirmBeforeCreate: boolean;
+    calendarLeftPlacement: CalendarLeftPlacement;
     calendarWeeksToShow: CalendarWeeksToShow;
     calendarHighlightToday: boolean;
     calendarShowFeatureImage: boolean;
     calendarShowWeekNumber: boolean;
     calendarShowQuarter: boolean;
-    calendarConfirmBeforeCreate: boolean;
 
     // Calendar tab - Calendar integration
     calendarIntegrationMode: CalendarIntegrationMode;

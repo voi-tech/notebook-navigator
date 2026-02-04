@@ -276,8 +276,12 @@ export const NavigationPane = React.memo(
         const uiDispatch = useUIDispatch();
         const isVerticalDualPane = !uiState.singlePane && settings.dualPaneOrientation === 'vertical';
         const calendarPlacement = settings.calendarPlacement;
+        const isLeftSidebarCalendar = calendarPlacement === 'left-sidebar';
+        const shouldShowCalendarInDualPaneOverlay = !uiState.singlePane && !isVerticalDualPane;
+        const shouldShowCalendarInSinglePaneNavigation =
+            uiState.singlePane && settings.calendarLeftPlacement === 'navigation' && uiState.currentSinglePaneView === 'navigation';
         const shouldRenderCalendarOverlay =
-            !uiState.singlePane && calendarPlacement === 'left-sidebar' && showCalendar && !isVerticalDualPane;
+            isLeftSidebarCalendar && showCalendar && (shouldShowCalendarInDualPaneOverlay || shouldShowCalendarInSinglePaneNavigation);
         const shortcuts = useShortcuts();
         const {
             shortcuts: shortcutsList,

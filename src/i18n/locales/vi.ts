@@ -632,6 +632,7 @@ export const STRINGS_VI = {
             navigation: {
                 appearance: 'Giao diện',
                 shortcutsAndRecent: 'Phím tắt và mục gần đây',
+                leftSidebar: 'Thanh bên trái',
                 calendarIntegration: 'Tích hợp lịch'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_VI = {
                 options: {
                     leftSidebar: 'Thanh bên trái',
                     rightSidebar: 'Thanh bên phải'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Vị trí chế độ bảng đơn',
+                desc: 'Nơi hiển thị lịch trong chế độ bảng đơn.',
+                options: {
+                    navigationPane: 'Bảng điều hướng',
+                    below: 'Bên dưới các bảng'
                 }
             },
             calendarLocale: {

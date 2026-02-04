@@ -260,6 +260,7 @@ export interface LocalStorageKeys {
     navItemHeightKey: string;
     navItemHeightScaleTextKey: string;
     calendarPlacementKey: string;
+    calendarLeftPlacementKey: string;
     calendarWeeksToShowKey: string;
     compactItemHeightKey: string;
     compactItemHeightScaleTextKey: string;
@@ -309,6 +310,7 @@ export const STORAGE_KEYS: LocalStorageKeys = {
     navItemHeightKey: 'notebook-navigator-nav-item-height',
     navItemHeightScaleTextKey: 'notebook-navigator-nav-item-height-scale-text',
     calendarPlacementKey: 'notebook-navigator-calendar-placement',
+    calendarLeftPlacementKey: 'notebook-navigator-calendar-left-placement',
     calendarWeeksToShowKey: 'notebook-navigator-calendar-weeks-to-show',
     compactItemHeightKey: 'notebook-navigator-compact-item-height',
     compactItemHeightScaleTextKey: 'notebook-navigator-compact-item-height-scale-text'

@@ -631,6 +631,7 @@ export const STRINGS_ZH_TW = {
             navigation: {
                 appearance: '外觀',
                 shortcutsAndRecent: '捷徑和最近項目',
+                leftSidebar: '左側邊欄',
                 calendarIntegration: '行事曆整合'
             },
             list: {
@@ -939,6 +940,14 @@ export const STRINGS_ZH_TW = {
                 options: {
                     leftSidebar: '左側邊欄',
                     rightSidebar: '右側邊欄'
+                }
+            },
+            calendarLeftPlacement: {
+                name: '單窗格位置',
+                desc: '單窗格模式下日曆顯示的位置。',
+                options: {
+                    navigationPane: '導航窗格',
+                    below: '窗格下方'
                 }
             },
             calendarLocale: {

@@ -19,7 +19,7 @@
 import { DropdownComponent, ExtraButtonComponent, Setting } from 'obsidian';
 import { getCurrentLanguage, strings } from '../../i18n';
 import { MOMENT_FORMAT_DOCS_URL } from '../../constants/urls';
-import { isCalendarPlacement, isCalendarWeekendDays, type CalendarWeeksToShow } from '../types';
+import { isCalendarLeftPlacement, isCalendarPlacement, isCalendarWeekendDays, type CalendarWeeksToShow } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import {
     createCalendarCustomDateFormatter,
@@ -153,9 +153,29 @@ export function renderCalendarTab(context: SettingsTabContext): void {
             })
         );
 
-    const appearanceGroup = createGroup(strings.settings.groups.navigation.appearance);
+    const leftSidebarGroup = createGroup(strings.settings.groups.navigation.leftSidebar);
 
-    const calendarWeeksToShowSetting = appearanceGroup.addSetting(setting => {
+    const calendarLeftPlacementSetting = leftSidebarGroup.addSetting(setting => {
+        setting.setName(strings.settings.items.calendarLeftPlacement.name).setDesc(strings.settings.items.calendarLeftPlacement.desc);
+    });
+
+    calendarLeftPlacementSetting.addDropdown((dropdown: DropdownComponent) => {
+        dropdown
+            .addOption('below', strings.settings.items.calendarLeftPlacement.options.below)
+            .addOption('navigation', strings.settings.items.calendarLeftPlacement.options.navigationPane)
+            .setValue(plugin.settings.calendarLeftPlacement)
+            .onChange(value => {
+                if (!isCalendarLeftPlacement(value)) {
+                    return;
+                }
+
+                plugin.setCalendarLeftPlacement(value);
+            });
+    });
+
+    addSettingSyncModeToggle({ setting: calendarLeftPlacementSetting, plugin, settingId: 'calendarLeftPlacement' });
+
+    const calendarWeeksToShowSetting = leftSidebarGroup.addSetting(setting => {
         setting.setName(strings.settings.items.calendarWeeksToShow.name).setDesc(strings.settings.items.calendarWeeksToShow.desc);
     });
 
@@ -177,6 +197,8 @@ export function renderCalendarTab(context: SettingsTabContext): void {
     });
 
     addSettingSyncModeToggle({ setting: calendarWeeksToShowSetting, plugin, settingId: 'calendarWeeksToShow' });
+
+    const appearanceGroup = createGroup(strings.settings.groups.navigation.appearance);
 
     appearanceGroup
         .addSetting(setting => {

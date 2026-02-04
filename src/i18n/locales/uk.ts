@@ -632,6 +632,7 @@ export const STRINGS_UK = {
             navigation: {
                 appearance: 'Вигляд',
                 shortcutsAndRecent: 'Ярлики та нещодавні елементи',
+                leftSidebar: 'Ліва бічна панель',
                 calendarIntegration: 'Інтеграція з календарем'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_UK = {
                 options: {
                     leftSidebar: 'Ліва бічна панель',
                     rightSidebar: 'Права бічна панель'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Розташування в режимі однієї панелі',
+                desc: 'Де відображається календар у режимі однієї панелі.',
+                options: {
+                    navigationPane: 'Панель навігації',
+                    below: 'Під панелями'
                 }
             },
             calendarLocale: {

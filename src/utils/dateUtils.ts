@@ -18,13 +18,13 @@
 
 import { TFile } from 'obsidian';
 
-import { format, parse, Locale } from 'date-fns';
+import { format, parse, parseISO, Locale } from 'date-fns';
 import { strings, getCurrentLanguage } from '../i18n';
 import { NotebookNavigatorSettings } from '../settings';
 import { getDateFnsLocale } from './dateFnsLocale';
 
-// Default ISO 8601 date format used when no format is specified
-export const ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+// Example ISO 8601 date-fns format string used as a settings placeholder
+export const ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
 export class DateUtils {
     /**
@@ -262,9 +262,16 @@ export class DateUtils {
 
             // If it's a string, parse it
             if (typeof value === 'string') {
-                // Use ISO format if dateFormat is empty
-                const formatToUse = dateFormat || ISO_DATE_FORMAT;
                 const trimmedValue = value.trim();
+                if (!dateFormat || !dateFormat.trim()) {
+                    const isoParsedDate = parseISO(trimmedValue);
+                    if (!isNaN(isoParsedDate.getTime())) {
+                        return isoParsedDate.getTime();
+                    }
+                    return undefined;
+                }
+
+                const formatToUse = dateFormat;
                 const normalizedLanguage = DateUtils.getNormalizedLanguage();
                 const normalizedValue = DateUtils.normalizeMeridiemSpacing(trimmedValue, normalizedLanguage);
                 const locale = DateUtils.getDateFnsLocale(normalizedLanguage);

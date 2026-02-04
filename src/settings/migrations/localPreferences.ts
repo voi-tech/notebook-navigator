@@ -26,9 +26,11 @@ import { DEFAULT_UI_SCALE, sanitizeUIScale } from '../../utils/uiScale';
 import {
     isAlphaSortOrder,
     isCalendarPlacement,
+    isCalendarLeftPlacement,
     isTagSortOrder,
     type AlphaSortOrder,
     type CalendarPlacement,
+    type CalendarLeftPlacement,
     type CalendarWeeksToShow,
     type TagSortOrder
 } from '../types';
@@ -121,6 +123,10 @@ function parseNavItemHeight(value: unknown): number | null {
 
 function parseCalendarPlacement(value: unknown): CalendarPlacement | null {
     return isCalendarPlacement(value) ? value : null;
+}
+
+function parseCalendarLeftPlacement(value: unknown): CalendarLeftPlacement | null {
+    return isCalendarLeftPlacement(value) ? value : null;
 }
 
 // Parses the calendar weeks-to-show setting to a supported integer value.
@@ -435,6 +441,37 @@ export function resolveCalendarPlacement(params: {
     // Seed local storage with a valid default value.
     const fallback = defaultSettings.calendarPlacement;
     localStorage.set(keys.calendarPlacementKey, fallback);
+    return { value: fallback, migrated: false };
+}
+
+/**
+ * Resolves the calendar single-pane placement for left sidebar with local overrides.
+ */
+export function resolveCalendarLeftPlacement(params: {
+    storedData: Record<string, unknown> | null;
+    keys: LocalStorageKeys;
+    defaultSettings: NotebookNavigatorSettings;
+}): MigrationResolution<CalendarLeftPlacement> {
+    const { storedData, keys, defaultSettings } = params;
+
+    const storedLocal = localStorage.get<unknown>(keys.calendarLeftPlacementKey);
+    const localValue = parseCalendarLeftPlacement(storedLocal);
+    if (localValue !== null) {
+        // Local storage takes precedence for per-device preferences.
+        return { value: localValue, migrated: false };
+    }
+
+    const storedSetting = storedData?.['calendarLeftPlacement'];
+    const settingValue = parseCalendarLeftPlacement(storedSetting);
+    if (settingValue !== null) {
+        // Migrate legacy synced value into local storage.
+        localStorage.set(keys.calendarLeftPlacementKey, settingValue);
+        return { value: settingValue, migrated: true };
+    }
+
+    // Seed local storage with a valid default value.
+    const fallback = defaultSettings.calendarLeftPlacement;
+    localStorage.set(keys.calendarLeftPlacementKey, fallback);
     return { value: fallback, migrated: false };
 }
 

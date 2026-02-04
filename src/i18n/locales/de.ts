@@ -633,6 +633,7 @@ export const STRINGS_DE = {
             navigation: {
                 appearance: 'Darstellung',
                 shortcutsAndRecent: 'Verknüpfungen & Letzte Einträge',
+                leftSidebar: 'Linke Seitenleiste',
                 calendarIntegration: 'Kalenderintegration'
             },
             list: {
@@ -943,6 +944,14 @@ export const STRINGS_DE = {
                 options: {
                     leftSidebar: 'Linke Seitenleiste',
                     rightSidebar: 'Rechte Seitenleiste'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Einzelbereichs-Platzierung',
+                desc: 'Wo der Kalender im Einzelbereichs-Modus angezeigt wird.',
+                options: {
+                    navigationPane: 'Navigationsbereich',
+                    below: 'Unter den Bereichen'
                 }
             },
             calendarLocale: {

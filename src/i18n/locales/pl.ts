@@ -634,6 +634,7 @@ export const STRINGS_PL = {
             navigation: {
                 appearance: 'Wygląd',
                 shortcutsAndRecent: 'Skróty i ostatnie elementy',
+                leftSidebar: 'Lewy panel boczny',
                 calendarIntegration: 'Integracja z kalendarzem'
             },
             list: {
@@ -943,6 +944,14 @@ export const STRINGS_PL = {
                 options: {
                     leftSidebar: 'Lewy pasek boczny',
                     rightSidebar: 'Prawy pasek boczny'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Pozycja w trybie pojedynczego panelu',
+                desc: 'Gdzie kalendarz jest wyświetlany w trybie pojedynczego panelu.',
+                options: {
+                    navigationPane: 'Panel nawigacji',
+                    below: 'Poniżej paneli'
                 }
             },
             calendarLocale: {

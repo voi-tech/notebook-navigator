@@ -632,6 +632,7 @@ export const STRINGS_TR = {
             navigation: {
                 appearance: 'Görünüm',
                 shortcutsAndRecent: 'Kısayollar ve son öğeler',
+                leftSidebar: 'Sol kenar çubuğu',
                 calendarIntegration: 'Takvim entegrasyonu'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_TR = {
                 options: {
                     leftSidebar: 'Sol kenar çubuğu',
                     rightSidebar: 'Sağ kenar çubuğu'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'Tek panel yerleşimi',
+                desc: 'Takvimin tek panel modunda gösterildiği yer.',
+                options: {
+                    navigationPane: 'Gezinme paneli',
+                    below: 'Panellerin altında'
                 }
             },
             calendarLocale: {

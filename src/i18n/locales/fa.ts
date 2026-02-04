@@ -632,6 +632,7 @@ export const STRINGS_FA = {
             navigation: {
                 appearance: 'ظاهر',
                 shortcutsAndRecent: 'میانبرها و موارد اخیر',
+                leftSidebar: 'نوار کناری چپ',
                 calendarIntegration: 'یکپارچه‌سازی تقویم'
             },
             list: {
@@ -941,6 +942,14 @@ export const STRINGS_FA = {
                 options: {
                     leftSidebar: 'نوار کناری راست', // RTL: "Left sidebar" → "Right sidebar" (appears on right in RTL)
                     rightSidebar: 'نوار کناری چپ' // RTL: "Right sidebar" → "Left sidebar" (appears on left in RTL)
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'جایگاه پنل تکی',
+                desc: 'محل نمایش تقویم در حالت پنل تکی.',
+                options: {
+                    navigationPane: 'پنل ناوبری',
+                    below: 'زیر پنل‌ها'
                 }
             },
             calendarLocale: {

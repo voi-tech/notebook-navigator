@@ -633,6 +633,7 @@ export const STRINGS_JA = {
             navigation: {
                 appearance: '外観',
                 shortcutsAndRecent: 'ショートカットと最近の項目',
+                leftSidebar: '左サイドバー',
                 calendarIntegration: 'カレンダー連携'
             },
             list: {
@@ -942,6 +943,14 @@ export const STRINGS_JA = {
                 options: {
                     leftSidebar: '左サイドバー',
                     rightSidebar: '右サイドバー'
+                }
+            },
+            calendarLeftPlacement: {
+                name: 'シングルペイン配置',
+                desc: 'シングルペインモードでのカレンダー表示位置。',
+                options: {
+                    navigationPane: 'ナビゲーションペイン',
+                    below: 'ペインの下'
                 }
             },
             calendarLocale: {

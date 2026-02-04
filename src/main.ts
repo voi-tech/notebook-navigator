@@ -87,9 +87,11 @@ import type { RevealFileOptions } from './hooks/useNavigatorReveal';
 import type { FolderAppearance } from './hooks/useListPaneAppearance';
 import {
     type CalendarPlacement,
+    type CalendarLeftPlacement,
     type CalendarWeeksToShow,
     type AlphaSortOrder,
     isCalendarPlacement,
+    isCalendarLeftPlacement,
     isCalendarWeekendDays,
     isAlphaSortOrder,
     isSettingSyncMode,
@@ -330,6 +332,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             sanitizeNavItemHeightSetting: value => this.sanitizeNavItemHeightSetting(value),
             sanitizeCalendarWeeksToShowSetting: value => this.sanitizeCalendarWeeksToShowSetting(value),
             sanitizeCalendarPlacementSetting: value => this.sanitizeCalendarPlacementSetting(value),
+            sanitizeCalendarLeftPlacementSetting: value => this.sanitizeCalendarLeftPlacementSetting(value),
             sanitizeCompactItemHeightSetting: value => this.sanitizeCompactItemHeightSetting(value),
             defaultUXPreferences: getDefaultUXPreferences(),
             isUXPreferencesRecord: value => this.isUXPreferencesRecord(value),
@@ -578,6 +581,10 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
     private sanitizeCalendarPlacementSetting(value: unknown): CalendarPlacement {
         return isCalendarPlacement(value) ? value : DEFAULT_SETTINGS.calendarPlacement;
+    }
+
+    private sanitizeCalendarLeftPlacementSetting(value: unknown): CalendarLeftPlacement {
+        return isCalendarLeftPlacement(value) ? value : DEFAULT_SETTINGS.calendarLeftPlacement;
     }
 
     private sanitizeCalendarWeeksToShowSetting(value: unknown): CalendarWeeksToShow {
@@ -1341,6 +1348,14 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         if (previousPlacement === 'right-sidebar' && placement === 'left-sidebar') {
             this.setShowCalendar(true);
         }
+    }
+
+    public setCalendarLeftPlacement(placement: CalendarLeftPlacement): void {
+        this.updateSettingAndMirrorToLocalStorage({
+            settingId: 'calendarLeftPlacement',
+            localStorageKey: this.keys.calendarLeftPlacementKey,
+            nextValue: placement
+        });
     }
 
     /**
