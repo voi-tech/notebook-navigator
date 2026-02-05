@@ -139,7 +139,51 @@ export const STRINGS_ES = {
         saveSearchShortcut: 'Guardar búsqueda en accesos directos',
         removeSearchShortcut: 'Eliminar búsqueda de accesos directos',
         shortcutModalTitle: 'Guardar búsqueda',
-        shortcutNamePlaceholder: 'Introduce el nombre'
+        shortcutNamePlaceholder: 'Introduce el nombre',
+        searchHelp: 'Sintaxis de búsqueda',
+        searchHelpTitle: 'Sintaxis de búsqueda',
+        searchHelpModal: {
+            intro: 'Combina nombres de archivo, etiquetas y fechas en una consulta (ej. `meeting #work @thisweek`). Omnisearch usa búsqueda de texto completo e ignora los tokens de etiquetas y fechas.',
+            sections: {
+                fileNames: {
+                    title: 'Nombres de archivo',
+                    items: [
+                        '`word` Encontrar notas con "word" en el nombre del archivo.',
+                        '`word1 word2` Cada palabra debe coincidir con el nombre del archivo.',
+                        '`!word` Excluir notas con "word" en el nombre del archivo.'
+                    ]
+                },
+                tags: {
+                    title: 'Etiquetas',
+                    items: [
+                        '`#tag` Incluir notas con etiqueta (también coincide con etiquetas anidadas como `#tag/subtag`).',
+                        '`#` Incluir solo notas con etiquetas.',
+                        '`!#tag` Excluir notas con etiqueta.',
+                        '`!#` Incluir solo notas sin etiquetas.',
+                        '`#tag1 #tag2` Coincidir con ambas etiquetas (AND implícito).',
+                        '`#tag1 AND #tag2` Coincidir con ambas etiquetas (AND explícito).',
+                        '`#tag1 OR #tag2` Coincidir con cualquiera de las etiquetas.',
+                        '`#a OR #b AND #c` AND tiene mayor precedencia: coincide con `#a`, o ambos `#b` y `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Fechas',
+                    items: [
+                        '`@today` Encontrar notas de hoy usando el campo de fecha predeterminado.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Rangos de fechas relativos.',
+                        '`@2026-02-07` Encontrar un día específico (también admite `@20260207`).',
+                        '`@2026` Encontrar un año calendario.',
+                        '`@2026-02` o `@202602` Encontrar un mes calendario.',
+                        '`@2026-W05` o `@2026W05` Encontrar una semana ISO.',
+                        '`@2026-Q2` o `@2026Q2` Encontrar un trimestre calendario.',
+                        '`@13/02/2026` Formatos numéricos con separadores (`@07022026` sigue tu configuración regional cuando es ambiguo).',
+                        '`@2026-02-01..2026-02-07` Encontrar un rango de días inclusivo (extremos abiertos soportados).',
+                        '`@c:...` o `@m:...` Apuntar a fecha de creación o modificación.',
+                        '`!@...` Excluir una coincidencia de fecha.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -670,7 +714,7 @@ export const STRINGS_ES = {
                     filterSearch: {
                         title: 'Búsqueda por filtro (predeterminado):',
                         description:
-                            'Filtra archivos por nombre y etiquetas dentro de la carpeta actual y subcarpetas. Modo filtro: texto y etiquetas mezclados coinciden con todos los términos (ej. "proyecto #trabajo"). Modo etiquetas: búsqueda solo con etiquetas admite operadores AND/OR (ej. "#trabajo AND #urgente", "#proyecto OR #personal"). Cmd/Ctrl+Clic en etiquetas para añadir con AND, Cmd/Ctrl+Mayús+Clic para añadir con OR. Admite exclusión con prefijo ! (ej. !borrador, !#archivado) y búsqueda de notas sin etiquetas con !#.'
+                            'Filtra archivos por nombre y etiquetas dentro de la carpeta actual y subcarpetas. Modo filtro: texto y etiquetas mezclados coinciden con todos los términos (ej. "proyecto #trabajo"). Modo etiquetas: búsqueda solo con etiquetas admite operadores AND/OR (ej. "#trabajo AND #urgente", "#proyecto OR #personal"). Cmd/Ctrl+Clic en etiquetas para añadir con AND, Cmd/Ctrl+Mayús+Clic para añadir con OR. Admite exclusión con prefijo ! (ej. !borrador, !#archivado) y búsqueda de notas sin etiquetas con !#. Admite filtros de fecha con prefijo @ (ej. @today, @2026-02-04, @2026-02-01..2026-02-04). Usa @c: o @m: para apuntar a fechas de creación/modificación, y !@ para excluir rangos. El campo de fecha predeterminado sigue el orden actual; al ordenar por nombre, usa Ajustes → Notas → Fecha → Al ordenar por nombre.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

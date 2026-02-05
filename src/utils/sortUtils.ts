@@ -17,7 +17,7 @@
  */
 
 import { TFile, TFolder } from 'obsidian';
-import type { SortOption, NotebookNavigatorSettings } from '../settings';
+import type { AlphabeticalDateMode, SortOption, NotebookNavigatorSettings } from '../settings';
 import { NavigationItemType, ItemType } from '../types';
 
 export { SORT_OPTIONS } from '../settings/types';
@@ -26,7 +26,7 @@ export function isDateSortOption(sortOption: SortOption): boolean {
     return sortOption.startsWith('modified') || sortOption.startsWith('created');
 }
 
-export function isAlphabeticalSortOption(sortOption: SortOption): boolean {
+function isAlphabeticalSortOption(sortOption: SortOption): boolean {
     return !isDateSortOption(sortOption);
 }
 
@@ -201,4 +201,16 @@ export function getSortIcon(sortOption: SortOption): string {
  */
 export function getDateField(sortOption: SortOption): 'ctime' | 'mtime' {
     return sortOption.startsWith('created') ? 'ctime' : 'mtime';
+}
+
+/**
+ * Resolves which date field to use based on sort option and alphabetical date mode setting.
+ * For date sorts, uses the sort field; for alphabetical sorts, uses the user preference.
+ */
+export function resolveDefaultDateField(sortOption: SortOption, alphabeticalDateMode: AlphabeticalDateMode): 'created' | 'modified' {
+    if (isAlphabeticalSortOption(sortOption)) {
+        return alphabeticalDateMode === 'created' ? 'created' : 'modified';
+    }
+
+    return getDateField(sortOption) === 'ctime' ? 'created' : 'modified';
 }

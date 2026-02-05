@@ -24,9 +24,11 @@ import { useServices } from '../context/ServicesContext';
 import { strings } from '../i18n';
 import { matchesShortcut, KeyboardShortcutAction } from '../utils/keyboardShortcuts';
 import { runAsyncAction, type MaybePromise } from '../utils/async';
+import { SearchDateInputSuggest } from '../suggest/SearchDateInputSuggest';
 import { SearchTagInputSuggest } from '../suggest/SearchTagInputSuggest';
 import type { SearchProvider } from '../types/search';
 import { resolveUXIcon } from '../utils/uxIcons';
+import { SearchHelpModal } from '../modals/SearchHelpModal';
 
 interface SearchInputProps {
     searchQuery: string;
@@ -60,6 +62,7 @@ export function SearchInput({
 }: SearchInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const tagSuggestRef = useRef<SearchTagInputSuggest | null>(null);
+    const dateSuggestRef = useRef<SearchDateInputSuggest | null>(null);
     const { isMobile, omnisearchService, app, tagTreeService } = useServices();
     const settings = useSettingsState();
     const uiState = useUIState();
@@ -128,11 +131,41 @@ export function SearchInput({
         };
     }, [app, tagTreeService, settings.showTags, applyTagSuggestion, isMobile]);
 
+    // Initialize date filter suggestions on the search input (Filter search provider)
+    useEffect(() => {
+        const inputEl = inputRef.current;
+        if (!inputEl) {
+            return;
+        }
+
+        const activeProvider = searchProvider ?? settings.searchProvider ?? 'internal';
+        const isOmnisearchSelected = activeProvider === 'omnisearch';
+        const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
+        const shouldEnableDateSuggest = !(isOmnisearchSelected && isOmnisearchAvailable);
+
+        if (!shouldEnableDateSuggest) {
+            dateSuggestRef.current?.close();
+            dateSuggestRef.current = null;
+            return;
+        }
+
+        const suggest = new SearchDateInputSuggest(app, inputEl, {
+            onApply: applyTagSuggestion,
+            isMobile
+        });
+        dateSuggestRef.current = suggest;
+        return () => {
+            dateSuggestRef.current = null;
+            suggest.dispose();
+        };
+    }, [app, applyTagSuggestion, isMobile, omnisearchService, searchProvider, settings.searchProvider]);
+
     useEffect(() => {
         if (searchQuery.trim().length > 0) {
             return;
         }
         tagSuggestRef.current?.close();
+        dateSuggestRef.current?.close();
     }, [searchQuery]);
 
     /**
@@ -203,9 +236,25 @@ export function SearchInput({
     const showShortcutButton = hasQuery && Boolean(onSaveShortcut || (isShortcutSaved && onRemoveShortcut));
     const shortcutButtonDisabled = isShortcutDisabled || (!isShortcutSaved && !onSaveShortcut) || (isShortcutSaved && !onRemoveShortcut);
 
+    // Builds container class name with modifier when shortcut button is visible
+    const searchContainerClassName = useMemo(() => {
+        const classes = ['nn-search-input-container'];
+        if (showShortcutButton) {
+            classes.push('nn-search-input-container--has-shortcut');
+        }
+        return classes.join(' ');
+    }, [showShortcutButton]);
+
+    // Opens the search syntax help modal, closing any active suggest popups first
+    const openSearchHelp = useCallback(() => {
+        tagSuggestRef.current?.close();
+        dateSuggestRef.current?.close();
+        new SearchHelpModal(app).open();
+    }, [app]);
+
     return (
         <div className="nn-search-input-wrapper">
-            <div className="nn-search-input-container">
+            <div className={searchContainerClassName}>
                 <ServiceIcon iconId={searchIconId} className="nn-search-input-icon" />
                 <input
                     ref={inputRef}
@@ -219,6 +268,25 @@ export function SearchInput({
                     onKeyDown={handleKeyDown}
                     onClick={handleSearchClick}
                 />
+                {!hasQuery && (
+                    <div
+                        className="nn-search-help-button"
+                        role="button"
+                        tabIndex={0}
+                        aria-label={strings.searchInput.searchHelp}
+                        onClick={() => {
+                            openSearchHelp();
+                        }}
+                        onKeyDown={event => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                openSearchHelp();
+                            }
+                        }}
+                    >
+                        <ServiceIcon iconId="info" aria-hidden={true} />
+                    </div>
+                )}
                 {/* Star button to save/remove search as shortcut */}
                 {showShortcutButton && (
                     <div

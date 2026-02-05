@@ -40,11 +40,19 @@ import { TIMEOUTS } from '../types/obsidian-extended';
 import { DateUtils } from '../utils/dateUtils';
 import { getFilesForFolder, getFilesForTag, collectPinnedPaths } from '../utils/fileFinder';
 import { shouldExcludeFile, createHiddenFileNameMatcher, isFolderInExcludedFolder } from '../utils/fileFilters';
-import { getDateField, getEffectiveSortOption, isDateSortOption, isPropertySortOption, naturalCompare } from '../utils/sortUtils';
+import {
+    getDateField,
+    getEffectiveSortOption,
+    isDateSortOption,
+    isPropertySortOption,
+    naturalCompare,
+    resolveDefaultDateField
+} from '../utils/sortUtils';
 import { strings } from '../i18n';
 import { FILE_VISIBILITY } from '../utils/fileTypeUtils';
 import {
     parseFilterSearchTokens,
+    fileMatchesDateFilterTokens,
     fileMatchesFilterTokens,
     filterSearchHasActiveCriteria,
     filterSearchNeedsTagLookup,
@@ -130,7 +138,7 @@ export function useListPaneData({
     visibility
 }: UseListPaneDataParams): UseListPaneDataResult {
     const { app, tagTreeService, commandQueue, omnisearchService } = useServices();
-    const { getFileCreatedTime, getFileModifiedTime, getDB, getFileDisplayName } = useFileCache();
+    const { getFileTimestamps, getDB, getFileDisplayName } = useFileCache();
     const { includeDescendantNotes, showHiddenItems } = visibility;
 
     // State to force updates when vault changes (incremented on create/delete/rename)
@@ -377,6 +385,10 @@ export function useListPaneData({
             return baseFiles;
         }
 
+        // Check if date filtering is needed and resolve which date field to use
+        const hasDateFilters = tokens.dateRanges.length > 0 || tokens.excludeDateRanges.length > 0;
+        const defaultDateField = resolveDefaultDateField(sortOption, settings.alphabeticalDateMode ?? 'modified');
+
         // Check if we need to access tag metadata for any file
         const needsTagLookup = filterSearchNeedsTagLookup(tokens);
         // Check if all inclusion clauses require files to have tags
@@ -405,7 +417,19 @@ export function useListPaneData({
 
             // Skip tag lookup if tokens do not reference tags
             if (!needsTagLookup) {
-                return fileMatchesFilterTokens(lowercaseName, emptyTags, tokens);
+                if (!fileMatchesFilterTokens(lowercaseName, emptyTags, tokens)) {
+                    return false;
+                }
+
+                if (!hasDateFilters) {
+                    return true;
+                }
+
+                const timestamps = getFileTimestamps(file);
+                return fileMatchesDateFilterTokens(
+                    { created: timestamps.created, modified: timestamps.modified, defaultField: defaultDateField },
+                    tokens
+                );
             }
 
             const rawTags = getCachedFileTags({ app, file, db });
@@ -425,12 +449,36 @@ export function useListPaneData({
                 lowercaseTags = TAG_PRESENCE_SENTINEL;
             }
 
-            return fileMatchesFilterTokens(lowercaseName, lowercaseTags, tokens);
+            if (!fileMatchesFilterTokens(lowercaseName, lowercaseTags, tokens)) {
+                return false;
+            }
+
+            if (!hasDateFilters) {
+                return true;
+            }
+
+            const timestamps = getFileTimestamps(file);
+            return fileMatchesDateFilterTokens(
+                { created: timestamps.created, modified: timestamps.modified, defaultField: defaultDateField },
+                tokens
+            );
         });
 
         // Return the filtered results from the internal filter search
         return filteredByFilterSearch;
-    }, [useOmnisearch, trimmedQuery, baseFiles, searchableNames, omnisearchResult, getDB, searchTokens, app]);
+    }, [
+        useOmnisearch,
+        trimmedQuery,
+        baseFiles,
+        searchableNames,
+        omnisearchResult,
+        getDB,
+        getFileTimestamps,
+        searchTokens,
+        sortOption,
+        settings.alphabeticalDateMode,
+        app
+    ]);
 
     // Builds map of file paths that are normally hidden but shown via "show hidden items"
     const hiddenFileState = useMemo(() => {
@@ -620,7 +668,8 @@ export function useListPaneData({
             unpinnedFiles.forEach(file => {
                 const dateField = getDateField(sortOption);
                 // Get timestamp based on sort field (created or modified)
-                const timestamp = dateField === 'ctime' ? getFileCreatedTime(file) : getFileModifiedTime(file);
+                const timestamps = getFileTimestamps(file);
+                const timestamp = dateField === 'ctime' ? timestamps.created : timestamps.modified;
                 const groupTitle = DateUtils.getDateGroup(timestamp);
 
                 if (groupTitle !== currentGroup) {
@@ -761,8 +810,7 @@ export function useListPaneData({
         selectionType,
         selectedFolder,
         selectedTag,
-        getFileCreatedTime,
-        getFileModifiedTime,
+        getFileTimestamps,
         searchMetaMap,
         sortOption,
         getDB,

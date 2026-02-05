@@ -80,12 +80,11 @@ const RELEASE_NOTES: ReleaseNote[] = [
         showOnUpdate: true,
         new: [
             '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
+            '==Date filters in search==! You can now filter notes by date using the "@" symbol. Some examples: @today, @2026W02, @2026-Q1, @13/02/2026, or ranges like @2026-01-01..2026-02-07. You can specifically choose created date with @c:, modified date with @m:, or exclude date matches with !@.',
             'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.'
         ],
         improved: ['You can now remove icons from the recently used icons list.'],
-        changed: [
-            'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
-        ]
+        changed: ['Format settings now use **Moment format**. Existing formats migrate automatically where possible.']
     },
     {
         version: '2.2.3',

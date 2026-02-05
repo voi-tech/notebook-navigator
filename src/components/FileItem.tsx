@@ -67,7 +67,7 @@ import { getTooltipPlacement } from '../utils/domUtils';
 import { openFileInContext } from '../utils/openFileInContext';
 import { FILE_VISIBILITY, getExtensionSuffix, isImageFile, shouldDisplayFile } from '../utils/fileTypeUtils';
 import { resolveFileDragIconId, resolveFileIconId } from '../utils/fileIconUtils';
-import { getDateField, isAlphabeticalSortOption, naturalCompare } from '../utils/sortUtils';
+import { naturalCompare, resolveDefaultDateField } from '../utils/sortUtils';
 import { getCachedFileTags } from '../utils/tagUtils';
 import {
     areCustomPropertyItemsEqual,
@@ -311,8 +311,7 @@ export const FileItem = React.memo(function FileItem({
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
     const appearanceSettings = useListPaneAppearance();
-    const { getFileDisplayName, getDB, getFileCreatedTime, getFileModifiedTime, hasPreview, regenerateFeatureImageForFile } =
-        useFileCache();
+    const { getFileDisplayName, getDB, getFileTimestamps, hasPreview, regenerateFeatureImageForFile } = useFileCache();
     const { navigateToTag } = useTagNavigation();
     const metadataService = useMetadataService();
     const { addNoteShortcut, hasNoteShortcut, noteShortcutKeysByPath, removeShortcut } = useShortcuts();
@@ -909,16 +908,9 @@ export const FileItem = React.memo(function FileItem({
     const displayDate = useMemo(() => {
         if (!appearanceSettings.showDate || !sortOption) return '';
 
-        const createdTimestamp = getFileCreatedTime(file);
-        const modifiedTimestamp = getFileModifiedTime(file);
-        const isAlphabeticalSort = isAlphabeticalSortOption(sortOption);
-        const alphabeticalMode = settings.alphabeticalDateMode ?? 'modified';
-
-        // Determine which date to show based on sort option and user preference
-        const dateField = getDateField(sortOption);
-        // For alphabetical sort, use the alphabeticalMode setting; for date sorts, use the sort field
-        const shouldUseCreatedDate = isAlphabeticalSort ? alphabeticalMode === 'created' : dateField === 'ctime';
-        const timestamp = shouldUseCreatedDate ? createdTimestamp : modifiedTimestamp;
+        const timestamps = getFileTimestamps(file);
+        const defaultDateField = resolveDefaultDateField(sortOption, settings.alphabeticalDateMode ?? 'modified');
+        const timestamp = defaultDateField === 'created' ? timestamps.created : timestamps.modified;
 
         // Pinned items are all grouped under "📌 Pinned" section regardless of their actual dates
         // We need to calculate the actual date group to show smart formatting
@@ -948,8 +940,7 @@ export const FileItem = React.memo(function FileItem({
         settings.dateFormat,
         settings.timeFormat,
         settings.alphabeticalDateMode,
-        getFileCreatedTime,
-        getFileModifiedTime,
+        getFileTimestamps,
         metadataVersion
     ]);
 
@@ -1286,10 +1277,9 @@ export const FileItem = React.memo(function FileItem({
 
         // Format dates for tooltip with time
         const dateTimeFormat = settings.timeFormat ? `${settings.dateFormat} ${settings.timeFormat}` : settings.dateFormat;
-        const createdTimestamp = getFileCreatedTime(file);
-        const modifiedTimestamp = getFileModifiedTime(file);
-        const createdDate = DateUtils.formatDate(createdTimestamp, dateTimeFormat);
-        const modifiedDate = DateUtils.formatDate(modifiedTimestamp, dateTimeFormat);
+        const timestamps = getFileTimestamps(file);
+        const createdDate = DateUtils.formatDate(timestamps.created, dateTimeFormat);
+        const modifiedDate = DateUtils.formatDate(timestamps.modified, dateTimeFormat);
 
         // Check current sort to determine date order
         const isCreatedSort = sortOption ? sortOption.startsWith('created-') : false;
@@ -1326,8 +1316,7 @@ export const FileItem = React.memo(function FileItem({
         settings,
         displayName,
         extensionSuffix,
-        getFileCreatedTime,
-        getFileModifiedTime,
+        getFileTimestamps,
         sortOption,
         metadataVersion,
         file.name

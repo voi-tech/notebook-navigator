@@ -336,6 +336,10 @@
     box-sizing: border-box;
 }
 
+.nn-search-input-container--has-shortcut .nn-search-input {
+    padding-right: 84px !important;
+}
+
 /* Active search state - when there's a search query */
 .nn-search-input.nn-search-active {
     background: var(--nn-theme-list-search-active-bg) !important;

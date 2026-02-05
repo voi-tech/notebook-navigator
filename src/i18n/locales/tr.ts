@@ -140,7 +140,51 @@ export const STRINGS_TR = {
         saveSearchShortcut: 'Arama kısayolunu kaydet',
         removeSearchShortcut: 'Arama kısayolunu kaldır',
         shortcutModalTitle: 'Arama kısayolunu kaydet',
-        shortcutNamePlaceholder: 'Kısayol adını girin'
+        shortcutNamePlaceholder: 'Kısayol adını girin',
+        searchHelp: 'Arama sözdizimi',
+        searchHelpTitle: 'Arama sözdizimi',
+        searchHelpModal: {
+            intro: 'Dosya adlarını, etiketleri ve tarihleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek`). Omnisearch tam metin araması kullanır ve etiket ve tarih belirteçlerini yoksayar.',
+            sections: {
+                fileNames: {
+                    title: 'Dosya adları',
+                    items: [
+                        '`word` Dosya adında "word" olan notları bul.',
+                        '`word1 word2` Her kelime dosya adıyla eşleşmeli.',
+                        '`!word` Dosya adında "word" olan notları hariç tut.'
+                    ]
+                },
+                tags: {
+                    title: 'Etiketler',
+                    items: [
+                        '`#tag` Etiketli notları dahil et (`#tag/subtag` gibi iç içe etiketleri de bulur).',
+                        '`#` Yalnızca etiketli notları dahil et.',
+                        '`!#tag` Etiketli notları hariç tut.',
+                        '`!#` Yalnızca etiketsiz notları dahil et.',
+                        '`#tag1 #tag2` Her iki etiketi bul (örtük AND).',
+                        '`#tag1 AND #tag2` Her iki etiketi bul (açık AND).',
+                        '`#tag1 OR #tag2` Etiketlerden herhangi birini bul.',
+                        '`#a OR #b AND #c` AND daha yüksek önceliğe sahip: `#a` veya hem `#b` hem `#c` ile eşleşir.'
+                    ]
+                },
+                dates: {
+                    title: 'Tarihler',
+                    items: [
+                        '`@today` Varsayılan tarih alanını kullanarak bugünkü notları bul.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Göreli tarih aralıkları.',
+                        '`@2026-02-07` Belirli bir günü bul (`@20260207` de desteklenir).',
+                        '`@2026` Bir takvim yılını bul.',
+                        '`@2026-02` veya `@202602` Bir takvim ayını bul.',
+                        '`@2026-W05` veya `@2026W05` Bir ISO haftasını bul.',
+                        '`@2026-Q2` veya `@2026Q2` Bir takvim çeyreğini bul.',
+                        '`@13/02/2026` Ayırıcılı sayısal formatlar (`@07022026` belirsizlikte yerel ayarınızı takip eder).',
+                        '`@2026-02-01..2026-02-07` Kapsayıcı bir gün aralığı bul (açık uçlar desteklenir).',
+                        '`@c:...` veya `@m:...` Oluşturma veya değiştirme tarihini hedefle.',
+                        '`!@...` Bir tarih eşleşmesini hariç tut.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -669,7 +713,7 @@ export const STRINGS_TR = {
                     filterSearch: {
                         title: 'Filtre araması (varsayılan):',
                         description:
-                            'Mevcut klasör ve alt klasörler içinde dosyaları ada ve etiketlere göre filtreler. Filtre modu: karışık metin ve etiketler tüm terimleri eşleştirir (örn. "proje #iş"). Etiket modu: yalnızca etiketlerle arama AND/OR operatörlerini destekler (örn. "#iş AND #acil", "#proje OR #kişisel"). Cmd/Ctrl+Tıklama ile AND olarak ekle, Cmd/Ctrl+Shift+Tıklama ile OR olarak ekle. ! ön ekiyle hariç tutma (örn. !taslak, !#arşiv) ve !# ile etiketsiz notları bulmayı destekler.'
+                            'Mevcut klasör ve alt klasörler içinde dosyaları ada ve etiketlere göre filtreler. Filtre modu: karışık metin ve etiketler tüm terimleri eşleştirir (örn. "proje #iş"). Etiket modu: yalnızca etiketlerle arama AND/OR operatörlerini destekler (örn. "#iş AND #acil", "#proje OR #kişisel"). Cmd/Ctrl+Tıklama ile AND olarak ekle, Cmd/Ctrl+Shift+Tıklama ile OR olarak ekle. ! ön ekiyle hariç tutma (örn. !taslak, !#arşiv) ve !# ile etiketsiz notları bulmayı destekler. @ önekli tarih filtrelerini destekler (örn. @today, @2026-02-04, @2026-02-01..2026-02-04). Oluşturma/değiştirme tarihlerini hedeflemek için @c: veya @m: kullanın, aralıkları hariç tutmak için !@ kullanın. Varsayılan tarih alanı mevcut sıralamayı takip eder; ada göre sıralarken Ayarlar → Notlar → Tarih → Ada göre sıralarken kullanılır.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

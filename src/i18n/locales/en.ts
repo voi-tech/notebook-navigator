@@ -140,7 +140,51 @@ export const STRINGS_EN = {
         saveSearchShortcut: 'Save search shortcut',
         removeSearchShortcut: 'Remove search shortcut',
         shortcutModalTitle: 'Save search shortcut',
-        shortcutNamePlaceholder: 'Enter shortcut name'
+        shortcutNamePlaceholder: 'Enter shortcut name',
+        searchHelp: 'Search syntax',
+        searchHelpTitle: 'Search syntax',
+        searchHelpModal: {
+            intro: 'Combine file names, tags, and dates in one query (e.g., `meeting #work @thisweek`). Omnisearch uses full-text search and ignores tag and date tokens.',
+            sections: {
+                fileNames: {
+                    title: 'File names',
+                    items: [
+                        '`word` Match notes with "word" in the file name.',
+                        '`word1 word2` Require every word to match the file name.',
+                        '`!word` Exclude notes with "word" in the file name.'
+                    ]
+                },
+                tags: {
+                    title: 'Tags',
+                    items: [
+                        '`#tag` Include notes with tag (also matches nested tags like `#tag/subtag`).',
+                        '`#` Include only tagged notes.',
+                        '`!#tag` Exclude notes with tag.',
+                        '`!#` Include only untagged notes.',
+                        '`#tag1 #tag2` Match both tags (implicit AND).',
+                        '`#tag1 AND #tag2` Match both tags (explicit AND).',
+                        '`#tag1 OR #tag2` Match either tag.',
+                        '`#a OR #b AND #c` AND has higher precedence: matches `#a`, or both `#b` and `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Dates',
+                    items: [
+                        '`@today` Match notes from today using the default date field.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Relative date ranges.',
+                        '`@2026-02-07` Match a single day (also supports `@20260207`).',
+                        '`@2026` Match a calendar year.',
+                        '`@2026-02` or `@202602` Match a calendar month.',
+                        '`@2026-W05` or `@2026W05` Match an ISO week.',
+                        '`@2026-Q2` or `@2026Q2` Match a calendar quarter.',
+                        '`@13/02/2026` Numeric formats with separators (`@07022026` follows your locale when ambiguous).',
+                        '`@2026-02-01..2026-02-07` Match an inclusive day range (open ends supported).',
+                        '`@c:...` or `@m:...` Target created or modified date.',
+                        '`!@...` Exclude a date match.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -669,7 +713,7 @@ export const STRINGS_EN = {
                     filterSearch: {
                         title: 'Filter search (default):',
                         description:
-                            'Filters files by name and tags within the current folder and subfolders. Filter mode: mixed text and tags match all terms (e.g., "project #work"). Tag mode: search with only tags supports AND/OR operators (e.g., "#work AND #urgent", "#project OR #personal"). Cmd/Ctrl+Click tags to add with AND, Cmd/Ctrl+Shift+Click to add with OR. Supports exclusion with ! prefix (e.g., !draft, !#archived) and finding untagged notes with !#.'
+                            'Filters files by name and tags within the current folder and subfolders. Filter mode: mixed text and tags match all terms (e.g., "project #work"). Tag mode: search with only tags supports AND/OR operators (e.g., "#work AND #urgent", "#project OR #personal"). Cmd/Ctrl+Click tags to add with AND, Cmd/Ctrl+Shift+Click to add with OR. Supports exclusion with ! prefix (e.g., !draft, !#archived) and finding untagged notes with !#. Supports date filters with @ prefix (e.g., @today, @2026-02-04, @2026-02-01..2026-02-04). Use @c: or @m: to target created/modified dates, and !@ to exclude ranges. Default date field follows the current sort; when sorting by name, uses Settings → Notes → Date → When sorting by name.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

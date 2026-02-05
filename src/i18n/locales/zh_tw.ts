@@ -139,7 +139,51 @@ export const STRINGS_ZH_TW = {
         saveSearchShortcut: '將搜尋儲存至捷徑',
         removeSearchShortcut: '從捷徑移除搜尋',
         shortcutModalTitle: '儲存搜尋捷徑',
-        shortcutNamePlaceholder: '輸入捷徑名稱'
+        shortcutNamePlaceholder: '輸入捷徑名稱',
+        searchHelp: '搜尋語法',
+        searchHelpTitle: '搜尋語法',
+        searchHelpModal: {
+            intro: '在一個查詢中組合檔案名稱、標籤和日期（例如：`meeting #work @thisweek`）。Omnisearch 使用全文搜尋，忽略標籤和日期標記。',
+            sections: {
+                fileNames: {
+                    title: '檔案名稱',
+                    items: [
+                        '`word` 尋找檔案名稱中含有 "word" 的筆記。',
+                        '`word1 word2` 每個詞都必須符合檔案名稱。',
+                        '`!word` 排除檔案名稱中含有 "word" 的筆記。'
+                    ]
+                },
+                tags: {
+                    title: '標籤',
+                    items: [
+                        '`#tag` 包含帶有標籤的筆記（也符合巢狀標籤如 `#tag/subtag`）。',
+                        '`#` 僅包含有標籤的筆記。',
+                        '`!#tag` 排除帶有標籤的筆記。',
+                        '`!#` 僅包含無標籤的筆記。',
+                        '`#tag1 #tag2` 符合兩個標籤（隱式 AND）。',
+                        '`#tag1 AND #tag2` 符合兩個標籤（顯式 AND）。',
+                        '`#tag1 OR #tag2` 符合任一標籤。',
+                        '`#a OR #b AND #c` AND 優先順序較高：符合 `#a`，或同時符合 `#b` 和 `#c`。'
+                    ]
+                },
+                dates: {
+                    title: '日期',
+                    items: [
+                        '`@today` 使用預設日期欄位尋找今天的筆記。',
+                        '`@yesterday`、`@last7d`、`@last30d`、`@thisweek`、`@thismonth` 相對日期範圍。',
+                        '`@2026-02-07` 尋找特定日期（也支援 `@20260207`）。',
+                        '`@2026` 尋找日曆年。',
+                        '`@2026-02` 或 `@202602` 尋找日曆月。',
+                        '`@2026-W05` 或 `@2026W05` 尋找 ISO 週。',
+                        '`@2026-Q2` 或 `@2026Q2` 尋找日曆季度。',
+                        '`@13/02/2026` 帶分隔符的數字格式（`@07022026` 在歧義時遵循您的地區設定）。',
+                        '`@2026-02-01..2026-02-07` 尋找包含性日期範圍（支援開放端點）。',
+                        '`@c:...` 或 `@m:...` 指定建立或修改日期。',
+                        '`!@...` 排除日期符合。'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -668,7 +712,7 @@ export const STRINGS_ZH_TW = {
                     filterSearch: {
                         title: '篩選搜尋（預設）：',
                         description:
-                            '按名稱和標籤篩選目前資料夾和子資料夾中的檔案。篩選模式：混合文字和標籤匹配所有條件（例如「專案 #工作」）。標籤模式：僅使用標籤搜尋支援 AND/OR 運算子（例如「#工作 AND #緊急」、「#專案 OR #個人」）。Cmd/Ctrl+點按標籤以 AND 方式新增，Cmd/Ctrl+Shift+點按以 OR 方式新增。支援使用 ! 前綴進行排除（例如 !草稿，!#已歸檔）以及使用 !# 尋找無標籤筆記。'
+                            '按名稱和標籤篩選目前資料夾和子資料夾中的檔案。篩選模式：混合文字和標籤匹配所有條件（例如「專案 #工作」）。標籤模式：僅使用標籤搜尋支援 AND/OR 運算子（例如「#工作 AND #緊急」、「#專案 OR #個人」）。Cmd/Ctrl+點按標籤以 AND 方式新增，Cmd/Ctrl+Shift+點按以 OR 方式新增。支援使用 ! 前綴進行排除（例如 !草稿，!#已歸檔）以及使用 !# 尋找無標籤筆記。支援使用 @ 前綴的日期篩選器（例如 @today、@2026-02-04、@2026-02-01..2026-02-04）。使用 @c: 或 @m: 指定建立/修改日期，使用 !@ 排除範圍。預設日期欄位跟隨當前排序；按名稱排序時，使用設定 → 筆記 → 日期 → 按名稱排序時。'
                     },
                     omnisearch: {
                         title: 'Omnisearch：',

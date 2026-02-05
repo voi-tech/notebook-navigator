@@ -16,7 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { describe, it, expect } from 'vitest';
-import { parseFilterSearchTokens, fileMatchesFilterTokens, updateFilterQueryWithTag } from '../../src/utils/filterSearch';
+import {
+    parseFilterSearchTokens,
+    fileMatchesDateFilterTokens,
+    fileMatchesFilterTokens,
+    updateFilterQueryWithTag
+} from '../../src/utils/filterSearch';
 
 const sortTokens = (values: string[]) => [...values].sort();
 
@@ -31,10 +36,12 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.includedTagTokens).toEqual([]);
         expect(tokens.nameTokens).toEqual([]);
         expect(tokens.tagTokens).toEqual([]);
+        expect(tokens.dateRanges).toEqual([]);
         expect(tokens.requireTagged).toBe(false);
         expect(tokens.includeUntagged).toBe(false);
         expect(tokens.excludeNameTokens).toEqual([]);
         expect(tokens.excludeTagTokens).toEqual([]);
+        expect(tokens.excludeDateRanges).toEqual([]);
         expect(tokens.excludeTagged).toBe(false);
     });
 
@@ -220,6 +227,134 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.excludeTagged).toBe(false);
         expect(tokens.includeUntagged).toBe(true);
     });
+
+    it('parses ISO date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@2026-02-04');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 1, 4).getTime());
+        expect(range.endMs).toBe(new Date(2026, 1, 5).getTime());
+    });
+
+    it('parses year date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@2026');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 0, 1).getTime());
+        expect(range.endMs).toBe(new Date(2027, 0, 1).getTime());
+    });
+
+    it('parses year/month date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@2026-02');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 1, 1).getTime());
+        expect(range.endMs).toBe(new Date(2026, 2, 1).getTime());
+    });
+
+    it('parses year/week date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@2026-W05');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 0, 26).getTime());
+        expect(range.endMs).toBe(new Date(2026, 1, 2).getTime());
+    });
+
+    it('parses year/quarter date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@2026-Q2');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 3, 1).getTime());
+        expect(range.endMs).toBe(new Date(2026, 6, 1).getTime());
+    });
+
+    it('parses compact date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@20260204');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 1, 4).getTime());
+        expect(range.endMs).toBe(new Date(2026, 1, 5).getTime());
+    });
+
+    it('parses day/month/year date tokens with @ prefix', () => {
+        const tokens = parseFilterSearchTokens('@13/02/2026');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges).toEqual([]);
+
+        const range = tokens.dateRanges[0];
+        expect(range.field).toBe('default');
+        expect(range.startMs).toBe(new Date(2026, 1, 13).getTime());
+        expect(range.endMs).toBe(new Date(2026, 1, 14).getTime());
+    });
+
+    it('parses date ranges using .. with open ends', () => {
+        const upperBound = parseFilterSearchTokens('@..2026-02-04');
+        expect(upperBound.mode).toBe('filter');
+        expect(upperBound.dateRanges).toHaveLength(1);
+        expect(upperBound.dateRanges[0].startMs).toBeNull();
+        expect(upperBound.dateRanges[0].endMs).toBe(new Date(2026, 1, 5).getTime());
+
+        const lowerBound = parseFilterSearchTokens('@2026-02-01..');
+        expect(lowerBound.mode).toBe('filter');
+        expect(lowerBound.dateRanges).toHaveLength(1);
+        expect(lowerBound.dateRanges[0].startMs).toBe(new Date(2026, 1, 1).getTime());
+        expect(lowerBound.dateRanges[0].endMs).toBeNull();
+    });
+
+    it('parses negated date filters with !@ prefix', () => {
+        const tokens = parseFilterSearchTokens('!@2026-02-04');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.dateRanges).toEqual([]);
+        expect(tokens.excludeDateRanges).toHaveLength(1);
+        expect(tokens.excludeDateRanges[0].endMs).toBe(new Date(2026, 1, 5).getTime());
+    });
+
+    it('keeps tag mode when date filters are present alongside tags', () => {
+        const tokens = parseFilterSearchTokens('#alpha OR #beta @2026-02-04');
+        expect(tokens.mode).toBe('tag');
+        expect(sortTokens(tokens.includedTagTokens)).toEqual(['alpha', 'beta']);
+        expect(tokens.dateRanges).toHaveLength(1);
+    });
+
+    it('treats non-date @ tokens as literal name tokens', () => {
+        const tokens = parseFilterSearchTokens('@john');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.nameTokens).toEqual(['@john']);
+        expect(tokens.dateRanges).toEqual([]);
+    });
+
+    it('ignores partial @ tokens that look like date filters', () => {
+        const tokens = parseFilterSearchTokens('@to');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.nameTokens).toEqual([]);
+        expect(tokens.dateRanges).toEqual([]);
+    });
 });
 
 describe('updateFilterQueryWithTag', () => {
@@ -400,5 +535,43 @@ describe('fileMatchesFilterTokens', () => {
         expect(fileMatchesFilterTokens('platform plan', [], tokens)).toBe(true);
         expect(fileMatchesFilterTokens('platform draft', [], tokens)).toBe(false);
         expect(fileMatchesFilterTokens('platform plan', ['yta'], tokens)).toBe(false);
+    });
+});
+
+describe('fileMatchesDateFilterTokens', () => {
+    it('matches timestamps inside @YYYY-MM-DD day filters using the default date field', () => {
+        const tokens = parseFilterSearchTokens('@2026-02-04');
+        const timestamp = new Date(2026, 1, 4, 12, 0, 0).getTime();
+
+        expect(fileMatchesDateFilterTokens({ created: 0, modified: timestamp, defaultField: 'modified' }, tokens)).toBe(true);
+        expect(
+            fileMatchesDateFilterTokens(
+                { created: 0, modified: new Date(2026, 1, 5, 12, 0, 0).getTime(), defaultField: 'modified' },
+                tokens
+            )
+        ).toBe(false);
+    });
+
+    it('matches @c: filters against created timestamps', () => {
+        const tokens = parseFilterSearchTokens('@c:2026-02-04');
+        const createdTimestamp = new Date(2026, 1, 4, 9, 0, 0).getTime();
+        const modifiedTimestamp = new Date(2026, 1, 6, 9, 0, 0).getTime();
+
+        expect(
+            fileMatchesDateFilterTokens({ created: createdTimestamp, modified: modifiedTimestamp, defaultField: 'modified' }, tokens)
+        ).toBe(true);
+    });
+
+    it('excludes timestamps that match !@ ranges', () => {
+        const tokens = parseFilterSearchTokens('!@2026-02-04');
+        const timestamp = new Date(2026, 1, 4, 12, 0, 0).getTime();
+
+        expect(fileMatchesDateFilterTokens({ created: 0, modified: timestamp, defaultField: 'modified' }, tokens)).toBe(false);
+        expect(
+            fileMatchesDateFilterTokens(
+                { created: 0, modified: new Date(2026, 1, 5, 12, 0, 0).getTime(), defaultField: 'modified' },
+                tokens
+            )
+        ).toBe(true);
     });
 });

@@ -139,7 +139,51 @@ export const STRINGS_FR = {
         saveSearchShortcut: 'Ajouter la recherche aux raccourcis',
         removeSearchShortcut: 'Retirer la recherche des raccourcis',
         shortcutModalTitle: 'Enregistrer la recherche',
-        shortcutNamePlaceholder: 'Saisir le nom du raccourci'
+        shortcutNamePlaceholder: 'Saisir le nom du raccourci',
+        searchHelp: 'Syntaxe de recherche',
+        searchHelpTitle: 'Syntaxe de recherche',
+        searchHelpModal: {
+            intro: "Combinez noms de fichiers, étiquettes et dates dans une requête (ex. `meeting #work @thisweek`). Omnisearch utilise la recherche plein texte et ignore les jetons d'étiquettes et de dates.",
+            sections: {
+                fileNames: {
+                    title: 'Noms de fichiers',
+                    items: [
+                        '`word` Trouver les notes avec "word" dans le nom de fichier.',
+                        '`word1 word2` Chaque mot doit correspondre au nom de fichier.',
+                        '`!word` Exclure les notes avec "word" dans le nom de fichier.'
+                    ]
+                },
+                tags: {
+                    title: 'Étiquettes',
+                    items: [
+                        "`#tag` Inclure les notes avec l'étiquette (correspond aussi aux étiquettes imbriquées comme `#tag/subtag`).",
+                        '`#` Inclure uniquement les notes étiquetées.',
+                        "`!#tag` Exclure les notes avec l'étiquette.",
+                        '`!#` Inclure uniquement les notes sans étiquettes.',
+                        '`#tag1 #tag2` Correspondre aux deux étiquettes (AND implicite).',
+                        '`#tag1 AND #tag2` Correspondre aux deux étiquettes (AND explicite).',
+                        "`#tag1 OR #tag2` Correspondre à l'une des étiquettes.",
+                        '`#a OR #b AND #c` AND a une priorité plus élevée : correspond à `#a`, ou aux deux `#b` et `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Dates',
+                    items: [
+                        "`@today` Trouver les notes d'aujourd'hui en utilisant le champ de date par défaut.",
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Plages de dates relatives.',
+                        '`@2026-02-07` Trouver un jour spécifique (supporte aussi `@20260207`).',
+                        '`@2026` Trouver une année civile.',
+                        '`@2026-02` ou `@202602` Trouver un mois civil.',
+                        '`@2026-W05` ou `@2026W05` Trouver une semaine ISO.',
+                        '`@2026-Q2` ou `@2026Q2` Trouver un trimestre civil.',
+                        "`@13/02/2026` Formats numériques avec séparateurs (`@07022026` suit votre locale en cas d'ambiguïté).",
+                        '`@2026-02-01..2026-02-07` Trouver une plage de jours inclusive (fins ouvertes supportées).',
+                        '`@c:...` ou `@m:...` Cibler la date de création ou de modification.',
+                        '`!@...` Exclure une correspondance de date.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -670,7 +714,7 @@ export const STRINGS_FR = {
                     filterSearch: {
                         title: 'Recherche par filtre (par défaut):',
                         description:
-                            'Filtre les fichiers par nom et étiquettes dans le dossier actuel et les sous-dossiers. Mode filtre : le texte et les étiquettes mixtes correspondent à tous les termes (ex. "projet #travail"). Mode étiquettes : la recherche avec uniquement des étiquettes prend en charge les opérateurs AND/OR (ex. "#travail AND #urgent", "#projet OR #personnel"). Cmd/Ctrl+Clic sur les étiquettes pour ajouter avec AND, Cmd/Ctrl+Maj+Clic pour ajouter avec OR. Prend en charge l\'exclusion avec le préfixe ! (ex. !brouillon, !#archivé) et la recherche de notes sans étiquettes avec !#.'
+                            'Filtre les fichiers par nom et étiquettes dans le dossier actuel et les sous-dossiers. Mode filtre : le texte et les étiquettes mixtes correspondent à tous les termes (ex. "projet #travail"). Mode étiquettes : la recherche avec uniquement des étiquettes prend en charge les opérateurs AND/OR (ex. "#travail AND #urgent", "#projet OR #personnel"). Cmd/Ctrl+Clic sur les étiquettes pour ajouter avec AND, Cmd/Ctrl+Maj+Clic pour ajouter avec OR. Prend en charge l\'exclusion avec le préfixe ! (ex. !brouillon, !#archivé) et la recherche de notes sans étiquettes avec !#. Prend en charge les filtres de date avec le préfixe @ (ex. @today, @2026-02-04, @2026-02-01..2026-02-04). Utilisez @c: ou @m: pour cibler la date de création/modification, et !@ pour exclure des plages. Le champ de date par défaut suit le tri actuel ; lors du tri par nom, utilise Paramètres → Notes → Date → Lors du tri par nom.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

@@ -139,7 +139,51 @@ export const STRINGS_DE = {
         saveSearchShortcut: 'Such-Lesezeichen speichern',
         removeSearchShortcut: 'Such-Lesezeichen entfernen',
         shortcutModalTitle: 'Such-Lesezeichen speichern',
-        shortcutNamePlaceholder: 'Lesezeichen-Namen eingeben'
+        shortcutNamePlaceholder: 'Lesezeichen-Namen eingeben',
+        searchHelp: 'Suchsyntax',
+        searchHelpTitle: 'Suchsyntax',
+        searchHelpModal: {
+            intro: 'Kombinieren Sie Dateinamen, Tags und Daten in einer Abfrage (z.B. `meeting #work @thisweek`). Omnisearch verwendet Volltextsuche und ignoriert Tag- und Datums-Token.',
+            sections: {
+                fileNames: {
+                    title: 'Dateinamen',
+                    items: [
+                        '`word` Notizen mit "word" im Dateinamen finden.',
+                        '`word1 word2` Jedes Wort muss im Dateinamen vorkommen.',
+                        '`!word` Notizen mit "word" im Dateinamen ausschließen.'
+                    ]
+                },
+                tags: {
+                    title: 'Tags',
+                    items: [
+                        '`#tag` Notizen mit Tag einschließen (findet auch verschachtelte Tags wie `#tag/subtag`).',
+                        '`#` Nur Notizen mit Tags anzeigen.',
+                        '`!#tag` Notizen mit Tag ausschließen.',
+                        '`!#` Nur Notizen ohne Tags anzeigen.',
+                        '`#tag1 #tag2` Beide Tags finden (implizites AND).',
+                        '`#tag1 AND #tag2` Beide Tags finden (explizites AND).',
+                        '`#tag1 OR #tag2` Eines der Tags finden.',
+                        '`#a OR #b AND #c` AND hat höhere Priorität: findet `#a` oder beide `#b` und `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Datum',
+                    items: [
+                        '`@today` Notizen von heute mit dem Standard-Datumsfeld finden.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Relative Datumsbereiche.',
+                        '`@2026-02-07` Einen bestimmten Tag finden (auch `@20260207` möglich).',
+                        '`@2026` Ein Kalenderjahr finden.',
+                        '`@2026-02` oder `@202602` Einen Kalendermonat finden.',
+                        '`@2026-W05` oder `@2026W05` Eine ISO-Woche finden.',
+                        '`@2026-Q2` oder `@2026Q2` Ein Kalenderquartal finden.',
+                        '`@13/02/2026` Numerische Formate mit Trennzeichen (`@07022026` folgt Ihrem Gebietsschema bei Mehrdeutigkeit).',
+                        '`@2026-02-01..2026-02-07` Einen inklusiven Datumsbereich finden (offene Enden unterstützt).',
+                        '`@c:...` oder `@m:...` Erstellungs- oder Änderungsdatum ansprechen.',
+                        '`!@...` Ein Datum ausschließen.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -670,7 +714,7 @@ export const STRINGS_DE = {
                     filterSearch: {
                         title: 'Filtersuche (Standard):',
                         description:
-                            'Filtert Dateien nach Namen und Tags im aktuellen Ordner und Unterordnern. Filtermodus: Gemischter Text und Tags entsprechen allen Begriffen (z.B. "projekt #arbeit"). Tag-Modus: Suche nur mit Tags unterstützt AND/OR-Operatoren (z.B. "#arbeit AND #dringend", "#projekt OR #persönlich"). Cmd/Strg+Klick auf Tags zum Hinzufügen mit AND, Cmd/Strg+Umschalt+Klick zum Hinzufügen mit OR. Unterstützt Ausschluss mit ! Präfix (z.B. !entwurf, !#archiviert) und das Finden von Notizen ohne Tags mit !#.'
+                            'Filtert Dateien nach Namen und Tags im aktuellen Ordner und Unterordnern. Filtermodus: Gemischter Text und Tags entsprechen allen Begriffen (z.B. "projekt #arbeit"). Tag-Modus: Suche nur mit Tags unterstützt AND/OR-Operatoren (z.B. "#arbeit AND #dringend", "#projekt OR #persönlich"). Cmd/Strg+Klick auf Tags zum Hinzufügen mit AND, Cmd/Strg+Umschalt+Klick zum Hinzufügen mit OR. Unterstützt Ausschluss mit ! Präfix (z.B. !entwurf, !#archiviert) und das Finden von Notizen ohne Tags mit !#. Unterstützt Datumsfilter mit @ Präfix (z.B. @today, @2026-02-04, @2026-02-01..2026-02-04). Verwenden Sie @c: oder @m: für Erstellungs-/Änderungsdatum, und !@ zum Ausschließen von Bereichen. Das Standard-Datumsfeld folgt der aktuellen Sortierung; bei alphabetischer Sortierung wird Einstellungen → Notizen → Datum → Bei Sortierung nach Name verwendet.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

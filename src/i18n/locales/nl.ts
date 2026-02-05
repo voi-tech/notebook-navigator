@@ -141,7 +141,51 @@ export const STRINGS_NL = {
         saveSearchShortcut: 'Zoeksnelkoppeling opslaan',
         removeSearchShortcut: 'Zoeksnelkoppeling verwijderen',
         shortcutModalTitle: 'Zoeksnelkoppeling opslaan',
-        shortcutNamePlaceholder: 'Voer naam snelkoppeling in'
+        shortcutNamePlaceholder: 'Voer naam snelkoppeling in',
+        searchHelp: 'Zoeksyntax',
+        searchHelpTitle: 'Zoeksyntax',
+        searchHelpModal: {
+            intro: 'Combineer bestandsnamen, tags en datums in één zoekopdracht (bijv. `meeting #work @thisweek`). Omnisearch gebruikt zoekopdrachten in volledige tekst en negeert tag- en datumtokens.',
+            sections: {
+                fileNames: {
+                    title: 'Bestandsnamen',
+                    items: [
+                        '`word` Notities met "word" in de bestandsnaam vinden.',
+                        '`word1 word2` Elk woord moet overeenkomen met de bestandsnaam.',
+                        '`!word` Notities met "word" in de bestandsnaam uitsluiten.'
+                    ]
+                },
+                tags: {
+                    title: 'Tags',
+                    items: [
+                        '`#tag` Notities met tag opnemen (vindt ook geneste tags zoals `#tag/subtag`).',
+                        '`#` Alleen notities met tags opnemen.',
+                        '`!#tag` Notities met tag uitsluiten.',
+                        '`!#` Alleen notities zonder tags opnemen.',
+                        '`#tag1 #tag2` Beide tags vinden (impliciete AND).',
+                        '`#tag1 AND #tag2` Beide tags vinden (expliciete AND).',
+                        '`#tag1 OR #tag2` Een van beide tags vinden.',
+                        '`#a OR #b AND #c` AND heeft hogere prioriteit: vindt `#a`, of beide `#b` en `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Datums',
+                    items: [
+                        '`@today` Notities van vandaag vinden met het standaard datumveld.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Relatieve datumbereiken.',
+                        '`@2026-02-07` Een specifieke dag vinden (ondersteunt ook `@20260207`).',
+                        '`@2026` Een kalenderjaar vinden.',
+                        '`@2026-02` of `@202602` Een kalendermaand vinden.',
+                        '`@2026-W05` of `@2026W05` Een ISO-week vinden.',
+                        '`@2026-Q2` of `@2026Q2` Een kalenderkwartaal vinden.',
+                        '`@13/02/2026` Numerieke formaten met scheidingstekens (`@07022026` volgt uw landinstelling bij onduidelijkheid).',
+                        '`@2026-02-01..2026-02-07` Een inclusief dagenbereik vinden (open einden ondersteund).',
+                        '`@c:...` of `@m:...` Aanmaak- of wijzigingsdatum targeten.',
+                        '`!@...` Een datumovereenkomst uitsluiten.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -671,7 +715,7 @@ export const STRINGS_NL = {
                     filterSearch: {
                         title: 'Filter zoeken (standaard):',
                         description:
-                            'Filtert bestanden op naam en tags binnen de huidige map en submappen. Filtermodus: gemengde tekst en tags komen overeen met alle termen (bijv. "project #werk"). Tagmodus: zoeken met alleen tags ondersteunt AND/OR-operatoren (bijv. "#werk AND #urgent", "#project OR #persoonlijk"). Cmd/Ctrl+Klik op tags om toe te voegen met AND, Cmd/Ctrl+Shift+Klik om toe te voegen met OR. Ondersteunt uitsluiting met ! prefix (bijv. !draft, !#archived) en het vinden van notities zonder tags met !#.'
+                            'Filtert bestanden op naam en tags binnen de huidige map en submappen. Filtermodus: gemengde tekst en tags komen overeen met alle termen (bijv. "project #werk"). Tagmodus: zoeken met alleen tags ondersteunt AND/OR-operatoren (bijv. "#werk AND #urgent", "#project OR #persoonlijk"). Cmd/Ctrl+Klik op tags om toe te voegen met AND, Cmd/Ctrl+Shift+Klik om toe te voegen met OR. Ondersteunt uitsluiting met ! prefix (bijv. !draft, !#archived) en het vinden van notities zonder tags met !#. Ondersteunt datumfilters met @ prefix (bijv. @today, @2026-02-04, @2026-02-01..2026-02-04). Gebruik @c: of @m: om aanmaak-/wijzigingsdatums te targeten, en !@ om bereiken uit te sluiten. Het standaard datumveld volgt de huidige sortering; bij sorteren op naam wordt Instellingen → Notities → Datum → Bij sorteren op naam gebruikt.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

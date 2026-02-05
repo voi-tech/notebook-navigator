@@ -141,7 +141,51 @@ export const STRINGS_PT_BR = {
         saveSearchShortcut: 'Salvar atalho de pesquisa',
         removeSearchShortcut: 'Remover atalho de pesquisa',
         shortcutModalTitle: 'Salvar atalho de pesquisa',
-        shortcutNamePlaceholder: 'Digite o nome do atalho'
+        shortcutNamePlaceholder: 'Digite o nome do atalho',
+        searchHelp: 'Sintaxe de pesquisa',
+        searchHelpTitle: 'Sintaxe de pesquisa',
+        searchHelpModal: {
+            intro: 'Combine nomes de arquivos, tags e datas em uma consulta (ex. `meeting #work @thisweek`). Omnisearch usa pesquisa de texto completo e ignora tokens de tags e datas.',
+            sections: {
+                fileNames: {
+                    title: 'Nomes de arquivos',
+                    items: [
+                        '`word` Encontrar notas com "word" no nome do arquivo.',
+                        '`word1 word2` Cada palavra deve corresponder ao nome do arquivo.',
+                        '`!word` Excluir notas com "word" no nome do arquivo.'
+                    ]
+                },
+                tags: {
+                    title: 'Tags',
+                    items: [
+                        '`#tag` Incluir notas com tag (também corresponde a tags aninhadas como `#tag/subtag`).',
+                        '`#` Incluir apenas notas com tags.',
+                        '`!#tag` Excluir notas com tag.',
+                        '`!#` Incluir apenas notas sem tags.',
+                        '`#tag1 #tag2` Corresponder a ambas as tags (AND implícito).',
+                        '`#tag1 AND #tag2` Corresponder a ambas as tags (AND explícito).',
+                        '`#tag1 OR #tag2` Corresponder a qualquer uma das tags.',
+                        '`#a OR #b AND #c` AND tem precedência maior: corresponde a `#a`, ou ambos `#b` e `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Datas',
+                    items: [
+                        '`@today` Encontrar notas de hoje usando o campo de data padrão.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Intervalos de datas relativos.',
+                        '`@2026-02-07` Encontrar um dia específico (também suporta `@20260207`).',
+                        '`@2026` Encontrar um ano calendário.',
+                        '`@2026-02` ou `@202602` Encontrar um mês calendário.',
+                        '`@2026-W05` ou `@2026W05` Encontrar uma semana ISO.',
+                        '`@2026-Q2` ou `@2026Q2` Encontrar um trimestre calendário.',
+                        '`@13/02/2026` Formatos numéricos com separadores (`@07022026` segue sua localização quando ambíguo).',
+                        '`@2026-02-01..2026-02-07` Encontrar um intervalo de dias inclusivo (extremos abertos suportados).',
+                        '`@c:...` ou `@m:...` Apontar para data de criação ou modificação.',
+                        '`!@...` Excluir uma correspondência de data.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -666,7 +710,7 @@ export const STRINGS_PT_BR = {
                     filterSearch: {
                         title: 'Pesquisa por filtro (padrão):',
                         description:
-                            'Filtra arquivos por nome e tags na pasta atual e subpastas. Modo filtro: texto e tags misturados correspondem a todos os termos (ex: "projeto #trabalho"). Modo tags: pesquisa apenas com tags suporta operadores AND/OR (ex: "#trabalho AND #urgente", "#projeto OR #pessoal"). Cmd/Ctrl+Clique em tags para adicionar com AND, Cmd/Ctrl+Shift+Clique para adicionar com OR. Suporta exclusão com prefixo ! (ex: !rascunho, !#arquivado) e localização de notas sem tags com !#.'
+                            'Filtra arquivos por nome e tags na pasta atual e subpastas. Modo filtro: texto e tags misturados correspondem a todos os termos (ex: "projeto #trabalho"). Modo tags: pesquisa apenas com tags suporta operadores AND/OR (ex: "#trabalho AND #urgente", "#projeto OR #pessoal"). Cmd/Ctrl+Clique em tags para adicionar com AND, Cmd/Ctrl+Shift+Clique para adicionar com OR. Suporta exclusão com prefixo ! (ex: !rascunho, !#arquivado) e localização de notas sem tags com !#. Suporta filtros de data com prefixo @ (ex. @today, @2026-02-04, @2026-02-01..2026-02-04). Use @c: ou @m: para apontar para datas de criação/modificação, e !@ para excluir intervalos. O campo de data padrão segue a ordenação atual; ao ordenar por nome, usa Configurações → Notas → Data → Ao ordenar por nome.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

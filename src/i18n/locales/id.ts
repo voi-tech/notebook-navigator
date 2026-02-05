@@ -140,7 +140,51 @@ export const STRINGS_ID = {
         saveSearchShortcut: 'Simpan pintasan pencarian',
         removeSearchShortcut: 'Hapus pintasan pencarian',
         shortcutModalTitle: 'Simpan pintasan pencarian',
-        shortcutNamePlaceholder: 'Masukkan nama pintasan'
+        shortcutNamePlaceholder: 'Masukkan nama pintasan',
+        searchHelp: 'Sintaks pencarian',
+        searchHelpTitle: 'Sintaks pencarian',
+        searchHelpModal: {
+            intro: 'Gabungkan nama file, tag, dan tanggal dalam satu kueri (contoh: `meeting #work @thisweek`). Omnisearch menggunakan pencarian teks lengkap dan mengabaikan token tag dan tanggal.',
+            sections: {
+                fileNames: {
+                    title: 'Nama file',
+                    items: [
+                        '`word` Temukan catatan dengan "word" di nama file.',
+                        '`word1 word2` Setiap kata harus cocok dengan nama file.',
+                        '`!word` Kecualikan catatan dengan "word" di nama file.'
+                    ]
+                },
+                tags: {
+                    title: 'Tag',
+                    items: [
+                        '`#tag` Sertakan catatan dengan tag (juga cocok dengan tag bersarang seperti `#tag/subtag`).',
+                        '`#` Sertakan hanya catatan dengan tag.',
+                        '`!#tag` Kecualikan catatan dengan tag.',
+                        '`!#` Sertakan hanya catatan tanpa tag.',
+                        '`#tag1 #tag2` Cocokkan kedua tag (AND implisit).',
+                        '`#tag1 AND #tag2` Cocokkan kedua tag (AND eksplisit).',
+                        '`#tag1 OR #tag2` Cocokkan salah satu tag.',
+                        '`#a OR #b AND #c` AND memiliki prioritas lebih tinggi: cocok dengan `#a`, atau keduanya `#b` dan `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Tanggal',
+                    items: [
+                        '`@today` Temukan catatan hari ini menggunakan field tanggal default.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Rentang tanggal relatif.',
+                        '`@2026-02-07` Temukan hari tertentu (juga mendukung `@20260207`).',
+                        '`@2026` Temukan tahun kalender.',
+                        '`@2026-02` atau `@202602` Temukan bulan kalender.',
+                        '`@2026-W05` atau `@2026W05` Temukan minggu ISO.',
+                        '`@2026-Q2` atau `@2026Q2` Temukan kuartal kalender.',
+                        '`@13/02/2026` Format numerik dengan pemisah (`@07022026` mengikuti lokal Anda saat ambigu).',
+                        '`@2026-02-01..2026-02-07` Temukan rentang hari inklusif (ujung terbuka didukung).',
+                        '`@c:...` atau `@m:...` Targetkan tanggal pembuatan atau modifikasi.',
+                        '`!@...` Kecualikan kecocokan tanggal.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -669,7 +713,7 @@ export const STRINGS_ID = {
                     filterSearch: {
                         title: 'Pencarian filter (default):',
                         description:
-                            'Memfilter file berdasarkan nama dan tag dalam folder dan subfolder saat ini. Mode filter: teks dan tag campuran cocok dengan semua istilah (misal, "proyek #kerja"). Mode tag: pencarian hanya dengan tag mendukung operator AND/OR (misal, "#kerja AND #mendesak", "#proyek OR #pribadi"). Cmd/Ctrl+Klik tag untuk menambah dengan AND, Cmd/Ctrl+Shift+Klik untuk menambah dengan OR. Mendukung pengecualian dengan awalan ! (misal, !draf, !#arsip) dan menemukan catatan tanpa tag dengan !#.'
+                            'Memfilter file berdasarkan nama dan tag dalam folder dan subfolder saat ini. Mode filter: teks dan tag campuran cocok dengan semua istilah (misal, "proyek #kerja"). Mode tag: pencarian hanya dengan tag mendukung operator AND/OR (misal, "#kerja AND #mendesak", "#proyek OR #pribadi"). Cmd/Ctrl+Klik tag untuk menambah dengan AND, Cmd/Ctrl+Shift+Klik untuk menambah dengan OR. Mendukung pengecualian dengan awalan ! (misal, !draf, !#arsip) dan menemukan catatan tanpa tag dengan !#. Mendukung filter tanggal dengan awalan @ (mis. @today, @2026-02-04, @2026-02-01..2026-02-04). Gunakan @c: atau @m: untuk menargetkan tanggal pembuatan/modifikasi, dan !@ untuk mengecualikan rentang. Field tanggal default mengikuti pengurutan saat ini; saat mengurutkan berdasarkan nama, gunakan Pengaturan → Catatan → Tanggal → Saat mengurutkan berdasarkan nama.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

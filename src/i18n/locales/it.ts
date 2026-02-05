@@ -140,7 +140,51 @@ export const STRINGS_IT = {
         saveSearchShortcut: 'Salva scorciatoia ricerca',
         removeSearchShortcut: 'Rimuovi scorciatoia ricerca',
         shortcutModalTitle: 'Salva scorciatoia ricerca',
-        shortcutNamePlaceholder: 'Inserisci nome scorciatoia'
+        shortcutNamePlaceholder: 'Inserisci nome scorciatoia',
+        searchHelp: 'Sintassi di ricerca',
+        searchHelpTitle: 'Sintassi di ricerca',
+        searchHelpModal: {
+            intro: 'Combina nomi file, tag e date in una query (es. `meeting #work @thisweek`). Omnisearch usa la ricerca full-text e ignora i token di tag e date.',
+            sections: {
+                fileNames: {
+                    title: 'Nomi file',
+                    items: [
+                        '`word` Trova note con "word" nel nome del file.',
+                        '`word1 word2` Ogni parola deve corrispondere al nome del file.',
+                        '`!word` Escludi note con "word" nel nome del file.'
+                    ]
+                },
+                tags: {
+                    title: 'Tag',
+                    items: [
+                        '`#tag` Includi note con tag (trova anche tag nidificati come `#tag/subtag`).',
+                        '`#` Includi solo note con tag.',
+                        '`!#tag` Escludi note con tag.',
+                        '`!#` Includi solo note senza tag.',
+                        '`#tag1 #tag2` Trova entrambi i tag (AND implicito).',
+                        '`#tag1 AND #tag2` Trova entrambi i tag (AND esplicito).',
+                        '`#tag1 OR #tag2` Trova uno dei tag.',
+                        '`#a OR #b AND #c` AND ha priorità maggiore: trova `#a`, o entrambi `#b` e `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Date',
+                    items: [
+                        '`@today` Trova note di oggi usando il campo data predefinito.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Intervalli di date relativi.',
+                        '`@2026-02-07` Trova un giorno specifico (supporta anche `@20260207`).',
+                        '`@2026` Trova un anno solare.',
+                        '`@2026-02` o `@202602` Trova un mese solare.',
+                        '`@2026-W05` o `@2026W05` Trova una settimana ISO.',
+                        '`@2026-Q2` o `@2026Q2` Trova un trimestre solare.',
+                        '`@13/02/2026` Formati numerici con separatori (`@07022026` segue la tua locale in caso di ambiguità).',
+                        '`@2026-02-01..2026-02-07` Trova un intervallo di giorni inclusivo (estremi aperti supportati).',
+                        '`@c:...` o `@m:...` Indica data di creazione o modifica.',
+                        '`!@...` Escludi una corrispondenza di data.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -669,7 +713,7 @@ export const STRINGS_IT = {
                     filterSearch: {
                         title: 'Ricerca con filtro (predefinito):',
                         description:
-                            'Filtra i file per nome e tag nella cartella corrente e sottocartelle. Modalità filtro: testo e tag misti corrispondono a tutti i termini (es. "progetto #lavoro"). Modalità tag: la ricerca solo con tag supporta operatori AND/OR (es. "#lavoro AND #urgente", "#progetto OR #personale"). Cmd/Ctrl+Clic sui tag per aggiungere con AND, Cmd/Ctrl+Maiusc+Clic per aggiungere con OR. Supporta esclusione con prefisso ! (es. !bozza, !#archiviato) e ricerca note senza tag con !#.'
+                            'Filtra i file per nome e tag nella cartella corrente e sottocartelle. Modalità filtro: testo e tag misti corrispondono a tutti i termini (es. "progetto #lavoro"). Modalità tag: la ricerca solo con tag supporta operatori AND/OR (es. "#lavoro AND #urgente", "#progetto OR #personale"). Cmd/Ctrl+Clic sui tag per aggiungere con AND, Cmd/Ctrl+Maiusc+Clic per aggiungere con OR. Supporta esclusione con prefisso ! (es. !bozza, !#archiviato) e ricerca note senza tag con !#. Supporta filtri data con prefisso @ (es. @today, @2026-02-04, @2026-02-01..2026-02-04). Usa @c: o @m: per indicare date di creazione/modifica, e !@ per escludere intervalli. Il campo data predefinito segue l\'ordinamento corrente; quando si ordina per nome, usa Impostazioni → Note → Data → Quando si ordina per nome.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

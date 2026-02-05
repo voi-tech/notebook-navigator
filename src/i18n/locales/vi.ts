@@ -140,7 +140,51 @@ export const STRINGS_VI = {
         saveSearchShortcut: 'Lưu lối tắt tìm kiếm',
         removeSearchShortcut: 'Gỡ lối tắt tìm kiếm',
         shortcutModalTitle: 'Lưu lối tắt tìm kiếm',
-        shortcutNamePlaceholder: 'Nhập tên lối tắt'
+        shortcutNamePlaceholder: 'Nhập tên lối tắt',
+        searchHelp: 'Cú pháp tìm kiếm',
+        searchHelpTitle: 'Cú pháp tìm kiếm',
+        searchHelpModal: {
+            intro: 'Kết hợp tên tệp, thẻ và ngày trong một truy vấn (ví dụ: `meeting #work @thisweek`). Omnisearch sử dụng tìm kiếm toàn văn và bỏ qua các token thẻ và ngày.',
+            sections: {
+                fileNames: {
+                    title: 'Tên tệp',
+                    items: [
+                        '`word` Tìm ghi chú có "word" trong tên tệp.',
+                        '`word1 word2` Mỗi từ phải khớp với tên tệp.',
+                        '`!word` Loại trừ ghi chú có "word" trong tên tệp.'
+                    ]
+                },
+                tags: {
+                    title: 'Thẻ',
+                    items: [
+                        '`#tag` Bao gồm ghi chú có thẻ (cũng khớp với thẻ lồng nhau như `#tag/subtag`).',
+                        '`#` Chỉ bao gồm ghi chú có thẻ.',
+                        '`!#tag` Loại trừ ghi chú có thẻ.',
+                        '`!#` Chỉ bao gồm ghi chú không có thẻ.',
+                        '`#tag1 #tag2` Khớp cả hai thẻ (AND ngầm định).',
+                        '`#tag1 AND #tag2` Khớp cả hai thẻ (AND rõ ràng).',
+                        '`#tag1 OR #tag2` Tìm một trong các thẻ.',
+                        '`#a OR #b AND #c` AND có độ ưu tiên cao hơn: khớp `#a`, hoặc cả `#b` và `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Ngày',
+                    items: [
+                        '`@today` Tìm ghi chú hôm nay sử dụng trường ngày mặc định.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Phạm vi ngày tương đối.',
+                        '`@2026-02-07` Tìm một ngày cụ thể (cũng hỗ trợ `@20260207`).',
+                        '`@2026` Tìm một năm dương lịch.',
+                        '`@2026-02` hoặc `@202602` Tìm một tháng dương lịch.',
+                        '`@2026-W05` hoặc `@2026W05` Tìm một tuần ISO.',
+                        '`@2026-Q2` hoặc `@2026Q2` Tìm một quý dương lịch.',
+                        '`@13/02/2026` Định dạng số có dấu phân cách (`@07022026` theo địa phương của bạn khi mơ hồ).',
+                        '`@2026-02-01..2026-02-07` Tìm phạm vi ngày bao gồm (hỗ trợ đầu mở).',
+                        '`@c:...` hoặc `@m:...` Nhắm mục tiêu ngày tạo hoặc sửa đổi.',
+                        '`!@...` Loại trừ một kết quả khớp ngày.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -669,7 +713,7 @@ export const STRINGS_VI = {
                     filterSearch: {
                         title: 'Tìm kiếm lọc (mặc định):',
                         description:
-                            'Lọc tệp theo tên và thẻ trong thư mục hiện tại và thư mục con. Chế độ lọc: văn bản và thẻ hỗn hợp khớp với tất cả các điều kiện (ví dụ: "dự án #công việc"). Chế độ thẻ: tìm kiếm chỉ với thẻ hỗ trợ toán tử AND/OR (ví dụ: "#công việc AND #khẩn cấp", "#dự án OR #cá nhân"). Cmd/Ctrl+Nhấp vào thẻ để thêm với AND, Cmd/Ctrl+Shift+Nhấp để thêm với OR. Hỗ trợ loại trừ với tiền tố ! (ví dụ: !nháp, !#lưu trữ) và tìm ghi chú không có thẻ với !#.'
+                            'Lọc tệp theo tên và thẻ trong thư mục hiện tại và thư mục con. Chế độ lọc: văn bản và thẻ hỗn hợp khớp với tất cả các điều kiện (ví dụ: "dự án #công việc"). Chế độ thẻ: tìm kiếm chỉ với thẻ hỗ trợ toán tử AND/OR (ví dụ: "#công việc AND #khẩn cấp", "#dự án OR #cá nhân"). Cmd/Ctrl+Nhấp vào thẻ để thêm với AND, Cmd/Ctrl+Shift+Nhấp để thêm với OR. Hỗ trợ loại trừ với tiền tố ! (ví dụ: !nháp, !#lưu trữ) và tìm ghi chú không có thẻ với !#. Hỗ trợ bộ lọc ngày với tiền tố @ (ví dụ: @today, @2026-02-04, @2026-02-01..2026-02-04). Sử dụng @c: hoặc @m: để nhắm mục tiêu ngày tạo/sửa đổi, và !@ để loại trừ phạm vi. Trường ngày mặc định theo sắp xếp hiện tại; khi sắp xếp theo tên, sử dụng Cài đặt → Ghi chú → Ngày → Khi sắp xếp theo tên.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

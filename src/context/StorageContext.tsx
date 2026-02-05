@@ -76,6 +76,7 @@ interface StorageContextValue {
     getFileDisplayName: (file: TFile) => string;
     getFileCreatedTime: (file: TFile) => number;
     getFileModifiedTime: (file: TFile) => number;
+    getFileTimestamps: (file: TFile) => { created: number; modified: number };
     getFileMetadata: (file: TFile) => { name: string; created: number; modified: number };
     // IndexedDB storage instance for FileItem to use
     getDB: () => IndexedDBStorage;
@@ -102,6 +103,24 @@ interface StorageProviderProps {
     api: NotebookNavigatorAPI | null;
     children: ReactNode;
 }
+
+// Resolves file created/modified timestamps from frontmatter metadata or file stats
+const computeFileTimestamps = (file: TFile, extractedMetadata: ProcessedMetadata | null): { created: number; modified: number } => {
+    return {
+        created:
+            extractedMetadata?.fc !== undefined &&
+            extractedMetadata.fc !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
+            extractedMetadata.fc !== METADATA_SENTINEL.PARSE_FAILED
+                ? extractedMetadata.fc
+                : file.stat.ctime,
+        modified:
+            extractedMetadata?.fm !== undefined &&
+            extractedMetadata.fm !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
+            extractedMetadata.fm !== METADATA_SENTINEL.PARSE_FAILED
+                ? extractedMetadata.fm
+                : file.stat.mtime
+    };
+};
 
 export function StorageProvider({ app, api, children }: StorageProviderProps) {
     const settings = useSettingsState();
@@ -254,63 +273,27 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         [app, settings]
     );
 
-    const getFileCreatedTime = useCallback(
-        (file: TFile): number => {
-            if (settings.useFrontmatterMetadata) {
-                const metadata = extractMetadata(app, file, settings);
-                if (
-                    metadata.fc !== undefined &&
-                    metadata.fc !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
-                    metadata.fc !== METADATA_SENTINEL.PARSE_FAILED
-                ) {
-                    return metadata.fc;
-                }
-            }
-
-            return file.stat.ctime;
+    const getFileTimestamps = useCallback(
+        (file: TFile): { created: number; modified: number } => {
+            const extractedMetadata = settings.useFrontmatterMetadata ? extractMetadata(app, file, settings) : null;
+            return computeFileTimestamps(file, extractedMetadata);
         },
         [app, settings]
     );
 
-    const getFileModifiedTime = useCallback(
-        (file: TFile): number => {
-            if (settings.useFrontmatterMetadata) {
-                const metadata = extractMetadata(app, file, settings);
-                if (
-                    metadata.fm !== undefined &&
-                    metadata.fm !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
-                    metadata.fm !== METADATA_SENTINEL.PARSE_FAILED
-                ) {
-                    return metadata.fm;
-                }
-            }
+    const getFileCreatedTime = useCallback((file: TFile): number => getFileTimestamps(file).created, [getFileTimestamps]);
 
-            return file.stat.mtime;
-        },
-        [app, settings]
-    );
+    const getFileModifiedTime = useCallback((file: TFile): number => getFileTimestamps(file).modified, [getFileTimestamps]);
 
     const getFileMetadata = useCallback(
         (file: TFile): { name: string; created: number; modified: number } => {
-            let extractedMetadata: ProcessedMetadata | null = null;
-            if (settings.useFrontmatterMetadata) {
-                extractedMetadata = extractMetadata(app, file, settings);
-            }
+            const extractedMetadata = settings.useFrontmatterMetadata ? extractMetadata(app, file, settings) : null;
+            const timestamps = computeFileTimestamps(file, extractedMetadata);
 
             return {
                 name: extractedMetadata?.fn || getDisplayName(file, undefined, settings),
-                created:
-                    extractedMetadata?.fc !== undefined &&
-                    extractedMetadata.fc !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
-                    extractedMetadata.fc !== METADATA_SENTINEL.PARSE_FAILED
-                        ? extractedMetadata.fc
-                        : file.stat.ctime,
-                modified:
-                    extractedMetadata?.fm !== undefined &&
-                    extractedMetadata.fm !== METADATA_SENTINEL.FIELD_NOT_CONFIGURED &&
-                    extractedMetadata.fm !== METADATA_SENTINEL.PARSE_FAILED
-                        ? extractedMetadata.fm
-                        : file.stat.mtime
+                created: timestamps.created,
+                modified: timestamps.modified
             };
         },
         [app, settings]
@@ -399,6 +382,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
             getFileDisplayName,
             getFileCreatedTime,
             getFileModifiedTime,
+            getFileTimestamps,
             getFileMetadata,
             getDB: getDBInstance,
             getFile: (path: string) => getDBInstance().getFile(path),
@@ -417,6 +401,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         getFileDisplayName,
         getFileCreatedTime,
         getFileModifiedTime,
+        getFileTimestamps,
         getFileMetadata,
         isStorageReady,
         rebuildCache,

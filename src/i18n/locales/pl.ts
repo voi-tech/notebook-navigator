@@ -139,7 +139,51 @@ export const STRINGS_PL = {
         saveSearchShortcut: 'Zapisz wyszukiwanie w skrótach',
         removeSearchShortcut: 'Usuń wyszukiwanie ze skrótów',
         shortcutModalTitle: 'Zapisz wyszukiwanie',
-        shortcutNamePlaceholder: 'Wprowadź nazwę skrótu'
+        shortcutNamePlaceholder: 'Wprowadź nazwę skrótu',
+        searchHelp: 'Składnia wyszukiwania',
+        searchHelpTitle: 'Składnia wyszukiwania',
+        searchHelpModal: {
+            intro: 'Łącz nazwy plików, tagi i daty w jednym zapytaniu (np. `meeting #work @thisweek`). Omnisearch używa wyszukiwania pełnotekstowego i ignoruje tokeny tagów i dat.',
+            sections: {
+                fileNames: {
+                    title: 'Nazwy plików',
+                    items: [
+                        '`word` Znajdź notatki ze słowem "word" w nazwie pliku.',
+                        '`word1 word2` Każde słowo musi pasować do nazwy pliku.',
+                        '`!word` Wyklucz notatki ze słowem "word" w nazwie pliku.'
+                    ]
+                },
+                tags: {
+                    title: 'Tagi',
+                    items: [
+                        '`#tag` Uwzględnij notatki z tagiem (pasuje też do zagnieżdżonych tagów jak `#tag/subtag`).',
+                        '`#` Uwzględnij tylko notatki z tagami.',
+                        '`!#tag` Wyklucz notatki z tagiem.',
+                        '`!#` Uwzględnij tylko notatki bez tagów.',
+                        '`#tag1 #tag2` Znajdź oba tagi (niejawne AND).',
+                        '`#tag1 AND #tag2` Znajdź oba tagi (jawne AND).',
+                        '`#tag1 OR #tag2` Znajdź dowolny z tagów.',
+                        '`#a OR #b AND #c` AND ma wyższy priorytet: pasuje do `#a` lub obu `#b` i `#c`.'
+                    ]
+                },
+                dates: {
+                    title: 'Daty',
+                    items: [
+                        '`@today` Znajdź notatki z dzisiaj używając domyślnego pola daty.',
+                        '`@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` Względne zakresy dat.',
+                        '`@2026-02-07` Znajdź konkretny dzień (obsługuje też `@20260207`).',
+                        '`@2026` Znajdź rok kalendarzowy.',
+                        '`@2026-02` lub `@202602` Znajdź miesiąc kalendarzowy.',
+                        '`@2026-W05` lub `@2026W05` Znajdź tydzień ISO.',
+                        '`@2026-Q2` lub `@2026Q2` Znajdź kwartał kalendarzowy.',
+                        '`@13/02/2026` Formaty numeryczne z separatorami (`@07022026` podąża za ustawieniami regionalnymi przy niejednoznaczności).',
+                        '`@2026-02-01..2026-02-07` Znajdź włączny zakres dni (otwarte końce obsługiwane).',
+                        '`@c:...` lub `@m:...` Wskaż datę utworzenia lub modyfikacji.',
+                        '`!@...` Wyklucz dopasowanie daty.'
+                    ]
+                }
+            }
+        }
     },
 
     // Context menus
@@ -671,7 +715,7 @@ export const STRINGS_PL = {
                     filterSearch: {
                         title: 'Wyszukiwanie filtrujące (domyślne):',
                         description:
-                            'Filtruje pliki według nazwy i tagów w bieżącym folderze i podfolderach. Tryb filtrowania: mieszany tekst i tagi dopasowują wszystkie terminy (np. "projekt #praca"). Tryb tagów: wyszukiwanie tylko tagami obsługuje operatory AND/OR (np. "#praca AND #pilne", "#projekt OR #osobiste"). Cmd/Ctrl+Kliknięcie na tagi dodaje z AND, Cmd/Ctrl+Shift+Kliknięcie dodaje z OR. Obsługuje wykluczanie z prefiksem ! (np. !szkic, !#zarchiwizowane) oraz znajdowanie notatek bez tagów za pomocą !#.'
+                            'Filtruje pliki według nazwy i tagów w bieżącym folderze i podfolderach. Tryb filtrowania: mieszany tekst i tagi dopasowują wszystkie terminy (np. "projekt #praca"). Tryb tagów: wyszukiwanie tylko tagami obsługuje operatory AND/OR (np. "#praca AND #pilne", "#projekt OR #osobiste"). Cmd/Ctrl+Kliknięcie na tagi dodaje z AND, Cmd/Ctrl+Shift+Kliknięcie dodaje z OR. Obsługuje wykluczanie z prefiksem ! (np. !szkic, !#zarchiwizowane) oraz znajdowanie notatek bez tagów za pomocą !#. Obsługuje filtry dat z prefiksem @ (np. @today, @2026-02-04, @2026-02-01..2026-02-04). Użyj @c: lub @m: aby wskazać daty utworzenia/modyfikacji, i !@ aby wykluczyć zakresy. Domyślne pole daty podąża za bieżącym sortowaniem; przy sortowaniu według nazwy używa Ustawienia → Notatki → Data → Przy sortowaniu według nazwy.'
                     },
                     omnisearch: {
                         title: 'Omnisearch:',

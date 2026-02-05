@@ -1215,6 +1215,10 @@ body {
     box-sizing: border-box;
 }
 
+.nn-search-input-container--has-shortcut .nn-search-input {
+    padding-right: 84px !important;
+}
+
 /* Active search state - when there's a search query */
 .nn-search-input.nn-search-active {
     background: var(--nn-theme-list-search-active-bg) !important;
@@ -1324,7 +1328,8 @@ body {
 }
 
 .nn-search-clear-button,
-.nn-search-star-button {
+.nn-search-star-button,
+.nn-search-help-button {
     position: absolute;
     top: 8px;
     cursor: pointer;
@@ -1335,13 +1340,15 @@ body {
 }
 
 .nn-search-clear-button:focus-visible,
-.nn-search-star-button:focus-visible {
+.nn-search-star-button:focus-visible,
+.nn-search-help-button:focus-visible {
     outline: 2px solid var(--interactive-accent);
     outline-offset: 2px;
 }
 
 .nn-search-clear-button svg,
-.nn-search-star-button svg {
+.nn-search-star-button svg,
+.nn-search-help-button svg {
     width: 16px;
     height: 16px;
 }
@@ -1354,12 +1361,17 @@ body {
     right: 34px;
 }
 
+.nn-search-help-button {
+    right: 10px;
+}
+
 .nn-search-star-button--active {
     color: var(--interactive-accent);
 }
 
 .notebook-navigator-mobile .nn-search-clear-button,
-.notebook-navigator-mobile .nn-search-star-button {
+.notebook-navigator-mobile .nn-search-star-button,
+.notebook-navigator-mobile .nn-search-help-button {
     top: 0;
     height: 36px;
 }
@@ -1370,6 +1382,14 @@ body {
 
 .notebook-navigator-mobile .nn-search-star-button {
     right: 44px;
+}
+
+.notebook-navigator-mobile .nn-search-help-button {
+    right: 10px;
+}
+
+.notebook-navigator-mobile .nn-search-input-container--has-shortcut .nn-search-input {
+    padding-right: 94px !important;
 }
 
 /* Clickable path segments in header */
@@ -1392,8 +1412,10 @@ body {
 /* Hover effects only apply on hover-capable devices (prevents "stuck hover" on touch). */
 @media (hover: hover) and (pointer: fine) {
     .nn-search-clear-button:hover,
-    .nn-search-star-button:hover {
+    .nn-search-star-button:hover,
+    .nn-search-help-button:hover {
         color: var(--nn-theme-header-button-active-icon-color);
+        opacity: 1;
     }
 
     .nn-path-segment:hover {
@@ -4358,6 +4380,36 @@ body.nn-resizing {
 
 .nn-folder-note-type-buttons button {
     width: 100%;
+}
+
+/* ========================================================================
+   Search help modal
+   ======================================================================== */
+
+.modal.nn-search-help-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal.nn-search-help-modal .nn-search-help-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.modal.nn-search-help-modal code {
+    font-weight: 600;
+}
+
+.is-mobile .modal.nn-search-help-modal {
+    max-height: min(560px, calc(100vh - 24px));
+    max-width: calc(100vw - 24px);
+}
+
+.is-mobile .modal.nn-search-help-modal .modal-content {
+    padding-right: 12px;
 }
 /* Source: src/styles/sections/modal-select-vault-profile.css */
 
