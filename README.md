@@ -156,11 +156,114 @@ The video has subtitles in 21 languages.
 | Shift+Home/End                              | Select from current position to first/last item                                                                                             |
 | Shift+↑/↓                                   | Extend selection up/down                                                                                                                    |
 
-**Note:** All keyboard shortcuts can be customized by editing the `keyboardShortcuts` section in `.obsidian/plugins/notebook-navigator/data.json`. You can add VIM-style navigation (h,j,k,l) or assign multiple keys to the same command.
+**Note:** All keyboard shortcuts can be customized. See [section 7 - Custom hotkeys](#7-custom-hotkeys) for details on adding VIM-style navigation (h,j,k,l), alternate keys, and modifier combinations.
 
 <br>
 
-## 6 Commands
+## 6 Search
+
+Notebook Navigator has two search modes: filter search and Omnisearch. Switch between them using the up/down arrow keys or by clicking the search icon. Combine file names, tags, and dates in one query (e.g., `meeting #work @thisweek`).
+
+### 6.1 Filter search
+
+Filters files by name and tags within the current folder and subfolders. Default search mode.
+
+**File names**
+
+- `word` - Match notes with "word" in the file name
+- `word1 word2` - Require every word to match the file name
+- `!word` - Exclude notes with "word" in the file name
+
+**Tags**
+
+- `#tag` - Include notes with tag (also matches nested tags like `#tag/subtag`)
+- `#` - Include only tagged notes
+- `!#tag` - Exclude notes with tag
+- `!#` - Include only untagged notes
+- `#tag1 #tag2` - Match both tags (implicit AND)
+- `#tag1 AND #tag2` - Match both tags (explicit AND)
+- `#tag1 OR #tag2` - Match either tag
+- `#a OR #b AND #c` - AND has higher precedence: matches `#a`, or both `#b` and `#c`
+- Cmd/Ctrl+Click a tag to add with AND. Cmd/Ctrl+Shift+Click to add with OR
+
+**Dates**
+
+- `@today` - Match notes from today using the default date field
+- `@yesterday`, `@last7d`, `@last30d`, `@thisweek`, `@thismonth` - Relative date ranges
+- `@2026-02-07` - Match a single day (also supports `@20260207`)
+- `@2026` - Match a calendar year
+- `@2026-02` or `@202602` - Match a calendar month
+- `@2026-W05` or `@2026W05` - Match an ISO week
+- `@2026-Q2` or `@2026Q2` - Match a calendar quarter
+- `@13/02/2026` - Numeric formats with separators (`@07022026` follows your locale when ambiguous)
+- `@2026-02-01..2026-02-07` - Match an inclusive day range (open ends supported)
+- `@c:...` or `@m:...` - Target created or modified date
+- `!@...` - Exclude a date match
+
+The default date field follows the current sort order. When sorting by name, the date field is configured in Settings → Notes → Date → When sorting by name.
+
+### 6.2 Omnisearch
+
+Full-text search across the vault, filtered to the current folder, subfolders, or selected tags. Requires the [Omnisearch](https://github.com/scambier/obsidian-omnisearch) plugin. If Omnisearch is not installed, search falls back to filter search.
+
+Note previews show Omnisearch result excerpts instead of the default preview text.
+
+**Known limitations**
+
+- **Performance** - Can be slow when searching for fewer than 3 characters in large vaults
+- **Path bug** - Cannot search in paths with non-ASCII characters and does not search subpaths correctly
+- **Limited results** - Omnisearch searches the entire vault and returns a limited number of results before filtering, so relevant files from the current folder may not appear if many matches exist elsewhere
+- **Preview text** - Note previews are replaced with Omnisearch result excerpts, which may not show the actual search match highlight if it appears elsewhere in the file
+
+<br>
+
+## 7 Custom hotkeys
+
+Edit `.obsidian/plugins/notebook-navigator/data.json` to customize Notebook Navigator hotkeys. Open the file and locate the `keyboardShortcuts` section. Each entry maps an action to one or more key bindings:
+
+```json
+"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]
+```
+
+Add multiple bindings per action to support alternate keys, like the `ArrowUp` and `K` example above. Combine modifiers in one entry by listing each value, for example `"modifiers": ["Mod", "Shift"]`. Keyboard sequences such as `gg` or `dd` are not supported. Reload Obsidian after editing the file.
+
+### 7.1 Modifiers
+
+| Modifier | Key                                       |
+| -------- | ----------------------------------------- |
+| `Mod`    | Cmd (macOS) / Ctrl (Win/Linux)            |
+| `Alt`    | Alt / Option                              |
+| `Shift`  | Shift                                     |
+| `Ctrl`   | Control (prefer `Mod` for cross-platform) |
+
+### 7.2 Available actions
+
+| Action                            | Default key(s)       |
+| --------------------------------- | -------------------- |
+| `pane:move-up`                    | ArrowUp              |
+| `pane:move-down`                  | ArrowDown            |
+| `pane:page-up`                    | PageUp               |
+| `pane:page-down`                  | PageDown             |
+| `pane:home`                       | Home                 |
+| `pane:end`                        | End                  |
+| `pane:delete-selected`            | Delete, Backspace    |
+| `navigation:collapse-or-parent`   | ArrowLeft            |
+| `navigation:expand-or-focus-list` | ArrowRight           |
+| `navigation:focus-list`           | Tab                  |
+| `list:focus-navigation`           | ArrowLeft, Shift+Tab |
+| `list:focus-editor`               | ArrowRight, Tab      |
+| `list:select-all`                 | Mod+A                |
+| `list:extend-selection-up`        | Shift+ArrowUp        |
+| `list:extend-selection-down`      | Shift+ArrowDown      |
+| `list:range-to-start`             | Shift+Home           |
+| `list:range-to-end`               | Shift+End            |
+| `search:focus-list`               | Tab, Enter           |
+| `search:focus-navigation`         | Shift+Tab            |
+| `search:close`                    | Escape               |
+
+<br>
+
+## 8 Commands
 
 Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 
@@ -224,7 +327,7 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 
 - `Notebook Navigator: Rebuild cache` Rebuilds the local Notebook Navigator cache. Use this if you experience missing tags, incorrect previews or missing feature images
 
-### 6.1 Command IDs
+### 8.1 Command IDs
 
 | Command ID                                  | Command name                                                                                         |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -279,30 +382,30 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 
 <br>
 
-## 7 Network Usage Disclosure
+## 9 Network Usage Disclosure
 
 Notebook Navigator runs locally, but some features make HTTP requests from Obsidian.
 
-### 7.1 Release update checks (Optional)
+### 9.1 Release update checks (Optional)
 
 - **Setting:** "Check for new version on start"
 - **Request:** `https://api.github.com/repos/johansan/notebook-navigator/releases/latest`
 - **Frequency:** At most once per 24 hours, on startup
 - **Data:** Sends standard HTTP metadata; does not include vault content
 
-### 7.2 Icon pack downloads (Optional)
+### 9.2 Icon pack downloads (Optional)
 
 - **Setting:** Enable an icon pack in the Icon Packs tab
 - **Requests:** `https://raw.githubusercontent.com/johansan/notebook-navigator/main/icon-assets/...` (manifest, font, metadata)
 - **Storage:** Stored locally in IndexedDB
 
-### 7.3 External images and YouTube thumbnails
+### 9.3 External images and YouTube thumbnails
 
 - **Feature images (Optional):** Controlled by the "Download external images" setting. Downloads remote images and YouTube thumbnails for feature images and stores them locally in IndexedDB.
 - **Welcome modal (First launch):** Loads a static thumbnail from `https://raw.githubusercontent.com/johansan/notebook-navigator/main/images/youtube-thumbnail.jpg`.
 - **What’s new modal (On update / when opened):** Loads YouTube thumbnails from `https://img.youtube.com/vi/<id>/...` for release notes that include a YouTube link.
 
-### 7.4 Privacy and data handling
+### 9.4 Privacy and data handling
 
 - Notebook Navigator does not send note content, file names, or tags to a Notebook Navigator server.
 - Requests to GitHub, YouTube, and any external image host are made directly from your device and include standard HTTP metadata (IP address, user-agent, and similar).
@@ -310,13 +413,13 @@ Notebook Navigator runs locally, but some features make HTTP requests from Obsid
 
 <br>
 
-## 8 Star History
+## 10 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=johansan/notebook-navigator&type=date&legend=top-left)](https://www.star-history.com/#johansan/notebook-navigator&type=date&legend=top-left)
 
 <br>
 
-## 9 Contact
+## 11 Contact
 
 Notebook Navigator is built and maintained by [Johan Sanneblad](https://www.linkedin.com/in/johansan/). Johan has a PhD in Software Development and has worked with innovation development for companies such as Apple, Electronic Arts, Google, Microsoft, Lego, SKF, Volvo Cars, Volvo Group and Yamaha.
 
@@ -324,13 +427,13 @@ Feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/johansan/
 
 <br>
 
-## 10 Questions or issues?
+## 12 Questions or issues?
 
 **[Join our Discord](https://discord.gg/6eeSUvzEJr)** for support and discussions, or open an issue on the
 [GitHub repository](https://github.com/johansan/notebook-navigator).
 
 <br>
 
-## 11 License
+## 13 License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/johansan/notebook-navigator/blob/main/LICENSE) file for details.
