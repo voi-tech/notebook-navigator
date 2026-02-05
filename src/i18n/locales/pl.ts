@@ -671,11 +671,8 @@ export const STRINGS_PL = {
             folderNotes: 'Notatki folderu',
             foldersAndTags: 'Foldery i tagi',
             tags: 'Tagi',
-            search: 'Wyszukiwanie',
-            searchAndHotkeys: 'Wyszukiwanie i skróty',
             listPane: 'Panel listy',
             notes: 'Notatki',
-            hotkeys: 'Skróty klawiszowe',
             advanced: 'Zaawansowane'
         },
         groups: {
@@ -719,37 +716,6 @@ export const STRINGS_PL = {
             switchToLocal: 'Wyłącz synchronizację'
         },
         items: {
-            searchProvider: {
-                name: 'Dostawca wyszukiwania',
-                desc: 'Wybierz między szybkim wyszukiwaniem nazwy pliku lub pełnotekstowym wyszukiwaniem z pluginem Omnisearch.',
-                options: {
-                    internal: 'Wyszukiwanie filtrujące',
-                    omnisearch: 'Omnisearch (pełnotekstowy)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Wyszukiwanie filtrujące (domyślne):',
-                        description:
-                            'Filtruje pliki według nazwy i tagów w bieżącym folderze i podfolderach. Tryb filtrowania: mieszany tekst i tagi dopasowują wszystkie terminy (np. "projekt #praca"). Tryb tagów: wyszukiwanie tylko tagami obsługuje operatory AND/OR (np. "#praca AND #pilne", "#projekt OR #osobiste"). Cmd/Ctrl+Kliknięcie na tagi dodaje z AND, Cmd/Ctrl+Shift+Kliknięcie dodaje z OR. Obsługuje wykluczanie z prefiksem ! (np. !szkic, !#zarchiwizowane) oraz znajdowanie notatek bez tagów za pomocą !#. Obsługuje filtry dat z prefiksem @ (np. @today, @2026-02-04, @2026-02-01..2026-02-04). Użyj @c: lub @m: aby wskazać daty utworzenia/modyfikacji, i !@ aby wykluczyć zakresy. Domyślne pole daty podąża za bieżącym sortowaniem; przy sortowaniu według nazwy używa Ustawienia → Notatki → Data → Przy sortowaniu według nazwy.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Wyszukiwanie pełnotekstowe, które przeszukuje cały skarbiec, a następnie filtruje wyniki, aby pokazywać tylko pliki z bieżącego folderu, podfolderów lub wybranych tagów. Wymaga zainstalowania wtyczki Omnisearch - jeśli nie jest dostępna, wyszukiwanie automatycznie powróci do wyszukiwania filtrującego.',
-                        warningNotInstalled: 'Wtyczka Omnisearch nie jest zainstalowana. Używana jest wyszukiwarka filtrująca.',
-                        limitations: {
-                            title: 'Znane ograniczenia:',
-                            performance: 'Wydajność: Może być wolne, szczególnie przy wyszukiwaniu mniej niż 3 znaków w dużych skarbcach',
-                            pathBug:
-                                'Błąd ścieżki: Nie może wyszukiwać w ścieżkach z nie-ASCII znakami i nieprawidłowo przeszukuje podścieżki, wpływając na pliki pojawiające się w wynikach wyszukiwania',
-                            limitedResults:
-                                'Ograniczone wyniki: Ponieważ Omnisearch przeszukuje cały skarbiec i zwraca ograniczoną liczbę wyników przed filtrowaniem, istotne pliki z bieżącego folderu mogą się nie pojawić, jeśli istnieje zbyt wiele dopasowań w innym miejscu skarbca',
-                            previewText:
-                                'Tekst podglądu: Podglądy notatek są zastępowane fragmentami wyników Omnisearch, które mogą nie pokazywać rzeczywistego podświetlenia dopasowania wyszukiwania, jeśli pojawia się ono w innym miejscu pliku'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Tytuł panelu listy',
                 desc: 'Wybierz, gdzie ma być wyświetlany tytuł panelu listy.',
@@ -1532,18 +1498,6 @@ export const STRINGS_PL = {
                 error: 'Nie udało się odbudować pamięci podręcznej',
                 indexingTitle: 'Indeksowanie magazynu...',
                 progress: 'Aktualizowanie pamięci podręcznej Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Edytuj <plugin folder>/notebook-navigator/data.json, aby dostosować skróty Notebook Navigator. Otwórz plik i znajdź sekcję "keyboardShortcuts". Każdy wpis ma następującą strukturę:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (preferuj "Mod" dla wielu platform)'
-                ],
-                guidance:
-                    'Dodaj wiele mapowań, aby obsłużyć alternatywne klawisze, na przykład ArrowUp i K pokazane powyżej. Aby użyć kilku modyfikatorów, wypisz je w jednej definicji, np. "modifiers": ["Mod", "Shift"]. Sekwencje klawiszy takie jak "gg" lub "dd" nie są obsługiwane. Po edycji ponownie uruchom Obsidian.'
             },
             externalIcons: {
                 downloadButton: 'Pobierz',

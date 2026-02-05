@@ -669,11 +669,8 @@ export const STRINGS_ID = {
             folderNotes: 'Catatan folder',
             foldersAndTags: 'Folder & tag',
             tags: 'Tag',
-            search: 'Pencarian',
-            searchAndHotkeys: 'Pencarian & pintasan',
             listPane: 'Panel daftar',
             notes: 'Catatan',
-            hotkeys: 'Pintasan',
             advanced: 'Lanjutan'
         },
         groups: {
@@ -717,37 +714,6 @@ export const STRINGS_ID = {
             switchToLocal: 'Nonaktifkan sinkronisasi'
         },
         items: {
-            searchProvider: {
-                name: 'Penyedia pencarian',
-                desc: 'Pilih antara pencarian nama file cepat atau pencarian teks lengkap dengan plugin Omnisearch.',
-                options: {
-                    internal: 'Pencarian filter',
-                    omnisearch: 'Omnisearch (teks lengkap)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Pencarian filter (default):',
-                        description:
-                            'Memfilter file berdasarkan nama dan tag dalam folder dan subfolder saat ini. Mode filter: teks dan tag campuran cocok dengan semua istilah (misal, "proyek #kerja"). Mode tag: pencarian hanya dengan tag mendukung operator AND/OR (misal, "#kerja AND #mendesak", "#proyek OR #pribadi"). Cmd/Ctrl+Klik tag untuk menambah dengan AND, Cmd/Ctrl+Shift+Klik untuk menambah dengan OR. Mendukung pengecualian dengan awalan ! (misal, !draf, !#arsip) dan menemukan catatan tanpa tag dengan !#. Mendukung filter tanggal dengan awalan @ (mis. @today, @2026-02-04, @2026-02-01..2026-02-04). Gunakan @c: atau @m: untuk menargetkan tanggal pembuatan/modifikasi, dan !@ untuk mengecualikan rentang. Field tanggal default mengikuti pengurutan saat ini; saat mengurutkan berdasarkan nama, gunakan Pengaturan → Catatan → Tanggal → Saat mengurutkan berdasarkan nama.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Pencarian teks lengkap yang mencari seluruh vault, kemudian memfilter hasil untuk menampilkan hanya file dari folder, subfolder, atau tag yang dipilih. Memerlukan plugin Omnisearch terinstal - jika tidak tersedia, pencarian akan otomatis kembali ke pencarian Filter.',
-                        warningNotInstalled: 'Plugin Omnisearch tidak terinstal. Pencarian filter digunakan.',
-                        limitations: {
-                            title: 'Keterbatasan yang diketahui:',
-                            performance: 'Kinerja: Bisa lambat, terutama saat mencari kurang dari 3 karakter di vault besar',
-                            pathBug:
-                                'Bug path: Tidak dapat mencari di path dengan karakter non-ASCII dan tidak mencari subpath dengan benar, mempengaruhi file mana yang muncul di hasil pencarian',
-                            limitedResults:
-                                'Hasil terbatas: Karena Omnisearch mencari seluruh vault dan mengembalikan jumlah hasil terbatas sebelum pemfilteran, file yang relevan dari folder saat ini mungkin tidak muncul jika terlalu banyak kecocokan di tempat lain di vault',
-                            previewText:
-                                'Teks pratinjau: Pratinjau catatan diganti dengan kutipan hasil Omnisearch, yang mungkin tidak menampilkan sorotan kecocokan pencarian sebenarnya jika muncul di tempat lain di file'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Judul panel daftar',
                 desc: 'Pilih di mana judul panel daftar ditampilkan.',
@@ -1529,18 +1495,6 @@ export const STRINGS_ID = {
                 error: 'Gagal membangun ulang cache',
                 indexingTitle: 'Mengindeks vault...',
                 progress: 'Memperbarui cache Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Edit <folder plugin>/notebook-navigator/data.json untuk menyesuaikan pintasan keyboard Notebook Navigator. Buka file dan temukan bagian "keyboardShortcuts". Setiap entri menggunakan struktur ini:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (lebih baik "Mod" untuk lintas platform)'
-                ],
-                guidance:
-                    'Tambahkan beberapa pemetaan untuk mendukung tombol alternatif, seperti binding ArrowUp dan K yang ditunjukkan di atas. Kombinasikan modifier dalam satu entri dengan mencantumkan setiap nilai, misalnya "modifiers": ["Mod", "Shift"]. Urutan keyboard seperti "gg" atau "dd" tidak didukung. Muat ulang Obsidian setelah mengedit file.'
             },
             externalIcons: {
                 downloadButton: 'Unduh',

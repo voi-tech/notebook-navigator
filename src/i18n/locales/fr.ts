@@ -671,10 +671,7 @@ export const STRINGS_FR = {
             folders: 'Dossiers',
             folderNotes: 'Notes de dossier',
             foldersAndTags: 'Dossiers et étiquettes',
-            search: 'Rechercher',
-            searchAndHotkeys: 'Recherche et raccourcis',
             listPane: 'Panneau de liste',
-            hotkeys: 'Raccourcis clavier',
             advanced: 'Avancé'
         },
         groups: {
@@ -718,38 +715,6 @@ export const STRINGS_FR = {
             switchToLocal: 'Désactiver la synchronisation'
         },
         items: {
-            searchProvider: {
-                name: 'Fournisseur de recherche',
-                desc: 'Choisissez entre la recherche rapide par nom de fichier ou la recherche plein texte avec le plugin Omnisearch.',
-                options: {
-                    internal: 'Recherche par filtre',
-                    omnisearch: 'Omnisearch (plein texte)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Recherche par filtre (par défaut):',
-                        description:
-                            'Filtre les fichiers par nom et étiquettes dans le dossier actuel et les sous-dossiers. Mode filtre : le texte et les étiquettes mixtes correspondent à tous les termes (ex. "projet #travail"). Mode étiquettes : la recherche avec uniquement des étiquettes prend en charge les opérateurs AND/OR (ex. "#travail AND #urgent", "#projet OR #personnel"). Cmd/Ctrl+Clic sur les étiquettes pour ajouter avec AND, Cmd/Ctrl+Maj+Clic pour ajouter avec OR. Prend en charge l\'exclusion avec le préfixe ! (ex. !brouillon, !#archivé) et la recherche de notes sans étiquettes avec !#. Prend en charge les filtres de date avec le préfixe @ (ex. @today, @2026-02-04, @2026-02-01..2026-02-04). Utilisez @c: ou @m: pour cibler la date de création/modification, et !@ pour exclure des plages. Le champ de date par défaut suit le tri actuel ; lors du tri par nom, utilise Paramètres → Notes → Date → Lors du tri par nom.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            "Recherche plein texte qui parcourt l'ensemble de votre coffre, puis filtre les résultats pour n'afficher que les fichiers du dossier actuel, des sous-dossiers ou des étiquettes sélectionnées. Nécessite l'installation du plugin Omnisearch - s'il n'est pas disponible, la recherche reviendra automatiquement à la recherche par filtre.",
-                        warningNotInstalled: 'Le plugin Omnisearch n’est pas installé. La recherche par filtre est utilisée.',
-                        limitations: {
-                            title: 'Limitations connues:',
-                            performance:
-                                'Performance: Peut être lent, surtout lors de la recherche de moins de 3 caractères dans de grandes coffres',
-                            pathBug:
-                                'Bug de chemin: Ne peut pas rechercher dans les chemins avec des caractères non-ASCII et ne recherche pas correctement dans les sous-chemins, affectant les fichiers qui apparaissent dans les résultats de recherche',
-                            limitedResults:
-                                "Résultats limités: Comme Omnisearch recherche dans tout le coffre et renvoie un nombre limité de résultats avant le filtrage, les fichiers pertinents de votre dossier actuel peuvent ne pas apparaître s'il existe trop de correspondances ailleurs dans le coffre",
-                            previewText:
-                                "Texte d'aperçu: Les aperçus de notes sont remplacés par des extraits de résultats Omnisearch, qui peuvent ne pas afficher la mise en surbrillance réelle de la correspondance de recherche si elle apparaît ailleurs dans le fichier"
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Titre du panneau de liste',
                 desc: 'Choisissez où afficher le titre du panneau de liste.',
@@ -1535,18 +1500,6 @@ export const STRINGS_FR = {
                 error: 'Échec de la reconstruction du cache',
                 indexingTitle: 'Indexation du coffre...',
                 progress: 'Mise à jour du cache de Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Modifiez <plugin folder>/notebook-navigator/data.json pour personnaliser les raccourcis de Notebook Navigator. Ouvrez le fichier et repérez la section "keyboardShortcuts". Chaque entrée suit cette structure :',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Maj',
-                    '"Ctrl" = Contrôle (privilégiez "Mod" pour le multiplateforme)'
-                ],
-                guidance:
-                    'Ajoutez plusieurs associations pour proposer des touches alternatives comme FlècheHaut et K montrées ci-dessus. Combinez des modificateurs dans une même entrée en listant chaque valeur, par exemple "modifiers": ["Mod", "Shift"]. Les séquences clavier telles que "gg" ou "dd" ne sont pas prises en charge. Après modification, rechargez Obsidian.'
             },
             externalIcons: {
                 downloadButton: 'Télécharger',

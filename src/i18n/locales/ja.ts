@@ -670,10 +670,7 @@ export const STRINGS_JA = {
             folders: 'フォルダノート',
             folderNotes: 'フォルダノート',
             foldersAndTags: 'フォルダとタグ',
-            search: '検索',
-            searchAndHotkeys: '検索とホットキー',
             listPane: 'リストペイン',
-            hotkeys: 'ホットキー',
             advanced: '詳細設定'
         },
         groups: {
@@ -717,37 +714,6 @@ export const STRINGS_JA = {
             switchToLocal: '同期を無効化'
         },
         items: {
-            searchProvider: {
-                name: '検索プロバイダー',
-                desc: 'クイックファイル名検索またはOmnisearchプラグインによる全文検索を選択してください。',
-                options: {
-                    internal: 'フィルター検索',
-                    omnisearch: 'Omnisearch（全文）'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'フィルター検索（デフォルト）：',
-                        description:
-                            '現在のフォルダとサブフォルダ内のファイルを名前とタグでフィルタリング。フィルターモード：テキストとタグの混在で全ての条件に一致（例：「プロジェクト #仕事」）。タグモード：タグのみの検索でAND/OR演算子をサポート（例：「#仕事 AND #急ぎ」、「#プロジェクト OR #個人」）。Cmd/Ctrl+クリックでANDとして追加、Cmd/Ctrl+Shift+クリックでORとして追加。!プレフィックスによる除外（例：!下書き、!#アーカイブ済み）と!#によるタグなしノートの検索をサポート。@ プレフィックスの日付フィルターをサポート（例：@today、@2026-02-04、@2026-02-01..2026-02-04）。@c: または @m: を使用して作成日/更新日を指定し、!@ で範囲を除外します。デフォルトの日付フィールドは現在のソートに従います。名前でソート時は、設定 → ノート → 日付 → 名前でソート時 を使用します。'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch：',
-                        description:
-                            'ボールト全体を検索し、現在のフォルダ、サブフォルダ、または選択したタグからのファイルのみを表示するように結果をフィルタリングする全文検索。Omnisearchプラグインのインストールが必要 - 利用できない場合、検索は自動的にフィルター検索にフォールバックします。',
-                        warningNotInstalled: 'Omnisearchプラグインがインストールされていません。フィルター検索を使用します。',
-                        limitations: {
-                            title: '既知の制限事項：',
-                            performance: 'パフォーマンス：大きなボールトで3文字未満を検索する場合、特に遅くなることがあります',
-                            pathBug:
-                                'パスのバグ：非ASCII文字を含むパスで検索できず、サブパスを正しく検索しません。検索結果に表示されるファイルに影響します',
-                            limitedResults:
-                                '制限された結果：Omnisearchはボールト全体を検索し、フィルタリング前に限られた数の結果を返すため、ボールトの他の場所に多くの一致が存在する場合、現在のフォルダからの関連ファイルが表示されない可能性があります',
-                            previewText:
-                                'プレビューテキスト：ノートのプレビューはOmnisearchの結果の抜粋に置き換えられ、検索一致のハイライトがファイルの他の場所に表示される場合、実際のハイライトが表示されない可能性があります'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'リストペインのタイトル',
                 desc: 'リストペインのタイトルを表示する場所を選択します。',
@@ -1530,18 +1496,6 @@ export const STRINGS_JA = {
                 error: 'キャッシュの再構築に失敗しました',
                 indexingTitle: 'ボールトをインデックス中...',
                 progress: 'Notebook Navigator のキャッシュを更新しています.'
-            },
-            hotkeys: {
-                intro: 'Notebook Navigator のホットキーは <plugin folder>/notebook-navigator/data.json を編集してカスタマイズします。ファイルをテキストエディタで開き、"keyboardShortcuts" セクションを探してください。各エントリは次の構造です:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control（クロスプラットフォームには "Mod" を推奨）'
-                ],
-                guidance:
-                    'ArrowUp と K のような代替キーを追加する場合は、上の例と同じように同一コマンドへ複数のマッピングを登録してください。複数のモディファイアを使う場合は "modifiers": ["Mod", "Shift"] のように並べて記述します。「gg」や「dd」などのキーシーケンスには対応していません。編集後は Obsidian を再読み込みしてください。'
             },
             externalIcons: {
                 downloadButton: 'ダウンロード',

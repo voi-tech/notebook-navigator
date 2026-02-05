@@ -35,7 +35,6 @@ export const SYNC_MODE_SETTING_IDS = [
     'vaultProfile',
     'folderSortOrder',
     'tagSortOrder',
-    'searchProvider',
     'includeDescendantNotes',
     'useFloatingToolbars',
     'dualPane',
@@ -380,7 +379,7 @@ export interface NotebookNavigatorSettings {
     // Icon packs tab
     externalIconProviders: Record<string, boolean>;
 
-    // Search & hotkeys tab
+    // Search settings and hotkeys
     searchProvider: SearchProvider | null;
     keyboardShortcuts: KeyboardShortcutConfig;
 

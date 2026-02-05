@@ -31,7 +31,6 @@ import {
     resolveNavItemHeightScaleText,
     resolvePaneTransitionDuration,
     resolvePinNavigationBanner,
-    resolveSearchProvider,
     resolveTagSortOrder,
     resolveToolbarVisibility
 } from '../../settings/migrations/localPreferences';
@@ -66,7 +65,6 @@ interface CreateSyncModeRegistryParams {
     sanitizeDualPaneOrientationSetting: (value: unknown) => DualPaneOrientation;
     sanitizeTagSortOrderSetting: (value: unknown) => NotebookNavigatorSettings['tagSortOrder'];
     sanitizeFolderSortOrderSetting: (value: unknown) => NotebookNavigatorSettings['folderSortOrder'];
-    sanitizeSearchProviderSetting: (value: unknown) => NotebookNavigatorSettings['searchProvider'];
     sanitizePaneTransitionDurationSetting: (value: unknown) => number;
     sanitizeToolbarVisibilitySetting: (value: unknown) => NotebookNavigatorSettings['toolbarVisibility'];
     sanitizeNavIndentSetting: (value: unknown) => number;
@@ -262,16 +260,6 @@ export function createSyncModeRegistry(params: CreateSyncModeRegistryParams): Sy
                 migrated: false
             }),
             sanitizeSynced: () => params.sanitizeTagSortOrderSetting(params.getSettings().tagSortOrder)
-        }),
-        searchProvider: createResolvedLocalStorageSettingEntry({
-            settingId: 'searchProvider',
-            loadPhase: 'preProfiles',
-            localStorageKey: params.keys.searchProviderKey,
-            resolveDeviceLocal: storedData => ({
-                value: resolveSearchProvider({ storedData, keys: params.keys, defaultSettings: params.defaultSettings }),
-                migrated: false
-            }),
-            sanitizeSynced: () => params.sanitizeSearchProviderSetting(params.getSettings().searchProvider)
         }),
         includeDescendantNotes: createUXPreferenceEntry({
             settingId: 'includeDescendantNotes',

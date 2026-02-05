@@ -671,10 +671,7 @@ export const STRINGS_DE = {
             folders: 'Ordner',
             folderNotes: 'Ordnernotizen',
             foldersAndTags: 'Ordner & Tags',
-            search: 'Suchen',
-            searchAndHotkeys: 'Suche & Tastenkürzel',
             listPane: 'Listenbereich',
-            hotkeys: 'Tastenkürzel',
             advanced: 'Erweitert'
         },
         groups: {
@@ -718,38 +715,6 @@ export const STRINGS_DE = {
             switchToLocal: 'Synchronisierung deaktivieren'
         },
         items: {
-            searchProvider: {
-                name: 'Suchanbieter',
-                desc: 'Wählen Sie zwischen schneller Dateinamensuche oder Volltextsuche mit dem Omnisearch-Plugin.',
-                options: {
-                    internal: 'Filtersuche',
-                    omnisearch: 'Omnisearch (Volltext)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Filtersuche (Standard):',
-                        description:
-                            'Filtert Dateien nach Namen und Tags im aktuellen Ordner und Unterordnern. Filtermodus: Gemischter Text und Tags entsprechen allen Begriffen (z.B. "projekt #arbeit"). Tag-Modus: Suche nur mit Tags unterstützt AND/OR-Operatoren (z.B. "#arbeit AND #dringend", "#projekt OR #persönlich"). Cmd/Strg+Klick auf Tags zum Hinzufügen mit AND, Cmd/Strg+Umschalt+Klick zum Hinzufügen mit OR. Unterstützt Ausschluss mit ! Präfix (z.B. !entwurf, !#archiviert) und das Finden von Notizen ohne Tags mit !#. Unterstützt Datumsfilter mit @ Präfix (z.B. @today, @2026-02-04, @2026-02-01..2026-02-04). Verwenden Sie @c: oder @m: für Erstellungs-/Änderungsdatum, und !@ zum Ausschließen von Bereichen. Das Standard-Datumsfeld folgt der aktuellen Sortierung; bei alphabetischer Sortierung wird Einstellungen → Notizen → Datum → Bei Sortierung nach Name verwendet.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Volltextsuche, die Ihren gesamten Tresor durchsucht und dann die Ergebnisse filtert, um nur Dateien aus dem aktuellen Ordner, Unterordnern oder ausgewählten Tags anzuzeigen. Erfordert die Installation des Omnisearch-Plugins - falls nicht verfügbar, fällt die Suche automatisch auf die Filtersuche zurück.',
-                        warningNotInstalled: 'Omnisearch-Plugin nicht installiert. Filtersuche wird verwendet.',
-                        limitations: {
-                            title: 'Bekannte Einschränkungen:',
-                            performance:
-                                'Leistung: Kann langsam sein, besonders bei der Suche nach weniger als 3 Zeichen in großen Tresoren',
-                            pathBug:
-                                'Pfadfehler: Kann nicht in Pfaden mit Nicht-ASCII-Zeichen suchen und durchsucht Unterpfade nicht korrekt, was die angezeigten Suchergebnisse beeinflusst',
-                            limitedResults:
-                                'Begrenzte Ergebnisse: Da Omnisearch den gesamten Tresor durchsucht und eine begrenzte Anzahl von Ergebnissen vor der Filterung zurückgibt, erscheinen relevante Dateien aus Ihrem aktuellen Ordner möglicherweise nicht, wenn zu viele Treffer an anderer Stelle im Tresor vorhanden sind',
-                            previewText:
-                                'Vorschautext: Notizvorschauen werden durch Omnisearch-Ergebnisauszüge ersetzt, die möglicherweise nicht die tatsächliche Suchtreffhervorhebung anzeigen, wenn sie an anderer Stelle in der Datei erscheint'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Titel des Listenbereichs',
                 desc: 'Wählen Sie, wo der Titel des Listenbereichs angezeigt wird.',
@@ -1531,18 +1496,6 @@ export const STRINGS_DE = {
                 error: 'Cache-Neuaufbau fehlgeschlagen',
                 indexingTitle: 'Tresor wird indexiert...',
                 progress: 'Notebook Navigator-Cache wird aktualisiert.'
-            },
-            hotkeys: {
-                intro: 'Bearbeite <plugin folder>/notebook-navigator/data.json, um Notebook Navigator-Tastenkürzel anzupassen. Öffne die Datei in einem Texteditor und suche den Abschnitt "keyboardShortcuts". Jede Zuordnung nutzt diese Struktur:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Strg (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Umschalt',
-                    '"Ctrl" = Steuerung ("Mod" für plattformübergreifend bevorzugen)'
-                ],
-                guidance:
-                    'Füge mehrere Zuordnungen hinzu, um alternative Tasten wie im obigen ArrowUp- und K-Beispiel zu unterstützen. Kombiniere Modifikatortasten, indem du sie gemeinsam angibst, zum Beispiel "modifiers": ["Mod", "Shift"]. Tastatursequenzen wie "gg" oder "dd" werden nicht unterstützt. Lade Obsidian nach dem Bearbeiten der Datei neu.'
             },
             externalIcons: {
                 downloadButton: 'Herunterladen',

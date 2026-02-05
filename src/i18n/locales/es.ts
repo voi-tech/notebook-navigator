@@ -671,10 +671,7 @@ export const STRINGS_ES = {
             folders: 'Carpetas',
             folderNotes: 'Notas de carpeta',
             foldersAndTags: 'Carpetas y etiquetas',
-            search: 'Buscar',
-            searchAndHotkeys: 'Búsqueda y atajos',
             listPane: 'Panel de lista',
-            hotkeys: 'Atajos de teclado',
             advanced: 'Avanzado'
         },
         groups: {
@@ -718,37 +715,6 @@ export const STRINGS_ES = {
             switchToLocal: 'Desactivar sincronización'
         },
         items: {
-            searchProvider: {
-                name: 'Proveedor de búsqueda',
-                desc: 'Elija entre búsqueda rápida de nombres de archivo o búsqueda de texto completo con el plugin Omnisearch.',
-                options: {
-                    internal: 'Búsqueda por filtro',
-                    omnisearch: 'Omnisearch (texto completo)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Búsqueda por filtro (predeterminado):',
-                        description:
-                            'Filtra archivos por nombre y etiquetas dentro de la carpeta actual y subcarpetas. Modo filtro: texto y etiquetas mezclados coinciden con todos los términos (ej. "proyecto #trabajo"). Modo etiquetas: búsqueda solo con etiquetas admite operadores AND/OR (ej. "#trabajo AND #urgente", "#proyecto OR #personal"). Cmd/Ctrl+Clic en etiquetas para añadir con AND, Cmd/Ctrl+Mayús+Clic para añadir con OR. Admite exclusión con prefijo ! (ej. !borrador, !#archivado) y búsqueda de notas sin etiquetas con !#. Admite filtros de fecha con prefijo @ (ej. @today, @2026-02-04, @2026-02-01..2026-02-04). Usa @c: o @m: para apuntar a fechas de creación/modificación, y !@ para excluir rangos. El campo de fecha predeterminado sigue el orden actual; al ordenar por nombre, usa Ajustes → Notas → Fecha → Al ordenar por nombre.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Búsqueda de texto completo que busca en toda su bóveda, luego filtra los resultados para mostrar solo archivos de la carpeta actual, subcarpetas o etiquetas seleccionadas. Requiere que el plugin Omnisearch esté instalado - si no está disponible, la búsqueda volverá automáticamente a la búsqueda por filtro.',
-                        warningNotInstalled: 'El plugin Omnisearch no está instalado. Se usa la búsqueda por filtro.',
-                        limitations: {
-                            title: 'Limitaciones conocidas:',
-                            performance: 'Rendimiento: Puede ser lento, especialmente al buscar menos de 3 caracteres en bóvedas grandes',
-                            pathBug:
-                                'Error de ruta: No puede buscar en rutas con caracteres no ASCII y no busca correctamente en subrutas, afectando qué archivos aparecen en los resultados de búsqueda',
-                            limitedResults:
-                                'Resultados limitados: Como Omnisearch busca en toda la bóveda y devuelve un número limitado de resultados antes del filtrado, los archivos relevantes de su carpeta actual pueden no aparecer si existen demasiadas coincidencias en otro lugar de la bóveda',
-                            previewText:
-                                'Texto de vista previa: Las vistas previas de notas se reemplazan con extractos de resultados de Omnisearch, que pueden no mostrar el resaltado real de la coincidencia de búsqueda si aparece en otro lugar del archivo'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Título del panel de lista',
                 desc: 'Elige dónde se muestra el título del panel de lista.',
@@ -1532,18 +1498,6 @@ export const STRINGS_ES = {
                 error: 'Error al reconstruir caché',
                 indexingTitle: 'Indexando la bóveda...',
                 progress: 'Actualizando la caché de Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Edita <plugin folder>/notebook-navigator/data.json para personalizar los atajos de Notebook Navigator. Abre el archivo y busca la sección "keyboardShortcuts". Cada entrada usa esta estructura:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Opción',
-                    '"Shift" = Mayús',
-                    '"Ctrl" = Control (prefiere "Mod" para multiplataforma)'
-                ],
-                guidance:
-                    'Añade varias asignaciones para admitir teclas alternativas como ArrowUp y K mostradas arriba. Combina modificadores en una misma entrada indicando cada valor, por ejemplo "modifiers": ["Mod", "Shift"]. Las secuencias de teclado como "gg" o "dd" no están disponibles. Recarga Obsidian después de editar el archivo.'
             },
             externalIcons: {
                 downloadButton: 'Descargar',

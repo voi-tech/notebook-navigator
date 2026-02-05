@@ -668,11 +668,8 @@ export const STRINGS_KO = {
             folderNotes: '폴더 노트',
             foldersAndTags: '폴더 및 태그',
             tags: '태그',
-            search: '검색',
-            searchAndHotkeys: '검색 및 단축키',
             listPane: '목록 창',
             notes: '노트',
-            hotkeys: '단축키',
             advanced: '고급'
         },
         groups: {
@@ -716,37 +713,6 @@ export const STRINGS_KO = {
             switchToLocal: '동기화 비활성화'
         },
         items: {
-            searchProvider: {
-                name: '검색 제공자',
-                desc: '빠른 파일명 검색 또는 Omnisearch 플러그인을 통한 전체 텍스트 검색 중에서 선택하세요.',
-                options: {
-                    internal: '필터 검색',
-                    omnisearch: 'Omnisearch (전체 텍스트)'
-                },
-                info: {
-                    filterSearch: {
-                        title: '필터 검색 (기본값):',
-                        description:
-                            '현재 폴더와 하위 폴더 내의 파일을 이름과 태그로 필터링합니다. 필터 모드: 텍스트와 태그 혼합 시 모든 조건에 일치 (예: "프로젝트 #업무"). 태그 모드: 태그만으로 검색 시 AND/OR 연산자 지원 (예: "#업무 AND #긴급", "#프로젝트 OR #개인"). Cmd/Ctrl+클릭으로 AND로 추가, Cmd/Ctrl+Shift+클릭으로 OR로 추가. ! 접두사를 사용한 제외(예: !초안, !#보관됨)와 !#를 사용한 태그 없는 노트 찾기를 지원합니다. @ 접두사가 있는 날짜 필터 지원 (예: @today, @2026-02-04, @2026-02-01..2026-02-04). @c: 또는 @m:를 사용하여 생성/수정 날짜를 지정하고, !@로 범위를 제외합니다. 기본 날짜 필드는 현재 정렬을 따릅니다. 이름으로 정렬 시 설정 → 노트 → 날짜 → 이름으로 정렬 시를 사용합니다.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            '전체 보관소를 검색한 다음 현재 폴더, 하위 폴더 또는 선택한 태그의 파일만 표시하도록 결과를 필터링하는 전체 텍스트 검색. Omnisearch 플러그인 설치가 필요합니다 - 사용할 수 없는 경우 검색이 자동으로 필터 검색으로 대체됩니다.',
-                        warningNotInstalled: 'Omnisearch 플러그인이 설치되지 않았습니다. 필터 검색을 사용합니다.',
-                        limitations: {
-                            title: '알려진 제한 사항:',
-                            performance: '성능: 대용량 보관소에서 3자 미만을 검색할 때 특히 느릴 수 있음',
-                            pathBug:
-                                '경로 버그: 비ASCII 문자가 있는 경로에서 검색할 수 없으며 하위 경로를 올바르게 검색하지 않아 검색 결과에 표시되는 파일에 영향을 줍니다',
-                            limitedResults:
-                                '제한된 결과: Omnisearch가 전체 보관소를 검색하고 필터링 전에 제한된 수의 결과를 반환하므로 보관소의 다른 곳에 일치 항목이 너무 많으면 현재 폴더의 관련 파일이 나타나지 않을 수 있음',
-                            previewText:
-                                '미리보기 텍스트: 노트 미리보기가 Omnisearch 결과 발췌로 대체되어 검색 일치 하이라이트가 파일의 다른 위치에 나타나는 경우 실제 하이라이트가 표시되지 않을 수 있음'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: '목록 창 제목',
                 desc: '목록 창 제목을 표시할 위치를 선택하세요.',
@@ -1527,18 +1493,6 @@ export const STRINGS_KO = {
                 error: '캐시 다시 빌드 실패',
                 indexingTitle: '보관함을 인덱싱하는 중...',
                 progress: 'Notebook Navigator 캐시를 업데이트하는 중.'
-            },
-            hotkeys: {
-                intro: 'Notebook Navigator 단축키는 <plugin folder>/notebook-navigator/data.json을 편집하여 구성합니다. 파일을 텍스트 편집기로 열고 "keyboardShortcuts" 섹션을 확인하세요. 각 항목은 다음 구조를 사용합니다:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (크로스 플랫폼에서는 "Mod" 권장)'
-                ],
-                guidance:
-                    '위 예제처럼 ArrowUp과 K를 함께 허용하려면 동일한 명령에 여러 매핑을 추가하세요. 여러 수정 키를 사용하려면 "modifiers": ["Mod", "Shift"]처럼 모두 나열합니다. "gg" 또는 "dd"와 같은 키 시퀀스는 지원되지 않습니다. 파일을 수정한 후 Obsidian을 다시 로드하세요.'
             },
             externalIcons: {
                 downloadButton: '다운로드',

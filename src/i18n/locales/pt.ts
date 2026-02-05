@@ -669,11 +669,8 @@ export const STRINGS_PT = {
             folderNotes: 'Notas de pasta',
             foldersAndTags: 'Pastas e etiquetas',
             tags: 'Etiquetas',
-            search: 'Pesquisa',
-            searchAndHotkeys: 'Pesquisa e atalhos',
             listPane: 'Painel de lista',
             notes: 'Notas',
-            hotkeys: 'Atalhos de teclado',
             advanced: 'Avançado'
         },
         groups: {
@@ -717,37 +714,6 @@ export const STRINGS_PT = {
             switchToLocal: 'Desativar sincronização'
         },
         items: {
-            searchProvider: {
-                name: 'Fornecedor de pesquisa',
-                desc: 'Escolha entre pesquisa rápida por nome de ficheiro ou pesquisa de texto completo com o plugin Omnisearch.',
-                options: {
-                    internal: 'Pesquisa com filtro',
-                    omnisearch: 'Omnisearch (texto completo)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Pesquisa com filtro (predefinido):',
-                        description:
-                            'Filtra ficheiros por nome e etiquetas na pasta atual e subpastas. Modo filtro: texto e etiquetas misturados correspondem a todos os termos (ex: "projeto #trabalho"). Modo etiquetas: pesquisa apenas com etiquetas suporta operadores AND/OR (ex: "#trabalho AND #urgente", "#projeto OR #pessoal"). Cmd/Ctrl+Clique em etiquetas para adicionar com AND, Cmd/Ctrl+Shift+Clique para adicionar com OR. Suporta exclusão com prefixo ! (ex: !rascunho, !#arquivo) e encontrar notas sem etiquetas com !#. Suporta filtros de data com prefixo @ (ex. @today, @2026-02-04, @2026-02-01..2026-02-04). Use @c: ou @m: para visar datas de criação/modificação, e !@ para excluir intervalos. O campo de data predefinido segue a ordenação atual; ao ordenar por nome, usa Definições → Notas → Data → Ao ordenar por nome.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Pesquisa de texto completo em todo o cofre, depois filtra os resultados para mostrar apenas ficheiros da pasta atual, subpastas ou etiquetas selecionadas. Requer o plugin Omnisearch instalado - se não disponível, a pesquisa volta automaticamente para Pesquisa com filtro.',
-                        warningNotInstalled: 'Plugin Omnisearch não instalado. A usar Pesquisa com filtro.',
-                        limitations: {
-                            title: 'Limitações conhecidas:',
-                            performance: 'Desempenho: Pode ser lento, especialmente ao pesquisar menos de 3 caracteres em cofres grandes',
-                            pathBug:
-                                'Erro de caminho: Não consegue pesquisar em caminhos com caracteres não-ASCII e não pesquisa subcaminhos corretamente, afetando quais ficheiros aparecem nos resultados',
-                            limitedResults:
-                                'Resultados limitados: Como o Omnisearch pesquisa todo o cofre e retorna um número limitado de resultados antes de filtrar, ficheiros relevantes da pasta atual podem não aparecer se existirem muitas correspondências noutros locais',
-                            previewText:
-                                'Texto de pré-visualização: As pré-visualizações de notas são substituídas por excertos de resultados do Omnisearch, que podem não mostrar o destaque real da correspondência se aparecer noutro local do ficheiro'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Título do painel de lista',
                 desc: 'Escolha onde mostrar o título do painel de lista.',
@@ -1532,18 +1498,6 @@ export const STRINGS_PT = {
                 error: 'Falha ao reconstruir cache',
                 indexingTitle: 'A indexar o cofre...',
                 progress: 'A atualizar a cache do Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Edite <plugin folder>/notebook-navigator/data.json para personalizar os atalhos de teclado do Notebook Navigator. Abra o ficheiro e localize a secção "keyboardShortcuts". Cada entrada usa esta estrutura:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (prefira "Mod" para multiplataforma)'
-                ],
-                guidance:
-                    'Adicione múltiplos mapeamentos para suportar teclas alternativas, como os bindings ArrowUp e K mostrados acima. Combine modificadores numa entrada listando cada valor, por exemplo "modifiers": ["Mod", "Shift"]. Sequências de teclado como "gg" ou "dd" não são suportadas. Recarregue o Obsidian após editar o ficheiro.'
             },
             externalIcons: {
                 downloadButton: 'Transferir',

@@ -668,10 +668,7 @@ export const STRINGS_ZH_TW = {
             folders: '資料夾',
             folderNotes: '資料夾筆記',
             foldersAndTags: '資料夾與標籤',
-            search: '搜尋',
-            searchAndHotkeys: '搜尋與快速鍵',
             listPane: '列表窗格',
-            hotkeys: '快速鍵',
             advanced: '進階'
         },
         groups: {
@@ -715,36 +712,6 @@ export const STRINGS_ZH_TW = {
             switchToLocal: '停用同步'
         },
         items: {
-            searchProvider: {
-                name: '搜尋提供器',
-                desc: '在快速檔名搜尋或使用 Omnisearch 外掛的全文搜尋之間選擇。',
-                options: {
-                    internal: '篩選搜尋',
-                    omnisearch: 'Omnisearch（全文）'
-                },
-                info: {
-                    filterSearch: {
-                        title: '篩選搜尋（預設）：',
-                        description:
-                            '按名稱和標籤篩選目前資料夾和子資料夾中的檔案。篩選模式：混合文字和標籤匹配所有條件（例如「專案 #工作」）。標籤模式：僅使用標籤搜尋支援 AND/OR 運算子（例如「#工作 AND #緊急」、「#專案 OR #個人」）。Cmd/Ctrl+點按標籤以 AND 方式新增，Cmd/Ctrl+Shift+點按以 OR 方式新增。支援使用 ! 前綴進行排除（例如 !草稿，!#已歸檔）以及使用 !# 尋找無標籤筆記。支援使用 @ 前綴的日期篩選器（例如 @today、@2026-02-04、@2026-02-01..2026-02-04）。使用 @c: 或 @m: 指定建立/修改日期，使用 !@ 排除範圍。預設日期欄位跟隨當前排序；按名稱排序時，使用設定 → 筆記 → 日期 → 按名稱排序時。'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch：',
-                        description:
-                            '全文搜尋，搜尋整個保險庫，然後篩選結果以僅顯示來自目前資料夾、子資料夾或選定標籤的檔案。需要安裝 Omnisearch 外掛 - 如果不可用，搜尋將自動回退到篩選搜尋。',
-                        warningNotInstalled: '未安裝 Omnisearch 外掛。使用篩選搜尋。',
-                        limitations: {
-                            title: '已知限制：',
-                            performance: '效能：可能較慢，特別是在大型保險庫中搜尋少於 3 個字元時',
-                            pathBug: '路徑錯誤：無法在包含非 ASCII 字元的路徑中搜尋，且不能正確搜尋子路徑，影響搜尋結果中顯示的檔案',
-                            limitedResults:
-                                '結果有限：由於 Omnisearch 搜尋整個保險庫並在篩選前傳回有限數量的結果，如果保險庫其他地方存在太多匹配項，目前資料夾中的相關檔案可能不會出現',
-                            previewText:
-                                '預覽文字：筆記預覽被 Omnisearch 結果摘錄取代，如果搜尋匹配醒目顯示出現在檔案的其他位置，可能不會顯示實際的醒目顯示'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: '列表窗格標題',
                 desc: '選擇列表窗格標題的顯示位置。',
@@ -1524,18 +1491,6 @@ export const STRINGS_ZH_TW = {
                 error: '重建快取失敗',
                 indexingTitle: '正在索引保險庫...',
                 progress: '正在更新 Notebook Navigator 快取.'
-            },
-            hotkeys: {
-                intro: '透過編輯 <plugin folder>/notebook-navigator/data.json 來自訂 Notebook Navigator 快速鍵。用文字編輯器開啟檔案並找到 "keyboardShortcuts" 區段。每個條目都使用以下結構：',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control（跨平台建議使用 "Mod"）'
-                ],
-                guidance:
-                    '如上方範例所示，需要額外按鍵時可為同一命令新增多條對應。若需組合多個修飾鍵，請在同一條目中列出所有值，例如 "modifiers": ["Mod", "Shift" ]。不支援 "gg" 或 "dd" 這類按鍵序列。編輯完成後，請重新載入 Obsidian。'
             },
             externalIcons: {
                 downloadButton: '下載',

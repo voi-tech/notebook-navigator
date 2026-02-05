@@ -668,10 +668,7 @@ export const STRINGS_ZH_CN = {
             folders: '文件夹',
             folderNotes: '文件夹笔记',
             foldersAndTags: '文件夹与标签',
-            search: '搜索',
-            searchAndHotkeys: '搜索与快捷键',
             listPane: '列表窗格',
-            hotkeys: '快捷键',
             advanced: '高级'
         },
         groups: {
@@ -715,36 +712,6 @@ export const STRINGS_ZH_CN = {
             switchToLocal: '禁用同步'
         },
         items: {
-            searchProvider: {
-                name: '搜索提供器',
-                desc: '在快速文件名搜索或使用Omnisearch插件的全文搜索之间选择。',
-                options: {
-                    internal: '过滤搜索',
-                    omnisearch: 'Omnisearch（全文）'
-                },
-                info: {
-                    filterSearch: {
-                        title: '过滤搜索（默认）：',
-                        description:
-                            '按名称和标签过滤当前文件夹和子文件夹中的文件。过滤模式：混合文本和标签匹配所有条件（例如"项目 #工作"）。标签模式：仅使用标签搜索支持 AND/OR 运算符（例如"#工作 AND #紧急"、"#项目 OR #个人"）。Cmd/Ctrl+点击标签以 AND 方式添加，Cmd/Ctrl+Shift+点击以 OR 方式添加。支持使用 ! 前缀进行排除（例如 !草稿，!#已归档）以及使用 !# 查找无标签笔记。支持使用 @ 前缀的日期过滤器（例如 @today、@2026-02-04、@2026-02-01..2026-02-04）。使用 @c: 或 @m: 指定创建/修改日期，使用 !@ 排除范围。默认日期字段跟随当前排序；按名称排序时，使用设置 → 笔记 → 日期 → 按名称排序时。'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch：',
-                        description:
-                            '全文搜索，搜索整个仓库，然后过滤结果以仅显示来自当前文件夹、子文件夹或选定标签的文件。需要安装Omnisearch插件 - 如果不可用，搜索将自动回退到过滤搜索。',
-                        warningNotInstalled: '未安装 Omnisearch 插件。使用过滤搜索。',
-                        limitations: {
-                            title: '已知限制：',
-                            performance: '性能：可能较慢，特别是在大型仓库中搜索少于3个字符时',
-                            pathBug: '路径错误：无法在包含非ASCII字符的路径中搜索，且不能正确搜索子路径，影响搜索结果中显示的文件',
-                            limitedResults:
-                                '结果有限：由于Omnisearch搜索整个仓库并在过滤前返回有限数量的结果，如果仓库其他地方存在太多匹配项，当前文件夹中的相关文件可能不会出现',
-                            previewText:
-                                '预览文本：笔记预览被Omnisearch结果摘录替换，如果搜索匹配高亮出现在文件的其他位置，可能不会显示实际的高亮'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: '列表窗格标题',
                 desc: '选择列表窗格标题的显示位置。',
@@ -1525,18 +1492,6 @@ export const STRINGS_ZH_CN = {
                 error: '重建缓存失败',
                 indexingTitle: '正在索引仓库...',
                 progress: '正在更新 Notebook Navigator 缓存.'
-            },
-            hotkeys: {
-                intro: '通过编辑 <plugin folder>/notebook-navigator/data.json 来自定义 Notebook Navigator 快捷键。用文本编辑器打开文件并找到 "keyboardShortcuts" 部分。每个条目都使用以下结构：',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control（跨平台推荐使用 "Mod"）'
-                ],
-                guidance:
-                    '如上方示例所示，需要额外按键时可为同一命令添加多条映射。若需组合多个修饰键，请在同一条目中列出所有值，例如 "modifiers": ["Mod", "Shift" ]。不支持 "gg" 或 "dd" 这类按键序列。编辑完成后，请重新加载 Obsidian。'
             },
             externalIcons: {
                 downloadButton: '下载',

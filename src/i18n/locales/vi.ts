@@ -668,11 +668,8 @@ export const STRINGS_VI = {
             folderNotes: 'Ghi chú thư mục',
             foldersAndTags: 'Thư mục & thẻ',
             tags: 'Thẻ',
-            search: 'Tìm kiếm',
-            searchAndHotkeys: 'Tìm kiếm & phím tắt',
             listPane: 'Ngăn danh sách',
             notes: 'Ghi chú',
-            hotkeys: 'Phím tắt',
             advanced: 'Nâng cao'
         },
         groups: {
@@ -716,37 +713,6 @@ export const STRINGS_VI = {
             switchToLocal: 'Tắt đồng bộ'
         },
         items: {
-            searchProvider: {
-                name: 'Nhà cung cấp tìm kiếm',
-                desc: 'Chọn giữa tìm kiếm nhanh theo tên tệp hoặc tìm kiếm toàn văn với plugin Omnisearch.',
-                options: {
-                    internal: 'Tìm kiếm lọc',
-                    omnisearch: 'Omnisearch (toàn văn)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Tìm kiếm lọc (mặc định):',
-                        description:
-                            'Lọc tệp theo tên và thẻ trong thư mục hiện tại và thư mục con. Chế độ lọc: văn bản và thẻ hỗn hợp khớp với tất cả các điều kiện (ví dụ: "dự án #công việc"). Chế độ thẻ: tìm kiếm chỉ với thẻ hỗ trợ toán tử AND/OR (ví dụ: "#công việc AND #khẩn cấp", "#dự án OR #cá nhân"). Cmd/Ctrl+Nhấp vào thẻ để thêm với AND, Cmd/Ctrl+Shift+Nhấp để thêm với OR. Hỗ trợ loại trừ với tiền tố ! (ví dụ: !nháp, !#lưu trữ) và tìm ghi chú không có thẻ với !#. Hỗ trợ bộ lọc ngày với tiền tố @ (ví dụ: @today, @2026-02-04, @2026-02-01..2026-02-04). Sử dụng @c: hoặc @m: để nhắm mục tiêu ngày tạo/sửa đổi, và !@ để loại trừ phạm vi. Trường ngày mặc định theo sắp xếp hiện tại; khi sắp xếp theo tên, sử dụng Cài đặt → Ghi chú → Ngày → Khi sắp xếp theo tên.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Tìm kiếm toàn văn trong toàn bộ vault, sau đó lọc kết quả để chỉ hiển thị tệp từ thư mục hiện tại, thư mục con hoặc thẻ đã chọn. Yêu cầu cài đặt plugin Omnisearch - nếu không có, tìm kiếm sẽ tự động chuyển về Tìm kiếm lọc.',
-                        warningNotInstalled: 'Chưa cài plugin Omnisearch. Đang dùng Tìm kiếm lọc.',
-                        limitations: {
-                            title: 'Hạn chế đã biết:',
-                            performance: 'Hiệu suất: Có thể chậm, đặc biệt khi tìm ít hơn 3 ký tự trong vault lớn',
-                            pathBug:
-                                'Lỗi đường dẫn: Không thể tìm trong đường dẫn có ký tự non-ASCII và không tìm đúng đường dẫn con, ảnh hưởng đến tệp xuất hiện trong kết quả',
-                            limitedResults:
-                                'Kết quả giới hạn: Vì Omnisearch tìm toàn bộ vault và trả về số kết quả giới hạn trước khi lọc, tệp liên quan từ thư mục hiện tại có thể không xuất hiện nếu có quá nhiều kết quả ở nơi khác',
-                            previewText:
-                                'Văn bản xem trước: Xem trước ghi chú được thay bằng trích đoạn kết quả Omnisearch, có thể không hiển thị đúng highlight nếu nó xuất hiện ở nơi khác trong tệp'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Tiêu đề ngăn danh sách',
                 desc: 'Chọn nơi hiển thị tiêu đề ngăn danh sách.',
@@ -1526,18 +1492,6 @@ export const STRINGS_VI = {
                 error: 'Không thể xây dựng lại cache',
                 indexingTitle: 'Đang lập chỉ mục vault...',
                 progress: 'Đang cập nhật cache Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Sửa <plugin folder>/notebook-navigator/data.json để tùy chỉnh phím tắt Notebook Navigator. Mở tệp và tìm phần "keyboardShortcuts". Mỗi mục dùng cấu trúc này:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (ưu tiên "Mod" cho đa nền tảng)'
-                ],
-                guidance:
-                    'Thêm nhiều mapping để hỗ trợ phím thay thế, như binding ArrowUp và K ở trên. Kết hợp modifier trong một mục bằng cách liệt kê từng giá trị, ví dụ "modifiers": ["Mod", "Shift"]. Chuỗi phím như "gg" hoặc "dd" không được hỗ trợ. Tải lại Obsidian sau khi sửa tệp.'
             },
             externalIcons: {
                 downloadButton: 'Tải về',

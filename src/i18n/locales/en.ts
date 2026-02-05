@@ -668,11 +668,8 @@ export const STRINGS_EN = {
             folderNotes: 'Folder notes',
             foldersAndTags: 'Folders & tags',
             tags: 'Tags',
-            search: 'Search',
-            searchAndHotkeys: 'Search & hotkeys',
             listPane: 'List pane',
             notes: 'Notes',
-            hotkeys: 'Hotkeys',
             advanced: 'Advanced'
         },
         groups: {
@@ -716,37 +713,6 @@ export const STRINGS_EN = {
             switchToLocal: 'Disable sync'
         },
         items: {
-            searchProvider: {
-                name: 'Search provider',
-                desc: 'Choose between quick file name search or full-text search with Omnisearch plugin.',
-                options: {
-                    internal: 'Filter search',
-                    omnisearch: 'Omnisearch (full-text)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Filter search (default):',
-                        description:
-                            'Filters files by name and tags within the current folder and subfolders. Filter mode: mixed text and tags match all terms (e.g., "project #work"). Tag mode: search with only tags supports AND/OR operators (e.g., "#work AND #urgent", "#project OR #personal"). Cmd/Ctrl+Click tags to add with AND, Cmd/Ctrl+Shift+Click to add with OR. Supports exclusion with ! prefix (e.g., !draft, !#archived) and finding untagged notes with !#. Supports date filters with @ prefix (e.g., @today, @2026-02-04, @2026-02-01..2026-02-04). Use @c: or @m: to target created/modified dates, and !@ to exclude ranges. Default date field follows the current sort; when sorting by name, uses Settings → Notes → Date → When sorting by name.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Full-text search that searches your entire vault, then filters the results to show only files from the current folder, subfolders, or selected tags. Requires the Omnisearch plugin to be installed - if not available, search will automatically fall back to Filter search.',
-                        warningNotInstalled: 'Omnisearch plugin not installed. Filter search is used.',
-                        limitations: {
-                            title: 'Known limitations:',
-                            performance: 'Performance: Can be slow, especially when searching for less than 3 characters in large vaults',
-                            pathBug:
-                                'Path bug: Cannot search in paths with non-ASCII characters and does not search subpaths correctly, affecting which files appear in search results',
-                            limitedResults:
-                                'Limited results: Since Omnisearch searches the entire vault and returns a limited number of results before filtering, relevant files from your current folder may not appear if too many matches exist elsewhere in the vault',
-                            previewText:
-                                'Preview text: Note previews are replaced with Omnisearch result excerpts, which may not show the actual search match highlight if it appears elsewhere in the file'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'List pane title',
                 desc: 'Choose where the list pane title is shown.',
@@ -1524,18 +1490,6 @@ export const STRINGS_EN = {
                 error: 'Failed to rebuild cache',
                 indexingTitle: 'Indexing vault...',
                 progress: 'Updating Notebook Navigator cache.'
-            },
-            hotkeys: {
-                intro: 'Edit <plugin folder>/notebook-navigator/data.json to customize Notebook Navigator hotkeys. Open the file and locate the "keyboardShortcuts" section. Each entry uses this structure:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (prefer "Mod" for cross-platform)'
-                ],
-                guidance:
-                    'Add multiple mappings to support alternate keys, like the ArrowUp and K bindings shown above. Combine modifiers in one entry by listing each value, for example "modifiers": ["Mod", "Shift"]. Keyboard sequences such as "gg" or "dd" are not supported. Reload Obsidian after editing the file.'
             },
             externalIcons: {
                 downloadButton: 'Download',

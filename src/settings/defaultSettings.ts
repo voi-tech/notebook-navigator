@@ -260,7 +260,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     // Icon packs tab
     externalIconProviders: {},
 
-    // Search & hotkeys tab
+    // Search settings and hotkeys
     searchProvider: 'internal',
     keyboardShortcuts: getDefaultKeyboardShortcuts(),
 

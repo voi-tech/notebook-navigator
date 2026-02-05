@@ -626,35 +626,6 @@ export function resolveFolderSortOrder(params: {
     return defaultSettings.folderSortOrder;
 }
 
-/**
- * Resolves the effective search provider preference with local overrides.
- */
-export function resolveSearchProvider(params: {
-    storedData: Record<string, unknown> | null;
-    keys: LocalStorageKeys;
-    defaultSettings: NotebookNavigatorSettings;
-}): 'internal' | 'omnisearch' {
-    const { storedData, keys, defaultSettings } = params;
-
-    const storedLocal = localStorage.get<unknown>(keys.searchProviderKey);
-    if (storedLocal === 'internal' || storedLocal === 'omnisearch') {
-        // Local storage takes precedence for per-device preferences.
-        return storedLocal;
-    }
-
-    const storedSetting = storedData?.['searchProvider'];
-    if (storedSetting === 'internal' || storedSetting === 'omnisearch') {
-        // Migrate legacy synced value into local storage.
-        localStorage.set(keys.searchProviderKey, storedSetting);
-        return storedSetting;
-    }
-
-    // Seed local storage with a valid default value.
-    const fallbackProvider: 'internal' | 'omnisearch' = defaultSettings.searchProvider === 'omnisearch' ? 'omnisearch' : 'internal';
-    localStorage.set(keys.searchProviderKey, fallbackProvider);
-    return fallbackProvider;
-}
-
 // Resolves UI scale from local storage, migrating from legacy synced values if present.
 function resolveUIScaleFromStorage(storageKey: string, storedSetting: unknown): number {
     const parseScale = (value: unknown): number | null => {

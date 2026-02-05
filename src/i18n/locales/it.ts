@@ -668,11 +668,8 @@ export const STRINGS_IT = {
             folderNotes: 'Note cartella',
             foldersAndTags: 'Cartelle e tag',
             tags: 'Tag',
-            search: 'Ricerca',
-            searchAndHotkeys: 'Ricerca e scorciatoie',
             listPane: 'Pannello lista',
             notes: 'Note',
-            hotkeys: 'Scorciatoie da tastiera',
             advanced: 'Avanzate'
         },
         groups: {
@@ -716,37 +713,6 @@ export const STRINGS_IT = {
             switchToLocal: 'Disattiva sincronizzazione'
         },
         items: {
-            searchProvider: {
-                name: 'Provider di ricerca',
-                desc: 'Scegli tra ricerca rapida per nome file o ricerca full-text con il plugin Omnisearch.',
-                options: {
-                    internal: 'Ricerca con filtro',
-                    omnisearch: 'Omnisearch (full-text)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Ricerca con filtro (predefinito):',
-                        description:
-                            'Filtra i file per nome e tag nella cartella corrente e sottocartelle. Modalità filtro: testo e tag misti corrispondono a tutti i termini (es. "progetto #lavoro"). Modalità tag: la ricerca solo con tag supporta operatori AND/OR (es. "#lavoro AND #urgente", "#progetto OR #personale"). Cmd/Ctrl+Clic sui tag per aggiungere con AND, Cmd/Ctrl+Maiusc+Clic per aggiungere con OR. Supporta esclusione con prefisso ! (es. !bozza, !#archiviato) e ricerca note senza tag con !#. Supporta filtri data con prefisso @ (es. @today, @2026-02-04, @2026-02-01..2026-02-04). Usa @c: o @m: per indicare date di creazione/modifica, e !@ per escludere intervalli. Il campo data predefinito segue l\'ordinamento corrente; quando si ordina per nome, usa Impostazioni → Note → Data → Quando si ordina per nome.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            "Ricerca full-text che cerca nell'intero vault, poi filtra i risultati per mostrare solo i file dalla cartella corrente, sottocartelle o tag selezionati. Richiede il plugin Omnisearch installato - se non disponibile, la ricerca tornerà automaticamente alla Ricerca con filtro.",
-                        warningNotInstalled: 'Plugin Omnisearch non installato. Viene usata la Ricerca con filtro.',
-                        limitations: {
-                            title: 'Limitazioni note:',
-                            performance: 'Prestazioni: Può essere lento, specialmente cercando meno di 3 caratteri in vault grandi',
-                            pathBug:
-                                'Bug percorsi: Non può cercare in percorsi con caratteri non-ASCII e non cerca correttamente nei sottopercorsi, influenzando quali file appaiono nei risultati',
-                            limitedResults:
-                                "Risultati limitati: Poiché Omnisearch cerca nell'intero vault e restituisce un numero limitato di risultati prima del filtro, i file rilevanti dalla cartella corrente potrebbero non apparire se ci sono troppe corrispondenze altrove nel vault",
-                            previewText:
-                                "Testo anteprima: Le anteprime note sono sostituite con estratti dei risultati Omnisearch, che potrebbero non mostrare l'evidenziazione della corrispondenza se appare altrove nel file"
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Titolo pannello lista',
                 desc: 'Scegli dove mostrare il titolo del pannello lista.',
@@ -1530,18 +1496,6 @@ export const STRINGS_IT = {
                 error: 'Impossibile ricostruire cache',
                 indexingTitle: 'Indicizzazione del vault...',
                 progress: 'Aggiornamento della cache di Notebook Navigator.'
-            },
-            hotkeys: {
-                intro: 'Modifica <cartella plugin>/notebook-navigator/data.json per personalizzare le scorciatoie da tastiera di Notebook Navigator. Apri il file e trova la sezione "keyboardShortcuts". Ogni voce usa questa struttura:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (preferisci "Mod" per cross-platform)'
-                ],
-                guidance:
-                    'Aggiungi più mapping per supportare tasti alternativi, come i binding ArrowUp e K mostrati sopra. Combina modificatori in una voce elencando ogni valore, ad esempio "modifiers": ["Mod", "Shift"]. Sequenze tastiera come "gg" o "dd" non sono supportate. Ricarica Obsidian dopo aver modificato il file.'
             },
             externalIcons: {
                 downloadButton: 'Scarica',

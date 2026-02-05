@@ -35,7 +35,6 @@ import { renderFoldersTagsTab } from './settings/tabs/FoldersTagsTab';
 import { renderListPaneTab } from './settings/tabs/ListPaneTab';
 import { renderNotesTab } from './settings/tabs/NotesTab';
 import { renderIconPacksTab } from './settings/tabs/IconPacksTab';
-import { renderHotkeysSearchTab } from './settings/tabs/HotkeysSearchTab';
 import { renderAdvancedTab } from './settings/tabs/AdvancedTab';
 import type {
     AddSettingFunction,
@@ -48,16 +47,7 @@ import { NOTEBOOK_NAVIGATOR_ICON_ID } from './constants/notebookNavigatorIcon';
 import { getDBInstanceOrNull } from './storage/fileOperations';
 
 /** Identifiers for different settings tab panes */
-type SettingsPaneId =
-    | 'general'
-    | 'navigation-pane'
-    | 'calendar'
-    | 'folders-tags'
-    | 'list-pane'
-    | 'notes'
-    | 'icon-packs'
-    | 'search-hotkeys'
-    | 'advanced';
+type SettingsPaneId = 'general' | 'navigation-pane' | 'calendar' | 'folders-tags' | 'list-pane' | 'notes' | 'icon-packs' | 'advanced';
 
 /** Definition of a settings pane with its ID, label, and render function */
 interface SettingsPaneDefinition {
@@ -584,11 +574,6 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
             { id: 'list-pane', label: strings.settings.sections.listPane, render: renderListPaneTab },
             { id: 'notes', label: strings.settings.sections.notes, render: renderNotesTab },
             { id: 'icon-packs', label: strings.settings.sections.icons, render: renderIconPacksTab },
-            {
-                id: 'search-hotkeys',
-                label: strings.settings.sections.searchAndHotkeys,
-                render: renderHotkeysSearchTab
-            },
             { id: 'advanced', label: strings.settings.sections.advanced, render: renderAdvancedTab }
         ];
 

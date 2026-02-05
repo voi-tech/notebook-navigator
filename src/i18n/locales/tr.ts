@@ -669,11 +669,8 @@ export const STRINGS_TR = {
             folderNotes: 'Klasör notları',
             foldersAndTags: 'Klasörler ve etiketler',
             tags: 'Etiketler',
-            search: 'Arama',
-            searchAndHotkeys: 'Arama ve kısayol tuşları',
             listPane: 'Liste bölmesi',
             notes: 'Notlar',
-            hotkeys: 'Kısayol tuşları',
             advanced: 'Gelişmiş'
         },
         groups: {
@@ -717,37 +714,6 @@ export const STRINGS_TR = {
             switchToLocal: 'Senkronizasyonu devre dışı bırak'
         },
         items: {
-            searchProvider: {
-                name: 'Arama sağlayıcı',
-                desc: 'Hızlı dosya adı araması veya Omnisearch eklentisi ile tam metin araması arasında seçim yapın.',
-                options: {
-                    internal: 'Filtre araması',
-                    omnisearch: 'Omnisearch (tam metin)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Filtre araması (varsayılan):',
-                        description:
-                            'Mevcut klasör ve alt klasörler içinde dosyaları ada ve etiketlere göre filtreler. Filtre modu: karışık metin ve etiketler tüm terimleri eşleştirir (örn. "proje #iş"). Etiket modu: yalnızca etiketlerle arama AND/OR operatörlerini destekler (örn. "#iş AND #acil", "#proje OR #kişisel"). Cmd/Ctrl+Tıklama ile AND olarak ekle, Cmd/Ctrl+Shift+Tıklama ile OR olarak ekle. ! ön ekiyle hariç tutma (örn. !taslak, !#arşiv) ve !# ile etiketsiz notları bulmayı destekler. @ önekli tarih filtrelerini destekler (örn. @today, @2026-02-04, @2026-02-01..2026-02-04). Oluşturma/değiştirme tarihlerini hedeflemek için @c: veya @m: kullanın, aralıkları hariç tutmak için !@ kullanın. Varsayılan tarih alanı mevcut sıralamayı takip eder; ada göre sıralarken Ayarlar → Notlar → Tarih → Ada göre sıralarken kullanılır.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Tüm kasanızda arama yapan, ardından sonuçları yalnızca mevcut klasör, alt klasörler veya seçili etiketlerdeki dosyaları gösterecek şekilde filtreleyen tam metin araması. Omnisearch eklentisinin yüklenmesini gerektirir - mevcut değilse, arama otomatik olarak Filtre aramasına döner.',
-                        warningNotInstalled: 'Omnisearch eklentisi yüklü değil. Filtre araması kullanılıyor.',
-                        limitations: {
-                            title: 'Bilinen sınırlamalar:',
-                            performance: 'Performans: Özellikle büyük kasalarda 3 karakterden az arama yaparken yavaş olabilir',
-                            pathBug:
-                                'Yol hatası: ASCII olmayan karakterler içeren yollarda arama yapamaz ve alt yolları doğru şekilde aramaz, bu da arama sonuçlarında hangi dosyaların görüneceğini etkiler',
-                            limitedResults:
-                                'Sınırlı sonuçlar: Omnisearch tüm kasada arama yaptığından ve filtrelemeden önce sınırlı sayıda sonuç döndürdüğünden, kasanın başka yerlerinde çok fazla eşleşme varsa mevcut klasörünüzdeki ilgili dosyalar görünmeyebilir',
-                            previewText:
-                                'Önizleme metni: Not önizlemeleri Omnisearch sonuç alıntılarıyla değiştirilir, bu da eşleşme dosyanın başka bir yerinde görünüyorsa gerçek arama eşleşmesi vurgusunu göstermeyebilir'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Liste bölmesi başlığı',
                 desc: 'Liste bölmesi başlığının nerede gösterileceğini seçin.',
@@ -1528,18 +1494,6 @@ export const STRINGS_TR = {
                 error: 'Önbellek yeniden oluşturulamadı',
                 indexingTitle: 'Kasa dizinleniyor...',
                 progress: 'Notebook Navigator önbelleği güncelleniyor.'
-            },
-            hotkeys: {
-                intro: 'Notebook Navigator kısayol tuşlarını özelleştirmek için <plugin folder>/notebook-navigator/data.json dosyasını düzenleyin. Dosyayı açın ve "keyboardShortcuts" bölümünü bulun. Her giriş bu yapıyı kullanır:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (çapraz platform için "Mod" tercih edin)'
-                ],
-                guidance:
-                    'Alternatif tuşları desteklemek için yukarıda gösterilen ArrowUp ve K bağlamaları gibi birden fazla eşleme ekleyin. Değiştiricileri tek bir girişte her değeri listeleyerek birleştirin, örneğin "modifiers": ["Mod", "Shift"]. "gg" veya "dd" gibi klavye dizileri desteklenmez. Dosyayı düzenledikten sonra Obsidian\'ı yeniden yükleyin.'
             },
             externalIcons: {
                 downloadButton: 'İndir',

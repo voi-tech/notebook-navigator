@@ -671,11 +671,8 @@ export const STRINGS_NL = {
             folderNotes: 'Mapnotities',
             foldersAndTags: 'Mappen & tags',
             tags: 'Tags',
-            search: 'Zoeken',
-            searchAndHotkeys: 'Zoeken & sneltoetsen',
             listPane: 'Lijstpaneel',
             notes: 'Notities',
-            hotkeys: 'Sneltoetsen',
             advanced: 'Geavanceerd'
         },
         groups: {
@@ -719,37 +716,6 @@ export const STRINGS_NL = {
             switchToLocal: 'Synchronisatie uitschakelen'
         },
         items: {
-            searchProvider: {
-                name: 'Zoekprovider',
-                desc: 'Kies tussen snelle bestandsnaamzoekfunctie of volledige tekstzoekfunctie met Omnisearch plugin.',
-                options: {
-                    internal: 'Filter zoeken',
-                    omnisearch: 'Omnisearch (volledige tekst)'
-                },
-                info: {
-                    filterSearch: {
-                        title: 'Filter zoeken (standaard):',
-                        description:
-                            'Filtert bestanden op naam en tags binnen de huidige map en submappen. Filtermodus: gemengde tekst en tags komen overeen met alle termen (bijv. "project #werk"). Tagmodus: zoeken met alleen tags ondersteunt AND/OR-operatoren (bijv. "#werk AND #urgent", "#project OR #persoonlijk"). Cmd/Ctrl+Klik op tags om toe te voegen met AND, Cmd/Ctrl+Shift+Klik om toe te voegen met OR. Ondersteunt uitsluiting met ! prefix (bijv. !draft, !#archived) en het vinden van notities zonder tags met !#. Ondersteunt datumfilters met @ prefix (bijv. @today, @2026-02-04, @2026-02-01..2026-02-04). Gebruik @c: of @m: om aanmaak-/wijzigingsdatums te targeten, en !@ om bereiken uit te sluiten. Het standaard datumveld volgt de huidige sortering; bij sorteren op naam wordt Instellingen → Notities → Datum → Bij sorteren op naam gebruikt.'
-                    },
-                    omnisearch: {
-                        title: 'Omnisearch:',
-                        description:
-                            'Volledige tekstzoekfunctie die uw hele kluis doorzoekt en vervolgens de resultaten filtert om alleen bestanden uit de huidige map, submappen of geselecteerde tags te tonen. Vereist dat de Omnisearch plugin is geïnstalleerd - indien niet beschikbaar, valt de zoekopdracht automatisch terug naar Filter zoeken.',
-                        warningNotInstalled: 'Omnisearch plugin niet geïnstalleerd. Filter zoeken wordt gebruikt.',
-                        limitations: {
-                            title: 'Bekende beperkingen:',
-                            performance: 'Prestaties: Kan traag zijn, vooral bij zoeken naar minder dan 3 tekens in grote kluizen',
-                            pathBug:
-                                'Padfout: Kan niet zoeken in paden met niet-ASCII-tekens en doorzoekt subpaden niet correct, wat invloed heeft op welke bestanden in zoekresultaten verschijnen',
-                            limitedResults:
-                                'Beperkte resultaten: Omdat Omnisearch de hele kluis doorzoekt en een beperkt aantal resultaten retourneert voordat er wordt gefilterd, kunnen relevante bestanden uit uw huidige map mogelijk niet verschijnen als er te veel overeenkomsten elders in de kluis bestaan',
-                            previewText:
-                                'Voorbeeldtekst: Notitievoorbeelden worden vervangen door Omnisearch-resultaatfragmenten, die mogelijk niet de daadwerkelijke zoekresultaatmarkering tonen als deze elders in het bestand verschijnt'
-                        }
-                    }
-                }
-            },
             listPaneTitle: {
                 name: 'Titel lijstpaneel',
                 desc: 'Kies waar de titel van het lijstpaneel wordt weergegeven.',
@@ -1533,18 +1499,6 @@ export const STRINGS_NL = {
                 error: 'Kan cache niet opnieuw opbouwen',
                 indexingTitle: 'Kluis wordt geïndexeerd...',
                 progress: 'Notebook Navigator-cache wordt bijgewerkt.'
-            },
-            hotkeys: {
-                intro: 'Bewerk <plugin folder>/notebook-navigator/data.json om Notebook Navigator sneltoetsen aan te passen. Open het bestand en zoek de sectie "keyboardShortcuts". Elke invoer gebruikt deze structuur:',
-                example: '"pane:move-up": [ { "key": "ArrowUp", "modifiers": [] }, { "key": "K", "modifiers": [] } ]',
-                modifierList: [
-                    '"Mod" = Cmd (macOS) / Ctrl (Win/Linux)',
-                    '"Alt" = Alt/Option',
-                    '"Shift" = Shift',
-                    '"Ctrl" = Control (gebruik bij voorkeur "Mod" voor cross-platform)'
-                ],
-                guidance:
-                    'Voeg meerdere toewijzingen toe om alternatieve toetsen te ondersteunen, zoals de ArrowUp en K bindingen hierboven. Combineer modifiers in één invoer door elke waarde te vermelden, bijvoorbeeld "modifiers": ["Mod", "Shift"]. Toetsenbordreeksen zoals "gg" of "dd" worden niet ondersteund. Herlaad Obsidian na het bewerken van het bestand.'
             },
             externalIcons: {
                 downloadButton: 'Downloaden',

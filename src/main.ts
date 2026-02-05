@@ -158,7 +158,6 @@ function getDefaultUXPreferences(): UXPreferences {
 const LEGACY_LOCAL_SYNC_MODE_SETTING_IDS = new Set<SyncModeSettingId>([
     'vaultProfile',
     'tagSortOrder',
-    'searchProvider',
     'includeDescendantNotes',
     'dualPane',
     'dualPaneOrientation',
@@ -326,7 +325,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             sanitizeDualPaneOrientationSetting: value => this.sanitizeDualPaneOrientationSetting(value),
             sanitizeTagSortOrderSetting: value => this.sanitizeTagSortOrderSetting(value),
             sanitizeFolderSortOrderSetting: value => this.sanitizeFolderSortOrderSetting(value),
-            sanitizeSearchProviderSetting: value => this.sanitizeSearchProviderSetting(value),
             sanitizePaneTransitionDurationSetting: value => this.sanitizePaneTransitionDurationSetting(value),
             sanitizeToolbarVisibilitySetting: value => this.sanitizeToolbarVisibilitySetting(value),
             sanitizeNavIndentSetting: value => this.sanitizeNavIndentSetting(value),
@@ -427,6 +425,14 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         // Start with default settings
         this.settings = { ...DEFAULT_SETTINGS, ...(storedSettings ?? {}) };
+        const hadLegacySearchProviderInSettings = Boolean(storedData && 'searchProvider' in storedData);
+        const storedSearchProvider = localStorage.get<unknown>(this.keys.searchProviderKey);
+        if (storedSearchProvider === 'internal' || storedSearchProvider === 'omnisearch') {
+            this.settings.searchProvider = storedSearchProvider;
+        } else {
+            this.settings.searchProvider = 'internal';
+            localStorage.set(this.keys.searchProviderKey, 'internal');
+        }
 
         const settingsRecord = this.settings as unknown as Record<string, unknown>;
         delete settingsRecord['showCalendar'];
@@ -529,7 +535,12 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.refreshMatcherCachesIfNeeded();
 
         const needsPersistedCleanup =
-            migratedReleaseState || migratedRecentColors || hadLocalValuesInSettings || uiScaleMigrated || migratedMomentFormats;
+            migratedReleaseState ||
+            migratedRecentColors ||
+            hadLocalValuesInSettings ||
+            hadLegacySearchProviderInSettings ||
+            uiScaleMigrated ||
+            migratedMomentFormats;
 
         if (needsPersistedCleanup) {
             await this.saveData(this.getPersistableSettings());
@@ -618,13 +629,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
     private sanitizeFolderSortOrderSetting(value: unknown): AlphaSortOrder {
         return typeof value === 'string' && isAlphaSortOrder(value) ? value : DEFAULT_SETTINGS.folderSortOrder;
-    }
-
-    private sanitizeSearchProviderSetting(value: unknown): 'internal' | 'omnisearch' {
-        if (value === 'omnisearch') {
-            return 'omnisearch';
-        }
-        return 'internal';
     }
 
     private sanitizeVaultProfileId(candidate: unknown): string {
@@ -1241,11 +1245,13 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     public setSearchProvider(provider: 'internal' | 'omnisearch'): void {
         const isOmnisearchAvailable = this.omnisearchService?.isAvailable() ?? false;
         const normalized = provider === 'omnisearch' && isOmnisearchAvailable ? 'omnisearch' : 'internal';
-        this.updateSettingAndMirrorToLocalStorage({
-            settingId: 'searchProvider',
-            localStorageKey: this.keys.searchProviderKey,
-            nextValue: normalized
-        });
+        if (this.settings.searchProvider === normalized) {
+            return;
+        }
+
+        this.settings.searchProvider = normalized;
+        localStorage.set(this.keys.searchProviderKey, normalized);
+        this.notifySettingsUpdate();
     }
 
     /**
@@ -1981,6 +1987,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         delete rest.recentColors;
         delete rest.lastReleaseCheckAt;
         delete rest.latestKnownRelease;
+        delete rest.searchProvider;
         delete rest.showCalendar;
         delete rest.calendarCustomPromptForTitle;
         const syncModeRegistry = this.getSyncModeRegistry();
