@@ -90,7 +90,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         changed: [
             'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
-            'Removed the setting Settings > Search > Search provider. This setting is now local and toggled in the list pane.'
+            'Removed the settings tab Settings > "Search & hotkeys". The search setting is now local and toggled in the list pane.'
         ]
     },
     {
