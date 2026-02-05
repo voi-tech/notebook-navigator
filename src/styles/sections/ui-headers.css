@@ -303,7 +303,7 @@
     height: 32px;
 }
 
-/* Search icon */
+/* Search icon (clickable toggle between search providers) */
 .nn-search-input-icon {
     position: absolute;
     left: 10px;
@@ -313,7 +313,16 @@
     font-size: 16px;
     line-height: 16px;
     color: var(--nn-theme-list-header-icon-color);
-    pointer-events: none;
+    cursor: pointer;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nn-search-input-icon:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 2px;
 }
 
 .nn-search-input-icon svg {

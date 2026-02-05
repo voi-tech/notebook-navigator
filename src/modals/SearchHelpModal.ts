@@ -68,9 +68,11 @@ export class SearchHelpModal extends Modal {
 
         const scrollEl = contentEl.createDiv({ cls: 'nn-search-help-scroll' });
         scrollEl.createEl('p', { text: strings.searchInput.searchHelpModal.intro });
+        const switchingEl = scrollEl.createEl('p');
+        switchingEl.createEl('strong', { text: strings.searchInput.searchHelpModal.introSwitching });
 
-        const { fileNames, tags, dates } = strings.searchInput.searchHelpModal.sections;
-        const sections = [fileNames, tags, dates];
+        const { fileNames, tags, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
+        const sections = [fileNames, tags, dates, omnisearch];
 
         for (const section of sections) {
             scrollEl.createEl('h3', { text: section.title });

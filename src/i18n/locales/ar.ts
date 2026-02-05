@@ -137,6 +137,8 @@ export const STRINGS_AR = {
         placeholder: 'بحث...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'بحث شامل...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'مسح البحث', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'التبديل إلى البحث بالتصفية',
+        switchToOmnisearch: 'التبديل إلى Omnisearch',
         saveSearchShortcut: 'حفظ اختصار البحث',
         removeSearchShortcut: 'إزالة اختصار البحث',
         shortcutModalTitle: 'حفظ اختصار البحث',
@@ -144,7 +146,8 @@ export const STRINGS_AR = {
         searchHelp: 'صيغة البحث',
         searchHelpTitle: 'صيغة البحث',
         searchHelpModal: {
-            intro: 'ادمج أسماء الملفات والوسوم والتواريخ في استعلام واحد (مثال: `meeting #work @thisweek`). يستخدم Omnisearch البحث في النص الكامل ويتجاهل رموز الوسوم والتواريخ.',
+            intro: 'ادمج أسماء الملفات والوسوم والتواريخ في استعلام واحد (مثال: `meeting #work @thisweek`). قم بتثبيت إضافة Omnisearch لاستخدام البحث في النص الكامل.',
+            introSwitching: 'التبديل بين البحث بالتصفية و Omnisearch باستخدام مفاتيح الأسهم لأعلى/لأسفل أو بالنقر على أيقونة البحث.',
             sections: {
                 fileNames: {
                     title: 'أسماء الملفات',
@@ -164,7 +167,8 @@ export const STRINGS_AR = {
                         '`#tag1 #tag2` مطابقة كلا الوسمين (AND ضمني).',
                         '`#tag1 AND #tag2` مطابقة كلا الوسمين (AND صريح).',
                         '`#tag1 OR #tag2` مطابقة أي من الوسمين.',
-                        '`#a OR #b AND #c` AND له أولوية أعلى: يطابق `#a`، أو كلاً من `#b` و `#c`.'
+                        '`#a OR #b AND #c` AND له أولوية أعلى: يطابق `#a`، أو كلاً من `#b` و `#c`.',
+                        'Cmd/Ctrl+النقر على وسم لإضافته مع AND. Cmd/Ctrl+Shift+النقر لإضافته مع OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +185,16 @@ export const STRINGS_AR = {
                         '`@2026-02-01..2026-02-07` البحث عن نطاق أيام شامل (النهايات المفتوحة مدعومة).',
                         '`@c:...` أو `@m:...` استهداف تاريخ الإنشاء أو التعديل.',
                         '`!@...` استبعاد مطابقة التاريخ.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'البحث في النص الكامل عبر الخزنة، مع التصفية حسب المجلد الحالي أو الوسوم المحددة.',
+                        'قد يكون بطيئًا مع أقل من 3 أحرف في الخزن الكبيرة.',
+                        'لا يمكنه البحث في المسارات التي تحتوي على أحرف غير ASCII أو البحث في المسارات الفرعية بشكل صحيح.',
+                        'يعيد نتائج محدودة قبل تصفية المجلدات، لذا قد لا تظهر الملفات ذات الصلة إذا وُجدت مطابقات كثيرة في أماكن أخرى.',
+                        'تعرض معاينات الملاحظات مقتطفات Omnisearch بدلاً من نص المعاينة الافتراضي.'
                     ]
                 }
             }

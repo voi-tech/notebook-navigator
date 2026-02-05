@@ -137,6 +137,8 @@ export const STRINGS_EN = {
         placeholder: 'Search...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Clear search', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Switch to filter search',
+        switchToOmnisearch: 'Switch to Omnisearch',
         saveSearchShortcut: 'Save search shortcut',
         removeSearchShortcut: 'Remove search shortcut',
         shortcutModalTitle: 'Save search shortcut',
@@ -144,7 +146,8 @@ export const STRINGS_EN = {
         searchHelp: 'Search syntax',
         searchHelpTitle: 'Search syntax',
         searchHelpModal: {
-            intro: 'Combine file names, tags, and dates in one query (e.g., `meeting #work @thisweek`). Omnisearch uses full-text search and ignores tag and date tokens.',
+            intro: 'Combine file names, tags, and dates in one query (e.g., `meeting #work @thisweek`). Install the Omnisearch plugin to use full-text search.',
+            introSwitching: 'Switch between filter search and Omnisearch using the up/down arrow keys or by clicking the search icon.',
             sections: {
                 fileNames: {
                     title: 'File names',
@@ -164,7 +167,8 @@ export const STRINGS_EN = {
                         '`#tag1 #tag2` Match both tags (implicit AND).',
                         '`#tag1 AND #tag2` Match both tags (explicit AND).',
                         '`#tag1 OR #tag2` Match either tag.',
-                        '`#a OR #b AND #c` AND has higher precedence: matches `#a`, or both `#b` and `#c`.'
+                        '`#a OR #b AND #c` AND has higher precedence: matches `#a`, or both `#b` and `#c`.',
+                        'Cmd/Ctrl+Click a tag to add with AND. Cmd/Ctrl+Shift+Click to add with OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +185,16 @@ export const STRINGS_EN = {
                         '`@2026-02-01..2026-02-07` Match an inclusive day range (open ends supported).',
                         '`@c:...` or `@m:...` Target created or modified date.',
                         '`!@...` Exclude a date match.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Full-text search across the vault, filtered to the current folder or selected tags.',
+                        'Can be slow with fewer than 3 characters in large vaults.',
+                        'Cannot search paths with non-ASCII characters or search subpaths correctly.',
+                        'Returns limited results before folder filtering, so relevant files may not appear if many matches exist elsewhere.',
+                        'Note previews show Omnisearch excerpts instead of the default preview text.'
                     ]
                 }
             }

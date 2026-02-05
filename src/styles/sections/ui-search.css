@@ -124,8 +124,20 @@
     text-decoration: none;
 }
 
+/* Mobile search icon touch target */
+.notebook-navigator-mobile .nn-search-input-icon {
+    top: 0;
+    height: 36px;
+    width: 36px;
+    left: 0;
+}
+
 /* Hover effects only apply on hover-capable devices (prevents "stuck hover" on touch). */
 @media (hover: hover) and (pointer: fine) {
+    .nn-search-input-icon:hover {
+        color: var(--nn-theme-header-button-active-icon-color);
+    }
+
     .nn-search-clear-button:hover,
     .nn-search-star-button:hover,
     .nn-search-help-button:hover {

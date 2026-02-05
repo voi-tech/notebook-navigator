@@ -136,6 +136,8 @@ export const STRINGS_KO = {
         placeholder: '검색...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: '검색 지우기', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: '필터 검색으로 전환',
+        switchToOmnisearch: 'Omnisearch로 전환',
         saveSearchShortcut: '검색을 바로가기에 저장',
         removeSearchShortcut: '바로가기에서 검색 제거',
         shortcutModalTitle: '검색 바로가기 저장',
@@ -143,7 +145,8 @@ export const STRINGS_KO = {
         searchHelp: '검색 구문',
         searchHelpTitle: '검색 구문',
         searchHelpModal: {
-            intro: '파일 이름, 태그, 날짜를 하나의 쿼리에서 결합 (예: `meeting #work @thisweek`). Omnisearch는 전체 텍스트 검색을 사용하고 태그 및 날짜 토큰을 무시합니다.',
+            intro: '파일 이름, 태그, 날짜를 하나의 쿼리에서 결합 (예: `meeting #work @thisweek`). Omnisearch 플러그인을 설치하면 전체 텍스트 검색을 사용할 수 있습니다.',
+            introSwitching: '위/아래 화살표 키 또는 검색 아이콘 클릭으로 필터 검색과 Omnisearch 간에 전환할 수 있습니다.',
             sections: {
                 fileNames: {
                     title: '파일 이름',
@@ -163,7 +166,8 @@ export const STRINGS_KO = {
                         '`#tag1 #tag2` 두 태그 모두 일치 (암시적 AND).',
                         '`#tag1 AND #tag2` 두 태그 모두 일치 (명시적 AND).',
                         '`#tag1 OR #tag2` 태그 중 하나와 일치.',
-                        '`#a OR #b AND #c` AND가 우선순위가 높음: `#a` 또는 `#b`와 `#c` 모두 일치.'
+                        '`#a OR #b AND #c` AND가 우선순위가 높음: `#a` 또는 `#b`와 `#c` 모두 일치.',
+                        'Cmd/Ctrl+클릭으로 AND로 태그 추가. Cmd/Ctrl+Shift+클릭으로 OR로 추가.'
                     ]
                 },
                 dates: {
@@ -180,6 +184,16 @@ export const STRINGS_KO = {
                         '`@2026-02-01..2026-02-07` 포함 날짜 범위 찾기 (열린 끝 지원).',
                         '`@c:...` 또는 `@m:...` 생성 또는 수정 날짜 지정.',
                         '`!@...` 날짜 일치 제외.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        '보관소 전체의 전체 텍스트 검색. 현재 폴더 또는 선택된 태그로 필터링됩니다.',
+                        '대규모 보관소에서 3자 미만일 경우 느릴 수 있습니다.',
+                        '비ASCII 문자가 포함된 경로를 검색하거나 하위 경로를 올바르게 검색할 수 없습니다.',
+                        '폴더 필터링 전에 제한된 결과를 반환하므로, 다른 곳에 많은 일치 항목이 있으면 관련 파일이 표시되지 않을 수 있습니다.',
+                        '노트 미리보기에 기본 미리보기 텍스트 대신 Omnisearch 발췌문이 표시됩니다.'
                     ]
                 }
             }

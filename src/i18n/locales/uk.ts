@@ -137,6 +137,8 @@ export const STRINGS_UK = {
         placeholder: 'Пошук...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Очистити пошук', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Перемкнути на пошук з фільтром',
+        switchToOmnisearch: 'Перемкнути на Omnisearch',
         saveSearchShortcut: 'Зберегти ярлик пошуку',
         removeSearchShortcut: 'Вилучити ярлик пошуку',
         shortcutModalTitle: 'Зберегти ярлик пошуку',
@@ -144,7 +146,9 @@ export const STRINGS_UK = {
         searchHelp: 'Синтаксис пошуку',
         searchHelpTitle: 'Синтаксис пошуку',
         searchHelpModal: {
-            intro: 'Комбінуйте імена файлів, теги та дати в одному запиті (напр. `meeting #work @thisweek`). Omnisearch використовує повнотекстовий пошук та ігнорує токени тегів і дат.',
+            intro: 'Комбінуйте імена файлів, теги та дати в одному запиті (напр. `meeting #work @thisweek`). Встановіть плагін Omnisearch для повнотекстового пошуку.',
+            introSwitching:
+                'Перемикайтеся між пошуком за фільтром та Omnisearch за допомогою клавіш стрілок вгору/вниз або натиснувши на значок пошуку.',
             sections: {
                 fileNames: {
                     title: 'Імена файлів',
@@ -164,7 +168,8 @@ export const STRINGS_UK = {
                         '`#tag1 #tag2` Знайти обидва теги (неявне AND).',
                         '`#tag1 AND #tag2` Знайти обидва теги (явне AND).',
                         '`#tag1 OR #tag2` Знайти будь-який з тегів.',
-                        '`#a OR #b AND #c` AND має більший пріоритет: знаходить `#a`, або обидва `#b` і `#c`.'
+                        '`#a OR #b AND #c` AND має більший пріоритет: знаходить `#a`, або обидва `#b` і `#c`.',
+                        'Cmd/Ctrl+Клік по тегу для додавання з AND. Cmd/Ctrl+Shift+Клік для додавання з OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +186,16 @@ export const STRINGS_UK = {
                         '`@2026-02-01..2026-02-07` Знайти включний діапазон днів (відкриті кінці підтримуються).',
                         '`@c:...` або `@m:...` Вказати дату створення або зміни.',
                         '`!@...` Виключити збіг дати.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Повнотекстовий пошук по всьому сховищу з фільтрацією за поточною папкою або вибраними тегами.',
+                        'Може бути повільним при менш ніж 3 символах у великих сховищах.',
+                        'Не може шукати шляхи з не-ASCII символами або коректно шукати підшляхи.',
+                        "Повертає обмежені результати до фільтрації за папками, тому релевантні файли можуть не з'явитися, якщо багато збігів в інших місцях.",
+                        'Попередній перегляд нотаток показує фрагменти Omnisearch замість тексту попереднього перегляду за замовчуванням.'
                     ]
                 }
             }

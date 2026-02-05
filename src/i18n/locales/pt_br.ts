@@ -138,6 +138,8 @@ export const STRINGS_PT_BR = {
         placeholder: 'Pesquisar...',
         placeholderOmnisearch: 'Omnisearch...',
         clearSearch: 'Limpar pesquisa',
+        switchToFilterSearch: 'Mudar para pesquisa por filtro',
+        switchToOmnisearch: 'Mudar para Omnisearch',
         saveSearchShortcut: 'Salvar atalho de pesquisa',
         removeSearchShortcut: 'Remover atalho de pesquisa',
         shortcutModalTitle: 'Salvar atalho de pesquisa',
@@ -145,7 +147,9 @@ export const STRINGS_PT_BR = {
         searchHelp: 'Sintaxe de pesquisa',
         searchHelpTitle: 'Sintaxe de pesquisa',
         searchHelpModal: {
-            intro: 'Combine nomes de arquivos, tags e datas em uma consulta (ex. `meeting #work @thisweek`). Omnisearch usa pesquisa de texto completo e ignora tokens de tags e datas.',
+            intro: 'Combine nomes de arquivos, tags e datas em uma consulta (ex. `meeting #work @thisweek`). Instale o plugin Omnisearch para usar pesquisa de texto completo.',
+            introSwitching:
+                'Alterne entre pesquisa por filtro e Omnisearch usando as teclas de seta para cima/baixo ou clicando no ícone de pesquisa.',
             sections: {
                 fileNames: {
                     title: 'Nomes de arquivos',
@@ -165,7 +169,8 @@ export const STRINGS_PT_BR = {
                         '`#tag1 #tag2` Corresponder a ambas as tags (AND implícito).',
                         '`#tag1 AND #tag2` Corresponder a ambas as tags (AND explícito).',
                         '`#tag1 OR #tag2` Corresponder a qualquer uma das tags.',
-                        '`#a OR #b AND #c` AND tem precedência maior: corresponde a `#a`, ou ambos `#b` e `#c`.'
+                        '`#a OR #b AND #c` AND tem precedência maior: corresponde a `#a`, ou ambos `#b` e `#c`.',
+                        'Cmd/Ctrl+Clique em uma tag para adicionar com AND. Cmd/Ctrl+Shift+Clique para adicionar com OR.'
                     ]
                 },
                 dates: {
@@ -182,6 +187,16 @@ export const STRINGS_PT_BR = {
                         '`@2026-02-01..2026-02-07` Encontrar um intervalo de dias inclusivo (extremos abertos suportados).',
                         '`@c:...` ou `@m:...` Apontar para data de criação ou modificação.',
                         '`!@...` Excluir uma correspondência de data.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Pesquisa de texto completo em todo o cofre, filtrada pela pasta atual ou tags selecionadas.',
+                        'Pode ser lento com menos de 3 caracteres em cofres grandes.',
+                        'Não consegue pesquisar caminhos com caracteres não-ASCII ou pesquisar subcaminhos corretamente.',
+                        'Retorna resultados limitados antes da filtragem por pasta, então arquivos relevantes podem não aparecer se muitas correspondências existirem em outros locais.',
+                        'As prévias das notas mostram trechos do Omnisearch em vez do texto de prévia padrão.'
                     ]
                 }
             }

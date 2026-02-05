@@ -138,6 +138,8 @@ export const STRINGS_NL = {
         placeholder: 'Zoeken...',
         placeholderOmnisearch: 'Omnisearch...',
         clearSearch: 'Zoekopdracht wissen',
+        switchToFilterSearch: 'Overschakelen naar filterzoeken',
+        switchToOmnisearch: 'Overschakelen naar Omnisearch',
         saveSearchShortcut: 'Zoeksnelkoppeling opslaan',
         removeSearchShortcut: 'Zoeksnelkoppeling verwijderen',
         shortcutModalTitle: 'Zoeksnelkoppeling opslaan',
@@ -145,7 +147,9 @@ export const STRINGS_NL = {
         searchHelp: 'Zoeksyntax',
         searchHelpTitle: 'Zoeksyntax',
         searchHelpModal: {
-            intro: 'Combineer bestandsnamen, tags en datums in één zoekopdracht (bijv. `meeting #work @thisweek`). Omnisearch gebruikt zoekopdrachten in volledige tekst en negeert tag- en datumtokens.',
+            intro: 'Combineer bestandsnamen, tags en datums in één zoekopdracht (bijv. `meeting #work @thisweek`). Installeer de Omnisearch-plugin om zoeken in volledige tekst te gebruiken.',
+            introSwitching:
+                'Schakel tussen filterzoeken en Omnisearch met de pijltoetsen omhoog/omlaag of door op het zoekpictogram te klikken.',
             sections: {
                 fileNames: {
                     title: 'Bestandsnamen',
@@ -165,7 +169,8 @@ export const STRINGS_NL = {
                         '`#tag1 #tag2` Beide tags vinden (impliciete AND).',
                         '`#tag1 AND #tag2` Beide tags vinden (expliciete AND).',
                         '`#tag1 OR #tag2` Een van beide tags vinden.',
-                        '`#a OR #b AND #c` AND heeft hogere prioriteit: vindt `#a`, of beide `#b` en `#c`.'
+                        '`#a OR #b AND #c` AND heeft hogere prioriteit: vindt `#a`, of beide `#b` en `#c`.',
+                        'Cmd/Ctrl+Klik op een tag om toe te voegen met AND. Cmd/Ctrl+Shift+Klik om toe te voegen met OR.'
                     ]
                 },
                 dates: {
@@ -182,6 +187,16 @@ export const STRINGS_NL = {
                         '`@2026-02-01..2026-02-07` Een inclusief dagenbereik vinden (open einden ondersteund).',
                         '`@c:...` of `@m:...` Aanmaak- of wijzigingsdatum targeten.',
                         '`!@...` Een datumovereenkomst uitsluiten.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Zoeken in volledige tekst door de hele vault, gefilterd op de huidige map of geselecteerde tags.',
+                        'Kan traag zijn met minder dan 3 tekens in grote vaults.',
+                        'Kan geen paden met niet-ASCII-tekens doorzoeken of subpaden correct doorzoeken.',
+                        'Geeft beperkte resultaten terug vóór mapfiltering, waardoor relevante bestanden mogelijk niet verschijnen als er elders veel overeenkomsten bestaan.',
+                        'Notitievoorbeelden tonen Omnisearch-fragmenten in plaats van de standaard voorbeeldtekst.'
                     ]
                 }
             }

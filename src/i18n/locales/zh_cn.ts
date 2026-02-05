@@ -136,6 +136,8 @@ export const STRINGS_ZH_CN = {
         placeholder: '搜索...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: '清除搜索', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: '切换到筛选搜索',
+        switchToOmnisearch: '切换到 Omnisearch',
         saveSearchShortcut: '将搜索保存到快捷方式',
         removeSearchShortcut: '从快捷方式移除搜索',
         shortcutModalTitle: '保存搜索快捷方式',
@@ -143,7 +145,8 @@ export const STRINGS_ZH_CN = {
         searchHelp: '搜索语法',
         searchHelpTitle: '搜索语法',
         searchHelpModal: {
-            intro: '在一个查询中组合文件名、标签和日期（例如：`meeting #work @thisweek`）。Omnisearch 使用全文搜索，忽略标签和日期标记。',
+            intro: '在一个查询中组合文件名、标签和日期（例如：`meeting #work @thisweek`）。安装 Omnisearch 插件以使用全文搜索。',
+            introSwitching: '使用上/下箭头键或点击搜索图标在过滤搜索和 Omnisearch 之间切换。',
             sections: {
                 fileNames: {
                     title: '文件名',
@@ -163,7 +166,8 @@ export const STRINGS_ZH_CN = {
                         '`#tag1 #tag2` 匹配两个标签（隐式 AND）。',
                         '`#tag1 AND #tag2` 匹配两个标签（显式 AND）。',
                         '`#tag1 OR #tag2` 匹配任一标签。',
-                        '`#a OR #b AND #c` AND 优先级更高：匹配 `#a`，或同时匹配 `#b` 和 `#c`。'
+                        '`#a OR #b AND #c` AND 优先级更高：匹配 `#a`，或同时匹配 `#b` 和 `#c`。',
+                        'Cmd/Ctrl+点击标签以 AND 方式添加。Cmd/Ctrl+Shift+点击以 OR 方式添加。'
                     ]
                 },
                 dates: {
@@ -180,6 +184,16 @@ export const STRINGS_ZH_CN = {
                         '`@2026-02-01..2026-02-07` 查找包含性日期范围（支持开放端点）。',
                         '`@c:...` 或 `@m:...` 指定创建或修改日期。',
                         '`!@...` 排除日期匹配。'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        '对整个仓库进行全文搜索，按当前文件夹或选定标签过滤。',
+                        '在大型仓库中输入少于3个字符时可能会较慢。',
+                        '无法搜索包含非ASCII字符的路径，也无法正确搜索子路径。',
+                        '在文件夹过滤之前返回有限的结果，因此如果其他地方存在大量匹配项，相关文件可能不会显示。',
+                        '笔记预览显示 Omnisearch 摘录，而不是默认预览文本。'
                     ]
                 }
             }

@@ -137,6 +137,8 @@ export const STRINGS_VI = {
         placeholder: 'Tìm kiếm...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Xóa tìm kiếm', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Chuyển sang tìm kiếm bộ lọc',
+        switchToOmnisearch: 'Chuyển sang Omnisearch',
         saveSearchShortcut: 'Lưu lối tắt tìm kiếm',
         removeSearchShortcut: 'Gỡ lối tắt tìm kiếm',
         shortcutModalTitle: 'Lưu lối tắt tìm kiếm',
@@ -144,7 +146,8 @@ export const STRINGS_VI = {
         searchHelp: 'Cú pháp tìm kiếm',
         searchHelpTitle: 'Cú pháp tìm kiếm',
         searchHelpModal: {
-            intro: 'Kết hợp tên tệp, thẻ và ngày trong một truy vấn (ví dụ: `meeting #work @thisweek`). Omnisearch sử dụng tìm kiếm toàn văn và bỏ qua các token thẻ và ngày.',
+            intro: 'Kết hợp tên tệp, thẻ và ngày trong một truy vấn (ví dụ: `meeting #work @thisweek`). Cài đặt plugin Omnisearch để sử dụng tìm kiếm toàn văn.',
+            introSwitching: 'Chuyển đổi giữa tìm kiếm bộ lọc và Omnisearch bằng phím mũi tên lên/xuống hoặc nhấp vào biểu tượng tìm kiếm.',
             sections: {
                 fileNames: {
                     title: 'Tên tệp',
@@ -164,7 +167,8 @@ export const STRINGS_VI = {
                         '`#tag1 #tag2` Khớp cả hai thẻ (AND ngầm định).',
                         '`#tag1 AND #tag2` Khớp cả hai thẻ (AND rõ ràng).',
                         '`#tag1 OR #tag2` Tìm một trong các thẻ.',
-                        '`#a OR #b AND #c` AND có độ ưu tiên cao hơn: khớp `#a`, hoặc cả `#b` và `#c`.'
+                        '`#a OR #b AND #c` AND có độ ưu tiên cao hơn: khớp `#a`, hoặc cả `#b` và `#c`.',
+                        'Cmd/Ctrl+Nhấp vào thẻ để thêm với AND. Cmd/Ctrl+Shift+Nhấp để thêm với OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +185,16 @@ export const STRINGS_VI = {
                         '`@2026-02-01..2026-02-07` Tìm phạm vi ngày bao gồm (hỗ trợ đầu mở).',
                         '`@c:...` hoặc `@m:...` Nhắm mục tiêu ngày tạo hoặc sửa đổi.',
                         '`!@...` Loại trừ một kết quả khớp ngày.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Tìm kiếm toàn văn trong toàn bộ kho, được lọc theo thư mục hiện tại hoặc thẻ đã chọn.',
+                        'Có thể chậm với ít hơn 3 ký tự trong kho lớn.',
+                        'Không thể tìm kiếm đường dẫn có ký tự không phải ASCII hoặc tìm kiếm đường dẫn con chính xác.',
+                        'Trả về kết quả giới hạn trước khi lọc thư mục, nên các tệp liên quan có thể không xuất hiện nếu có nhiều kết quả khớp ở nơi khác.',
+                        'Bản xem trước ghi chú hiển thị trích đoạn Omnisearch thay vì văn bản xem trước mặc định.'
                     ]
                 }
             }

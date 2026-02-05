@@ -63,24 +63,56 @@ export function SearchInput({
     const inputRef = useRef<HTMLInputElement>(null);
     const tagSuggestRef = useRef<SearchTagInputSuggest | null>(null);
     const dateSuggestRef = useRef<SearchDateInputSuggest | null>(null);
-    const { isMobile, omnisearchService, app, tagTreeService } = useServices();
+    const { isMobile, omnisearchService, app, tagTreeService, plugin } = useServices();
     const settings = useSettingsState();
     const uiState = useUIState();
     const uiDispatch = useUIDispatch();
-    const searchIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'list-search'), [settings.interfaceIcons]);
+
+    const activeProvider = searchProvider ?? settings.searchProvider ?? 'internal';
+    const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
+    const isOmnisearchActive = activeProvider === 'omnisearch' && isOmnisearchAvailable;
     const shortcutIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'nav-shortcuts'), [settings.interfaceIcons]);
+    const searchIconId = useMemo(
+        () => (isOmnisearchActive ? 'text-search' : resolveUXIcon(settings.interfaceIcons, 'list-search')),
+        [isOmnisearchActive, settings.interfaceIcons]
+    );
+    const placeholderText = isOmnisearchActive ? strings.searchInput.placeholderOmnisearch : strings.searchInput.placeholder;
+    const hasQuery = searchQuery.trim().length > 0;
+    const showShortcutButton = hasQuery && Boolean(onSaveShortcut || (isShortcutSaved && onRemoveShortcut));
+    const shortcutButtonDisabled = isShortcutDisabled || (!isShortcutSaved && !onSaveShortcut) || (isShortcutSaved && !onRemoveShortcut);
+    const searchContainerClassName = `nn-search-input-container${showShortcutButton ? ' nn-search-input-container--has-shortcut' : ''}`;
 
-    const placeholderText = useMemo(() => {
-        const activeProvider = searchProvider ?? settings.searchProvider ?? 'internal';
-        const isOmnisearchSelected = activeProvider === 'omnisearch';
-        const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
-
-        if (isOmnisearchSelected && isOmnisearchAvailable) {
-            return strings.searchInput.placeholderOmnisearch;
+    const restoreSearchInputFocus = useCallback((selection?: { start: number | null; end: number | null }) => {
+        const input = inputRef.current;
+        if (!input) {
+            return;
         }
 
-        return strings.searchInput.placeholder;
-    }, [searchProvider, settings.searchProvider, omnisearchService]);
+        input.focus();
+
+        const start = selection?.start ?? input.selectionStart;
+        const end = selection?.end ?? input.selectionEnd;
+        if (start !== null && end !== null) {
+            input.setSelectionRange(start, end);
+        }
+    }, []);
+
+    const handleToggleProvider = useCallback(
+        (options?: { restoreFocus?: boolean }) => {
+            if (!isOmnisearchAvailable) {
+                return;
+            }
+
+            const input = inputRef.current;
+            const selection = input ? { start: input.selectionStart, end: input.selectionEnd } : undefined;
+            plugin.setSearchProvider(isOmnisearchActive ? 'internal' : 'omnisearch');
+
+            if (options?.restoreFocus) {
+                requestAnimationFrame(() => restoreSearchInputFocus(selection));
+            }
+        },
+        [isOmnisearchAvailable, isOmnisearchActive, plugin, restoreSearchInputFocus]
+    );
 
     // Auto-focus input when shouldFocus is true
     useEffect(() => {
@@ -110,12 +142,14 @@ export function SearchInput({
 
     // Initialize Obsidian's tag suggest helper on the search input
     useEffect(() => {
-        if (!settings.showTags) {
+        const inputEl = inputRef.current;
+        if (!inputEl || !tagTreeService || !settings.showTags || isOmnisearchActive) {
+            tagSuggestRef.current?.dispose();
+            tagSuggestRef.current = null;
             return;
         }
 
-        const inputEl = inputRef.current;
-        if (!inputEl || !tagTreeService) {
+        if (tagSuggestRef.current) {
             return;
         }
 
@@ -124,28 +158,24 @@ export function SearchInput({
             onApply: applyTagSuggestion,
             isMobile
         });
+
         tagSuggestRef.current = suggest;
         return () => {
-            tagSuggestRef.current = null;
             suggest.dispose();
+            tagSuggestRef.current = null;
         };
-    }, [app, tagTreeService, settings.showTags, applyTagSuggestion, isMobile]);
+    }, [app, tagTreeService, settings.showTags, isOmnisearchActive, applyTagSuggestion, isMobile]);
 
     // Initialize date filter suggestions on the search input (Filter search provider)
     useEffect(() => {
         const inputEl = inputRef.current;
-        if (!inputEl) {
+        if (!inputEl || isOmnisearchActive) {
+            dateSuggestRef.current?.dispose();
+            dateSuggestRef.current = null;
             return;
         }
 
-        const activeProvider = searchProvider ?? settings.searchProvider ?? 'internal';
-        const isOmnisearchSelected = activeProvider === 'omnisearch';
-        const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
-        const shouldEnableDateSuggest = !(isOmnisearchSelected && isOmnisearchAvailable);
-
-        if (!shouldEnableDateSuggest) {
-            dateSuggestRef.current?.close();
-            dateSuggestRef.current = null;
+        if (dateSuggestRef.current) {
             return;
         }
 
@@ -155,10 +185,10 @@ export function SearchInput({
         });
         dateSuggestRef.current = suggest;
         return () => {
-            dateSuggestRef.current = null;
             suggest.dispose();
+            dateSuggestRef.current = null;
         };
-    }, [app, applyTagSuggestion, isMobile, omnisearchService, searchProvider, settings.searchProvider]);
+    }, [app, applyTagSuggestion, isMobile, isOmnisearchActive]);
 
     useEffect(() => {
         if (searchQuery.trim().length > 0) {
@@ -189,6 +219,24 @@ export function SearchInput({
         const isImeComposing = nativeEvent.isComposing || nativeEvent.keyCode === 229;
 
         if (isImeComposing) {
+            return;
+        }
+
+        // Toggle search provider with ArrowUp/ArrowDown when no suggestion popup is open
+        if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && isOmnisearchAvailable) {
+            if (nativeEvent.repeat) {
+                return;
+            }
+
+            const isSuggestOpen = Boolean(
+                tagSuggestRef.current?.containerEl?.isConnected || dateSuggestRef.current?.containerEl?.isConnected
+            );
+            if (isSuggestOpen) {
+                return;
+            }
+
+            e.preventDefault();
+            handleToggleProvider({ restoreFocus: true });
             return;
         }
 
@@ -231,20 +279,6 @@ export function SearchInput({
         uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'search' });
     };
 
-    // Determine if shortcut save/remove button should be shown and its state
-    const hasQuery = searchQuery.trim().length > 0;
-    const showShortcutButton = hasQuery && Boolean(onSaveShortcut || (isShortcutSaved && onRemoveShortcut));
-    const shortcutButtonDisabled = isShortcutDisabled || (!isShortcutSaved && !onSaveShortcut) || (isShortcutSaved && !onRemoveShortcut);
-
-    // Builds container class name with modifier when shortcut button is visible
-    const searchContainerClassName = useMemo(() => {
-        const classes = ['nn-search-input-container'];
-        if (showShortcutButton) {
-            classes.push('nn-search-input-container--has-shortcut');
-        }
-        return classes.join(' ');
-    }, [showShortcutButton]);
-
     // Opens the search syntax help modal, closing any active suggest popups first
     const openSearchHelp = useCallback(() => {
         tagSuggestRef.current?.close();
@@ -255,7 +289,33 @@ export function SearchInput({
     return (
         <div className="nn-search-input-wrapper">
             <div className={searchContainerClassName}>
-                <ServiceIcon iconId={searchIconId} className="nn-search-input-icon" />
+                <div
+                    className="nn-search-input-icon"
+                    role="button"
+                    tabIndex={isOmnisearchAvailable ? 0 : -1}
+                    aria-label={isOmnisearchActive ? strings.searchInput.switchToFilterSearch : strings.searchInput.switchToOmnisearch}
+                    style={isOmnisearchAvailable ? undefined : { pointerEvents: 'none' }}
+                    onMouseDown={
+                        isOmnisearchAvailable
+                            ? event => {
+                                  event.preventDefault();
+                              }
+                            : undefined
+                    }
+                    onClick={isOmnisearchAvailable ? () => handleToggleProvider({ restoreFocus: true }) : undefined}
+                    onKeyDown={
+                        isOmnisearchAvailable
+                            ? event => {
+                                  if (event.key === 'Enter' || event.key === ' ') {
+                                      event.preventDefault();
+                                      handleToggleProvider({ restoreFocus: true });
+                                  }
+                              }
+                            : undefined
+                    }
+                >
+                    <ServiceIcon iconId={searchIconId} aria-hidden={true} />
+                </div>
                 <input
                     ref={inputRef}
                     type="search"

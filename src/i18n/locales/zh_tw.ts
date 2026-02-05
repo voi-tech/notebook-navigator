@@ -136,6 +136,8 @@ export const STRINGS_ZH_TW = {
         placeholder: '搜尋...',
         placeholderOmnisearch: 'Omnisearch...',
         clearSearch: '清除搜尋',
+        switchToFilterSearch: '切換到篩選搜尋',
+        switchToOmnisearch: '切換到 Omnisearch',
         saveSearchShortcut: '將搜尋儲存至捷徑',
         removeSearchShortcut: '從捷徑移除搜尋',
         shortcutModalTitle: '儲存搜尋捷徑',
@@ -143,7 +145,8 @@ export const STRINGS_ZH_TW = {
         searchHelp: '搜尋語法',
         searchHelpTitle: '搜尋語法',
         searchHelpModal: {
-            intro: '在一個查詢中組合檔案名稱、標籤和日期（例如：`meeting #work @thisweek`）。Omnisearch 使用全文搜尋，忽略標籤和日期標記。',
+            intro: '在一個查詢中組合檔案名稱、標籤和日期（例如：`meeting #work @thisweek`）。安裝 Omnisearch 外掛程式以使用全文搜尋。',
+            introSwitching: '使用上/下箭頭鍵或點擊搜尋圖示在篩選搜尋和 Omnisearch 之間切換。',
             sections: {
                 fileNames: {
                     title: '檔案名稱',
@@ -163,7 +166,8 @@ export const STRINGS_ZH_TW = {
                         '`#tag1 #tag2` 符合兩個標籤（隱式 AND）。',
                         '`#tag1 AND #tag2` 符合兩個標籤（顯式 AND）。',
                         '`#tag1 OR #tag2` 符合任一標籤。',
-                        '`#a OR #b AND #c` AND 優先順序較高：符合 `#a`，或同時符合 `#b` 和 `#c`。'
+                        '`#a OR #b AND #c` AND 優先順序較高：符合 `#a`，或同時符合 `#b` 和 `#c`。',
+                        'Cmd/Ctrl+點擊標籤以 AND 方式新增。Cmd/Ctrl+Shift+點擊以 OR 方式新增。'
                     ]
                 },
                 dates: {
@@ -180,6 +184,16 @@ export const STRINGS_ZH_TW = {
                         '`@2026-02-01..2026-02-07` 尋找包含性日期範圍（支援開放端點）。',
                         '`@c:...` 或 `@m:...` 指定建立或修改日期。',
                         '`!@...` 排除日期符合。'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        '對整個保管庫進行全文搜尋，按目前資料夾或選定標籤篩選。',
+                        '在大型保管庫中輸入少於3個字元時可能會較慢。',
+                        '無法搜尋包含非ASCII字元的路徑，也無法正確搜尋子路徑。',
+                        '在資料夾篩選之前返回有限的結果，因此如果其他地方存在大量符合項，相關檔案可能不會顯示。',
+                        '筆記預覽顯示 Omnisearch 摘錄，而不是預設預覽文字。'
                     ]
                 }
             }

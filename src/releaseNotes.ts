@@ -75,16 +75,23 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
-        version: '2.2.4',
+        version: '2.3.0',
         date: '2026-02-09',
         showOnUpdate: true,
         new: [
             '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
             '==Date filters in search==! You can now filter notes by date using the "@" symbol. Some examples: @today, @2026W02, @2026-Q1, @13/02/2026, or ranges like @2026-01-01..2026-02-07. You can specifically choose created date with @c:, modified date with @m:, or exclude date matches with !@.',
+            '==Quickly switch between filter search and Omnisearch==! Quickly switch between filter search and Omnisearch by pressing the search icon or pressing UP/DOWN when the search input is focused.',
             'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.'
         ],
-        improved: ['You can now remove icons from the recently used icons list.'],
-        changed: ['Format settings now use **Moment format**. Existing formats migrate automatically where possible.']
+        improved: [
+            'You can now remove icons from the recently used icons list.',
+            'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are less likely to be pushed out by matches from other parts of the vault.'
+        ],
+        changed: [
+            'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
+            'Removed the setting Settings > Search > Search provider. This setting is now local and toggled in the list pane.'
+        ]
     },
     {
         version: '2.2.3',

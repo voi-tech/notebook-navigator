@@ -137,6 +137,8 @@ export const STRINGS_IT = {
         placeholder: 'Cerca...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Cancella ricerca', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Passa alla ricerca con filtro',
+        switchToOmnisearch: 'Passa a Omnisearch',
         saveSearchShortcut: 'Salva scorciatoia ricerca',
         removeSearchShortcut: 'Rimuovi scorciatoia ricerca',
         shortcutModalTitle: 'Salva scorciatoia ricerca',
@@ -144,7 +146,8 @@ export const STRINGS_IT = {
         searchHelp: 'Sintassi di ricerca',
         searchHelpTitle: 'Sintassi di ricerca',
         searchHelpModal: {
-            intro: 'Combina nomi file, tag e date in una query (es. `meeting #work @thisweek`). Omnisearch usa la ricerca full-text e ignora i token di tag e date.',
+            intro: 'Combina nomi file, tag e date in una query (es. `meeting #work @thisweek`). Installa il plugin Omnisearch per usare la ricerca full-text.',
+            introSwitching: "Passa tra ricerca con filtro e Omnisearch usando i tasti freccia su/giù o cliccando sull'icona di ricerca.",
             sections: {
                 fileNames: {
                     title: 'Nomi file',
@@ -164,7 +167,8 @@ export const STRINGS_IT = {
                         '`#tag1 #tag2` Trova entrambi i tag (AND implicito).',
                         '`#tag1 AND #tag2` Trova entrambi i tag (AND esplicito).',
                         '`#tag1 OR #tag2` Trova uno dei tag.',
-                        '`#a OR #b AND #c` AND ha priorità maggiore: trova `#a`, o entrambi `#b` e `#c`.'
+                        '`#a OR #b AND #c` AND ha priorità maggiore: trova `#a`, o entrambi `#b` e `#c`.',
+                        'Cmd/Ctrl+Clic su un tag per aggiungere con AND. Cmd/Ctrl+Shift+Clic per aggiungere con OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +185,16 @@ export const STRINGS_IT = {
                         '`@2026-02-01..2026-02-07` Trova un intervallo di giorni inclusivo (estremi aperti supportati).',
                         '`@c:...` o `@m:...` Indica data di creazione o modifica.',
                         '`!@...` Escludi una corrispondenza di data.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        "Ricerca full-text nell'intero vault, filtrata per la cartella corrente o i tag selezionati.",
+                        'Può essere lento con meno di 3 caratteri nei vault grandi.',
+                        'Non può cercare percorsi con caratteri non-ASCII o cercare correttamente i sottopercorsi.',
+                        'Restituisce risultati limitati prima del filtraggio per cartella, quindi file rilevanti potrebbero non apparire se esistono molte corrispondenze altrove.',
+                        'Le anteprime delle note mostrano estratti di Omnisearch invece del testo di anteprima predefinito.'
                     ]
                 }
             }

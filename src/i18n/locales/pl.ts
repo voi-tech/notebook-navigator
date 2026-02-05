@@ -136,6 +136,8 @@ export const STRINGS_PL = {
         placeholder: 'Szukaj...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Wyczyść wyszukiwanie', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Przełącz na wyszukiwanie z filtrem',
+        switchToOmnisearch: 'Przełącz na Omnisearch',
         saveSearchShortcut: 'Zapisz wyszukiwanie w skrótach',
         removeSearchShortcut: 'Usuń wyszukiwanie ze skrótów',
         shortcutModalTitle: 'Zapisz wyszukiwanie',
@@ -143,7 +145,9 @@ export const STRINGS_PL = {
         searchHelp: 'Składnia wyszukiwania',
         searchHelpTitle: 'Składnia wyszukiwania',
         searchHelpModal: {
-            intro: 'Łącz nazwy plików, tagi i daty w jednym zapytaniu (np. `meeting #work @thisweek`). Omnisearch używa wyszukiwania pełnotekstowego i ignoruje tokeny tagów i dat.',
+            intro: 'Łącz nazwy plików, tagi i daty w jednym zapytaniu (np. `meeting #work @thisweek`). Zainstaluj wtyczkę Omnisearch, aby użyć wyszukiwania pełnotekstowego.',
+            introSwitching:
+                'Przełączaj między wyszukiwaniem filtrowym a Omnisearch za pomocą klawiszy strzałek góra/dół lub klikając ikonę wyszukiwania.',
             sections: {
                 fileNames: {
                     title: 'Nazwy plików',
@@ -163,7 +167,8 @@ export const STRINGS_PL = {
                         '`#tag1 #tag2` Znajdź oba tagi (niejawne AND).',
                         '`#tag1 AND #tag2` Znajdź oba tagi (jawne AND).',
                         '`#tag1 OR #tag2` Znajdź dowolny z tagów.',
-                        '`#a OR #b AND #c` AND ma wyższy priorytet: pasuje do `#a` lub obu `#b` i `#c`.'
+                        '`#a OR #b AND #c` AND ma wyższy priorytet: pasuje do `#a` lub obu `#b` i `#c`.',
+                        'Cmd/Ctrl+Kliknij tag, aby dodać z AND. Cmd/Ctrl+Shift+Kliknij, aby dodać z OR.'
                     ]
                 },
                 dates: {
@@ -180,6 +185,16 @@ export const STRINGS_PL = {
                         '`@2026-02-01..2026-02-07` Znajdź włączny zakres dni (otwarte końce obsługiwane).',
                         '`@c:...` lub `@m:...` Wskaż datę utworzenia lub modyfikacji.',
                         '`!@...` Wyklucz dopasowanie daty.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Wyszukiwanie pełnotekstowe w całym sejfie, filtrowane do bieżącego folderu lub wybranych tagów.',
+                        'Może być wolne przy mniej niż 3 znakach w dużych sejfach.',
+                        'Nie może wyszukiwać ścieżek ze znakami spoza ASCII ani prawidłowo wyszukiwać podścieżek.',
+                        'Zwraca ograniczone wyniki przed filtrowaniem folderów, więc odpowiednie pliki mogą się nie pojawić, jeśli wiele dopasowań istnieje gdzie indziej.',
+                        'Podglądy notatek pokazują fragmenty Omnisearch zamiast domyślnego tekstu podglądu.'
                     ]
                 }
             }

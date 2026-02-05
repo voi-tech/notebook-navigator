@@ -137,6 +137,8 @@ export const STRINGS_ID = {
         placeholder: 'Cari...',
         placeholderOmnisearch: 'Omnisearch...',
         clearSearch: 'Bersihkan pencarian',
+        switchToFilterSearch: 'Beralih ke pencarian filter',
+        switchToOmnisearch: 'Beralih ke Omnisearch',
         saveSearchShortcut: 'Simpan pintasan pencarian',
         removeSearchShortcut: 'Hapus pintasan pencarian',
         shortcutModalTitle: 'Simpan pintasan pencarian',
@@ -144,7 +146,9 @@ export const STRINGS_ID = {
         searchHelp: 'Sintaks pencarian',
         searchHelpTitle: 'Sintaks pencarian',
         searchHelpModal: {
-            intro: 'Gabungkan nama file, tag, dan tanggal dalam satu kueri (contoh: `meeting #work @thisweek`). Omnisearch menggunakan pencarian teks lengkap dan mengabaikan token tag dan tanggal.',
+            intro: 'Gabungkan nama file, tag, dan tanggal dalam satu kueri (contoh: `meeting #work @thisweek`). Instal plugin Omnisearch untuk menggunakan pencarian teks lengkap.',
+            introSwitching:
+                'Beralih antara pencarian filter dan Omnisearch menggunakan tombol panah atas/bawah atau dengan mengklik ikon pencarian.',
             sections: {
                 fileNames: {
                     title: 'Nama file',
@@ -164,7 +168,8 @@ export const STRINGS_ID = {
                         '`#tag1 #tag2` Cocokkan kedua tag (AND implisit).',
                         '`#tag1 AND #tag2` Cocokkan kedua tag (AND eksplisit).',
                         '`#tag1 OR #tag2` Cocokkan salah satu tag.',
-                        '`#a OR #b AND #c` AND memiliki prioritas lebih tinggi: cocok dengan `#a`, atau keduanya `#b` dan `#c`.'
+                        '`#a OR #b AND #c` AND memiliki prioritas lebih tinggi: cocok dengan `#a`, atau keduanya `#b` dan `#c`.',
+                        'Cmd/Ctrl+Klik tag untuk menambahkan dengan AND. Cmd/Ctrl+Shift+Klik untuk menambahkan dengan OR.'
                     ]
                 },
                 dates: {
@@ -181,6 +186,16 @@ export const STRINGS_ID = {
                         '`@2026-02-01..2026-02-07` Temukan rentang hari inklusif (ujung terbuka didukung).',
                         '`@c:...` atau `@m:...` Targetkan tanggal pembuatan atau modifikasi.',
                         '`!@...` Kecualikan kecocokan tanggal.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Pencarian teks lengkap di seluruh vault, difilter berdasarkan folder saat ini atau tag yang dipilih.',
+                        'Bisa lambat dengan kurang dari 3 karakter di vault besar.',
+                        'Tidak dapat mencari jalur dengan karakter non-ASCII atau mencari subjalur dengan benar.',
+                        'Mengembalikan hasil terbatas sebelum filter folder, sehingga file yang relevan mungkin tidak muncul jika banyak kecocokan ada di tempat lain.',
+                        'Pratinjau catatan menampilkan kutipan Omnisearch alih-alih teks pratinjau default.'
                     ]
                 }
             }

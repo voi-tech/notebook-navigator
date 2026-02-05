@@ -136,6 +136,8 @@ export const STRINGS_FR = {
         placeholder: 'Rechercher...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Effacer la recherche', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Passer à la recherche par filtre',
+        switchToOmnisearch: 'Passer à Omnisearch',
         saveSearchShortcut: 'Ajouter la recherche aux raccourcis',
         removeSearchShortcut: 'Retirer la recherche des raccourcis',
         shortcutModalTitle: 'Enregistrer la recherche',
@@ -143,7 +145,9 @@ export const STRINGS_FR = {
         searchHelp: 'Syntaxe de recherche',
         searchHelpTitle: 'Syntaxe de recherche',
         searchHelpModal: {
-            intro: "Combinez noms de fichiers, étiquettes et dates dans une requête (ex. `meeting #work @thisweek`). Omnisearch utilise la recherche plein texte et ignore les jetons d'étiquettes et de dates.",
+            intro: 'Combinez noms de fichiers, étiquettes et dates dans une requête (ex. `meeting #work @thisweek`). Installez le plugin Omnisearch pour utiliser la recherche plein texte.',
+            introSwitching:
+                "Basculez entre la recherche par filtre et Omnisearch avec les touches fléchées haut/bas ou en cliquant sur l'icône de recherche.",
             sections: {
                 fileNames: {
                     title: 'Noms de fichiers',
@@ -163,7 +167,8 @@ export const STRINGS_FR = {
                         '`#tag1 #tag2` Correspondre aux deux étiquettes (AND implicite).',
                         '`#tag1 AND #tag2` Correspondre aux deux étiquettes (AND explicite).',
                         "`#tag1 OR #tag2` Correspondre à l'une des étiquettes.",
-                        '`#a OR #b AND #c` AND a une priorité plus élevée : correspond à `#a`, ou aux deux `#b` et `#c`.'
+                        '`#a OR #b AND #c` AND a une priorité plus élevée : correspond à `#a`, ou aux deux `#b` et `#c`.',
+                        'Cmd/Ctrl+Clic sur une étiquette pour ajouter avec AND. Cmd/Ctrl+Shift+Clic pour ajouter avec OR.'
                     ]
                 },
                 dates: {
@@ -180,6 +185,16 @@ export const STRINGS_FR = {
                         '`@2026-02-01..2026-02-07` Trouver une plage de jours inclusive (fins ouvertes supportées).',
                         '`@c:...` ou `@m:...` Cibler la date de création ou de modification.',
                         '`!@...` Exclure une correspondance de date.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Recherche plein texte dans tout le coffre, filtrée par le dossier actuel ou les étiquettes sélectionnées.',
+                        'Peut être lent avec moins de 3 caractères dans les grands coffres.',
+                        'Ne peut pas rechercher les chemins avec des caractères non-ASCII ou rechercher correctement les sous-chemins.',
+                        'Retourne des résultats limités avant le filtrage par dossier, donc les fichiers pertinents peuvent ne pas apparaître si de nombreuses correspondances existent ailleurs.',
+                        "Les aperçus de notes affichent les extraits Omnisearch au lieu du texte d'aperçu par défaut."
                     ]
                 }
             }

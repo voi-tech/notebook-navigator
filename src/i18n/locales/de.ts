@@ -136,6 +136,8 @@ export const STRINGS_DE = {
         placeholder: 'Suchen...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Suche löschen', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Zur Filtersuche wechseln',
+        switchToOmnisearch: 'Zu Omnisearch wechseln',
         saveSearchShortcut: 'Such-Lesezeichen speichern',
         removeSearchShortcut: 'Such-Lesezeichen entfernen',
         shortcutModalTitle: 'Such-Lesezeichen speichern',
@@ -143,7 +145,9 @@ export const STRINGS_DE = {
         searchHelp: 'Suchsyntax',
         searchHelpTitle: 'Suchsyntax',
         searchHelpModal: {
-            intro: 'Kombinieren Sie Dateinamen, Tags und Daten in einer Abfrage (z.B. `meeting #work @thisweek`). Omnisearch verwendet Volltextsuche und ignoriert Tag- und Datums-Token.',
+            intro: 'Kombinieren Sie Dateinamen, Tags und Daten in einer Abfrage (z.B. `meeting #work @thisweek`). Installieren Sie das Omnisearch-Plugin für Volltextsuche.',
+            introSwitching:
+                'Wechseln Sie zwischen Filtersuche und Omnisearch mit den Auf-/Ab-Pfeiltasten oder durch Klicken auf das Suchsymbol.',
             sections: {
                 fileNames: {
                     title: 'Dateinamen',
@@ -163,7 +167,8 @@ export const STRINGS_DE = {
                         '`#tag1 #tag2` Beide Tags finden (implizites AND).',
                         '`#tag1 AND #tag2` Beide Tags finden (explizites AND).',
                         '`#tag1 OR #tag2` Eines der Tags finden.',
-                        '`#a OR #b AND #c` AND hat höhere Priorität: findet `#a` oder beide `#b` und `#c`.'
+                        '`#a OR #b AND #c` AND hat höhere Priorität: findet `#a` oder beide `#b` und `#c`.',
+                        'Cmd/Ctrl+Klick auf einen Tag zum Hinzufügen mit AND. Cmd/Ctrl+Shift+Klick zum Hinzufügen mit OR.'
                     ]
                 },
                 dates: {
@@ -180,6 +185,16 @@ export const STRINGS_DE = {
                         '`@2026-02-01..2026-02-07` Einen inklusiven Datumsbereich finden (offene Enden unterstützt).',
                         '`@c:...` oder `@m:...` Erstellungs- oder Änderungsdatum ansprechen.',
                         '`!@...` Ein Datum ausschließen.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Volltextsuche im gesamten Vault, gefiltert nach dem aktuellen Ordner oder ausgewählten Tags.',
+                        'Kann bei weniger als 3 Zeichen in großen Vaults langsam sein.',
+                        'Kann Pfade mit Nicht-ASCII-Zeichen nicht durchsuchen oder Unterpfade korrekt durchsuchen.',
+                        'Gibt begrenzte Ergebnisse vor der Ordnerfilterung zurück, sodass relevante Dateien möglicherweise nicht erscheinen, wenn viele Treffer an anderer Stelle existieren.',
+                        'Notizvorschauen zeigen Omnisearch-Auszüge anstelle des Standard-Vorschautexts.'
                     ]
                 }
             }

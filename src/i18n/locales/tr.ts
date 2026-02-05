@@ -137,6 +137,8 @@ export const STRINGS_TR = {
         placeholder: 'Ara...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: 'Aramayı temizle', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'Filtre aramasına geç',
+        switchToOmnisearch: 'Omnisearch aramasına geç',
         saveSearchShortcut: 'Arama kısayolunu kaydet',
         removeSearchShortcut: 'Arama kısayolunu kaldır',
         shortcutModalTitle: 'Arama kısayolunu kaydet',
@@ -144,7 +146,9 @@ export const STRINGS_TR = {
         searchHelp: 'Arama sözdizimi',
         searchHelpTitle: 'Arama sözdizimi',
         searchHelpModal: {
-            intro: 'Dosya adlarını, etiketleri ve tarihleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek`). Omnisearch tam metin araması kullanır ve etiket ve tarih belirteçlerini yoksayar.',
+            intro: 'Dosya adlarını, etiketleri ve tarihleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek`). Tam metin araması kullanmak için Omnisearch eklentisini yükleyin.',
+            introSwitching:
+                'Yukarı/aşağı ok tuşlarını kullanarak veya arama simgesine tıklayarak filtre araması ve Omnisearch arasında geçiş yapın.',
             sections: {
                 fileNames: {
                     title: 'Dosya adları',
@@ -164,7 +168,8 @@ export const STRINGS_TR = {
                         '`#tag1 #tag2` Her iki etiketi bul (örtük AND).',
                         '`#tag1 AND #tag2` Her iki etiketi bul (açık AND).',
                         '`#tag1 OR #tag2` Etiketlerden herhangi birini bul.',
-                        '`#a OR #b AND #c` AND daha yüksek önceliğe sahip: `#a` veya hem `#b` hem `#c` ile eşleşir.'
+                        '`#a OR #b AND #c` AND daha yüksek önceliğe sahip: `#a` veya hem `#b` hem `#c` ile eşleşir.',
+                        'Cmd/Ctrl+Tıklama ile etiketi AND olarak ekleyin. Cmd/Ctrl+Shift+Tıklama ile OR olarak ekleyin.'
                     ]
                 },
                 dates: {
@@ -181,6 +186,16 @@ export const STRINGS_TR = {
                         '`@2026-02-01..2026-02-07` Kapsayıcı bir gün aralığı bul (açık uçlar desteklenir).',
                         '`@c:...` veya `@m:...` Oluşturma veya değiştirme tarihini hedefle.',
                         '`!@...` Bir tarih eşleşmesini hariç tut.'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'Kasadaki tam metin araması, geçerli klasör veya seçili etiketlere göre filtrelenir.',
+                        'Büyük kasalarda 3 karakterden az ile yavaş olabilir.',
+                        'ASCII olmayan karakterler içeren yolları veya alt yolları doğru şekilde arayamaz.',
+                        'Klasör filtrelemesinden önce sınırlı sonuç döndürür, bu nedenle başka yerlerde çok sayıda eşleşme varsa ilgili dosyalar görünmeyebilir.',
+                        'Not önizlemeleri varsayılan önizleme metni yerine Omnisearch alıntılarını gösterir.'
                     ]
                 }
             }

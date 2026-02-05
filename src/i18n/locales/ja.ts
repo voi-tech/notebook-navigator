@@ -136,6 +136,8 @@ export const STRINGS_JA = {
         placeholder: '検索...', // Placeholder text for search input (English: Search...)
         placeholderOmnisearch: 'Omnisearch...', // Placeholder text when Omnisearch provider is active (English: Omnisearch...)
         clearSearch: '検索をクリア', // Tooltip for clear search button (English: Clear search)
+        switchToFilterSearch: 'フィルター検索に切り替え',
+        switchToOmnisearch: 'Omnisearchに切り替え',
         saveSearchShortcut: '検索をショートカットに保存',
         removeSearchShortcut: 'ショートカットから検索を削除',
         shortcutModalTitle: '検索ショートカットを保存',
@@ -143,7 +145,8 @@ export const STRINGS_JA = {
         searchHelp: '検索構文',
         searchHelpTitle: '検索構文',
         searchHelpModal: {
-            intro: 'ファイル名、タグ、日付を1つのクエリで組み合わせ可能（例：`meeting #work @thisweek`）。Omnisearch は全文検索を使用し、タグと日付のトークンを無視します。',
+            intro: 'ファイル名、タグ、日付を1つのクエリで組み合わせ可能（例：`meeting #work @thisweek`）。Omnisearch プラグインをインストールすると全文検索が使用できます。',
+            introSwitching: '上下矢印キーまたは検索アイコンのクリックで、フィルター検索と Omnisearch を切り替えられます。',
             sections: {
                 fileNames: {
                     title: 'ファイル名',
@@ -163,7 +166,8 @@ export const STRINGS_JA = {
                         '`#tag1 #tag2` 両方のタグに一致（暗黙のAND）。',
                         '`#tag1 AND #tag2` 両方のタグに一致（明示的なAND）。',
                         '`#tag1 OR #tag2` いずれかのタグに一致。',
-                        '`#a OR #b AND #c` ANDは優先度が高い：`#a`、または`#b`と`#c`の両方に一致。'
+                        '`#a OR #b AND #c` ANDは優先度が高い：`#a`、または`#b`と`#c`の両方に一致。',
+                        'Cmd/Ctrl+クリックでタグを AND として追加。Cmd/Ctrl+Shift+クリックで OR として追加。'
                     ]
                 },
                 dates: {
@@ -180,6 +184,16 @@ export const STRINGS_JA = {
                         '`@2026-02-01..2026-02-07` 包括的な日付範囲を検索（開放端サポート）。',
                         '`@c:...` または `@m:...` 作成日または更新日を指定。',
                         '`!@...` 日付の一致を除外。'
+                    ]
+                },
+                omnisearch: {
+                    title: 'Omnisearch',
+                    items: [
+                        'ボールト全体の全文検索。現在のフォルダまたは選択されたタグでフィルタリングされます。',
+                        '大規模なボールトでは3文字未満の場合、動作が遅くなることがあります。',
+                        '非ASCIIパスの検索やサブパスの正確な検索はできません。',
+                        'フォルダフィルタリング前に返される結果数に制限があるため、他に多くの一致がある場合、関連ファイルが表示されないことがあります。',
+                        'ノートプレビューはデフォルトのプレビューテキストの代わりに Omnisearch の抜粋を表示します。'
                     ]
                 }
             }
