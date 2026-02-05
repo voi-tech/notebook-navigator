@@ -155,6 +155,23 @@ export function useListPaneData({
     const isOmnisearchAvailable = omnisearchService?.isAvailable() ?? false;
     // Use Omnisearch only when selected, available, and there's a query
     const useOmnisearch = searchProvider === 'omnisearch' && isOmnisearchAvailable && hasSearchQuery;
+    /**
+     * Optional folder scope passed to Omnisearch.
+     *
+     * Scope is only provided for folder selections because that is where
+     * Omnisearch can narrow results by path. Tag selections intentionally skip
+     * scope injection because tag views are not represented by a single folder
+     * path and may span unrelated locations in the vault.
+     *
+     * The service applies additional safety checks before injecting `path:"..."`.
+     * If the path is not considered safe, the query is executed unchanged.
+     */
+    const omnisearchPathScope = useMemo(() => {
+        if (selectionType !== ItemType.FOLDER || !selectedFolder) {
+            return undefined;
+        }
+        return selectedFolder.path;
+    }, [selectionType, selectedFolder]);
     const { hiddenFolders, hiddenFileProperties, hiddenFileNames, hiddenTags, hiddenFileTags, fileVisibility } = activeProfile;
     const listConfig = useMemo(
         () => ({
@@ -268,7 +285,19 @@ export function useListPaneData({
         // Execute omnisearch
         runAsyncAction(async () => {
             try {
-                const hits = await omnisearchService.search(trimmedQuery);
+                // Pass folder scope to Omnisearch so path filtering can run inside
+                // Omnisearch's own ranking pipeline. This improves relevance when
+                // the vault has many global matches outside the current folder.
+                //
+                // The service only injects scope when:
+                // - no user `path:` filter is already present
+                // - the folder path passes ASCII/simple-path safety checks
+                //
+                // If those conditions are not met, this call behaves like the
+                // previous implementation and sends only `trimmedQuery`.
+                const hits = await omnisearchService.search(trimmedQuery, {
+                    pathScope: omnisearchPathScope
+                });
                 // Ignore stale results
                 if (disposed || searchTokenRef.current !== token) {
                     return;
@@ -319,7 +348,7 @@ export function useListPaneData({
         return () => {
             disposed = true;
         };
-    }, [useOmnisearch, omnisearchService, trimmedQuery, basePathSet]);
+    }, [useOmnisearch, omnisearchService, trimmedQuery, omnisearchPathScope, basePathSet]);
 
     // Rebuild the entire map when the baseFiles list or name provider changes
     useEffect(() => {
