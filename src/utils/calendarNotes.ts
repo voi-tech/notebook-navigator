@@ -31,6 +31,7 @@ import {
     normalizeCalendarVaultFolderPath,
     splitCalendarCustomPattern
 } from './calendarCustomNotePatterns';
+import { createMarkdownFileFromTemplate } from './fileCreationUtils';
 import type { MomentApi, MomentInstance } from './moment';
 
 export type CalendarNoteKind = 'day' | 'week' | 'month' | 'quarter' | 'year';
@@ -180,21 +181,11 @@ export async function createCalendarMarkdownFile(
         throw new Error('Calendar folder path is not a folder');
     }
 
-    const created = await app.fileManager.createNewMarkdownFile(folder, baseName);
-
-    // Create the note first (fires Obsidian vault "create" for other plugins), then write optional template content.
-    // Note: some plugins (e.g. Templater) handle "create" asynchronously and may read/modify the file after a short delay.
-    if (templatePath) {
-        try {
-            const entry = app.vault.getAbstractFileByPath(templatePath);
-            if (entry instanceof TFile) {
-                const content = await app.vault.read(entry);
-                await app.vault.modify(created, content);
-            }
-        } catch (error) {
-            console.error('Failed to apply calendar template', templatePath, error);
-        }
-    }
-
-    return created;
+    return createMarkdownFileFromTemplate({
+        app,
+        folder,
+        baseName,
+        templatePath,
+        templateErrorContext: 'calendar'
+    });
 }

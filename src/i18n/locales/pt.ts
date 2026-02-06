@@ -677,6 +677,7 @@ export const STRINGS_PT = {
             general: {
                 vaultProfiles: 'Perfis do cofre',
                 filtering: 'Filtragem',
+                templates: 'Modelos',
                 behavior: 'Comportamento',
                 keyboardNavigation: 'Navegação por teclado',
                 view: 'Aparência',
@@ -1034,6 +1035,7 @@ export const STRINGS_PT = {
                     dailyNotes: 'Pasta e formato de data são configurados no plugin Daily Notes.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Pasta raiz',
                 desc: 'Pasta base para notas periódicas. Padrões de data podem incluir subpastas. Muda com o perfil do cofre selecionado.',
@@ -1046,11 +1048,11 @@ export const STRINGS_PT = {
             },
             calendarCustomFilePattern: {
                 name: 'Notas diárias',
-                desc: 'Formatar caminho usando formato de data Moment. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo.',
+                desc: 'Formatar caminho usando formato de data Moment. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo. Definir localização da pasta de modelos em Geral > Modelos.',
                 momentDescPrefix: 'Formatar caminho usando ',
                 momentLinkText: 'formato de data Moment',
                 momentDescSuffix:
-                    '. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo.',
+                    '. Coloque nomes de subpastas entre colchetes, ex. [Work]/YYYY. Clique no ícone de modelo para definir um modelo. Definir localização da pasta de modelos em Geral > Modelos.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaxe atual: {path}',
                 parsingError: 'O padrão deve ser formatado e analisado novamente como uma data completa (ano, mês, dia).'
@@ -1460,10 +1462,9 @@ export const STRINGS_PT = {
                 desc: 'Nome da nota de pasta sem extensão. Deixe vazio para usar o mesmo nome que a pasta.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Propriedades da nota de pasta',
-                desc: 'Frontmatter YAML adicionado a novas notas de pasta. Os marcadores --- são adicionados automaticamente.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Modelo de nota de pasta',
+                desc: 'Ficheiro de modelo para novas notas de pasta Markdown. Definir localização da pasta de modelos em Geral > Modelos.'
             },
             openFolderNotesInNewTab: {
                 name: 'Abrir notas de pasta em novo separador',

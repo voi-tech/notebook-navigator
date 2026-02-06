@@ -679,6 +679,7 @@ export const STRINGS_PL = {
             general: {
                 vaultProfiles: 'Profile sejfu',
                 filtering: 'Filtrowanie',
+                templates: 'Szablony',
                 behavior: 'Zachowanie',
                 keyboardNavigation: 'Nawigacja klawiaturą',
                 view: 'Wygląd',
@@ -1036,6 +1037,7 @@ export const STRINGS_PL = {
                     dailyNotes: 'Folder i format daty są konfigurowane we wtyczce Daily Notes.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Folder główny',
                 desc: 'Folder bazowy dla notatek okresowych. Wzorce dat mogą zawierać podfoldery. Zmienia się z wybranym profilem skarbca.',
@@ -1048,11 +1050,11 @@ export const STRINGS_PL = {
             },
             calendarCustomFilePattern: {
                 name: 'Notatki dzienne',
-                desc: 'Formatuj ścieżkę używając formatu daty Moment. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon.',
+                desc: 'Formatuj ścieżkę używając formatu daty Moment. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon. Ustaw lokalizację folderu szablonów w Ogólne > Szablony.',
                 momentDescPrefix: 'Formatuj ścieżkę używając ',
                 momentLinkText: 'formatu daty Moment',
                 momentDescSuffix:
-                    '. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon.',
+                    '. Umieść nazwy podfolderów w nawiasach kwadratowych, np. [Work]/YYYY. Kliknij ikonę szablonu, aby ustawić szablon. Ustaw lokalizację folderu szablonów w Ogólne > Szablony.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Aktualna składnia: {path}',
                 parsingError: 'Wzorzec musi dać się sformatować i ponownie sparsować jako pełną datę (rok, miesiąc, dzień).'
@@ -1460,10 +1462,9 @@ export const STRINGS_PL = {
                 desc: 'Nazwa notatki folderu bez rozszerzenia. Zostaw puste aby użyć takiej samej nazwy jak folder.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Właściwości notatki folderu',
-                desc: 'YAML frontmatter dodawany do nowych notatek folderów. Znaczniki --- są dodawane automatycznie.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Szablon notatki folderu',
+                desc: 'Plik szablonu dla nowych notatek folderów Markdown. Ustaw lokalizację folderu szablonów w Ogólne > Szablony.'
             },
             openFolderNotesInNewTab: {
                 name: 'Otwórz notatki folderów w nowej karcie',

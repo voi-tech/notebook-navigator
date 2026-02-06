@@ -21,6 +21,7 @@ import { strings } from '../i18n';
 import { TIMEOUTS, OBSIDIAN_COMMANDS } from '../types/obsidian-extended';
 import { executeCommand } from './typeGuards';
 import { showNotice } from './noticeUtils';
+import { normalizeOptionalVaultFilePath } from './pathUtils';
 
 /**
  * Options for creating a new file
@@ -36,6 +37,14 @@ export interface CreateFileOptions {
     triggerRename?: boolean;
     /** Custom error message key */
     errorKey?: string;
+}
+
+interface CreateMarkdownFileFromTemplateOptions {
+    app: App;
+    folder: TFolder;
+    baseName: string;
+    templatePath?: string | null;
+    templateErrorContext: string;
 }
 
 /**
@@ -125,6 +134,41 @@ export async function createFileWithOptions(parent: TFolder, app: App, options: 
         showNotice(errorMessage, { variant: 'warning' });
         return null;
     }
+}
+
+export async function createMarkdownFileFromTemplate({
+    app,
+    folder,
+    baseName,
+    templatePath,
+    templateErrorContext
+}: CreateMarkdownFileFromTemplateOptions): Promise<TFile> {
+    const created = await app.fileManager.createNewMarkdownFile(folder, baseName);
+
+    // Create the note first (fires Obsidian vault "create"), then apply template content.
+    // Some plugins read or modify created files asynchronously after creation.
+    if (templatePath) {
+        const normalizedTemplatePath = normalizeOptionalVaultFilePath(templatePath);
+        if (!normalizedTemplatePath) {
+            console.warn(`[${templateErrorContext} template] Invalid template path`, templatePath);
+            return created;
+        }
+
+        try {
+            const entry = app.vault.getAbstractFileByPath(normalizedTemplatePath);
+            if (!(entry instanceof TFile) || entry.extension !== 'md') {
+                console.warn(`[${templateErrorContext} template] Template file not found`, normalizedTemplatePath);
+                return created;
+            }
+
+            const content = await app.vault.read(entry);
+            await app.vault.modify(created, content);
+        } catch (error) {
+            console.error(`Failed to apply ${templateErrorContext} template`, normalizedTemplatePath, error);
+        }
+    }
+
+    return created;
 }
 
 /**

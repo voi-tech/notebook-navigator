@@ -24,6 +24,8 @@ import type { SettingsTabContext } from './SettingsTabContext';
 import { createSettingGroupFactory } from '../settingGroups';
 import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
+import { FilePathInputSuggest } from '../../suggest/FilePathInputSuggest';
+import { normalizeOptionalVaultFilePath } from '../../utils/pathUtils';
 
 /** Renders the folders and tags settings tab */
 export function renderFoldersTagsTab(context: SettingsTabContext): void {
@@ -193,23 +195,25 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
         }
     );
 
-    const folderNotePropertiesSetting = context.createDebouncedTextAreaSetting(
+    const folderNoteTemplateSetting = context.createDebouncedTextSetting(
         folderNotesSettingsEl,
-        strings.settings.items.folderNoteProperties.name,
-        strings.settings.items.folderNoteProperties.desc,
-        strings.settings.items.folderNoteProperties.placeholder,
-        () => plugin.settings.folderNoteProperties,
+        strings.settings.items.folderNoteTemplate.name,
+        strings.settings.items.folderNoteTemplate.desc,
+        '',
+        () => plugin.settings.folderNoteTemplate ?? '',
         value => {
-            const normalizedBlock = value.replace(/\r\n/g, '\n').trim();
-            const withoutDelimiters = normalizedBlock
-                .replace(/^---\s*\n?/, '')
-                .replace(/\n?---\s*$/, '')
-                .trim();
-            plugin.settings.folderNoteProperties = withoutDelimiters;
-        },
-        { rows: 4 }
+            plugin.settings.folderNoteTemplate = normalizeOptionalVaultFilePath(value);
+        }
     );
-    folderNotePropertiesSetting.controlEl.addClass('nn-setting-wide-input');
+    folderNoteTemplateSetting.controlEl.addClass('nn-setting-wide-input');
+    const folderNoteTemplateInputEl = folderNoteTemplateSetting.controlEl.querySelector<HTMLInputElement>('input');
+    if (folderNoteTemplateInputEl) {
+        const templateSuggest = new FilePathInputSuggest(context.app, folderNoteTemplateInputEl, {
+            getBaseFolder: () => plugin.settings.calendarTemplateFolder,
+            includeFile: file => file.extension === 'md'
+        });
+        folderNoteTemplateInputEl.addEventListener('click', () => templateSuggest.open());
+    }
 
     new Setting(folderNotesSettingsEl)
         .setName(strings.settings.items.openFolderNotesInNewTab.name)

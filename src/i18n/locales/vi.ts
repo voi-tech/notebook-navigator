@@ -676,6 +676,7 @@ export const STRINGS_VI = {
             general: {
                 vaultProfiles: 'Hồ sơ vault',
                 filtering: 'Lọc',
+                templates: 'Mẫu',
                 behavior: 'Hành vi',
                 keyboardNavigation: 'Điều hướng bằng bàn phím',
                 view: 'Giao diện',
@@ -1033,6 +1034,7 @@ export const STRINGS_VI = {
                     dailyNotes: 'Thư mục và định dạng ngày được cấu hình trong plugin Daily Notes cốt lõi.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Thư mục gốc',
                 desc: 'Thư mục cơ sở cho ghi chú định kỳ. Mẫu ngày có thể bao gồm thư mục con. Thay đổi theo hồ sơ vault đã chọn.',
@@ -1045,10 +1047,11 @@ export const STRINGS_VI = {
             },
             calendarCustomFilePattern: {
                 name: 'Ghi chú hàng ngày',
-                desc: 'Định dạng đường dẫn sử dụng định dạng ngày Moment. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu.',
+                desc: 'Định dạng đường dẫn sử dụng định dạng ngày Moment. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu. Đặt vị trí thư mục mẫu trong Chung > Mẫu.',
                 momentDescPrefix: 'Định dạng đường dẫn sử dụng ',
                 momentLinkText: 'định dạng ngày Moment',
-                momentDescSuffix: '. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu.',
+                momentDescSuffix:
+                    '. Đặt tên thư mục con trong dấu ngoặc vuông, vd: [Work]/YYYY. Nhấp vào biểu tượng mẫu để đặt mẫu. Đặt vị trí thư mục mẫu trong Chung > Mẫu.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Cú pháp hiện tại: {path}',
                 parsingError: 'Mẫu phải có thể định dạng và phân tích lại thành một ngày đầy đủ (năm, tháng, ngày).'
@@ -1455,10 +1458,9 @@ export const STRINGS_VI = {
                 desc: 'Tên ghi chú thư mục không có phần mở rộng. Để trống để dùng cùng tên với thư mục.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Thuộc tính ghi chú thư mục',
-                desc: 'YAML frontmatter thêm vào ghi chú thư mục mới. Dấu --- được thêm tự động.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Mẫu ghi chú thư mục',
+                desc: 'Tệp mẫu cho ghi chú thư mục Markdown mới. Đặt vị trí thư mục mẫu trong Chung > Mẫu.'
             },
             openFolderNotesInNewTab: {
                 name: 'Mở ghi chú thư mục trong tab mới',

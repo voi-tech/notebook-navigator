@@ -109,7 +109,7 @@ show progress.
    - Starts preview text warmup (`startPreviewTextWarmup`) after init.
 5. Load settings from `data.json` and run migrations.
    - Sanitize keyboard shortcuts and migrate legacy fields.
-   - Apply default date/time formats and normalize folder note properties.
+   - Apply default date/time formats and migrate folder note template settings.
    - Load UX preferences from vault-scoped localStorage.
 6. Handle first-launch setup when no saved data exists.
    - Normalize tag settings and clear vault-scoped localStorage keys (preserving IndexedDB version markers).

@@ -678,6 +678,7 @@ export const STRINGS_ES = {
             general: {
                 vaultProfiles: 'Perfiles de bóveda',
                 filtering: 'Filtrado',
+                templates: 'Plantillas',
                 behavior: 'Comportamiento',
                 keyboardNavigation: 'Navegación con teclado',
                 view: 'Apariencia',
@@ -1035,6 +1036,7 @@ export const STRINGS_ES = {
                     dailyNotes: 'La carpeta y el formato de fecha se configuran en el plugin de notas diarias.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Carpeta raíz',
                 desc: 'Carpeta base para notas periódicas. Los patrones de fecha pueden incluir subcarpetas. Cambia con el perfil de bóveda seleccionado.',
@@ -1047,11 +1049,11 @@ export const STRINGS_ES = {
             },
             calendarCustomFilePattern: {
                 name: 'Notas diarias',
-                desc: 'Formatear ruta usando formato de fecha de Moment. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla.',
+                desc: 'Formatear ruta usando formato de fecha de Moment. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla. Establecer ubicación de carpeta de plantillas en General > Plantillas.',
                 momentDescPrefix: 'Formatear ruta usando ',
                 momentLinkText: 'formato de fecha Moment',
                 momentDescSuffix:
-                    '. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla.',
+                    '. Envuelve los nombres de subcarpetas entre corchetes, ej. [Work]/YYYY. Haz clic en el icono de plantilla para establecer una plantilla. Establecer ubicación de carpeta de plantillas en General > Plantillas.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaxis actual: {path}',
                 parsingError: 'El patrón debe formatear y volver a analizarse como una fecha completa (año, mes, día).'
@@ -1460,10 +1462,9 @@ export const STRINGS_ES = {
                 desc: 'Nombre de la nota de carpeta. Dejar vacío para usar el mismo nombre que la carpeta.',
                 placeholder: 'Dejar vacío para el nombre de la carpeta'
             },
-            folderNoteProperties: {
-                name: 'Propiedades de nota de carpeta',
-                desc: 'Frontmatter YAML agregado a las nuevas notas de carpeta. Los marcadores --- se agregan automáticamente.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Plantilla de nota de carpeta',
+                desc: 'Archivo de plantilla para nuevas notas de carpeta en Markdown. Establecer ubicación de carpeta de plantillas en General > Plantillas.'
             },
             openFolderNotesInNewTab: {
                 name: 'Abrir notas de carpeta en nueva pestaña',

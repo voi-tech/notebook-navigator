@@ -47,7 +47,6 @@ import { createSubSettingsContainer, setElementVisible } from '../subSettings';
 import { getMomentApi, resolveMomentLocale, type MomentInstance } from '../../utils/moment';
 import { runAsyncAction } from '../../utils/async';
 import { CalendarTemplateModal } from '../../modals/CalendarTemplateModal';
-import { FolderPathInputSuggest } from '../../suggest/FolderPathInputSuggest';
 import { createInlineExternalLinkText } from './externalLink';
 
 const CALENDAR_LOCALE_SYSTEM_DEFAULT = 'system-default';
@@ -289,23 +288,6 @@ export function renderCalendarTab(context: SettingsTabContext): void {
     );
     calendarCustomRootFolderSetting.controlEl.addClass('nn-setting-wide-input');
     const calendarCustomRootFolderInputEl = calendarCustomRootFolderSetting.controlEl.querySelector<HTMLInputElement>('input');
-
-    const calendarTemplateFolderSetting = createDebouncedTextSetting(
-        customCalendarSettingsEl,
-        strings.settings.items.calendarTemplateFolder.name,
-        strings.settings.items.calendarTemplateFolder.desc,
-        strings.settings.items.calendarTemplateFolder.placeholder,
-        () => normalizeCalendarCustomRootFolder(plugin.settings.calendarTemplateFolder),
-        value => {
-            plugin.settings.calendarTemplateFolder = normalizeCalendarCustomRootFolder(value);
-        }
-    );
-    calendarTemplateFolderSetting.controlEl.addClass('nn-setting-wide-input');
-    const calendarTemplateFolderInputEl = calendarTemplateFolderSetting.controlEl.querySelector<HTMLInputElement>('input');
-    if (calendarTemplateFolderInputEl) {
-        const folderSuggest = new FolderPathInputSuggest(context.app, calendarTemplateFolderInputEl);
-        calendarTemplateFolderInputEl.addEventListener('click', () => folderSuggest.open());
-    }
 
     /** UI elements and state for a calendar pattern setting with template support. */
     interface CalendarCustomPatternSetting {
@@ -628,10 +610,6 @@ export function renderCalendarTab(context: SettingsTabContext): void {
 
         if (calendarCustomRootFolderInputEl && document.activeElement !== calendarCustomRootFolderInputEl) {
             calendarCustomRootFolderInputEl.value = activeProfile.periodicNotesFolder;
-        }
-
-        if (calendarTemplateFolderInputEl && document.activeElement !== calendarTemplateFolderInputEl) {
-            calendarTemplateFolderInputEl.value = plugin.settings.calendarTemplateFolder;
         }
 
         const setAllErrorsHidden = () => {

@@ -19,7 +19,7 @@
 import { App, type PaneType, TFile, TFolder, normalizePath } from 'obsidian';
 import { strings } from '../i18n';
 import { FolderNoteType, FOLDER_NOTE_TYPE_EXTENSIONS, FolderNoteCreationPreference } from '../types/folderNote';
-import { createDatabaseContent } from './fileCreationUtils';
+import { createDatabaseContent, createMarkdownFileFromTemplate } from './fileCreationUtils';
 import { isExcalidrawFile, stripExcalidrawSuffix } from './fileNameUtils';
 import { CommandQueueService } from '../services/CommandQueueService';
 import { promptForFolderNoteType } from '../modals/FolderNoteTypeModal';
@@ -49,7 +49,7 @@ export interface FolderNoteDetectionSettings {
 export interface FolderNoteCreationSettings {
     folderNoteType: FolderNoteCreationPreference;
     folderNoteName: string;
-    folderNoteProperties: string;
+    folderNoteTemplate: string | null;
 }
 
 /** Set of file extensions that are valid for folder notes */
@@ -218,37 +218,30 @@ export async function createFolderNote(
         return null;
     }
 
-    // Generate content based on folder note type
-    let content = '';
-
-    if (selectedType === 'markdown') {
-        const trimmedBlock = settings.folderNoteProperties.replace(/\r\n/g, '\n').trim();
-        if (trimmedBlock.length > 0) {
-            content = `---\n${trimmedBlock}\n---\n`;
-        }
-    } else if (selectedType === 'canvas') {
-        content = '{}';
-    } else if (selectedType === 'base') {
-        content = createDatabaseContent();
-    }
-
     try {
-        const file = await app.vault.create(notePath, content);
-        if (commandQueue) {
-            await commandQueue.executeOpenFolderNote(folder.path, async () => {
-                const leaf = app.workspace.getLeaf(false);
-                if (!leaf) {
-                    return;
-                }
-                await leaf.openFile(file);
+        let file: TFile;
+        if (selectedType === 'markdown') {
+            file = await createMarkdownFileFromTemplate({
+                app,
+                folder,
+                baseName,
+                templatePath: settings.folderNoteTemplate,
+                templateErrorContext: 'folder note'
             });
+        } else if (selectedType === 'canvas') {
+            file = await app.vault.create(notePath, '{}');
         } else {
-            const leaf = app.workspace.getLeaf(false);
-            if (!leaf) {
-                return file;
-            }
-            await leaf.openFile(file);
+            file = await app.vault.create(notePath, createDatabaseContent());
         }
+
+        await openFolderNoteFile({
+            app,
+            commandQueue: commandQueue ?? null,
+            folder,
+            folderNote: file,
+            context: null,
+            active: true
+        });
         return file;
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

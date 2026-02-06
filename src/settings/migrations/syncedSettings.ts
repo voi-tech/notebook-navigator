@@ -26,6 +26,7 @@ import { cloneShortcuts, DEFAULT_VAULT_PROFILE_ID } from '../../utils/vaultProfi
 import { ShortcutType, type ShortcutEntry } from '../../types/shortcuts';
 import { isCustomPropertyType } from '../types';
 import { normalizeCalendarCustomRootFolder } from '../../utils/calendarCustomNotePatterns';
+import { normalizeOptionalVaultFilePath } from '../../utils/pathUtils';
 
 // Types/Interfaces
 export interface LegacyVisibilityMigration {
@@ -211,32 +212,19 @@ export function migrateLegacySyncedSettings(params: {
     delete mutableSettings['showFileTagsInSlimMode'];
 }
 
-// Migrates folderNoteProperties to the normalized string block format.
-export function migrateFolderNotePropertiesSetting(params: {
+// Migrates folder note template setting and removes legacy folderNoteProperties.
+export function migrateFolderNoteTemplateSetting(params: {
     settings: NotebookNavigatorSettings;
     defaultSettings: NotebookNavigatorSettings;
 }): void {
     const { settings, defaultSettings } = params;
+    const settingsRecord = settings as unknown as Record<string, unknown>;
+    const templateSetting = settings.folderNoteTemplate;
+    const normalizedTemplatePath = normalizeOptionalVaultFilePath(templateSetting);
+    settings.folderNoteTemplate = normalizedTemplatePath ?? defaultSettings.folderNoteTemplate;
 
-    const normalizeFolderNoteBlock = (input: string): string =>
-        input
-            .replace(/\r\n/g, '\n')
-            .replace(/^---\s*\n?/, '')
-            .replace(/\n?---\s*$/, '')
-            .trim();
-
-    const folderNotePropertiesSetting = settings.folderNoteProperties;
-    if (Array.isArray(folderNotePropertiesSetting)) {
-        const migratedProperties = folderNotePropertiesSetting
-            .map(entry => (typeof entry === 'string' ? entry.trim() : ''))
-            .filter(entry => entry.length > 0)
-            .map(entry => `${entry}: true`)
-            .join('\n');
-        settings.folderNoteProperties = normalizeFolderNoteBlock(migratedProperties);
-    } else if (typeof folderNotePropertiesSetting === 'string') {
-        settings.folderNoteProperties = normalizeFolderNoteBlock(folderNotePropertiesSetting);
-    } else {
-        settings.folderNoteProperties = defaultSettings.folderNoteProperties;
+    if (Object.prototype.hasOwnProperty.call(settingsRecord, 'folderNoteProperties')) {
+        delete settingsRecord['folderNoteProperties'];
     }
 }
 

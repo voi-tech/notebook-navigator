@@ -679,6 +679,7 @@ export const STRINGS_NL = {
             general: {
                 vaultProfiles: 'Kluisprofielen',
                 filtering: 'Filteren',
+                templates: 'Sjablonen',
                 behavior: 'Gedrag',
                 keyboardNavigation: 'Toetsenbordnavigatie',
                 view: 'Uiterlijk',
@@ -1036,6 +1037,7 @@ export const STRINGS_NL = {
                     dailyNotes: 'Map en datumformaat worden geconfigureerd in de Daily Notes core plugin.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Hoofdmap',
                 desc: 'Basismap voor periodieke notities. Datumpatronen kunnen submappen bevatten. Wijzigt met het geselecteerde kluisprofiel.',
@@ -1048,11 +1050,11 @@ export const STRINGS_NL = {
             },
             calendarCustomFilePattern: {
                 name: 'Dagelijkse notities',
-                desc: 'Pad formatteren met Moment-datumnotatie. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen.',
+                desc: 'Pad formatteren met Moment-datumnotatie. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen. Stel de sjabloonmaplocatie in bij Algemeen > Sjablonen.',
                 momentDescPrefix: 'Pad formatteren met ',
                 momentLinkText: 'Moment-datumnotatie',
                 momentDescSuffix:
-                    '. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen.',
+                    '. Zet submapnamen tussen haakjes, bijv. [Work]/YYYY. Klik op het sjabloonpictogram om een sjabloon in te stellen. Stel de sjabloonmaplocatie in bij Algemeen > Sjablonen.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Huidige syntaxis: {path}',
                 parsingError: 'Het patroon moet kunnen formatteren en terug-parsen naar een volledige datum (jaar, maand, dag).'
@@ -1461,10 +1463,9 @@ export const STRINGS_NL = {
                 desc: 'Naam van de mapnotitie zonder extensie. Laat leeg om dezelfde naam als de map te gebruiken.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Mapnotitie-eigenschappen',
-                desc: 'YAML frontmatter toegevoegd aan nieuwe mapnotities. --- markers worden automatisch toegevoegd.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Mapnotitiesjabloon',
+                desc: 'Sjabloonbestand voor nieuwe Markdown-mapnotities. Stel de sjabloonmaplocatie in bij Algemeen > Sjablonen.'
             },
             openFolderNotesInNewTab: {
                 name: 'Mapnotities in nieuw tabblad openen',

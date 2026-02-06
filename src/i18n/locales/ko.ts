@@ -676,6 +676,7 @@ export const STRINGS_KO = {
             general: {
                 vaultProfiles: '보관소 프로필',
                 filtering: '필터링',
+                templates: '템플릿',
                 behavior: '동작',
                 keyboardNavigation: '키보드 탐색',
                 view: '모양',
@@ -1033,6 +1034,7 @@ export const STRINGS_KO = {
                     dailyNotes: '폴더 및 날짜 형식은 데일리 노트 코어 플러그인에서 설정됩니다.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: '루트 폴더',
                 desc: '정기 노트의 기본 폴더. 날짜 패턴에 하위 폴더를 포함할 수 있습니다. 선택한 보관소 프로필에 따라 변경됩니다.',
@@ -1045,11 +1047,11 @@ export const STRINGS_KO = {
             },
             calendarCustomFilePattern: {
                 name: '일일 노트',
-                desc: 'Moment 날짜 형식을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요.',
+                desc: 'Moment 날짜 형식을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요. 템플릿 폴더 위치는 일반 > 템플릿에서 설정하세요.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 날짜 형식',
                 momentDescSuffix:
-                    '을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요.',
+                    '을 사용하여 경로 지정. 하위 폴더 이름은 대괄호로 감싸세요, 예: [Work]/YYYY. 템플릿 아이콘을 클릭하여 템플릿을 설정하세요. 템플릿 폴더 위치는 일반 > 템플릿에서 설정하세요.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '현재 구문: {path}',
                 parsingError: '패턴은 전체 날짜(연, 월, 일)로 포맷되고 다시 파싱될 수 있어야 합니다.'
@@ -1456,10 +1458,9 @@ export const STRINGS_KO = {
                 desc: '확장자 없는 폴더 노트의 이름입니다. 폴더와 같은 이름을 사용하려면 비워 두세요.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: '폴더 노트 속성',
-                desc: '새 폴더 노트에 추가되는 YAML 전문. --- 마커는 자동으로 추가됩니다.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: '폴더 노트 템플릿',
+                desc: '새 마크다운 폴더 노트용 템플릿 파일. 템플릿 폴더 위치는 일반 > 템플릿에서 설정하세요.'
             },
             openFolderNotesInNewTab: {
                 name: '폴더 노트를 새 탭에서 열기',

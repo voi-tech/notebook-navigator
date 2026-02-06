@@ -174,16 +174,18 @@ export function buildFolderCreationMenu(params: FolderMenuBuilderParams): void {
             // Create folder note option
             menu.addItem((item: MenuItem) => {
                 setAsyncOnClick(item.setTitle(strings.contextMenu.folder.createFolderNote).setIcon('lucide-pen-box'), async () => {
+                    ensureFolderSelected();
                     const createdNote = await createFolderNote(
                         app,
                         folder,
                         {
                             folderNoteType: settings.folderNoteType,
                             folderNoteName: settings.folderNoteName,
-                            folderNoteProperties: settings.folderNoteProperties
+                            folderNoteTemplate: settings.folderNoteTemplate
                         },
                         services.commandQueue
                     );
+                    handleFileCreation(createdNote);
                     if (createdNote && settings.pinCreatedFolderNote) {
                         try {
                             if (!metadataService.isFilePinned(createdNote.path, 'folder')) {

@@ -60,6 +60,8 @@ import { createSettingGroupFactory } from '../settingGroups';
 import { addSettingSyncModeToggle } from '../syncModeToggle';
 import { createSubSettingsContainer, setElementVisible, wireToggleSettingWithSubSettings } from '../subSettings';
 import { createSettingDescriptionWithExternalLink } from './externalLink';
+import { normalizeCalendarCustomRootFolder } from '../../utils/calendarCustomNotePatterns';
+import { FolderPathInputSuggest } from '../../suggest/FolderPathInputSuggest';
 
 /** Renders the general settings tab */
 export function renderGeneralTab(context: SettingsTabContext): void {
@@ -494,6 +496,26 @@ export function renderGeneralTab(context: SettingsTabContext): void {
     excludedFilesSetting.controlEl.addClass('nn-setting-wide-input');
     excludedFilesInput = excludedFilesSetting.controlEl.querySelector('input');
     refreshProfileControls();
+
+    const templatesGroup = createGroup(strings.settings.groups.general.templates);
+    const templateFolderSetting = templatesGroup.addSetting(setting => {
+        configureDebouncedTextSetting(
+            setting,
+            strings.settings.items.calendarTemplateFolder.name,
+            strings.settings.items.calendarTemplateFolder.desc,
+            strings.settings.items.calendarTemplateFolder.placeholder,
+            () => normalizeCalendarCustomRootFolder(plugin.settings.calendarTemplateFolder),
+            value => {
+                plugin.settings.calendarTemplateFolder = normalizeCalendarCustomRootFolder(value);
+            }
+        );
+    });
+    templateFolderSetting.controlEl.addClass('nn-setting-wide-input');
+    const templateFolderInputEl = templateFolderSetting.controlEl.querySelector<HTMLInputElement>('input');
+    if (templateFolderInputEl) {
+        const folderSuggest = new FolderPathInputSuggest(context.app, templateFolderInputEl);
+        templateFolderInputEl.addEventListener('click', () => folderSuggest.open());
+    }
 
     const behaviorGroup = createGroup(strings.settings.groups.general.behavior);
 

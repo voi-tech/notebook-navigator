@@ -677,6 +677,7 @@ export const STRINGS_ID = {
             general: {
                 vaultProfiles: 'Profil vault',
                 filtering: 'Penyaringan',
+                templates: 'Templat',
                 behavior: 'Perilaku',
                 keyboardNavigation: 'Navigasi keyboard',
                 view: 'Tampilan',
@@ -1034,6 +1035,7 @@ export const STRINGS_ID = {
                     dailyNotes: 'Folder dan format tanggal dikonfigurasi di plugin inti Daily Notes.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Folder root',
                 desc: 'Folder dasar untuk catatan berkala. Pola tanggal dapat menyertakan subfolder. Berubah dengan profil vault yang dipilih.',
@@ -1046,11 +1048,11 @@ export const STRINGS_ID = {
             },
             calendarCustomFilePattern: {
                 name: 'Catatan harian',
-                desc: 'Format jalur menggunakan format tanggal Moment. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template.',
+                desc: 'Format jalur menggunakan format tanggal Moment. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template. Atur lokasi folder templat di Umum > Templat.',
                 momentDescPrefix: 'Format jalur menggunakan ',
                 momentLinkText: 'format tanggal Moment',
                 momentDescSuffix:
-                    '. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template.',
+                    '. Bungkus nama subfolder dalam tanda kurung, misal [Work]/YYYY. Klik ikon template untuk mengatur template. Atur lokasi folder templat di Umum > Templat.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintaks saat ini: {path}',
                 parsingError: 'Pola harus dapat diformat dan diparse kembali sebagai tanggal lengkap (tahun, bulan, hari).'
@@ -1458,10 +1460,9 @@ export const STRINGS_ID = {
                 desc: 'Nama catatan folder tanpa ekstensi. Biarkan kosong untuk menggunakan nama yang sama dengan folder.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Properti catatan folder',
-                desc: 'Frontmatter YAML ditambahkan ke catatan folder baru. Penanda --- ditambahkan secara otomatis.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Templat catatan folder',
+                desc: 'File templat untuk catatan folder markdown baru. Atur lokasi folder templat di Umum > Templat.'
             },
             openFolderNotesInNewTab: {
                 name: 'Buka catatan folder di tab baru',

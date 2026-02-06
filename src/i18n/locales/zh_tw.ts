@@ -675,6 +675,7 @@ export const STRINGS_ZH_TW = {
             general: {
                 vaultProfiles: '保險庫設定檔',
                 filtering: '篩選',
+                templates: '範本',
                 behavior: '行為',
                 keyboardNavigation: '鍵盤導覽',
                 view: '外觀',
@@ -1032,6 +1033,7 @@ export const STRINGS_ZH_TW = {
                     dailyNotes: '資料夾和日期格式在日記核心外掛程式中設定。'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: '根資料夾',
                 desc: '週期筆記的基礎資料夾。日期模式可以包含子資料夾。隨所選儲存庫設定檔更改。',
@@ -1044,10 +1046,11 @@ export const STRINGS_ZH_TW = {
             },
             calendarCustomFilePattern: {
                 name: '日記',
-                desc: '使用 Moment 日期格式設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。',
+                desc: '使用 Moment 日期格式設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。在一般 > 範本中設定範本資料夾位置。',
                 momentDescPrefix: '使用 ',
                 momentLinkText: 'Moment 日期格式',
-                momentDescSuffix: ' 設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。',
+                momentDescSuffix:
+                    ' 設定路徑。將子資料夾名稱用方括號括起來，例如 [Work]/YYYY。點擊範本圖示設定範本。在一般 > 範本中設定範本資料夾位置。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '目前語法：{path}',
                 parsingError: '模式必須能格式化並重新解析為完整日期（年、月、日）。'
@@ -1454,10 +1457,9 @@ export const STRINGS_ZH_TW = {
                 desc: '資料夾筆記的名稱。留空以使用與資料夾相同的名稱。',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: '資料夾筆記屬性',
-                desc: '新增到新資料夾筆記的 YAML 前置內容。--- 標記會自動新增。',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: '資料夾筆記範本',
+                desc: '新建 Markdown 資料夾筆記的範本檔案。在一般 > 範本中設定範本資料夾位置。'
             },
             openFolderNotesInNewTab: {
                 name: '在新分頁中開啟資料夾筆記',

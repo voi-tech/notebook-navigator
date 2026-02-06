@@ -676,6 +676,7 @@ export const STRINGS_EN = {
             general: {
                 vaultProfiles: 'Vault profiles',
                 filtering: 'Filtering',
+                templates: 'Templates',
                 behavior: 'Behavior',
                 keyboardNavigation: 'Keyboard navigation',
                 view: 'Appearance',
@@ -1033,6 +1034,7 @@ export const STRINGS_EN = {
                     dailyNotes: 'Folder and date format are configured in the Daily Notes core plugin.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Root folder (vault profile)',
                 desc: 'Base folder for periodic notes. Date patterns can include subfolders. Changes with the selected vault profile.',
@@ -1045,10 +1047,11 @@ export const STRINGS_EN = {
             },
             calendarCustomFilePattern: {
                 name: 'Daily notes',
-                desc: 'Format path using Moment date format. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template.',
+                desc: 'Format path using Moment date format. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template. Set template folder location in General > Templates.',
                 momentDescPrefix: 'Format path using ',
                 momentLinkText: 'Moment date format',
-                momentDescSuffix: '. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template.',
+                momentDescSuffix:
+                    '. Wrap subfolder names in brackets, e.g., [Work]/YYYY. Click template icon to set template. Set template folder location in General > Templates.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Current syntax: {path}',
                 parsingError: 'Pattern must format and parse back to a full date (year, month, day).'
@@ -1453,10 +1456,9 @@ export const STRINGS_EN = {
                 desc: 'Name of the folder note without extension. Leave empty to use the same name as the folder.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Folder note properties',
-                desc: 'YAML frontmatter added to new folder notes. --- markers are added automatically.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Folder note template',
+                desc: 'Template file for new markdown folder notes. Set template folder location in General > Templates.'
             },
             openFolderNotesInNewTab: {
                 name: 'Open folder notes in new tab',

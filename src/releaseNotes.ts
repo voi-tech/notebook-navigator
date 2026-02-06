@@ -90,7 +90,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         changed: [
             'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
-            'Removed the settings tab Settings > "Search & hotkeys". The search setting is now local and toggled in the list pane.'
+            'Removed the settings tab Settings > "Search & hotkeys". The search setting is now local and toggled in the list pane.',
+            'Settings > Folders & tags > Folder notes now uses a template file setting for markdown folder notes. The Folder note properties setting was removed.'
         ],
         fixed: [
             'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also improved performance significantly by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.'

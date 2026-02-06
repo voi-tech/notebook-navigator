@@ -28,7 +28,7 @@ import {
     extractLegacyPeriodicNotesFolder,
     extractLegacyShortcuts,
     extractLegacyVisibilitySettings,
-    migrateFolderNotePropertiesSetting,
+    migrateFolderNoteTemplateSetting,
     migrateLegacySyncedSettings
 } from './settings/migrations/syncedSettings';
 import {
@@ -514,7 +514,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
                 })
         );
 
-        migrateFolderNotePropertiesSetting({ settings: this.settings, defaultSettings: DEFAULT_SETTINGS });
+        migrateFolderNoteTemplateSetting({ settings: this.settings, defaultSettings: DEFAULT_SETTINGS });
         applyExistingUserDefaults({ settings: this.settings });
 
         // Extract legacy exclusion settings and migrate to vault profile system

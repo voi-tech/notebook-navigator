@@ -675,6 +675,7 @@ export const STRINGS_ZH_CN = {
             general: {
                 vaultProfiles: '仓库配置文件',
                 filtering: '过滤',
+                templates: '模板',
                 behavior: '行为',
                 keyboardNavigation: '键盘导航',
                 view: '外观',
@@ -1032,6 +1033,7 @@ export const STRINGS_ZH_CN = {
                     dailyNotes: '文件夹和日期格式在日记核心插件中配置。'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: '根文件夹',
                 desc: '周期笔记的基础文件夹。日期模式可以包含子文件夹。随所选仓库配置文件更改。',
@@ -1044,10 +1046,11 @@ export const STRINGS_ZH_CN = {
             },
             calendarCustomFilePattern: {
                 name: '日记',
-                desc: '使用 Moment 日期格式设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。',
+                desc: '使用 Moment 日期格式设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。在常规 > 模板中设置模板文件夹位置。',
                 momentDescPrefix: '使用 ',
                 momentLinkText: 'Moment 日期格式',
-                momentDescSuffix: ' 设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。',
+                momentDescSuffix:
+                    ' 设置路径。将子文件夹名称用方括号括起来，例如 [Work]/YYYY。点击模板图标设置模板。在常规 > 模板中设置模板文件夹位置。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '当前语法：{path}',
                 parsingError: '模式必须能格式化并重新解析为完整日期（年、月、日）。'
@@ -1455,10 +1458,9 @@ export const STRINGS_ZH_CN = {
                 desc: '文件夹笔记的名称。留空以使用与文件夹相同的名称。',
                 placeholder: '留空以使用文件夹名称'
             },
-            folderNoteProperties: {
-                name: '文件夹笔记属性',
-                desc: '添加到新文件夹笔记的YAML前置内容。--- 标记会自动添加。',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: '文件夹笔记模板',
+                desc: '新建 Markdown 文件夹笔记的模板文件。在常规 > 模板中设置模板文件夹位置。'
             },
             openFolderNotesInNewTab: {
                 name: '在新标签页中打开文件夹笔记',

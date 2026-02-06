@@ -677,6 +677,7 @@ export const STRINGS_JA = {
             general: {
                 vaultProfiles: '保管庫プロファイル',
                 filtering: 'フィルター',
+                templates: 'テンプレート',
                 behavior: '動作',
                 keyboardNavigation: 'キーボード操作',
                 view: '外観',
@@ -1034,6 +1035,7 @@ export const STRINGS_JA = {
                     dailyNotes: 'フォルダと日付形式はデイリーノートコアプラグインで設定されています。'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'ルートフォルダ',
                 desc: '定期ノートの基本フォルダ。日付パターンにはサブフォルダを含めることができます。選択されたボールトプロファイルで変更されます。',
@@ -1046,11 +1048,11 @@ export const STRINGS_JA = {
             },
             calendarCustomFilePattern: {
                 name: 'デイリーノート',
-                desc: 'Moment 日付フォーマットを使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。',
+                desc: 'Moment 日付フォーマットを使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。 テンプレートフォルダの場所は一般 > テンプレートで設定してください。',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment 日付フォーマット',
                 momentDescSuffix:
-                    'を使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。',
+                    'を使用してパスを指定。サブフォルダ名は角括弧で囲みます（例：[Work]/YYYY）。テンプレートアイコンをクリックしてテンプレートを設定。 テンプレートフォルダの場所は一般 > テンプレートで設定してください。',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: '現在の構文: {path}',
                 parsingError: 'パターンは完全な日付（年、月、日）としてフォーマットされ、再度パースできる必要があります。'
@@ -1459,10 +1461,9 @@ export const STRINGS_JA = {
                 desc: 'フォルダノートの名前。空のままにするとフォルダと同じ名前を使用します。',
                 placeholder: 'フォルダ名には空のまま'
             },
-            folderNoteProperties: {
-                name: 'フォルダノートプロパティ',
-                desc: '新しいフォルダノートに追加されるYAMLフロントマター。--- マーカーは自動的に追加されます。',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'フォルダノートテンプレート',
+                desc: '新しいMarkdownフォルダノート用のテンプレートファイル。テンプレートフォルダの場所は一般 > テンプレートで設定してください。'
             },
             openFolderNotesInNewTab: {
                 name: 'フォルダノートを新しいタブで開く',

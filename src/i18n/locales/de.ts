@@ -678,6 +678,7 @@ export const STRINGS_DE = {
             general: {
                 vaultProfiles: 'Tresorprofile',
                 filtering: 'Filterung',
+                templates: 'Vorlagen',
                 behavior: 'Verhalten',
                 keyboardNavigation: 'Tastaturnavigation',
                 view: 'Darstellung',
@@ -1035,6 +1036,7 @@ export const STRINGS_DE = {
                     dailyNotes: 'Ordner und Datumsformat werden im Daily Notes-Core-Plugin konfiguriert.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Stammordner',
                 desc: 'Basisordner für periodische Notizen. Datumsmuster können Unterordner enthalten. Ändert sich mit dem ausgewählten Tresorprofil.',
@@ -1047,11 +1049,11 @@ export const STRINGS_DE = {
             },
             calendarCustomFilePattern: {
                 name: 'Tägliche Notizen',
-                desc: 'Pfad mit Moment-Datumsformat formatieren. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen.',
+                desc: 'Pfad mit Moment-Datumsformat formatieren. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen. Vorlagenordner unter Allgemein > Vorlagen festlegen.',
                 momentDescPrefix: 'Pfad formatieren mit ',
                 momentLinkText: 'Moment-Datumsformat',
                 momentDescSuffix:
-                    '. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen.',
+                    '. Unterordnernamen in Klammern setzen, z.B. [Work]/YYYY. Klicken Sie auf das Vorlagensymbol, um eine Vorlage festzulegen. Vorlagenordner unter Allgemein > Vorlagen festlegen.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Aktuelle Syntax: {path}',
                 parsingError: 'Das Muster muss als vollständiges Datum (Jahr, Monat, Tag) formatiert und wieder geparst werden können.'
@@ -1459,10 +1461,9 @@ export const STRINGS_DE = {
                 desc: 'Name der Ordnernotiz. Leer lassen, um denselben Namen wie der Ordner zu verwenden.',
                 placeholder: 'Leer lassen für Ordnernamen'
             },
-            folderNoteProperties: {
-                name: 'Ordnernotiz-Eigenschaften',
-                desc: 'YAML-Frontmatter, das neuen Ordnernotizen hinzugefügt wird. --- Markierungen werden automatisch hinzugefügt.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Ordnernotiz-Vorlage',
+                desc: 'Vorlagendatei für neue Markdown-Ordnernotizen. Vorlagenordner unter Allgemein > Vorlagen festlegen.'
             },
             openFolderNotesInNewTab: {
                 name: 'Ordnernotizen in neuem Tab öffnen',

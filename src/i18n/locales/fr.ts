@@ -678,6 +678,7 @@ export const STRINGS_FR = {
             general: {
                 vaultProfiles: 'Profils du coffre',
                 filtering: 'Filtrage',
+                templates: 'Modèles',
                 behavior: 'Comportement',
                 keyboardNavigation: 'Navigation au clavier',
                 view: 'Apparence',
@@ -1035,6 +1036,7 @@ export const STRINGS_FR = {
                     dailyNotes: 'Le dossier et le format de date sont configurés dans le plugin Notes quotidiennes.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Dossier racine',
                 desc: 'Dossier de base pour les notes périodiques. Les modèles de date peuvent inclure des sous-dossiers. Change avec le profil de coffre sélectionné.',
@@ -1047,11 +1049,11 @@ export const STRINGS_FR = {
             },
             calendarCustomFilePattern: {
                 name: 'Notes quotidiennes',
-                desc: "Formater le chemin en utilisant le format de date Moment. Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle.",
+                desc: "Formater le chemin en utilisant le format de date Moment. Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle. Définir l'emplacement du dossier de modèles dans Général > Modèles.",
                 momentDescPrefix: 'Formater le chemin en utilisant le ',
                 momentLinkText: 'format de date Moment',
                 momentDescSuffix:
-                    ". Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle.",
+                    ". Entourez les noms de sous-dossiers de crochets, par ex. [Work]/YYYY. Cliquez sur l'icône de modèle pour définir un modèle. Définir l'emplacement du dossier de modèles dans Général > Modèles.",
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Syntaxe actuelle : {path}',
                 parsingError: 'Le modèle doit pouvoir être formaté et ré-analysé comme une date complète (année, mois, jour).'
@@ -1462,10 +1464,9 @@ export const STRINGS_FR = {
                 desc: 'Nom de la note de dossier. Laisser vide pour utiliser le même nom que le dossier.',
                 placeholder: 'Laisser vide pour le nom du dossier'
             },
-            folderNoteProperties: {
-                name: 'Propriétés de note de dossier',
-                desc: 'En-tête YAML ajouté aux nouvelles notes de dossier. Les marqueurs --- sont ajoutés automatiquement.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Modèle de note de dossier',
+                desc: "Fichier modèle pour les nouvelles notes de dossier Markdown. Définir l'emplacement du dossier de modèles dans Général > Modèles."
             },
             openFolderNotesInNewTab: {
                 name: 'Ouvrir les notes de dossier dans un nouvel onglet',

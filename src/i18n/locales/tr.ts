@@ -677,6 +677,7 @@ export const STRINGS_TR = {
             general: {
                 vaultProfiles: 'Kasa profilleri',
                 filtering: 'Filtreleme',
+                templates: 'Şablonlar',
                 behavior: 'Davranış',
                 keyboardNavigation: 'Klavye ile gezinme',
                 view: 'Görünüm',
@@ -1034,6 +1035,7 @@ export const STRINGS_TR = {
                     dailyNotes: 'Klasör ve tarih formatı Daily Notes çekirdek eklentisinde yapılandırılır.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Kök klasör',
                 desc: 'Periyodik notlar için temel klasör. Tarih desenleri alt klasörleri içerebilir. Seçili kasa profiliyle değişir.',
@@ -1046,11 +1048,11 @@ export const STRINGS_TR = {
             },
             calendarCustomFilePattern: {
                 name: 'Günlük notlar',
-                desc: 'Moment tarih biçimini kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın.',
+                desc: 'Moment tarih biçimini kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın. Şablon klasörü konumunu Genel > Şablonlar bölümünden ayarlayın.',
                 momentDescPrefix: '',
                 momentLinkText: 'Moment tarih biçimi',
                 momentDescSuffix:
-                    ' kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın.',
+                    ' kullanarak yolu biçimlendir. Alt klasör adlarını köşeli parantez içine alın, örn. [Work]/YYYY. Şablon ayarlamak için şablon simgesine tıklayın. Şablon klasörü konumunu Genel > Şablonlar bölümünden ayarlayın.',
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Geçerli sözdizimi: {path}',
                 parsingError: 'Desen, tam bir tarih (yıl, ay, gün) olarak biçimlendirilmeli ve tekrar ayrıştırılabilmelidir.'
@@ -1457,10 +1459,9 @@ export const STRINGS_TR = {
                 desc: 'Uzantısız klasör notu adı. Klasörle aynı adı kullanmak için boş bırakın.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Klasör notu özellikleri',
-                desc: 'Yeni klasör notlarına eklenen YAML frontmatter. --- işaretleri otomatik olarak eklenir.',
-                placeholder: 'tema: koyu\nklasörnotu: true'
+            folderNoteTemplate: {
+                name: 'Klasör notu şablonu',
+                desc: 'Yeni Markdown klasör notları için şablon dosyası. Şablon klasörü konumunu Genel > Şablonlar bölümünden ayarlayın.'
             },
             openFolderNotesInNewTab: {
                 name: 'Klasör notlarını yeni sekmede aç',

@@ -676,6 +676,7 @@ export const STRINGS_IT = {
             general: {
                 vaultProfiles: 'Profili vault',
                 filtering: 'Filtri',
+                templates: 'Modelli',
                 behavior: 'Comportamento',
                 keyboardNavigation: 'Navigazione da tastiera',
                 view: 'Aspetto',
@@ -1033,6 +1034,7 @@ export const STRINGS_IT = {
                     dailyNotes: 'Cartella e formato data sono configurati nel plugin Note giornaliere.'
                 }
             },
+
             calendarCustomRootFolder: {
                 name: 'Cartella radice',
                 desc: 'Cartella base per le note periodiche. I pattern di data possono includere sottocartelle. Cambia con il profilo del vault selezionato.',
@@ -1045,11 +1047,11 @@ export const STRINGS_IT = {
             },
             calendarCustomFilePattern: {
                 name: 'Note giornaliere',
-                desc: "Formatta percorso usando formato data Moment. Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello.",
+                desc: "Formatta percorso usando formato data Moment. Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello. Impostare la posizione della cartella modelli in Generale > Modelli.",
                 momentDescPrefix: 'Formatta percorso usando ',
                 momentLinkText: 'formato data Moment',
                 momentDescSuffix:
-                    ". Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello.",
+                    ". Racchiudi i nomi delle sottocartelle tra parentesi quadre, es. [Work]/YYYY. Clicca sull'icona del modello per impostare un modello. Impostare la posizione della cartella modelli in Generale > Modelli.",
                 placeholder: 'YYYY/YYYYMMDD',
                 example: 'Sintassi attuale: {path}',
                 parsingError: 'Il modello deve poter essere formattato e rianalizzato come una data completa (anno, mese, giorno).'
@@ -1459,10 +1461,9 @@ export const STRINGS_IT = {
                 desc: 'Nome della nota cartella senza estensione. Lascia vuoto per usare lo stesso nome della cartella.',
                 placeholder: 'index'
             },
-            folderNoteProperties: {
-                name: 'Proprietà nota cartella',
-                desc: 'YAML frontmatter aggiunto alle nuove note cartella. I marcatori --- sono aggiunti automaticamente.',
-                placeholder: 'theme: dark\nfoldernote: true'
+            folderNoteTemplate: {
+                name: 'Modello nota cartella',
+                desc: 'File modello per le nuove note cartella Markdown. Impostare la posizione della cartella modelli in Generale > Modelli.'
             },
             openFolderNotesInNewTab: {
                 name: 'Apri note cartella in nuova scheda',
