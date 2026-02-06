@@ -115,15 +115,15 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
 
     // Calendar tab - Calendar
     calendarPlacement: 'left-sidebar',
+    calendarConfirmBeforeCreate: true,
     calendarLocale: 'system-default',
     calendarWeekendDays: 'sat-sun',
-    calendarConfirmBeforeCreate: true,
-    calendarLeftPlacement: 'navigation',
-    calendarWeeksToShow: 1,
     calendarHighlightToday: true,
     calendarShowFeatureImage: true,
     calendarShowWeekNumber: false,
     calendarShowQuarter: false,
+    calendarLeftPlacement: 'navigation',
+    calendarWeeksToShow: 1,
 
     // Calendar tab - Calendar integration
     calendarIntegrationMode: 'notebook-navigator',

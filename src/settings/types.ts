@@ -252,15 +252,15 @@ export interface NotebookNavigatorSettings {
 
     // Calendar tab - Calendar
     calendarPlacement: CalendarPlacement;
+    calendarConfirmBeforeCreate: boolean;
     calendarLocale: string;
     calendarWeekendDays: CalendarWeekendDays;
-    calendarConfirmBeforeCreate: boolean;
-    calendarLeftPlacement: CalendarLeftPlacement;
-    calendarWeeksToShow: CalendarWeeksToShow;
     calendarHighlightToday: boolean;
     calendarShowFeatureImage: boolean;
     calendarShowWeekNumber: boolean;
     calendarShowQuarter: boolean;
+    calendarLeftPlacement: CalendarLeftPlacement;
+    calendarWeeksToShow: CalendarWeeksToShow;
 
     // Calendar tab - Calendar integration
     calendarIntegrationMode: CalendarIntegrationMode;

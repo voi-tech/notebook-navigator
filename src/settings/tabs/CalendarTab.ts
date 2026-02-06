@@ -102,6 +102,21 @@ export function renderCalendarTab(context: SettingsTabContext): void {
 
     topGroup
         .addSetting(setting => {
+            setting
+                .setName(strings.settings.items.calendarConfirmBeforeCreate.name)
+                .setDesc(strings.settings.items.calendarConfirmBeforeCreate.desc);
+        })
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.calendarConfirmBeforeCreate).onChange(async value => {
+                plugin.settings.calendarConfirmBeforeCreate = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+
+    const appearanceGroup = createGroup(strings.settings.groups.navigation.appearance);
+
+    appearanceGroup
+        .addSetting(setting => {
             setting.setName(strings.settings.items.calendarLocale.name).setDesc(strings.settings.items.calendarLocale.desc);
         })
         .addDropdown((dropdown: DropdownComponent) => {
@@ -119,7 +134,7 @@ export function renderCalendarTab(context: SettingsTabContext): void {
             });
         });
 
-    topGroup
+    appearanceGroup
         .addSetting(setting => {
             setting.setName(strings.settings.items.calendarWeekendDays.name).setDesc(strings.settings.items.calendarWeekendDays.desc);
         })
@@ -140,15 +155,48 @@ export function renderCalendarTab(context: SettingsTabContext): void {
                 });
         });
 
-    topGroup
+    appearanceGroup
         .addSetting(setting => {
-            setting
-                .setName(strings.settings.items.calendarConfirmBeforeCreate.name)
-                .setDesc(strings.settings.items.calendarConfirmBeforeCreate.desc);
+            setting.setName(strings.settings.items.calendarHighlightToday.name).setDesc(strings.settings.items.calendarHighlightToday.desc);
         })
         .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarConfirmBeforeCreate).onChange(async value => {
-                plugin.settings.calendarConfirmBeforeCreate = value;
+            toggle.setValue(plugin.settings.calendarHighlightToday).onChange(async value => {
+                plugin.settings.calendarHighlightToday = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+
+    appearanceGroup
+        .addSetting(setting => {
+            setting
+                .setName(strings.settings.items.calendarShowFeatureImage.name)
+                .setDesc(strings.settings.items.calendarShowFeatureImage.desc);
+        })
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.calendarShowFeatureImage).onChange(async value => {
+                plugin.settings.calendarShowFeatureImage = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+
+    appearanceGroup
+        .addSetting(setting => {
+            setting.setName(strings.settings.items.calendarShowWeekNumber.name).setDesc(strings.settings.items.calendarShowWeekNumber.desc);
+        })
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(async value => {
+                plugin.settings.calendarShowWeekNumber = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+
+    appearanceGroup
+        .addSetting(setting => {
+            setting.setName(strings.settings.items.calendarShowQuarter.name).setDesc(strings.settings.items.calendarShowQuarter.desc);
+        })
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.calendarShowQuarter).onChange(async value => {
+                plugin.settings.calendarShowQuarter = value;
                 await plugin.saveSettingsAndUpdate();
             })
         );
@@ -197,54 +245,6 @@ export function renderCalendarTab(context: SettingsTabContext): void {
     });
 
     addSettingSyncModeToggle({ setting: calendarWeeksToShowSetting, plugin, settingId: 'calendarWeeksToShow' });
-
-    const appearanceGroup = createGroup(strings.settings.groups.navigation.appearance);
-
-    appearanceGroup
-        .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarHighlightToday.name).setDesc(strings.settings.items.calendarHighlightToday.desc);
-        })
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarHighlightToday).onChange(async value => {
-                plugin.settings.calendarHighlightToday = value;
-                await plugin.saveSettingsAndUpdate();
-            })
-        );
-
-    appearanceGroup
-        .addSetting(setting => {
-            setting
-                .setName(strings.settings.items.calendarShowFeatureImage.name)
-                .setDesc(strings.settings.items.calendarShowFeatureImage.desc);
-        })
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarShowFeatureImage).onChange(async value => {
-                plugin.settings.calendarShowFeatureImage = value;
-                await plugin.saveSettingsAndUpdate();
-            })
-        );
-
-    appearanceGroup
-        .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarShowWeekNumber.name).setDesc(strings.settings.items.calendarShowWeekNumber.desc);
-        })
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarShowWeekNumber).onChange(async value => {
-                plugin.settings.calendarShowWeekNumber = value;
-                await plugin.saveSettingsAndUpdate();
-            })
-        );
-
-    appearanceGroup
-        .addSetting(setting => {
-            setting.setName(strings.settings.items.calendarShowQuarter.name).setDesc(strings.settings.items.calendarShowQuarter.desc);
-        })
-        .addToggle(toggle =>
-            toggle.setValue(plugin.settings.calendarShowQuarter).onChange(async value => {
-                plugin.settings.calendarShowQuarter = value;
-                await plugin.saveSettingsAndUpdate();
-            })
-        );
 
     const calendarIntegrationGroup = createGroup(strings.settings.groups.navigation.calendarIntegration);
 
