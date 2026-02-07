@@ -364,21 +364,6 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 - **File operations** - Create, rename, duplicate, move, trash files and folders
 - **Filtering** - Folder/tag/note/file exclusions with patterns and frontmatter properties
 
-### 8.6 Advanced theming support on GitHub
-
-- **Style Settings integration** - Full support for the [Style Settings](https://github.com/mgmeyers/obsidian-style-settings) plugin
-- **CSS variables** - `--nn-theme-*` variables for colors, backgrounds, separators, and mobile surface tokens
-- **Light/dark mode support** - Separate theming for light and dark modes
-- **[Complete theming guide](docs/theming-guide.md)** - Detailed documentation with examples
-
-### 8.7 Developer API on GitHub
-
-- **Public API for JavaScript/TypeScript** - API for plugins and scripts to interact with Notebook Navigator
-- **Metadata control** - Set folder/tag colors, icons, and manage pinned notes programmatically
-- **Navigation & selection** - Navigate to files, folders, and tags, and query current selections
-- **Event subscriptions** - Subscribe to Notebook Navigator events
-- **Full type definitions** - Complete TypeScript support
-- **[Complete API documentation](docs/api-reference.md)** - Detailed reference with examples
 
 <br>
 
