@@ -643,6 +643,18 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
         }
     });
 
+    // Command to toggle the default list mode between standard and compact
+    plugin.addCommand({
+        id: 'toggle-compact-mode',
+        name: strings.commands.toggleCompactMode,
+        callback: () => {
+            runAsyncAction(async () => {
+                plugin.settings.defaultListMode = plugin.settings.defaultListMode === 'compact' ? 'standard' : 'compact';
+                await plugin.saveSettingsAndUpdate();
+            });
+        }
+    });
+
     // Command to toggle between single and dual pane layouts
     plugin.addCommand({
         id: 'toggle-dual-pane',

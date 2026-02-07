@@ -633,6 +633,7 @@ export const STRINGS_ID = {
         toggleDescendants: 'Alihkan turunan',
         toggleHidden: 'Alihkan folder, tag, dan catatan tersembunyi',
         toggleTagSort: 'Alihkan urutan tag',
+        toggleCompactMode: 'Alihkan mode kompak', // Command palette: Toggles list mode between standard and compact (English: Toggle compact mode)
         collapseExpand: 'Ciutkan / luaskan semua item',
         addTag: 'Tambah tag ke file yang dipilih',
         removeTag: 'Hapus tag dari file yang dipilih',

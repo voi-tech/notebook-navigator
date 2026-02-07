@@ -632,6 +632,7 @@ export const STRINGS_TH = {
         toggleDescendants: 'สลับลูกหลาน',
         toggleHidden: 'สลับโฟลเดอร์ แท็ก และโน้ตที่ซ่อน',
         toggleTagSort: 'สลับลำดับการเรียงแท็ก',
+        toggleCompactMode: 'สลับโหมดกะทัดรัด', // Command palette: Toggles list mode between standard and compact (English: Toggle compact mode)
         collapseExpand: 'ยุบ / ขยายรายการทั้งหมด',
         addTag: 'เพิ่มแท็กในไฟล์ที่เลือก',
         removeTag: 'นำแท็กออกจากไฟล์ที่เลือก',

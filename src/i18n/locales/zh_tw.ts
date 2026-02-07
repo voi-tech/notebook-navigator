@@ -631,6 +631,7 @@ export const STRINGS_ZH_TW = {
         toggleDescendants: '切換後代',
         toggleHidden: '切換隱藏的資料夾、標籤和筆記',
         toggleTagSort: '切換標籤排序',
+        toggleCompactMode: '切換精簡模式', // Command palette: Toggles list mode between standard and compact (English: Toggle compact mode)
         collapseExpand: '摺疊/展開所有項目',
         addTag: '為選定檔案新增標籤',
         removeTag: '從選定檔案移除標籤',

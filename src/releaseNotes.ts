@@ -86,7 +86,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New setting: ==Folders & tags > Folder note name pattern==. You can now add prefixes and suffixes to folder note names, like _foldername to make them appear on top of alphabetically sorted lists.',
             'New setting: ==Folders & tags > Folder note template==. You can now set a template file for folder notes. **Important! This is a breaking change** - the old setting "Folder note properties" was used to set frontmatter properties for folder notes, and it is now removed. If you were using that setting, you can migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
             'New setting: ==Navigation pane > Show indent guides==. You can now show vertical indent guides in the navigation pane to better visualize the folder and tag hierarchy.',
-            'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.'
+            'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.',
+            'New command: ==Toggle compact mode==. Quickly toggle between default and compact mode in list pane. Bind it to a hot key or a button with the Commander plugin.'
         ],
         improved: [
             'You can now remove icons from the recently used icons list.',
@@ -97,7 +98,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Removed the settings tab Settings > "Search & hotkeys". The search setting is now local and toggled in the list pane.'
         ],
         fixed: [
-            'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also improved performance significantly by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.'
+            'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also improved performance significantly by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.',
+            'Weekly periodic note patterns previously used custom calendar locale, where others used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.'
         ]
     },
     {

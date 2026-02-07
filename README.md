@@ -217,6 +217,7 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 - `Notebook Navigator: Toggle descendants` Toggle subfolders / descendants notes display for folders and tags. **Suggestion:** Bind to a shortcut key like `Cmd/Ctrl+Shift+D` to quickly toggle display of notes from subfolders / descendants
 - `Notebook Navigator: Toggle hidden items` Show or hide hidden folders, tags, and notes
 - `Notebook Navigator: Toggle tag sort` Toggle between alphabetical and frequency-based tag sorting
+- `Notebook Navigator: Toggle compact mode` Toggle list mode between standard and compact
 - `Notebook Navigator: Collapse / expand all items` Collapse or expand all items based on the current state. When `Keep selected item expanded` is enabled (default on), all folders except the current one will be collapsed. This is handy to keep the navigation tree tidy when searching for documents
 
 **Calendar**
@@ -288,6 +289,7 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 | `notebook-navigator:toggle-descendants`     | Notebook Navigator: Toggle descendants                                                               |
 | `notebook-navigator:toggle-hidden`          | Notebook Navigator: Toggle hidden items (folders, tags, notes)                                       |
 | `notebook-navigator:toggle-tag-sort`        | Notebook Navigator: Toggle tag sort                                                                  |
+| `notebook-navigator:toggle-compact-mode`    | Notebook Navigator: Toggle compact mode                                                              |
 | `notebook-navigator:collapse-expand`        | Notebook Navigator: Collapse / expand all items                                                      |
 | `notebook-navigator:new-note`               | Notebook Navigator: Create new note                                                                  |
 | `notebook-navigator:new-note-from-template` | Notebook Navigator: Create new note from template                                                    |

@@ -635,6 +635,7 @@ export const STRINGS_NL = {
         toggleDescendants: 'Afstammelingen in-/uitschakelen',
         toggleHidden: 'Verborgen mappen, tags en notities in-/uitschakelen',
         toggleTagSort: 'Tag sorteervolgorde in-/uitschakelen',
+        toggleCompactMode: 'Compacte modus in-/uitschakelen', // Command palette: Toggles list mode between standard and compact (English: Toggle compact mode)
         collapseExpand: 'Alle items in-/uitklappen',
         addTag: 'Tag toevoegen aan geselecteerde bestanden',
         removeTag: 'Tag verwijderen van geselecteerde bestanden',
