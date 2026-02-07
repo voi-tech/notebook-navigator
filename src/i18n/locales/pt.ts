@@ -405,7 +405,13 @@ export const STRINGS_PT = {
             descendantRenameError: 'Não é possível mover uma etiqueta para si mesma ou um descendente.',
             confirmDelete: 'Eliminar etiqueta',
             file: 'ficheiro',
-            files: 'ficheiros'
+            files: 'ficheiros',
+            inlineParsingWarning: {
+                title: 'Compatibilidade de etiquetas inline',
+                message:
+                    '{tag} contém caracteres que o Obsidian não consegue analisar em etiquetas inline. As etiquetas de Frontmatter não são afetadas.',
+                confirm: 'Usar mesmo assim'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nova pasta',

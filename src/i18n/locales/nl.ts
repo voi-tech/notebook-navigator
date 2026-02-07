@@ -406,7 +406,12 @@ export const STRINGS_NL = {
             descendantRenameError: 'Een tag kan niet in zichzelf of een afstammeling worden verplaatst.',
             confirmDelete: 'Tag verwijderen',
             file: 'bestand',
-            files: 'bestanden'
+            files: 'bestanden',
+            inlineParsingWarning: {
+                title: 'Inline-tagcompatibiliteit',
+                message: '{tag} bevat tekens die Obsidian niet kan verwerken in inline-tags. Frontmatter-tags worden niet beïnvloed.',
+                confirm: 'Toch gebruiken'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nieuwe map',

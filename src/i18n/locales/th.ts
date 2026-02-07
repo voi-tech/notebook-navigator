@@ -404,7 +404,12 @@ export const STRINGS_TH = {
             descendantRenameError: 'ไม่สามารถย้ายแท็กไปยังตัวเองหรือลูกหลาน',
             confirmDelete: 'ลบแท็ก',
             file: 'ไฟล์',
-            files: 'ไฟล์'
+            files: 'ไฟล์',
+            inlineParsingWarning: {
+                title: 'ความเข้ากันได้ของแท็กแบบอินไลน์',
+                message: '{tag} มีอักขระที่ Obsidian ไม่สามารถแยกวิเคราะห์ในแท็กแบบอินไลน์ได้ แท็ก Frontmatter ไม่ได้รับผลกระทบ',
+                confirm: 'ใช้ต่อไป'
+            }
         },
         fileSystem: {
             newFolderTitle: 'โฟลเดอร์ใหม่',

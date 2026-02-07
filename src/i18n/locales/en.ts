@@ -401,6 +401,11 @@ export const STRINGS_EN = {
             renameUnchanged: '{tag} unchanged',
             renameNoChanges: '{oldTag} → {newTag} ({countLabel})',
             invalidTagName: 'Enter a valid tag name.',
+            inlineParsingWarning: {
+                title: 'Inline tag compatibility',
+                message: '{tag} contains characters that Obsidian cannot parse in inline tags. Frontmatter tags are not affected.',
+                confirm: 'Use anyway'
+            },
             descendantRenameError: 'Cannot move a tag into itself or a descendant.',
             confirmDelete: 'Delete tag',
             file: 'file',

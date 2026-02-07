@@ -405,7 +405,13 @@ export const STRINGS_FR = {
             descendantRenameError: 'Impossible de déplacer une étiquette dans elle-même ou un descendant.',
             confirmDelete: "Supprimer l'étiquette",
             file: 'fichier',
-            files: 'fichiers'
+            files: 'fichiers',
+            inlineParsingWarning: {
+                title: 'Compatibilité des étiquettes en ligne',
+                message:
+                    "{tag} contient des caractères qu'Obsidian ne peut pas analyser dans les étiquettes en ligne. Les étiquettes Frontmatter ne sont pas affectées.",
+                confirm: 'Utiliser quand même'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nouveau dossier',

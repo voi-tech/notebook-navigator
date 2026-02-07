@@ -404,7 +404,12 @@ export const STRINGS_ZH_TW = {
             descendantRenameError: '無法將標籤移動到自身或其子標籤中。',
             confirmDelete: '刪除標籤',
             file: '個檔案',
-            files: '個檔案'
+            files: '個檔案',
+            inlineParsingWarning: {
+                title: '內嵌標籤相容性',
+                message: '{tag} 包含 Obsidian 無法在內嵌標籤中解析的字元。Frontmatter 標籤不受影響。',
+                confirm: '仍然使用'
+            }
         },
         fileSystem: {
             newFolderTitle: '新建資料夾',

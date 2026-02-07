@@ -405,7 +405,13 @@ export const STRINGS_TR = {
             descendantRenameError: 'Bir etiket kendisine veya alt öğesine taşınamaz.',
             confirmDelete: 'Etiketi sil',
             file: 'dosya',
-            files: 'dosya'
+            files: 'dosya',
+            inlineParsingWarning: {
+                title: 'Satır içi etiket uyumluluğu',
+                message:
+                    "{tag}, Obsidian'ın satır içi etiketlerde ayrıştıramadığı karakterler içeriyor. Frontmatter etiketleri etkilenmez.",
+                confirm: 'Yine de kullan'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Yeni klasör',

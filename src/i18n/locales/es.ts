@@ -405,7 +405,13 @@ export const STRINGS_ES = {
             descendantRenameError: 'No se puede mover una etiqueta dentro de sí misma o un descendiente.',
             confirmDelete: 'Eliminar etiqueta',
             file: 'archivo',
-            files: 'archivos'
+            files: 'archivos',
+            inlineParsingWarning: {
+                title: 'Compatibilidad de etiquetas en línea',
+                message:
+                    '{tag} contiene caracteres que Obsidian no puede analizar en etiquetas en línea. Las etiquetas de Frontmatter no se ven afectadas.',
+                confirm: 'Usar de todos modos'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nueva carpeta',

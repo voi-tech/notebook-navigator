@@ -405,7 +405,12 @@ export const STRINGS_RU = {
             descendantRenameError: 'Нельзя переместить тег в себя или в потомка.',
             confirmDelete: 'Удалить тег',
             file: 'файл',
-            files: 'файлов'
+            files: 'файлов',
+            inlineParsingWarning: {
+                title: 'Совместимость встроенных тегов',
+                message: '{tag} содержит символы, которые Obsidian не может обработать во встроенных тегах. Теги Frontmatter не затронуты.',
+                confirm: 'Всё равно использовать'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Новая папка',

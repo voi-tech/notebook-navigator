@@ -404,7 +404,13 @@ export const STRINGS_VI = {
             descendantRenameError: 'Không thể di chuyển thẻ vào chính nó hoặc phần tử con.',
             confirmDelete: 'Xóa thẻ',
             file: 'tệp',
-            files: 'tệp'
+            files: 'tệp',
+            inlineParsingWarning: {
+                title: 'Tương thích thẻ nội tuyến',
+                message:
+                    '{tag} chứa các ký tự mà Obsidian không thể phân tích trong thẻ nội tuyến. Các thẻ Frontmatter không bị ảnh hưởng.',
+                confirm: 'Vẫn sử dụng'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Thư mục mới',

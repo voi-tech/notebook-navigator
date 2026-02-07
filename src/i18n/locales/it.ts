@@ -404,7 +404,12 @@ export const STRINGS_IT = {
             descendantRenameError: 'Impossibile spostare un tag in sé stesso o in un discendente.',
             confirmDelete: 'Elimina tag',
             file: 'file',
-            files: 'file'
+            files: 'file',
+            inlineParsingWarning: {
+                title: 'Compatibilità dei tag inline',
+                message: '{tag} contiene caratteri che Obsidian non può analizzare nei tag inline. I tag Frontmatter non sono interessati.',
+                confirm: 'Usa comunque'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nuova cartella',

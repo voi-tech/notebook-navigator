@@ -406,7 +406,12 @@ export const STRINGS_PL = {
             descendantRenameError: 'Nie można przenieść tagu do samego siebie lub potomka.',
             confirmDelete: 'Usuń tag',
             file: 'plik',
-            files: 'plików'
+            files: 'plików',
+            inlineParsingWarning: {
+                title: 'Zgodność tagów inline',
+                message: '{tag} zawiera znaki, których Obsidian nie może przetworzyć w tagach inline. Tagi Frontmatter nie są dotknięte.',
+                confirm: 'Użyj mimo to'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nowy folder',

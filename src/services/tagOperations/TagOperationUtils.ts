@@ -18,10 +18,13 @@
 
 import type { App } from 'obsidian';
 import { TFile } from 'obsidian';
+import { strings } from '../../i18n';
+import { ConfirmModal } from '../../modals/ConfirmModal';
 import type { TagTreeService } from '../TagTreeService';
 import type { RenameFile, TagDescriptor } from '../tagRename/TagRenameEngine';
 import type { TagUsageSummary } from './types';
 import { normalizeTagPathValue } from '../../utils/tagPrefixMatcher';
+import { isInlineTagValueCompatible } from '../../utils/tagUtils';
 
 /**
  * Yields control back to the event loop to prevent blocking UI during batch operations
@@ -100,4 +103,37 @@ export function resolveDisplayTagPath(tagPath: string, tagTreeService: TagTreeSe
     }
     const node = tagTreeService.findTagNode(canonical);
     return node?.displayPath ?? tagPath;
+}
+
+function formatTagLabel(tagValue: string): string {
+    const trimmed = tagValue.trim();
+    if (trimmed.startsWith('#')) {
+        return trimmed;
+    }
+    return `#${trimmed}`;
+}
+
+/**
+ * Shows a warning confirmation for tags that are not compatible with Obsidian inline parsing.
+ * Returns true when the action should continue.
+ */
+export async function confirmInlineTagParsingRisk(app: App, tagValue: string): Promise<boolean> {
+    if (isInlineTagValueCompatible(tagValue)) {
+        return true;
+    }
+
+    const warning = strings.modals.tagOperation.inlineParsingWarning;
+
+    return await new Promise<boolean>(resolve => {
+        const modal = new ConfirmModal(
+            app,
+            warning.title,
+            warning.message.replace('{tag}', formatTagLabel(tagValue)),
+            () => resolve(true),
+            warning.confirm,
+            { confirmButtonClass: 'mod-cta', onCancel: () => resolve(false) }
+        );
+
+        modal.open();
+    });
 }

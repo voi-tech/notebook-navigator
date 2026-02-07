@@ -404,7 +404,12 @@ export const STRINGS_AR = {
             descendantRenameError: 'لا يمكن نقل الوسم إلى نفسه أو إلى فرع منه.',
             confirmDelete: 'حذف الوسم',
             file: 'ملف',
-            files: 'ملفات'
+            files: 'ملفات',
+            inlineParsingWarning: {
+                title: 'توافق الوسوم المضمّنة',
+                message: 'يحتوي {tag} على أحرف لا يستطيع Obsidian تحليلها في الوسوم المضمّنة. لا تتأثر وسوم Frontmatter.',
+                confirm: 'استخدام على أي حال'
+            }
         },
         fileSystem: {
             newFolderTitle: 'مجلد جديد',

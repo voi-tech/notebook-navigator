@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { describe, it, expect } from 'vitest';
-import { hasValidTagCharacters, isValidTagPrecedingChar } from '../../src/utils/tagUtils';
+import { hasValidTagCharacters, isInlineTagValueCompatible, isValidTagPrecedingChar } from '../../src/utils/tagUtils';
 
 describe('tagUtils', () => {
     describe('hasValidTagCharacters', () => {
@@ -26,15 +26,43 @@ describe('tagUtils', () => {
             expect(hasValidTagCharacters('valid/tag')).toBe(true);
             expect(hasValidTagCharacters('123')).toBe(true);
             expect(hasValidTagCharacters('ümlaut')).toBe(true);
+            expect(hasValidTagCharacters('tag😀')).toBe(true);
+            expect(hasValidTagCharacters('my‼tag')).toBe(true);
+            expect(hasValidTagCharacters('my👩‍💻tag')).toBe(true);
+            expect(hasValidTagCharacters('🇺🇸tag')).toBe(true);
+            expect(hasValidTagCharacters('a\u0301')).toBe(true);
         });
 
         it('should return false for invalid tags', () => {
             expect(hasValidTagCharacters('invalid tag')).toBe(false);
             expect(hasValidTagCharacters('invalid#tag')).toBe(false);
             expect(hasValidTagCharacters('invalid!')).toBe(false);
+            expect(hasValidTagCharacters('my tag')).toBe(false);
+            expect(hasValidTagCharacters('/leading')).toBe(false);
+            expect(hasValidTagCharacters('trailing/')).toBe(false);
+            expect(hasValidTagCharacters('double//slash')).toBe(false);
+            expect(hasValidTagCharacters('\u200D')).toBe(false);
+            expect(hasValidTagCharacters('\uFE0E')).toBe(false);
+            expect(hasValidTagCharacters('\uFE0F')).toBe(false);
+            expect(hasValidTagCharacters('\u0301')).toBe(false);
+            expect(hasValidTagCharacters('\u200D\u0301')).toBe(false);
             expect(hasValidTagCharacters('')).toBe(false);
             expect(hasValidTagCharacters(null)).toBe(false);
             expect(hasValidTagCharacters(undefined)).toBe(false);
+        });
+    });
+
+    describe('isInlineTagValueCompatible', () => {
+        it('should return true for inline-compatible tags', () => {
+            expect(isInlineTagValueCompatible('project')).toBe(true);
+            expect(isInlineTagValueCompatible('project/sub')).toBe(true);
+            expect(isInlineTagValueCompatible('project😀')).toBe(true);
+        });
+
+        it('should return false for values that break inline parsing', () => {
+            expect(isInlineTagValueCompatible('my‼tag')).toBe(false);
+            expect(isInlineTagValueCompatible('my👩‍💻tag')).toBe(false);
+            expect(isInlineTagValueCompatible('my #tag')).toBe(false);
         });
     });
 
@@ -45,8 +73,9 @@ describe('tagUtils', () => {
             expect(isValidTagPrecedingChar('\n')).toBe(true);
         });
 
-        it('should return true for exclamation mark', () => {
-            expect(isValidTagPrecedingChar('!')).toBe(true);
+        it('should return false for punctuation', () => {
+            expect(isValidTagPrecedingChar('!')).toBe(false);
+            expect(isValidTagPrecedingChar('/')).toBe(false);
         });
 
         it('should return true for null/undefined (start of string)', () => {

@@ -405,7 +405,12 @@ export const STRINGS_ID = {
             descendantRenameError: 'Tidak dapat memindahkan tag ke dirinya sendiri atau turunannya.',
             confirmDelete: 'Hapus tag',
             file: 'file',
-            files: 'file'
+            files: 'file',
+            inlineParsingWarning: {
+                title: 'Kompatibilitas tag inline',
+                message: '{tag} mengandung karakter yang tidak dapat diurai Obsidian dalam tag inline. Tag Frontmatter tidak terpengaruh.',
+                confirm: 'Tetap gunakan'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Folder baru',

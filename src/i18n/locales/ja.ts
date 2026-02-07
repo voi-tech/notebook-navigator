@@ -404,7 +404,12 @@ export const STRINGS_JA = {
             descendantRenameError: 'タグを自身または子孫に移動することはできません。',
             confirmDelete: 'タグを削除',
             file: 'ファイル',
-            files: 'ファイル'
+            files: 'ファイル',
+            inlineParsingWarning: {
+                title: 'インラインタグの互換性',
+                message: '{tag} には Obsidian がインラインタグで解析できない文字が含まれています。Frontmatter タグには影響しません。',
+                confirm: 'そのまま使用'
+            }
         },
         fileSystem: {
             newFolderTitle: '新規フォルダ',

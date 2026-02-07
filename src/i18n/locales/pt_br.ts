@@ -402,7 +402,13 @@ export const STRINGS_PT_BR = {
             descendantRenameError: 'Não é possível mover uma tag para dentro de si mesma ou um descendente.',
             confirmDelete: 'Excluir tag',
             file: 'arquivo',
-            files: 'arquivos'
+            files: 'arquivos',
+            inlineParsingWarning: {
+                title: 'Compatibilidade de tags inline',
+                message:
+                    '{tag} contém caracteres que o Obsidian não consegue analisar em tags inline. As tags de Frontmatter não são afetadas.',
+                confirm: 'Usar mesmo assim'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Nova pasta',

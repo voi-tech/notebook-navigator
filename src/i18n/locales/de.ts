@@ -405,7 +405,13 @@ export const STRINGS_DE = {
             descendantRenameError: 'Ein Tag kann nicht in sich selbst oder einen Nachkommen verschoben werden.',
             confirmDelete: 'Tag löschen',
             file: 'Datei',
-            files: 'Dateien'
+            files: 'Dateien',
+            inlineParsingWarning: {
+                title: 'Inline-Tag-Kompatibilität',
+                message:
+                    '{tag} enthält Zeichen, die Obsidian in Inline-Tags nicht verarbeiten kann. Frontmatter-Tags sind nicht betroffen.',
+                confirm: 'Trotzdem verwenden'
+            }
         },
         fileSystem: {
             newFolderTitle: 'Neuer Ordner',

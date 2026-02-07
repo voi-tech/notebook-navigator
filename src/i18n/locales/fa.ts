@@ -404,7 +404,13 @@ export const STRINGS_FA = {
             descendantRenameError: 'نمی‌توان برچسب را به خود یا زیرمجموعه آن منتقل کرد.',
             confirmDelete: 'حذف برچسب',
             file: 'فایل',
-            files: 'فایل‌ها'
+            files: 'فایل‌ها',
+            inlineParsingWarning: {
+                title: 'سازگاری برچسب‌های درون‌خطی',
+                message:
+                    '{tag} شامل نویسه‌هایی است که Obsidian نمی‌تواند در برچسب‌های درون‌خطی تجزیه کند. برچسب‌های Frontmatter تحت تأثیر قرار نمی‌گیرند.',
+                confirm: 'استفاده در هر صورت'
+            }
         },
         fileSystem: {
             newFolderTitle: 'پوشه جدید',

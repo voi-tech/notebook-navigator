@@ -22,7 +22,13 @@ import type { TagTreeService } from '../TagTreeService';
 import type { MetadataService } from '../MetadataService';
 import { collectRenameFiles, RenameFile, TagDescriptor, TagReplacement, isDescendantRename } from '../tagRename/TagRenameEngine';
 import { TagRenameModal } from '../../modals/TagRenameModal';
-import { buildUsageSummary, buildUsageSummaryFromPaths, collectPreviewPaths, yieldToEventLoop } from './TagOperationUtils';
+import {
+    buildUsageSummary,
+    buildUsageSummaryFromPaths,
+    collectPreviewPaths,
+    confirmInlineTagParsingRisk,
+    yieldToEventLoop
+} from './TagOperationUtils';
 import type { TagRenameEventPayload, TagUsageSummary } from './types';
 import { TagFileMutations } from './TagFileMutations';
 import { showNotice } from '../../utils/noticeUtils';
@@ -104,6 +110,12 @@ export class TagRenameWorkflow {
                     showNotice(strings.modals.tagOperation.descendantRenameError, { variant: 'warning' });
                     return false;
                 }
+
+                const shouldContinue = await confirmInlineTagParsingRisk(this.app, trimmedName);
+                if (!shouldContinue) {
+                    return false;
+                }
+
                 return this.runTagRename(displayPath, trimmedName, presetTargets ?? null);
             }
         });

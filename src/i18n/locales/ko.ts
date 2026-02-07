@@ -403,7 +403,13 @@ export const STRINGS_KO = {
             descendantRenameError: '태그를 자신 또는 하위 태그로 이동할 수 없습니다.',
             confirmDelete: '태그 삭제',
             file: '파일',
-            files: '파일'
+            files: '파일',
+            inlineParsingWarning: {
+                title: '인라인 태그 호환성',
+                message:
+                    '{tag}에 Obsidian이 인라인 태그에서 구문 분석할 수 없는 문자가 포함되어 있습니다. Frontmatter 태그는 영향을 받지 않습니다.',
+                confirm: '그래도 사용'
+            }
         },
         fileSystem: {
             newFolderTitle: '새 폴더',

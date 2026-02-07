@@ -404,7 +404,12 @@ export const STRINGS_ZH_CN = {
             descendantRenameError: '无法将标签移动到自身或其子标签中。',
             confirmDelete: '删除标签',
             file: '个文件',
-            files: '个文件'
+            files: '个文件',
+            inlineParsingWarning: {
+                title: '内联标签兼容性',
+                message: '{tag} 包含 Obsidian 无法在内联标签中解析的字符。Frontmatter 标签不受影响。',
+                confirm: '仍然使用'
+            }
         },
         fileSystem: {
             newFolderTitle: '新建文件夹',
