@@ -364,7 +364,6 @@ Set custom hotkeys for these commands in Obsidian's Hotkeys settings:
 - **File operations** - Create, rename, duplicate, move, trash files and folders
 - **Filtering** - Folder/tag/note/file exclusions with patterns and frontmatter properties
 
-
 <br>
 
 ## 9 Network Usage Disclosure
