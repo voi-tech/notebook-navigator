@@ -6779,9 +6779,15 @@ body.nn-resizing {
    Android + Obsidian 1.11+ Platform Overrides
    ======================================================================== */
 
+/* Obsidian 1.11+ Android: match the view container background to mobile pane surfaces */
+.view-content.notebook-navigator.notebook-navigator-obsidian-1-11-plus-android {
+    background-color: var(--nn-theme-mobile-bg);
+}
+
 /* Obsidian 1.11+ Android: bottom padding inside the navigator viewport */
 /* Applied to the internal split container so the bottom edge doesn't touch the view chrome (8px matches the top spacer). */
 .notebook-navigator-obsidian-1-11-plus-android .nn-split-container {
+    background-color: var(--nn-theme-mobile-bg);
     padding-bottom: 8px;
     box-sizing: border-box;
 }
@@ -6869,6 +6875,12 @@ body.nn-resizing {
     );
     /* Note: Do NOT compensate icon size variables - they're used for SVG width/height
        which Android doesn't scale. Only compensate font-size on emoji elements directly. */
+}
+
+/* Navigation item names use fixed row height math based on 18px line-height.
+   Pre-compensate line-height so Android textZoom preserves the intended final size. */
+.notebook-navigator-android .nn-navitem-name {
+    line-height: calc(var(--nn-nav-line-height) * var(--nn-android-font-scale-reciprocal, 1));
 }
 
 /* Note counts in navigation pane - !important needed to override other rules */

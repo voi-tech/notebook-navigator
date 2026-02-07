@@ -99,7 +99,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         fixed: [
             'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also improved performance significantly by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.',
-            'Weekly periodic note patterns previously used custom calendar locale, where others used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.'
+            'Weekly periodic note patterns previously used custom calendar locale, where others used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.',
+            'Fixed two display issues in Android: A small gap at the bottom of the left sidebar and text fonts were cropped on some devices.'
         ]
     },
     {

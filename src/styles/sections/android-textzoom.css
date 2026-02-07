@@ -26,6 +26,12 @@
        which Android doesn't scale. Only compensate font-size on emoji elements directly. */
 }
 
+/* Navigation item names use fixed row height math based on 18px line-height.
+   Pre-compensate line-height so Android textZoom preserves the intended final size. */
+.notebook-navigator-android .nn-navitem-name {
+    line-height: calc(var(--nn-nav-line-height) * var(--nn-android-font-scale-reciprocal, 1));
+}
+
 /* Note counts in navigation pane - !important needed to override other rules */
 .notebook-navigator-android .nn-navitem-count {
     font-size: calc(
