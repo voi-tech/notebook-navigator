@@ -76,7 +76,7 @@ export interface ReleaseNote {
 const RELEASE_NOTES: ReleaseNote[] = [
     {
         version: '2.3.0',
-        date: '2026-02-08',
+        date: '2026-02-09',
         showOnUpdate: true,
         new: [
             '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
@@ -93,7 +93,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New search filter: ==has:task==. Use this to filter notes that have unfinished tasks.'
         ],
         improved: [
-            'Many improvements to calendar display. Days with notes now show as dots, and overall look and feel is much improved.',
+            'Many improvements to calendar display. Days with notes now show as dots, and the overall look and feel is much improved.',
+            'You can now command-click date, week, month, quarter or year in the calendar to show notes for that period in the list pane.',
             'Calendar now shows a small circle for notes with unfinished tasks.',
             'You can now remove icons from the recently used icons list.',
             'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are less likely to be pushed out by matches from other parts of the vault.'
