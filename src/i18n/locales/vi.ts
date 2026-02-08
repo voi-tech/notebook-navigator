@@ -1044,7 +1044,7 @@ export const STRINGS_VI = {
             },
             calendarHighlightToday: {
                 name: 'Làm nổi bật ngày hôm nay',
-                desc: 'Hiển thị vòng tròn đỏ và chữ in đậm cho ngày hôm nay.'
+                desc: 'Làm nổi bật ngày hôm nay bằng màu nền và chữ in đậm.'
             },
             calendarShowFeatureImage: {
                 name: 'Hiển thị hình ảnh nổi bật',

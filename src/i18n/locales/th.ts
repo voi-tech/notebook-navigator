@@ -1043,7 +1043,7 @@ export const STRINGS_TH = {
             },
             calendarHighlightToday: {
                 name: 'ไฮไลต์วันที่วันนี้',
-                desc: 'แสดงวงกลมสีแดงและข้อความตัวหนาบนวันที่วันนี้'
+                desc: 'ไฮไลต์วันที่วันนี้ด้วยสีพื้นหลังและข้อความตัวหนา'
             },
             calendarShowFeatureImage: {
                 name: 'แสดงรูปภาพเด่น',

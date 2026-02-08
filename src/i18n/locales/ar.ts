@@ -1043,7 +1043,7 @@ export const STRINGS_AR = {
             },
             calendarHighlightToday: {
                 name: 'تمييز تاريخ اليوم',
-                desc: 'إظهار دائرة حمراء ونص غامق على تاريخ اليوم.'
+                desc: 'تمييز تاريخ اليوم بلون خلفية ونص غامق.'
             },
             calendarShowFeatureImage: {
                 name: 'عرض صورة الميزة',

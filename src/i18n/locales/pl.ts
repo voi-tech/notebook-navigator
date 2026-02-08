@@ -1046,7 +1046,7 @@ export const STRINGS_PL = {
             },
             calendarHighlightToday: {
                 name: 'Wyróżnij dzisiejszą datę',
-                desc: 'Pokaż czerwone kółko i pogrubiony tekst na dzisiejszej dacie.'
+                desc: 'Wyróżnij dzisiejszą datę kolorem tła i pogrubionym tekstem.'
             },
             calendarShowFeatureImage: {
                 name: 'Pokaż obraz wyróżniający',

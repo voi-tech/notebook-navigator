@@ -1044,7 +1044,7 @@ export const STRINGS_ID = {
             },
             calendarHighlightToday: {
                 name: 'Sorot tanggal hari ini',
-                desc: 'Tampilkan lingkaran merah dan teks tebal pada tanggal hari ini.'
+                desc: 'Sorot tanggal hari ini dengan warna latar belakang dan teks tebal.'
             },
             calendarShowFeatureImage: {
                 name: 'Tampilkan gambar fitur',

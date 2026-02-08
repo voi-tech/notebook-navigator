@@ -1044,7 +1044,7 @@ export const STRINGS_JA = {
             },
             calendarHighlightToday: {
                 name: '今日の日付を強調表示',
-                desc: '今日の日付に赤い円と太字のテキストを表示します。'
+                desc: '今日の日付を背景色と太字で強調表示します。'
             },
             calendarShowFeatureImage: {
                 name: 'アイキャッチ画像を表示',

@@ -1043,7 +1043,7 @@ export const STRINGS_IT = {
             },
             calendarHighlightToday: {
                 name: 'Evidenzia la data di oggi',
-                desc: 'Mostra un cerchio rosso e testo in grassetto sulla data di oggi.'
+                desc: 'Evidenzia la data di oggi con un colore di sfondo e testo in grassetto.'
             },
             calendarShowFeatureImage: {
                 name: 'Mostra immagine in evidenza',

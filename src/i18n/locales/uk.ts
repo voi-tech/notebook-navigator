@@ -1044,7 +1044,7 @@ export const STRINGS_UK = {
             },
             calendarHighlightToday: {
                 name: 'Виділяти сьогоднішню дату',
-                desc: 'Показувати червоне коло та жирний текст на сьогоднішній даті.'
+                desc: 'Виділяти сьогоднішню дату кольором фону та жирним текстом.'
             },
             calendarShowFeatureImage: {
                 name: 'Показати обкладинку',

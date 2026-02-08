@@ -1045,7 +1045,7 @@ export const STRINGS_TR = {
             },
             calendarHighlightToday: {
                 name: 'Bugünün tarihini vurgula',
-                desc: 'Bugünün tarihinde kırmızı bir daire ve kalın metin göster.'
+                desc: 'Bugünün tarihini arka plan rengi ve kalın metinle vurgula.'
             },
             calendarShowFeatureImage: {
                 name: 'Öne çıkan görseli göster',

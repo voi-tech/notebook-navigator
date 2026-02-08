@@ -1043,7 +1043,7 @@ export const STRINGS_EN = {
             },
             calendarHighlightToday: {
                 name: "Highlight today's date",
-                desc: "Show a red circle and bold text on today's date."
+                desc: "Highlight today's date with a background color and bold text."
             },
             calendarShowFeatureImage: {
                 name: 'Show feature image',

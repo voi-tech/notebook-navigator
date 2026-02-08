@@ -1046,7 +1046,7 @@ export const STRINGS_NL = {
             },
             calendarHighlightToday: {
                 name: 'Datum van vandaag markeren',
-                desc: 'Toon een rode cirkel en vetgedrukte tekst op de datum van vandaag.'
+                desc: 'Markeer de datum van vandaag met een achtergrondkleur en vetgedrukte tekst.'
             },
             calendarShowFeatureImage: {
                 name: 'Uitgelichte afbeelding tonen',

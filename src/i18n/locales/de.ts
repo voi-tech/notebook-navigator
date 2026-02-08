@@ -1046,7 +1046,7 @@ export const STRINGS_DE = {
             },
             calendarHighlightToday: {
                 name: 'Heutiges Datum hervorheben',
-                desc: 'Einen roten Kreis und fetten Text für das heutige Datum anzeigen.'
+                desc: 'Das heutige Datum mit einer Hintergrundfarbe und fettem Text hervorheben.'
             },
             calendarShowFeatureImage: {
                 name: 'Feature-Bild anzeigen',

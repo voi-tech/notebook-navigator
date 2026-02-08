@@ -1042,7 +1042,7 @@ export const STRINGS_ZH_CN = {
             },
             calendarHighlightToday: {
                 name: '高亮今天日期',
-                desc: '在今天日期上显示红色圆圈和加粗文本。'
+                desc: '使用背景颜色和加粗文本高亮今天日期。'
             },
             calendarShowFeatureImage: {
                 name: '显示特色图片',

@@ -1045,7 +1045,7 @@ export const STRINGS_PT = {
             },
             calendarHighlightToday: {
                 name: 'Realçar a data de hoje',
-                desc: 'Mostrar um círculo vermelho e texto em negrito na data de hoje.'
+                desc: 'Realçar a data de hoje com uma cor de fundo e texto em negrito.'
             },
             calendarShowFeatureImage: {
                 name: 'Mostrar imagem de destaque',

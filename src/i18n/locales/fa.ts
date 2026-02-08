@@ -1044,7 +1044,7 @@ export const STRINGS_FA = {
             },
             calendarHighlightToday: {
                 name: 'برجسته کردن تاریخ امروز',
-                desc: 'نمایش دایره قرمز و متن پررنگ در تاریخ امروز.'
+                desc: 'برجسته کردن تاریخ امروز با رنگ پس‌زمینه و متن پررنگ.'
             },
             calendarShowFeatureImage: {
                 name: 'نمایش تصویر شاخص',

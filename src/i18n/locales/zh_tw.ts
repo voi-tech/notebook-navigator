@@ -1042,7 +1042,7 @@ export const STRINGS_ZH_TW = {
             },
             calendarHighlightToday: {
                 name: '醒目顯示今天日期',
-                desc: '在今天日期上顯示紅色圓圈和粗體文字。'
+                desc: '使用背景顏色和粗體文字醒目顯示今天日期。'
             },
             calendarShowFeatureImage: {
                 name: '顯示特色圖片',

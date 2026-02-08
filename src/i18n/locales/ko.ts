@@ -1044,7 +1044,7 @@ export const STRINGS_KO = {
             },
             calendarHighlightToday: {
                 name: '오늘 날짜 강조 표시',
-                desc: '오늘 날짜에 빨간 원과 굵은 텍스트를 표시합니다.'
+                desc: '오늘 날짜를 배경색과 굵은 텍스트로 강조 표시합니다.'
             },
             calendarShowFeatureImage: {
                 name: '대표 이미지 표시',
