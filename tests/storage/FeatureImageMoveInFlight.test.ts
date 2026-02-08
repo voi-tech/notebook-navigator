@@ -20,6 +20,7 @@ import { describe, expect, it } from 'vitest';
 import { IndexedDBStorage, createDefaultFileData } from '../../src/storage/IndexedDBStorage';
 import { FeatureImageBlobStore } from '../../src/storage/FeatureImageBlobStore';
 import { MemoryFileCache } from '../../src/storage/MemoryFileCache';
+import { FeatureImageCoordinator } from '../../src/storage/indexeddb/featureImageOps';
 
 class TestFeatureImageBlobStore extends FeatureImageBlobStore {
     public readonly reads: Array<{ path: string; expectedKey: string }> = [];
@@ -62,7 +63,16 @@ describe('IndexedDBStorage feature image moves', () => {
 
         storage.init = async () => void 0;
         Reflect.set(storage, 'db', {} as IDBDatabase);
-        Reflect.set(storage, 'featureImageBlobs', featureImageBlobs);
+        Reflect.set(
+            storage,
+            'featureImages',
+            new FeatureImageCoordinator({
+                getDb: () => Reflect.get(storage, 'db') as IDBDatabase,
+                init: () => storage.init(),
+                isClosing: () => false,
+                blobs: featureImageBlobs
+            })
+        );
 
         storage.beginFeatureImageBlobMove(oldPath, newPath);
 
