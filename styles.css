@@ -2585,13 +2585,11 @@ body {
 
 .nn-navigation-calendar-month .nn-navigation-calendar-period-year {
     flex: 0 0 auto;
-    flex-shrink: 0;
 }
 
 .nn-navigation-calendar-month .nn-navigation-calendar-quarter-button,
 .nn-navigation-calendar-month .nn-navigation-calendar-quarter-label {
     flex: 0 0 auto;
-    flex-shrink: 0;
 }
 
 .nn-navigation-calendar-period-button {
@@ -2888,10 +2886,6 @@ body {
     color: var(--nn-theme-calendar-day-outside-month-color);
 }
 
-.nn-navigation-calendar-day.is-in-month:not(.has-feature-image):not(.has-feature-image-key) {
-    color: var(--nn-theme-calendar-day-in-month-color);
-}
-
 .nn-navigation-calendar[data-highlight-today='true']
     .nn-navigation-calendar-day.is-today:not(.has-feature-image):not(.has-feature-image-key) {
     color: var(--nn-theme-calendar-day-today-color);
@@ -2955,7 +2949,6 @@ body {
     padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 0;
     border-radius: 10px;
     background: var(--background-secondary);
     border: 1px solid var(--background-modifier-border);
