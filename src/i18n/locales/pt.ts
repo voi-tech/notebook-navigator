@@ -82,6 +82,15 @@ export const STRINGS_PT = {
             title: 'Nova nota diária',
             message: 'O ficheiro {filename} não existe. Deseja criá-lo?',
             confirmButton: 'Criar'
+        },
+        helpModal: {
+            title: 'Calendário',
+            items: [
+                'Clique em qualquer dia para abrir ou criar uma nota diária. Semanas, meses, trimestres e anos funcionam da mesma forma.',
+                'Um ponto preenchido sob um dia significa que tem uma nota. Um ponto oco significa que tem tarefas inacabadas.',
+                'Se uma nota tiver uma imagem de destaque, ela aparece como fundo do dia.',
+                '`Cmd/Ctrl+Click` numa data para adicioná-la como filtro de pesquisa. `Option/Alt+Click` também funciona quando o modificador de opção está ativado nas definições.'
+            ]
         }
     },
 
@@ -1020,6 +1029,10 @@ export const STRINGS_PT = {
                     friSat: 'Sexta-feira e sábado',
                     thuFri: 'Quinta-feira e sexta-feira'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Mostrar botões de informação',
+                desc: 'Mostrar botões de informação na barra de pesquisa e no cabeçalho do calendário.'
             },
             calendarWeeksToShow: {
                 name: 'Semanas a mostrar na barra lateral esquerda',

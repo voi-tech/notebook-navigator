@@ -413,6 +413,13 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
+     * Sets the list pane search query to a date token.
+     */
+    addDateFilterToSearch(dateToken: string): void {
+        this.componentRef.current?.addDateFilterToSearch(dateToken);
+    }
+
+    /**
      * Add a tag to the currently selected files
      */
     async addTagToSelectedFiles(): Promise<void> {

@@ -82,6 +82,15 @@ export const STRINGS_TR = {
             title: 'Yeni günlük not',
             message: '{filename} dosyası mevcut değil. Oluşturmak ister misiniz?',
             confirmButton: 'Oluştur'
+        },
+        helpModal: {
+            title: 'Takvim',
+            items: [
+                'Günlük not açmak veya oluşturmak için herhangi bir güne tıklayın. Haftalar, aylar, çeyrekler ve yıllar aynı şekilde çalışır.',
+                'Bir günün altındaki dolu nokta, notu olduğu anlamına gelir. Boş nokta, tamamlanmamış görevleri olduğu anlamına gelir.',
+                'Bir notun öne çıkan görseli varsa, günün arka planı olarak görünür.',
+                'Bir tarihe `Cmd/Ctrl+Click` yaparak arama filtresi olarak ekleyin. Ayarlarda seçenek değiştirici etkinleştirildiğinde `Option/Alt+Click` de çalışır.'
+            ]
         }
     },
 
@@ -1020,6 +1029,10 @@ export const STRINGS_TR = {
                     friSat: 'Cuma ve cumartesi',
                     thuFri: 'Perşembe ve cuma'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Bilgi düğmelerini göster',
+                desc: 'Arama çubuğunda ve takvim başlığında bilgi düğmelerini göster.'
             },
             calendarWeeksToShow: {
                 name: 'Sol kenar çubuğunda gösterilecek haftalar',

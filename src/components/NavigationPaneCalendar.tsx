@@ -18,9 +18,10 @@
 
 import React, { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Menu, Notice, TFile } from 'obsidian';
+import { Menu, Notice, Platform, TFile } from 'obsidian';
 import { getCurrentLanguage, strings } from '../i18n';
 import { ConfirmModal } from '../modals/ConfirmModal';
+import { InfoModal } from '../modals/InfoModal';
 import { useServices } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useFileCacheOptional } from '../context/StorageContext';
@@ -58,7 +59,7 @@ import {
 import { getTooltipPlacement } from '../utils/domUtils';
 import { resolveUXIconForMenu } from '../utils/uxIcons';
 import { getActiveVaultProfile } from '../utils/vaultProfiles';
-import type { CalendarWeeksToShow, CalendarWeekendDays } from '../settings/types';
+import type { CalendarWeeksToShow, CalendarWeekendDays, MultiSelectModifier } from '../settings/types';
 
 interface CalendarHoverTooltipData {
     imageUrl: string | null;
@@ -88,7 +89,7 @@ interface CalendarDayButtonProps {
     dayNumber: number;
     isMobile: boolean;
     showUnfinishedTaskIndicator: boolean;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     onContextMenu: (event: React.MouseEvent<HTMLButtonElement>) => void;
     style: React.CSSProperties | undefined;
     tooltipEnabled: boolean;
@@ -148,14 +149,17 @@ function CalendarDayButton({
         onHideTooltip(element);
     }, [isMobile, onHideTooltip]);
 
-    const handleClick = useCallback(() => {
-        const element = buttonRef.current;
-        if (element) {
-            onHideTooltip(element);
-        }
+    const handleClick = useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            const element = buttonRef.current;
+            if (element) {
+                onHideTooltip(element);
+            }
 
-        onClick();
-    }, [onClick, onHideTooltip]);
+            onClick(event);
+        },
+        [onClick, onHideTooltip]
+    );
 
     useEffect(() => {
         const element = buttonRef.current;
@@ -206,6 +210,45 @@ function clamp(value: number, min: number, max: number): number {
 
 function formatIsoDate(date: MomentInstance): string {
     return date.format('YYYY-MM-DD');
+}
+
+function buildDateFilterToken(kind: CalendarNoteKind, date: MomentInstance): string {
+    switch (kind) {
+        case 'day':
+            return `@${date.format('YYYY-MM-DD')}`;
+        case 'week': {
+            const start = date.clone().startOf('day');
+            const end = start.clone().add(6, 'day');
+            return `@${start.format('YYYY-MM-DD')}..${end.format('YYYY-MM-DD')}`;
+        }
+        case 'month':
+            return `@${date.format('YYYY-MM')}`;
+        case 'quarter': {
+            const quarter = Math.floor(date.month() / 3) + 1;
+            return `@${date.format('YYYY')}-Q${quarter}`;
+        }
+        case 'year':
+            return `@${date.format('YYYY')}`;
+        default:
+            return '';
+    }
+}
+
+function isDateFilterModifierPressed(
+    event: { altKey: boolean; ctrlKey: boolean; metaKey: boolean },
+    modifierSetting: MultiSelectModifier,
+    isMobile: boolean
+): boolean {
+    if (isMobile) {
+        return false;
+    }
+
+    const hasCmdCtrl = Platform.isMacOS ? event.metaKey : event.metaKey || event.ctrlKey;
+    if (hasCmdCtrl) {
+        return true;
+    }
+
+    return modifierSetting === 'optionAlt' && event.altKey;
 }
 
 function getDayOfWeek(date: MomentInstance): number {
@@ -259,6 +302,7 @@ export interface NavigationPaneCalendarProps {
     onWeekCountChange?: (count: number) => void;
     onNavigationAction?: () => void;
     weeksToShowOverride?: CalendarWeeksToShow;
+    onAddDateFilter?: (dateToken: string) => void;
 }
 
 interface CalendarHoverTooltipState {
@@ -269,7 +313,12 @@ interface CalendarHoverTooltipState {
 type CustomCalendarNoteKind = CalendarNoteKind;
 type CustomCalendarNoteConfig = CalendarNoteConfig;
 
-export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, weeksToShowOverride }: NavigationPaneCalendarProps) {
+export function NavigationPaneCalendar({
+    onWeekCountChange,
+    onNavigationAction,
+    weeksToShowOverride,
+    onAddDateFilter
+}: NavigationPaneCalendarProps) {
     const { app, fileSystemOps, isMobile } = useServices();
     const settings = useSettingsState();
     const periodicNotesFolder = getActiveVaultProfile(settings).periodicNotesFolder;
@@ -1045,6 +1094,37 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
         onNavigationAction?.();
     }, [momentApi, onNavigationAction]);
 
+    const openCalendarHelp = useCallback(() => {
+        new InfoModal(app, {
+            title: strings.navigationCalendar.helpModal.title,
+            items: strings.navigationCalendar.helpModal.items
+        }).open();
+    }, [app]);
+
+    const handleDateFilterModifiedClick = useCallback(
+        (event: React.MouseEvent<HTMLElement>, kind: CalendarNoteKind, date: MomentInstance): boolean => {
+            if (!onAddDateFilter) {
+                return false;
+            }
+
+            if (!isDateFilterModifierPressed(event, settings.multiSelectModifier, isMobile)) {
+                return false;
+            }
+
+            const dateToken = buildDateFilterToken(kind, date);
+            if (!dateToken) {
+                return false;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            setHoverTooltip(null);
+            onAddDateFilter(dateToken);
+            return true;
+        },
+        [onAddDateFilter, settings.multiSelectModifier, isMobile]
+    );
+
     const collapseNavigationIfMobile = useCallback(() => {
         if (!isMobile || !app.workspace.leftSplit) {
             return;
@@ -1274,6 +1354,7 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
     );
 
     const showWeekNumbers = settings.calendarShowWeekNumber;
+    const showInfoButton = settings.calendarShowInfoButton;
     const highlightToday = settings.calendarHighlightToday;
 
     const isCustomCalendar = settings.calendarIntegrationMode === 'notebook-navigator';
@@ -1435,13 +1516,13 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                 ]
                                     .filter(Boolean)
                                     .join(' ')}
-                                onClick={() =>
-                                    openOrCreateCustomCalendarNote(
-                                        'month',
-                                        cursorDate.clone().locale(displayLocale),
-                                        headerPeriodNoteFiles.month
-                                    )
-                                }
+                                onClick={event => {
+                                    const periodDate = cursorDate.clone().locale(displayLocale);
+                                    if (handleDateFilterModifiedClick(event, 'month', periodDate)) {
+                                        return;
+                                    }
+                                    openOrCreateCustomCalendarNote('month', periodDate, headerPeriodNoteFiles.month);
+                                }}
                                 onContextMenu={event =>
                                     showCalendarNoteContextMenu(event, {
                                         kind: 'month',
@@ -1456,6 +1537,9 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                         ) : (
                             <span
                                 className="nn-navigation-calendar-period-label nn-navigation-calendar-period-month"
+                                onClick={event => {
+                                    handleDateFilterModifiedClick(event, 'month', cursorDate.clone().locale(displayLocale));
+                                }}
                                 onContextMenu={event =>
                                     showCalendarNoteContextMenu(event, {
                                         kind: 'month',
@@ -1479,13 +1563,13 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                 ]
                                     .filter(Boolean)
                                     .join(' ')}
-                                onClick={() =>
-                                    openOrCreateCustomCalendarNote(
-                                        'year',
-                                        cursorDate.clone().locale(displayLocale),
-                                        headerPeriodNoteFiles.year
-                                    )
-                                }
+                                onClick={event => {
+                                    const periodDate = cursorDate.clone().locale(displayLocale);
+                                    if (handleDateFilterModifiedClick(event, 'year', periodDate)) {
+                                        return;
+                                    }
+                                    openOrCreateCustomCalendarNote('year', periodDate, headerPeriodNoteFiles.year);
+                                }}
                                 onContextMenu={event =>
                                     showCalendarNoteContextMenu(event, {
                                         kind: 'year',
@@ -1500,6 +1584,9 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                         ) : (
                             <span
                                 className="nn-navigation-calendar-period-label nn-navigation-calendar-period-year"
+                                onClick={event => {
+                                    handleDateFilterModifiedClick(event, 'year', cursorDate.clone().locale(displayLocale));
+                                }}
                                 onContextMenu={event =>
                                     showCalendarNoteContextMenu(event, {
                                         kind: 'year',
@@ -1524,13 +1611,13 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                     ]
                                         .filter(Boolean)
                                         .join(' ')}
-                                    onClick={() =>
-                                        openOrCreateCustomCalendarNote(
-                                            'quarter',
-                                            cursorDate.clone().locale(displayLocale),
-                                            headerPeriodNoteFiles.quarter
-                                        )
-                                    }
+                                    onClick={event => {
+                                        const periodDate = cursorDate.clone().locale(displayLocale);
+                                        if (handleDateFilterModifiedClick(event, 'quarter', periodDate)) {
+                                            return;
+                                        }
+                                        openOrCreateCustomCalendarNote('quarter', periodDate, headerPeriodNoteFiles.quarter);
+                                    }}
                                     onContextMenu={event =>
                                         showCalendarNoteContextMenu(event, {
                                             kind: 'quarter',
@@ -1547,6 +1634,9 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                             ) : (
                                 <span
                                     className="nn-navigation-calendar-period-label nn-navigation-calendar-quarter-label"
+                                    onClick={event => {
+                                        handleDateFilterModifiedClick(event, 'quarter', cursorDate.clone().locale(displayLocale));
+                                    }}
                                     onContextMenu={event =>
                                         showCalendarNoteContextMenu(event, {
                                             kind: 'quarter',
@@ -1564,6 +1654,16 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                         ) : null}
                     </div>
                     <div className="nn-navigation-calendar-nav">
+                        {showInfoButton ? (
+                            <button
+                                type="button"
+                                className="nn-navigation-calendar-nav-button nn-navigation-calendar-help"
+                                aria-label={strings.navigationCalendar.helpModal.title}
+                                onClick={openCalendarHelp}
+                            >
+                                <ServiceIcon iconId="info" aria-hidden={true} />
+                            </button>
+                        ) : null}
                         <button
                             type="button"
                             className="nn-navigation-calendar-nav-button nn-navigation-calendar-nav-prev"
@@ -1622,17 +1722,18 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                                     ]
                                                         .filter(Boolean)
                                                         .join(' ')}
-                                                    onClick={() => {
+                                                    onClick={event => {
                                                         const weekStart = week.days[0]?.date;
                                                         if (!weekStart) {
                                                             return;
                                                         }
 
-                                                        openOrCreateCustomCalendarNote(
-                                                            'week',
-                                                            weekStart.clone().locale(displayLocale),
-                                                            weekNoteFile
-                                                        );
+                                                        const weekDate = weekStart.clone().locale(displayLocale);
+                                                        if (handleDateFilterModifiedClick(event, 'week', weekDate)) {
+                                                            return;
+                                                        }
+
+                                                        openOrCreateCustomCalendarNote('week', weekDate, weekNoteFile);
                                                     }}
                                                     onContextMenu={event => {
                                                         const weekStart = week.days[0]?.date;
@@ -1654,6 +1755,18 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                                 <div
                                                     className="nn-navigation-calendar-weeknumber"
                                                     aria-hidden="true"
+                                                    onClick={event => {
+                                                        const weekStart = week.days[0]?.date;
+                                                        if (!weekStart) {
+                                                            return;
+                                                        }
+
+                                                        handleDateFilterModifiedClick(
+                                                            event,
+                                                            'week',
+                                                            weekStart.clone().locale(displayLocale)
+                                                        );
+                                                    }}
                                                     onContextMenu={event => {
                                                         const weekStart = week.days[0]?.date;
                                                         if (!weekStart) {
@@ -1734,7 +1847,12 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                                 showUnfinishedTaskIndicator={hasUnfinishedTasks}
                                                 onShowTooltip={handleShowTooltip}
                                                 onHideTooltip={handleHideTooltip}
-                                                onClick={() => openOrCreateDailyNote(day.date, day.file)}
+                                                onClick={event => {
+                                                    if (handleDateFilterModifiedClick(event, 'day', day.date)) {
+                                                        return;
+                                                    }
+                                                    openOrCreateDailyNote(day.date, day.file);
+                                                }}
                                                 onContextMenu={event =>
                                                     showCalendarNoteContextMenu(event, {
                                                         kind: 'day',

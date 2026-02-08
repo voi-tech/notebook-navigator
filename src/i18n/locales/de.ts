@@ -81,6 +81,15 @@ export const STRINGS_DE = {
             title: 'Neue tägliche Notiz',
             message: 'Datei {filename} existiert nicht. Möchten Sie sie erstellen?',
             confirmButton: 'Erstellen'
+        },
+        helpModal: {
+            title: 'Kalender',
+            items: [
+                'Klicken Sie auf einen Tag, um eine tägliche Notiz zu öffnen oder zu erstellen. Wochen, Monate, Quartale und Jahre funktionieren genauso.',
+                'Ein gefüllter Punkt unter einem Tag bedeutet, dass eine Notiz vorhanden ist. Ein hohler Punkt bedeutet, dass unerledigte Aufgaben vorhanden sind.',
+                'Wenn eine Notiz ein Feature-Bild hat, wird es als Tageshintergrund angezeigt.',
+                '`Cmd/Ctrl+Click` auf ein Datum, um es als Suchfilter hinzuzufügen. `Option/Alt+Click` funktioniert ebenfalls, wenn der Options-Modifikator in den Einstellungen aktiviert ist.'
+            ]
         }
     },
 
@@ -1021,6 +1030,10 @@ export const STRINGS_DE = {
                     friSat: 'Freitag und Samstag',
                     thuFri: 'Donnerstag und Freitag'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Info-Schaltflächen anzeigen',
+                desc: 'Info-Schaltflächen in der Suchleiste und der Kalenderüberschrift anzeigen.'
             },
             calendarWeeksToShow: {
                 name: 'Angezeigte Wochen in linker Seitenleiste',

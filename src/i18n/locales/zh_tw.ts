@@ -81,6 +81,15 @@ export const STRINGS_ZH_TW = {
             title: '建立每日筆記',
             message: '每日筆記 {filename} 不存在。是否建立？',
             confirmButton: '建立'
+        },
+        helpModal: {
+            title: '行事曆',
+            items: [
+                '點擊任意日期以開啟或建立每日筆記。週、月、季度和年份的操作方式相同。',
+                '日期下方的實心圓點表示有筆記。空心圓點表示有未完成的任務。',
+                '如果筆記有特色圖片，它會顯示為該日期的背景。',
+                '`Cmd/Ctrl+Click` 日期可將其新增為搜尋篩選器。在設定中啟用選項修飾鍵後，`Option/Alt+Click` 同樣有效。'
+            ]
         }
     },
 
@@ -1017,6 +1026,10 @@ export const STRINGS_ZH_TW = {
                     friSat: '週五和週六',
                     thuFri: '週四和週五'
                 }
+            },
+            calendarShowInfoButton: {
+                name: '顯示資訊按鈕',
+                desc: '在搜尋列和日曆標題中顯示資訊按鈕。'
             },
             calendarWeeksToShow: {
                 name: '左側邊欄顯示週數',

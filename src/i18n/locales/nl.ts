@@ -82,6 +82,15 @@ export const STRINGS_NL = {
             title: 'Nieuwe dagelijkse notitie',
             message: 'Bestand {filename} bestaat niet. Wilt u het aanmaken?',
             confirmButton: 'Aanmaken'
+        },
+        helpModal: {
+            title: 'Kalender',
+            items: [
+                'Klik op een dag om een dagnotitie te openen of aan te maken. Weken, maanden, kwartalen en jaren werken op dezelfde manier.',
+                'Een gevulde stip onder een dag betekent dat er een notitie is. Een holle stip betekent dat er onvoltooide taken zijn.',
+                'Als een notitie een uitgelichte afbeelding heeft, wordt deze weergegeven als achtergrond van de dag.',
+                '`Cmd/Ctrl+Click` op een datum om deze toe te voegen als zoekfilter. `Option/Alt+Click` werkt ook wanneer de optiemodifier is ingeschakeld in de instellingen.'
+            ]
         }
     },
 
@@ -1021,6 +1030,10 @@ export const STRINGS_NL = {
                     friSat: 'Vrijdag en zaterdag',
                     thuFri: 'Donderdag en vrijdag'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Infoknoppen tonen',
+                desc: 'Infoknoppen weergeven in de zoekbalk en de kalenderheader.'
             },
             calendarWeeksToShow: {
                 name: 'Weken om te tonen in linker zijbalk',

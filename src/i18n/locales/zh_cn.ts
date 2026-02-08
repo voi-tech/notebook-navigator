@@ -81,6 +81,15 @@ export const STRINGS_ZH_CN = {
             title: '创建每日笔记',
             message: '每日笔记 {filename} 不存在。是否创建？',
             confirmButton: '创建'
+        },
+        helpModal: {
+            title: '日历',
+            items: [
+                '点击任意日期以打开或创建每日笔记。周、月、季度和年份的操作方式相同。',
+                '日期下方的实心圆点表示有笔记。空心圆点表示有未完成的任务。',
+                '如果笔记有特色图片，它会显示为该日期的背景。',
+                '`Cmd/Ctrl+Click` 日期可将其添加为搜索过滤器。在设置中启用选项修饰键后，`Option/Alt+Click` 同样有效。'
+            ]
         }
     },
 
@@ -1017,6 +1026,10 @@ export const STRINGS_ZH_CN = {
                     friSat: '周五和周六',
                     thuFri: '周四和周五'
                 }
+            },
+            calendarShowInfoButton: {
+                name: '显示信息按钮',
+                desc: '在搜索栏和日历标题中显示信息按钮。'
             },
             calendarWeeksToShow: {
                 name: '左侧边栏显示周数',

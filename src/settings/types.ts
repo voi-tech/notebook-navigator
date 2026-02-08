@@ -256,6 +256,7 @@ export interface NotebookNavigatorSettings {
     calendarConfirmBeforeCreate: boolean;
     calendarLocale: string;
     calendarWeekendDays: CalendarWeekendDays;
+    calendarShowInfoButton: boolean;
     calendarHighlightToday: boolean;
     calendarShowFeatureImage: boolean;
     calendarShowWeekNumber: boolean;

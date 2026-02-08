@@ -81,6 +81,15 @@ export const STRINGS_KO = {
             title: '새 데일리 노트',
             message: '파일 {filename}이(가) 존재하지 않습니다. 생성하시겠습니까?',
             confirmButton: '생성'
+        },
+        helpModal: {
+            title: '캘린더',
+            items: [
+                '아무 날이나 클릭하여 일간 노트를 열거나 만듭니다. 주, 월, 분기, 연도도 같은 방식으로 작동합니다.',
+                '날짜 아래 채워진 점은 노트가 있음을 의미합니다. 빈 점은 미완료 작업이 있음을 의미합니다.',
+                '노트에 대표 이미지가 있으면 해당 날짜의 배경으로 표시됩니다.',
+                '`Cmd/Ctrl+Click`으로 날짜를 검색 필터로 추가합니다. 설정에서 옵션 수정자가 활성화된 경우 `Option/Alt+Click`도 사용할 수 있습니다.'
+            ]
         }
     },
 
@@ -1019,6 +1028,10 @@ export const STRINGS_KO = {
                     friSat: '금요일과 토요일',
                     thuFri: '목요일과 금요일'
                 }
+            },
+            calendarShowInfoButton: {
+                name: '정보 버튼 표시',
+                desc: '검색 바와 캘린더 헤더에 정보 버튼을 표시합니다.'
             },
             calendarWeeksToShow: {
                 name: '왼쪽 사이드바에 표시할 주',

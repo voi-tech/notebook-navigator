@@ -82,6 +82,15 @@ export const STRINGS_VI = {
             title: 'Ghi chú hàng ngày mới',
             message: 'Tệp {filename} không tồn tại. Bạn có muốn tạo không?',
             confirmButton: 'Tạo'
+        },
+        helpModal: {
+            title: 'Lịch',
+            items: [
+                'Nhấp vào bất kỳ ngày nào để mở hoặc tạo ghi chú hàng ngày. Tuần, tháng, quý và năm hoạt động tương tự.',
+                'Chấm đặc dưới một ngày nghĩa là có ghi chú. Chấm rỗng nghĩa là có nhiệm vụ chưa hoàn thành.',
+                'Nếu ghi chú có ảnh nổi bật, nó sẽ hiển thị làm nền của ngày.',
+                '`Cmd/Ctrl+Click` vào ngày để thêm làm bộ lọc tìm kiếm. `Option/Alt+Click` cũng hoạt động khi bật phím bổ trợ tùy chọn trong cài đặt.'
+            ]
         }
     },
 
@@ -1019,6 +1028,10 @@ export const STRINGS_VI = {
                     friSat: 'Thứ sáu và thứ bảy',
                     thuFri: 'Thứ năm và thứ sáu'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Hiển thị nút thông tin',
+                desc: 'Hiển thị nút thông tin trên thanh tìm kiếm và tiêu đề lịch.'
             },
             calendarWeeksToShow: {
                 name: 'Số tuần hiển thị trong thanh bên trái',

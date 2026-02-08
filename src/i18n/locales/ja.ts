@@ -81,6 +81,15 @@ export const STRINGS_JA = {
             title: '新規デイリーノート',
             message: 'ファイル {filename} は存在しません。作成しますか？',
             confirmButton: '作成'
+        },
+        helpModal: {
+            title: 'カレンダー',
+            items: [
+                '任意の日をクリックしてデイリーノートを開くか作成します。週、月、四半期、年も同様に機能します。',
+                '日付の下の塗りつぶされたドットはノートがあることを意味します。中空のドットは未完了のタスクがあることを意味します。',
+                'ノートにフィーチャー画像がある場合、その日の背景として表示されます。',
+                '`Cmd/Ctrl+Click`で日付を検索フィルターとして追加します。設定でオプション修飾キーが有効な場合、`Option/Alt+Click`も使用できます。'
+            ]
         }
     },
 
@@ -1019,6 +1028,10 @@ export const STRINGS_JA = {
                     friSat: '金曜日と土曜日',
                     thuFri: '木曜日と金曜日'
                 }
+            },
+            calendarShowInfoButton: {
+                name: '情報ボタンを表示',
+                desc: '検索バーとカレンダーヘッダーに情報ボタンを表示します。'
             },
             calendarWeeksToShow: {
                 name: '左サイドバーの表示週数',

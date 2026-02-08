@@ -82,6 +82,15 @@ export const STRINGS_EN = {
             title: 'New daily note',
             message: 'File {filename} does not exist. Would you like to create it?',
             confirmButton: 'Create'
+        },
+        helpModal: {
+            title: 'Calendar',
+            items: [
+                'Click any day to open or create a daily note. Weeks, months, quarters, and years work the same way.',
+                'A filled dot under a day means it has a note. A hollow dot means it has unfinished tasks.',
+                "If a note has a feature image, it appears as the day's background.",
+                '`Cmd/Ctrl+Click` a date to add it as a search filter. `Option/Alt+Click` also works when the option modifier is enabled in settings.'
+            ]
         }
     },
 
@@ -1018,6 +1027,10 @@ export const STRINGS_EN = {
                     friSat: 'Friday and Saturday',
                     thuFri: 'Thursday and Friday'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Show info buttons',
+                desc: 'Display info buttons in the search bar and calendar header.'
             },
             calendarWeeksToShow: {
                 name: 'Weeks to show in left sidebar',

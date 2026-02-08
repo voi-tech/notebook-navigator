@@ -81,6 +81,15 @@ export const STRINGS_PL = {
             title: 'Nowa dzienna notatka',
             message: 'Plik {filename} nie istnieje. Czy chcesz go utworzyć?',
             confirmButton: 'Utwórz'
+        },
+        helpModal: {
+            title: 'Kalendarz',
+            items: [
+                'Kliknij dowolny dzień, aby otworzyć lub utworzyć notatkę dzienną. Tygodnie, miesiące, kwartały i lata działają w ten sam sposób.',
+                'Wypełniona kropka pod dniem oznacza, że ma notatkę. Pusta kropka oznacza, że ma nieukończone zadania.',
+                'Jeśli notatka ma obraz wyróżniający, pojawia się jako tło dnia.',
+                '`Cmd/Ctrl+Click` na dacie, aby dodać ją jako filtr wyszukiwania. `Option/Alt+Click` również działa, gdy modyfikator opcji jest włączony w ustawieniach.'
+            ]
         }
     },
 
@@ -1021,6 +1030,10 @@ export const STRINGS_PL = {
                     friSat: 'Piątek i sobota',
                     thuFri: 'Czwartek i piątek'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Pokaż przyciski informacji',
+                desc: 'Wyświetl przyciski informacji na pasku wyszukiwania i w nagłówku kalendarza.'
             },
             calendarWeeksToShow: {
                 name: 'Tygodnie do wyświetlenia na lewym pasku bocznym',

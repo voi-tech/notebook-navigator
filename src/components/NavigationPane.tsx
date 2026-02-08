@@ -190,6 +190,7 @@ interface NavigationPaneProps {
     onRevealFile: (file: TFile) => void;
     onRevealShortcutFile?: (file: TFile) => void;
     onModifySearchWithTag: (tag: string, operator: InclusionOperator) => void;
+    onModifySearchWithDateFilter: (dateToken: string) => void;
 }
 
 // Default note count object used when counts are disabled or unavailable
@@ -236,6 +237,7 @@ export const NavigationPane = React.memo(
             onRevealFile,
             onRevealShortcutFile,
             onModifySearchWithTag,
+            onModifySearchWithDateFilter,
             uiScale
         } = props;
         const commandQueue = useCommandQueue();
@@ -2911,7 +2913,7 @@ export const NavigationPane = React.memo(
                 </div>
                 {shouldRenderCalendarOverlay ? (
                     <div className="nn-navigation-calendar-overlay">
-                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} />
+                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={onModifySearchWithDateFilter} />
                     </div>
                 ) : null}
                 {shouldRenderBottomToolbarOutsidePanel ? <div className="nn-pane-bottom-toolbar">{navigationToolbar}</div> : null}

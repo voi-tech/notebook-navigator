@@ -82,6 +82,15 @@ export const STRINGS_ID = {
             title: 'Catatan harian baru',
             message: 'File {filename} tidak ada. Apakah Anda ingin membuatnya?',
             confirmButton: 'Buat'
+        },
+        helpModal: {
+            title: 'Kalender',
+            items: [
+                'Klik hari mana pun untuk membuka atau membuat catatan harian. Minggu, bulan, kuartal, dan tahun berfungsi dengan cara yang sama.',
+                'Titik terisi di bawah hari berarti memiliki catatan. Titik kosong berarti memiliki tugas yang belum selesai.',
+                'Jika catatan memiliki gambar fitur, gambar tersebut muncul sebagai latar belakang hari.',
+                '`Cmd/Ctrl+Click` pada tanggal untuk menambahkannya sebagai filter pencarian. `Option/Alt+Click` juga berfungsi saat pengubah opsi diaktifkan di pengaturan.'
+            ]
         }
     },
 
@@ -1019,6 +1028,10 @@ export const STRINGS_ID = {
                     friSat: 'Jumat dan Sabtu',
                     thuFri: 'Kamis dan Jumat'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Tampilkan tombol info',
+                desc: 'Tampilkan tombol info di bilah pencarian dan header kalender.'
             },
             calendarWeeksToShow: {
                 name: 'Minggu yang ditampilkan di sidebar kiri',

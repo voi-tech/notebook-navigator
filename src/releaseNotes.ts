@@ -81,6 +81,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         new: [
             '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
             '==Date filters in search==! You can now filter notes by date using the "@" symbol. Some examples: @today, @2026W02, @2026-Q1, @13/02/2026, or ranges like @2026-01-01..2026-02-07. You can specifically choose created date with @c:, modified date with @m:, or exclude date matches with -@.',
+            '==Date filters in calendar==! You can CMD+Click day, week, month, quarter or year in the calendar to show all notes for that period in the list pane!',
             '==Emojis in tags==! You can now use emojis when naming and renaming tags. Inline tag operations show a warning confirmation when a tag contains characters Obsidian cannot parse inline (example: ‼ can split an inline tag). YAML frontmatter tags can contain any characters.',
             '==Quickly switch between filter search and Omnisearch==! Quickly switch between filter search and Omnisearch by pressing the search icon or pressing UP/DOWN when the search input is focused.',
             'You can now set individual colors for property values in ==Notes > Property colors==! Use property:value=color to set colors for individual property values, like status:done=green and status:todo=red. If no value color is set it will fall back to the property color if defined.',
@@ -93,21 +94,20 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New search filter: ==has:task==. Use this to filter notes that have unfinished tasks.'
         ],
         improved: [
-            'Many improvements to calendar display. Days with notes now show as dots, and the overall look and feel is much improved.',
-            'You can now command-click date, week, month, quarter or year in the calendar to show notes for that period in the list pane.',
-            'Calendar now shows a small circle for notes with unfinished tasks.',
-            'You can now remove icons from the recently used icons list.',
-            'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are less likely to be pushed out by matches from other parts of the vault.'
+            'Many visual improvements to calendar. Days with notes now show as dots, and the overall look and feel is much improved.',
+            'The calendar now also shows a small circle for notes with unfinished tasks.',
+            'You can now remove individual icons from the recently used icons list.',
+            'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are now less likely to be pushed out by matches from other parts of the vault.'
         ],
         changed: [
-            '**Breaking change** - the setting "Folder note properties" used to set frontmatter properties for folder notes was removed. If you were using that setting, you can migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
+            '**Breaking change** - the setting "Folder note properties" used to set frontmatter properties for folder notes was removed. If you were using that setting, please migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
             '**Breaking change** - The search bar now uses "-" instead of "!" to exclude terms from search to match industry standards. To exclude a term you now use "-term" instead of "!term". Saved searches will be migrated on first launch.',
-            'Format settings now use **Moment format**. Existing formats migrate automatically where possible.',
-            'Removed the settings tab Settings > "Search & hotkeys". The search setting is now local and toggled in the list pane.'
+            'All date format settings now use **Moment format**. Existing date-fns formats migrate automatically on first launch.',
+            'Removed the settings tab **Settings > "Search & hotkeys"**. The search setting is now local and toggled in the list pane by pressing up/down or clicking the magnifying glass.'
         ],
         fixed: [
-            'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also improved performance significantly by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.',
-            'Weekly periodic note patterns previously used custom calendar locale, where others used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.',
+            'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also significantly improved performance when navigating in navpane by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.',
+            'Weekly periodic note patterns previously used custom calendar locale, where others like month and year used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.',
             'Fixed two display issues in Android: A small gap at the bottom of the left sidebar and text fonts were cropped on some devices.'
         ]
     },

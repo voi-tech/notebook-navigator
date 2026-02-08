@@ -28,7 +28,7 @@ import { SearchDateInputSuggest } from '../suggest/SearchDateInputSuggest';
 import { SearchTagInputSuggest } from '../suggest/SearchTagInputSuggest';
 import type { SearchProvider } from '../types/search';
 import { resolveUXIcon } from '../utils/uxIcons';
-import { SearchHelpModal } from '../modals/SearchHelpModal';
+import { InfoModal } from '../modals/InfoModal';
 
 interface SearchInputProps {
     searchQuery: string;
@@ -283,7 +283,14 @@ export function SearchInput({
     const openSearchHelp = useCallback(() => {
         tagSuggestRef.current?.close();
         dateSuggestRef.current?.close();
-        new SearchHelpModal(app).open();
+        const { fileNames, tags, connectors, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
+        const sections = [fileNames, dates, tags, connectors, omnisearch];
+        new InfoModal(app, {
+            title: strings.searchInput.searchHelpTitle,
+            intro: strings.searchInput.searchHelpModal.intro,
+            emphasizedIntro: strings.searchInput.searchHelpModal.introSwitching,
+            sections
+        }).open();
     }, [app]);
 
     return (
@@ -328,7 +335,7 @@ export function SearchInput({
                     onKeyDown={handleKeyDown}
                     onClick={handleSearchClick}
                 />
-                {!hasQuery && (
+                {!hasQuery && settings.calendarShowInfoButton && (
                     <div
                         className="nn-search-help-button"
                         role="button"

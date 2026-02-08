@@ -81,7 +81,12 @@ import { EMPTY_SEARCH_TAG_FILTER_STATE, type SearchProvider, type SearchTagFilte
 import { EMPTY_LIST_MENU_TYPE } from '../utils/contextMenu';
 import { useUXPreferenceActions, useUXPreferences } from '../context/UXPreferencesContext';
 import { normalizeTagPath } from '../utils/tagUtils';
-import { parseFilterSearchTokens, updateFilterQueryWithTag, type InclusionOperator } from '../utils/filterSearch';
+import {
+    parseFilterSearchTokens,
+    updateFilterQueryWithDateToken,
+    updateFilterQueryWithTag,
+    type InclusionOperator
+} from '../utils/filterSearch';
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { LIST_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
 import { runAsyncAction } from '../utils/async';
@@ -124,6 +129,7 @@ export interface ListPaneHandle {
     selectFile: (file: TFile, options?: SelectFileOptions) => void;
     selectAdjacentFile: (direction: 'next' | 'previous') => boolean;
     modifySearchWithTag: (tag: string, operator: InclusionOperator) => void;
+    modifySearchWithDateToken: (dateToken: string) => void;
     toggleSearch: () => void;
     executeSearchShortcut: (params: ExecuteSearchShortcutParams) => Promise<void>;
 }
@@ -1307,6 +1313,46 @@ export const ListPane = React.memo(
             ]
         );
 
+        const modifySearchWithDateToken = useCallback(
+            (dateToken: string) => {
+                const normalizedToken = dateToken.trim();
+                if (!normalizedToken) {
+                    return;
+                }
+
+                if (!isSearchActive) {
+                    setIsSearchActive(true);
+                    if (uiState.singlePane) {
+                        uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
+                    }
+                }
+
+                setShouldFocusSearch(true);
+                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'search' });
+
+                let nextQueryValue: string | null = null;
+
+                setSearchQuery(prev => {
+                    const result = updateFilterQueryWithDateToken(prev, normalizedToken);
+                    nextQueryValue = result.query;
+                    return result.query;
+                });
+
+                if (nextQueryValue !== null) {
+                    setDebouncedSearchQuery(nextQueryValue);
+                }
+            },
+            [
+                setIsSearchActive,
+                uiDispatch,
+                setShouldFocusSearch,
+                setSearchQuery,
+                setDebouncedSearchQuery,
+                isSearchActive,
+                uiState.singlePane
+            ]
+        );
+
         useImperativeHandle(
             ref,
             () => ({
@@ -1319,6 +1365,8 @@ export const ListPane = React.memo(
                 selectAdjacentFile,
                 // Toggle or modify search query to include/exclude a tag with AND/OR operator
                 modifySearchWithTag,
+                // Replace the active search query with a date token
+                modifySearchWithDateToken,
                 // Toggle search mode on/off or focus existing search
                 toggleSearch: () => {
                     if (isSearchActive) {
@@ -1356,7 +1404,8 @@ export const ListPane = React.memo(
                 executeSearchShortcut,
                 selectFileFromList,
                 selectAdjacentFile,
-                modifySearchWithTag
+                modifySearchWithTag,
+                modifySearchWithDateToken
             ]
         );
 
@@ -1612,7 +1661,7 @@ export const ListPane = React.memo(
                 </div>
                 {shouldRenderCalendarOverlay ? (
                     <div className="nn-navigation-calendar-overlay">
-                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} />
+                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={modifySearchWithDateToken} />
                     </div>
                 ) : null}
                 {shouldRenderBottomToolbarOutsidePanel ? <div className="nn-pane-bottom-toolbar">{listToolbar}</div> : null}

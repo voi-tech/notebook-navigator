@@ -82,6 +82,15 @@ export const STRINGS_IT = {
             title: 'Nuova nota giornaliera',
             message: 'Il file {filename} non esiste. Vuoi crearlo?',
             confirmButton: 'Crea'
+        },
+        helpModal: {
+            title: 'Calendario',
+            items: [
+                'Fai clic su un giorno per aprire o creare una nota giornaliera. Settimane, mesi, trimestri e anni funzionano allo stesso modo.',
+                'Un punto pieno sotto un giorno indica che ha una nota. Un punto vuoto indica che ha attività incomplete.',
+                "Se una nota ha un'immagine in evidenza, appare come sfondo del giorno.",
+                '`Cmd/Ctrl+Click` su una data per aggiungerla come filtro di ricerca. `Option/Alt+Click` funziona anche quando il modificatore opzione è abilitato nelle impostazioni.'
+            ]
         }
     },
 
@@ -1018,6 +1027,10 @@ export const STRINGS_IT = {
                     friSat: 'Venerdì e sabato',
                     thuFri: 'Giovedì e venerdì'
                 }
+            },
+            calendarShowInfoButton: {
+                name: 'Mostra pulsanti informazioni',
+                desc: 'Mostra i pulsanti informazioni nella barra di ricerca e nell\'intestazione del calendario.'
             },
             calendarWeeksToShow: {
                 name: 'Settimane da mostrare nella barra laterale sinistra',

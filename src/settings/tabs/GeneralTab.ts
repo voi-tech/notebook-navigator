@@ -901,6 +901,17 @@ export function renderGeneralTab(context: SettingsTabContext): void {
             })
         );
 
+    viewGroup
+        .addSetting(setting => {
+            setting.setName(strings.settings.items.calendarShowInfoButton.name).setDesc(strings.settings.items.calendarShowInfoButton.desc);
+        })
+        .addToggle(toggle =>
+            toggle.setValue(plugin.settings.calendarShowInfoButton).onChange(async value => {
+                plugin.settings.calendarShowInfoButton = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+
     renderToolbarVisibilitySetting(createSetting => viewGroup.addSetting(createSetting), plugin);
 
     const iconsGroup = createGroup(strings.settings.groups.general.icons);

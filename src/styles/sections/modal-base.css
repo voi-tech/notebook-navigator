@@ -94,7 +94,8 @@
     padding-right: 8px;
 }
 
-.modal.nn-search-help-modal code {
+.modal.nn-search-help-modal strong {
+    font-size: inherit;
     font-weight: 600;
 }
 

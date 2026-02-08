@@ -1235,6 +1235,11 @@ export interface UpdateFilterQueryWithTagResult {
     changed: boolean;
 }
 
+export interface UpdateFilterQueryWithDateTokenResult {
+    query: string;
+    changed: boolean;
+}
+
 /**
  * Toggle a normalized tag inside a raw query string.
  * In tag-only queries, connectors are inserted/cleaned as expression operators.
@@ -1315,6 +1320,25 @@ export function updateFilterQueryWithTag(
         query: nextQuery,
         action: 'added',
         changed: nextQuery !== trimmed
+    };
+}
+
+/**
+ * Replaces a raw query string with a date token (for example `@2026-02-08`).
+ */
+export function updateFilterQueryWithDateToken(query: string, dateToken: string): UpdateFilterQueryWithDateTokenResult {
+    const trimmedToken = dateToken.trim();
+
+    if (!trimmedToken || !trimmedToken.startsWith('@')) {
+        const trimmedQuery = query.trim();
+        return { query: trimmedQuery, changed: false };
+    }
+
+    const trimmedQuery = query.trim();
+    const nextQuery = trimmedToken;
+    return {
+        query: nextQuery,
+        changed: nextQuery !== trimmedQuery
     };
 }
 

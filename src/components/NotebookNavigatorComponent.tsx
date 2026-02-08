@@ -17,7 +17,7 @@
  */
 
 // src/components/NotebookNavigatorComponent.tsx
-import React, { useEffect, useImperativeHandle, forwardRef, useRef, useState, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useImperativeHandle, forwardRef, useRef, useState, useCallback, useLayoutEffect, useMemo } from 'react';
 import { TFile, TFolder } from 'obsidian';
 import { useSelectionState, useSelectionDispatch, resolvePrimarySelectedFile } from '../context/SelectionContext';
 import { useServices } from '../context/ServicesContext';
@@ -61,6 +61,7 @@ import { UpdateNoticeIndicator } from './UpdateNoticeIndicator';
 import { showNotice } from '../utils/noticeUtils';
 import { EMPTY_SEARCH_TAG_FILTER_STATE, type SearchTagFilterState } from '../types/search';
 import { getListPaneMeasurements } from '../utils/listPaneMeasurements';
+import type { InclusionOperator } from '../utils/filterSearch';
 
 // Checks if two string arrays have identical content in the same order
 const arraysEqual = (a: string[], b: string[]): boolean => {
@@ -92,6 +93,7 @@ export interface NotebookNavigatorHandle {
     addShortcutForCurrentSelection: () => Promise<void>;
     navigateToFolder: (folder: TFolder, options?: NavigateToFolderOptions) => void;
     navigateToTag: (tagPath: string) => void;
+    addDateFilterToSearch: (dateToken: string) => void;
     navigateToFolderWithModal: () => void;
     navigateToTagWithModal: () => void;
     addTagToSelectedFiles: () => Promise<void>;
@@ -208,6 +210,14 @@ export const NotebookNavigatorComponent = React.memo(
                 return;
             }
             await listHandle.executeSearchShortcut({ searchShortcut });
+        }, []);
+
+        const handleModifySearchWithTag = useCallback((tag: string, operator: InclusionOperator) => {
+            listPaneRef.current?.modifySearchWithTag(tag, operator);
+        }, []);
+
+        const handleModifySearchWithDateFilter = useCallback((dateToken: string) => {
+            listPaneRef.current?.modifySearchWithDateToken(dateToken);
         }, []);
 
         // Enable resizable pane
@@ -715,6 +725,7 @@ export const NotebookNavigatorComponent = React.memo(
                 },
                 navigateToFolder,
                 navigateToTag,
+                addDateFilterToSearch: handleModifySearchWithDateFilter,
                 navigateToFolderWithModal: () => {
                     // Show the folder selection modal for navigation
                     const modal = new FolderSuggestModal(
@@ -838,7 +849,8 @@ export const NotebookNavigatorComponent = React.memo(
             navigationPaneRef,
             addFolderShortcut,
             addNoteShortcut,
-            addTagShortcut
+            addTagShortcut,
+            handleModifySearchWithDateFilter
         ]);
 
         // Add platform class and background mode classes
@@ -944,11 +956,17 @@ export const NotebookNavigatorComponent = React.memo(
         }, [containerRef, settings.paneTransitionDuration]);
 
         // Compute navigation pane style based on orientation and single pane mode
-        const navigationPaneStyle = uiState.singlePane
-            ? { width: '100%', height: '100%' }
-            : orientation === 'vertical'
-              ? { width: '100%', flexBasis: `${paneSize}px`, minHeight: `${navigationPaneMinSize}px` }
-              : { width: `${paneSize}px`, height: '100%' };
+        const navigationPaneStyle = useMemo<React.CSSProperties>(() => {
+            if (uiState.singlePane) {
+                return { width: '100%', height: '100%' };
+            }
+
+            if (orientation === 'vertical') {
+                return { width: '100%', flexBasis: `${paneSize}px`, minHeight: `${navigationPaneMinSize}px` };
+            }
+
+            return { width: `${paneSize}px`, height: '100%' };
+        }, [uiState.singlePane, orientation, paneSize, navigationPaneMinSize]);
 
         const shouldRenderSinglePaneCalendar =
             uiState.singlePane &&
@@ -992,9 +1010,8 @@ export const NotebookNavigatorComponent = React.memo(
                         onRevealTag={revealTag}
                         onRevealFile={revealFileInNearestFolder}
                         onRevealShortcutFile={handleShortcutNoteReveal}
-                        onModifySearchWithTag={(tag, operator) => {
-                            listPaneRef.current?.modifySearchWithTag(tag, operator);
-                        }}
+                        onModifySearchWithTag={handleModifySearchWithTag}
+                        onModifySearchWithDateFilter={handleModifySearchWithDateFilter}
                     />
                     <ListPane
                         ref={listPaneRef}
@@ -1004,7 +1021,10 @@ export const NotebookNavigatorComponent = React.memo(
                     />
                     {shouldRenderSinglePaneCalendar ? (
                         <div className="nn-single-pane-calendar">
-                            <NavigationPaneCalendar onWeekCountChange={handleSinglePaneCalendarWeekCountChange} />
+                            <NavigationPaneCalendar
+                                onWeekCountChange={handleSinglePaneCalendarWeekCountChange}
+                                onAddDateFilter={handleModifySearchWithDateFilter}
+                            />
                         </div>
                     ) : null}
                 </div>
