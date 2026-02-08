@@ -58,6 +58,8 @@ function createFileData(overrides: Partial<FileData>): FileData {
         fileThumbnailsMtime: 0,
         tags: null,
         wordCount: null,
+        taskTotal: 0,
+        taskIncomplete: 0,
         customProperty: null,
         previewStatus: 'unprocessed',
         featureImage: null,
@@ -141,6 +143,34 @@ describe('Storage queue filters', () => {
         );
 
         settings = { ...settings, showFeatureImage: true };
+
+        const types: ContentProviderType[] = ['markdownPipeline'];
+        const result = filterFilesRequiringMetadataSources([file], types, settings);
+
+        expect(result).toEqual([file]);
+    });
+
+    it('includes markdown files when task counters are pending', () => {
+        const file = new TFile();
+        file.path = 'notes/note.md';
+        file.extension = 'md';
+        file.stat.mtime = 456;
+
+        db.setFile(
+            file.path,
+            createFileData({
+                mtime: file.stat.mtime,
+                markdownPipelineMtime: file.stat.mtime,
+                wordCount: 0,
+                taskTotal: null,
+                taskIncomplete: null,
+                previewStatus: 'none',
+                featureImageStatus: 'none',
+                featureImageKey: ''
+            })
+        );
+
+        settings = { ...settings, showFilePreview: false, showFeatureImage: false, customPropertyFields: '' };
 
         const types: ContentProviderType[] = ['markdownPipeline'];
         const result = filterFilesRequiringMetadataSources([file], types, settings);

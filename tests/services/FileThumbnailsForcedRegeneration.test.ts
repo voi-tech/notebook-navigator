@@ -52,6 +52,8 @@ function createFileData(overrides: Partial<FileData>): FileData {
         fileThumbnailsMtime: 0,
         tags: [],
         wordCount: 0,
+        taskTotal: 0,
+        taskIncomplete: 0,
         customProperty: null,
         previewStatus: 'none',
         featureImage: null,

@@ -54,6 +54,8 @@ function createFileData(overrides: Partial<FileData>): FileData {
         fileThumbnailsMtime: 0,
         tags: null,
         wordCount: null,
+        taskTotal: 0,
+        taskIncomplete: 0,
         customProperty: null,
         previewStatus: 'unprocessed',
         featureImage: null,
@@ -77,6 +79,8 @@ describe('recordFileChanges rename merge', () => {
             metadataMtime: 150,
             tags: ['destination'],
             wordCount: 10,
+            taskTotal: 3,
+            taskIncomplete: 1,
             // Stored custom property items include the source field key and value.
             customProperty: [{ fieldKey: 'status', value: 'destination' }],
             previewStatus: 'none',
@@ -92,6 +96,8 @@ describe('recordFileChanges rename merge', () => {
             metadataMtime: 0,
             tags: ['source'],
             wordCount: 42,
+            taskTotal: 7,
+            taskIncomplete: 2,
             // Stored custom property items include the source field key and value.
             customProperty: [{ fieldKey: 'status', value: 'source' }],
             previewStatus: 'has',
@@ -116,6 +122,8 @@ describe('recordFileChanges rename merge', () => {
         expect(updated.mtime).toBe(200);
         expect(updated.tags).toEqual(['source']);
         expect(updated.wordCount).toBe(42);
+        expect(updated.taskTotal).toBe(7);
+        expect(updated.taskIncomplete).toBe(2);
         expect(updated.customProperty).toEqual([{ fieldKey: 'status', value: 'source' }]);
         expect(updated.previewStatus).toBe('has');
         expect(updated.featureImageStatus).toBe('has');

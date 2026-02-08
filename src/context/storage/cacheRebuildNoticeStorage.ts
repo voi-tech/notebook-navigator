@@ -32,7 +32,15 @@ export interface CacheRebuildNoticeState {
 }
 
 function isFileContentType(value: unknown): value is FileContentType {
-    return value === 'preview' || value === 'tags' || value === 'featureImage' || value === 'metadata' || value === 'customProperty';
+    return (
+        value === 'preview' ||
+        value === 'tags' ||
+        value === 'featureImage' ||
+        value === 'metadata' ||
+        value === 'wordCount' ||
+        value === 'tasks' ||
+        value === 'customProperty'
+    );
 }
 
 // Validates the vault-scoped localStorage payload before using it to drive UI.

@@ -75,8 +75,9 @@ export function filterFilesRequiringMetadataSources(
                 settings.showFeatureImage && (record.featureImageKey === null || record.featureImageStatus === 'unprocessed');
             const needsCustomProperty = customPropertyEnabled && record.customProperty === null;
             const needsWordCount = record.wordCount === null;
+            const needsTasks = record.taskTotal === null || record.taskIncomplete === null;
             const needsRefresh = record.markdownPipelineMtime !== file.stat.mtime;
-            if (needsRefresh || needsPreview || needsFeatureImage || needsCustomProperty || needsWordCount) {
+            if (needsRefresh || needsPreview || needsFeatureImage || needsCustomProperty || needsWordCount || needsTasks) {
                 return true;
             }
         }

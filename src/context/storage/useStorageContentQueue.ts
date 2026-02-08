@@ -18,7 +18,7 @@
 
 import { useCallback, type RefObject } from 'react';
 import { TFile } from 'obsidian';
-import type { ContentProviderType } from '../../interfaces/IContentProvider';
+import type { ContentProviderType, FileContentType } from '../../interfaces/IContentProvider';
 import type { ContentProviderRegistry } from '../../services/content/ContentProviderRegistry';
 import type { NotebookNavigatorSettings } from '../../settings';
 import { getDBInstance } from '../../storage/fileOperations';
@@ -122,9 +122,7 @@ export function useStorageContentQueue(params: {
                     // no "changed files" but still pending derived content in the database. Fall back to checking
                     // the database for any missing content types.
                     const db = getDBInstance();
-                    const contentTypesToCheck: ('tags' | 'preview' | 'featureImage' | 'metadata' | 'wordCount' | 'customProperty')[] = [
-                        'wordCount'
-                    ];
+                    const contentTypesToCheck: FileContentType[] = ['wordCount', 'tasks'];
                     if (metadataDependentTypes.includes('tags')) {
                         contentTypesToCheck.push('tags');
                     }

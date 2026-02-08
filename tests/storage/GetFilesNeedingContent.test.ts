@@ -29,6 +29,8 @@ function createFileData(overrides: Partial<FileData>): FileData {
         fileThumbnailsMtime: 0,
         tags: [],
         wordCount: null,
+        taskTotal: 0,
+        taskIncomplete: 0,
         customProperty: null,
         previewStatus: 'none',
         featureImage: null,
@@ -70,5 +72,31 @@ describe('IndexedDBStorage.getFilesNeedingContent', () => {
         const metadataNeeding = storage.getFilesNeedingContent('metadata');
         expect(metadataNeeding.has('notes/note.md')).toBe(true);
         expect(metadataNeeding.has('docs/file.pdf')).toBe(false);
+    });
+
+    it('returns markdown files with pending task counters', () => {
+        const cache = new MemoryFileCache();
+        cache.markInitialized();
+
+        const storage = new IndexedDBStorage('test', { cache });
+
+        cache.updateFile(
+            'docs/file.pdf',
+            createFileData({
+                taskTotal: null,
+                taskIncomplete: null
+            })
+        );
+        cache.updateFile(
+            'notes/note.md',
+            createFileData({
+                taskTotal: null,
+                taskIncomplete: null
+            })
+        );
+
+        const tasksNeeding = storage.getFilesNeedingContent('tasks');
+        expect(tasksNeeding.has('notes/note.md')).toBe(true);
+        expect(tasksNeeding.has('docs/file.pdf')).toBe(false);
     });
 });

@@ -27,7 +27,7 @@ import {
 import { MemoryFileCache } from './MemoryFileCache';
 import { isPlainObjectRecordValue } from '../utils/recordUtils';
 import { isMarkdownPath } from '../utils/fileTypeUtils';
-import type { ContentProviderType } from '../interfaces/IContentProvider';
+import type { ContentProviderType, FileContentType } from '../interfaces/IContentProvider';
 import { getProviderProcessedMtimeField } from './providerMtime';
 import { LIMITS } from '../constants/limits';
 
@@ -75,6 +75,32 @@ function isCustomPropertyData(value: unknown): value is CustomPropertyItem[] {
     return value.every(entry => isCustomPropertyItem(entry));
 }
 
+// Task counters are stored and updated as a pair.
+//
+// Valid states:
+// - `null/null`: pending extraction (or tasks disabled upstream)
+// - `number/number`: extracted values (finite integers, >= 0)
+//
+// Callers must not send partial updates (only `taskTotal` or only `taskIncomplete`).
+// Partial/invalid values are normalized to `null/null` so the counters can re-converge.
+function normalizeTaskCounters(taskTotal: unknown, taskIncomplete: unknown): { taskTotal: number | null; taskIncomplete: number | null } {
+    const hasValidTaskTotal = typeof taskTotal === 'number' && Number.isFinite(taskTotal) && taskTotal >= 0;
+    const hasValidTaskIncomplete = typeof taskIncomplete === 'number' && Number.isFinite(taskIncomplete) && taskIncomplete >= 0;
+
+    if (taskTotal === null && taskIncomplete === null) {
+        return { taskTotal: null, taskIncomplete: null };
+    }
+
+    if (hasValidTaskTotal && hasValidTaskIncomplete) {
+        return {
+            taskTotal: Math.trunc(taskTotal),
+            taskIncomplete: Math.trunc(taskIncomplete)
+        };
+    }
+
+    return { taskTotal: null, taskIncomplete: null };
+}
+
 function getDefaultPreviewStatusForPath(path: string): PreviewStatus {
     return isMarkdownPath(path) ? 'unprocessed' : 'none';
 }
@@ -89,6 +115,8 @@ export function createDefaultFileData(params: { mtime: number; path: string }): 
         fileThumbnailsMtime: 0,
         tags: isMarkdown ? null : [],
         wordCount: isMarkdown ? null : 0,
+        taskTotal: isMarkdown ? null : 0,
+        taskIncomplete: isMarkdown ? null : 0,
         customProperty: null,
         previewStatus: getDefaultPreviewStatusForPath(params.path),
         featureImage: null,
@@ -137,6 +165,8 @@ export interface FileData {
     fileThumbnailsMtime: number;
     tags: string[] | null; // null = not extracted yet (e.g. when tags disabled)
     wordCount: number | null; // null = not generated yet
+    taskTotal: number | null; // null = not generated yet
+    taskIncomplete: number | null; // null = not generated yet
     customProperty: CustomPropertyItem[] | null; // null = not generated yet
     /**
      * Preview text processing state.
@@ -194,6 +224,8 @@ export interface FileContentChange {
         metadata?: FileData['metadata'] | null;
         tags?: string[] | null;
         wordCount?: number | null;
+        taskTotal?: number | null;
+        taskIncomplete?: number | null;
         customProperty?: FileData['customProperty'];
     };
     changeType?: 'metadata' | 'content' | 'both';
@@ -314,6 +346,9 @@ export class IndexedDBStorage {
             typeof data.wordCount === 'number' && Number.isFinite(data.wordCount) && data.wordCount >= 0
                 ? Math.trunc(data.wordCount)
                 : null;
+        const normalizedTaskCounters = normalizeTaskCounters(data.taskTotal, data.taskIncomplete);
+        data.taskTotal = normalizedTaskCounters.taskTotal;
+        data.taskIncomplete = normalizedTaskCounters.taskIncomplete;
         data.customProperty = isCustomPropertyData(data.customProperty) ? data.customProperty : null;
         data.previewStatus = previewStatus;
         // Feature image blobs are stored separately from the main record.
@@ -1467,7 +1502,7 @@ export class IndexedDBStorage {
      * @param type - Type of content to check for
      * @returns Set of file paths needing content
      */
-    getFilesNeedingContent(type: 'tags' | 'preview' | 'featureImage' | 'metadata' | 'wordCount' | 'customProperty'): Set<string> {
+    getFilesNeedingContent(type: FileContentType): Set<string> {
         if (!this.cache.isReady()) {
             return new Set();
         }
@@ -1480,6 +1515,7 @@ export class IndexedDBStorage {
                 (type === 'featureImage' && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed')) ||
                 (type === 'metadata' && isMarkdownPath(path) && data.metadata === null) ||
                 (type === 'wordCount' && isMarkdownPath(path) && data.wordCount === null) ||
+                (type === 'tasks' && isMarkdownPath(path) && (data.taskTotal === null || data.taskIncomplete === null)) ||
                 (type === 'customProperty' && isMarkdownPath(path) && data.customProperty === null)
             ) {
                 result.add(path);
@@ -1488,7 +1524,7 @@ export class IndexedDBStorage {
         return result;
     }
 
-    getFilesNeedingAnyContent(types: ('tags' | 'preview' | 'featureImage' | 'metadata' | 'wordCount' | 'customProperty')[]): Set<string> {
+    getFilesNeedingAnyContent(types: FileContentType[]): Set<string> {
         if (!this.cache.isReady() || types.length === 0) {
             return new Set();
         }
@@ -1498,6 +1534,7 @@ export class IndexedDBStorage {
         const needsFeatureImage = types.includes('featureImage');
         const needsMetadata = types.includes('metadata');
         const needsWordCount = types.includes('wordCount');
+        const needsTasks = types.includes('tasks');
         const needsCustomProperty = types.includes('customProperty');
 
         const result = new Set<string>();
@@ -1509,6 +1546,7 @@ export class IndexedDBStorage {
                 (needsFeatureImage && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed')) ||
                 (needsMetadata && isMarkdown && data.metadata === null) ||
                 (needsWordCount && isMarkdown && data.wordCount === null) ||
+                (needsTasks && isMarkdown && (data.taskTotal === null || data.taskIncomplete === null)) ||
                 (needsCustomProperty && isMarkdown && data.customProperty === null)
             ) {
                 result.add(path);
@@ -2526,6 +2564,8 @@ export class IndexedDBStorage {
             path: string;
             tags?: string[] | null;
             wordCount?: number | null;
+            taskTotal?: number | null;
+            taskIncomplete?: number | null;
             preview?: string;
             featureImage?: Blob | null;
             featureImageKey?: string | null;
@@ -2551,6 +2591,8 @@ export class IndexedDBStorage {
             path: string;
             tags?: string[] | null;
             wordCount?: number | null;
+            taskTotal?: number | null;
+            taskIncomplete?: number | null;
             preview?: string;
             featureImage?: Blob | null;
             featureImageKey?: string | null;
@@ -2681,6 +2723,16 @@ export class IndexedDBStorage {
                             changes.wordCount = guardedUpdate.wordCount;
                             hasContentChanges = true;
                         }
+                        const hasTaskUpdate = guardedUpdate.taskTotal !== undefined || guardedUpdate.taskIncomplete !== undefined;
+                        if (hasTaskUpdate) {
+                            // Task counters must be written together; normalization preserves pair semantics.
+                            const normalizedTaskCounters = normalizeTaskCounters(guardedUpdate.taskTotal, guardedUpdate.taskIncomplete);
+                            newData.taskTotal = normalizedTaskCounters.taskTotal;
+                            newData.taskIncomplete = normalizedTaskCounters.taskIncomplete;
+                            changes.taskTotal = normalizedTaskCounters.taskTotal;
+                            changes.taskIncomplete = normalizedTaskCounters.taskIncomplete;
+                            hasContentChanges = true;
+                        }
                         if (guardedUpdate.customProperty !== undefined) {
                             newData.customProperty = guardedUpdate.customProperty;
                             changes.customProperty = guardedUpdate.customProperty;
@@ -2807,6 +2859,8 @@ export class IndexedDBStorage {
                                 changes.featureImageKey !== undefined ||
                                 changes.featureImageStatus !== undefined ||
                                 changes.wordCount !== undefined ||
+                                changes.taskTotal !== undefined ||
+                                changes.taskIncomplete !== undefined ||
                                 changes.customProperty !== undefined;
                             const hasMetadataUpdates = changes.metadata !== undefined || changes.tags !== undefined;
                             const updateType =

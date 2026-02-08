@@ -36,6 +36,8 @@ export type ContentProviderUpdate = {
     path: string;
     tags?: string[] | null;
     wordCount?: number | null;
+    taskTotal?: number | null;
+    taskIncomplete?: number | null;
     preview?: string;
     featureImage?: Blob | null;
     featureImageKey?: string | null;

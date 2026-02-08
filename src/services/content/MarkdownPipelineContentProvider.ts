@@ -50,13 +50,15 @@ type MarkdownPipelineContext = {
 
 type MarkdownPipelineUpdate = {
     wordCount?: number | null;
+    taskTotal?: number | null;
+    taskIncomplete?: number | null;
     preview?: string;
     customProperty?: FileData['customProperty'];
     featureImageKey?: string | null;
     featureImage?: Blob | null;
 };
 
-type MarkdownPipelineProcessorId = 'preview' | 'wordCount' | 'customProperty' | 'featureImage';
+type MarkdownPipelineProcessorId = 'preview' | 'wordCount' | 'tasks' | 'customProperty' | 'featureImage';
 
 type MarkdownPipelineProcessor = {
     id: MarkdownPipelineProcessorId;
@@ -81,6 +83,89 @@ function resolveMarkdownBodyStartIndex(metadata: CachedMetadata, content: string
     }
 
     return index;
+}
+
+const REGEX_MARKDOWN_TASK_ITEM = /^(?:\s*>\s*)*\s*(?:[-*]|[1-9]\d*\.)\s+\[([ xX])\]/u;
+const REGEX_FENCE_OPEN_LINE = /^(\s*)((?:>\s*)*)\s*([`~]{3,}).*$/u;
+const REGEX_FENCE_CLOSE_LINE = /^(\s*)((?:>\s*)*)\s*([`~]{3,})\s*$/u;
+
+function countBlockquoteDepth(prefix: string): number {
+    if (!prefix.includes('>')) {
+        return 0;
+    }
+
+    let depth = 0;
+    for (let index = 0; index < prefix.length; index += 1) {
+        if (prefix[index] === '>') {
+            depth += 1;
+        }
+    }
+
+    return depth;
+}
+
+function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTotal: number; taskIncomplete: number } {
+    const safeBodyStartIndex = Math.min(Math.max(0, bodyStartIndex), content.length);
+    const body = safeBodyStartIndex === 0 ? content : content.slice(safeBodyStartIndex);
+
+    if (body.length === 0) {
+        return { taskTotal: 0, taskIncomplete: 0 };
+    }
+
+    let taskTotal = 0;
+    let taskIncomplete = 0;
+    let lineStart = 0;
+    let inFence = false;
+    let fenceChar = '';
+    let fenceLength = 0;
+    let fenceDepth = 0;
+
+    while (lineStart < body.length) {
+        const nextLineEnd = body.indexOf('\n', lineStart);
+        const lineEnd = nextLineEnd === -1 ? body.length : nextLineEnd;
+        let line = body.slice(lineStart, lineEnd);
+        if (line.endsWith('\r')) {
+            line = line.slice(0, -1);
+        }
+
+        if (inFence) {
+            const closeMatch = line.match(REGEX_FENCE_CLOSE_LINE);
+            if (closeMatch && closeMatch[3]) {
+                const currentDepth = countBlockquoteDepth(closeMatch[2] ?? '');
+                const matchChar = closeMatch[3][0] ?? '';
+                if (currentDepth === fenceDepth && matchChar === fenceChar && closeMatch[3].length >= fenceLength) {
+                    inFence = false;
+                    fenceChar = '';
+                    fenceLength = 0;
+                    fenceDepth = 0;
+                }
+            }
+        } else {
+            const openMatch = line.match(REGEX_FENCE_OPEN_LINE);
+            if (openMatch && openMatch[3]) {
+                inFence = true;
+                fenceChar = openMatch[3][0] ?? '';
+                fenceLength = openMatch[3].length;
+                fenceDepth = countBlockquoteDepth(openMatch[2] ?? '');
+            } else {
+                const match = line.match(REGEX_MARKDOWN_TASK_ITEM);
+                if (match) {
+                    taskTotal += 1;
+                    if (match[1] === ' ') {
+                        taskIncomplete += 1;
+                    }
+                }
+            }
+        }
+
+        if (nextLineEnd === -1) {
+            break;
+        }
+
+        lineStart = lineEnd + 1;
+    }
+
+    return { taskTotal, taskIncomplete };
 }
 
 // Converts frontmatter values into a list of pill strings.
@@ -169,6 +254,22 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                 return false;
             },
             run: async context => await this.processWordCount(context)
+        },
+        {
+            id: 'tasks',
+            needsProcessing: context => {
+                if (
+                    !context.fileData ||
+                    context.fileModified ||
+                    context.fileData.taskTotal === null ||
+                    context.fileData.taskIncomplete === null
+                ) {
+                    return context.isExcalidraw || context.hasContent;
+                }
+
+                return false;
+            },
+            run: async context => await this.processTasks(context)
         },
         {
             id: 'customProperty',
@@ -315,8 +416,9 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             settings.showFeatureImage && (fileData.featureImageKey === null || fileData.featureImageStatus === 'unprocessed');
         const needsCustomProperty = customPropertyEnabled && fileData.customProperty === null;
         const needsWordCount = fileData.wordCount === null;
+        const needsTasks = fileData.taskTotal === null || fileData.taskIncomplete === null;
 
-        return needsPreview || needsFeatureImage || needsCustomProperty || needsWordCount;
+        return needsPreview || needsFeatureImage || needsCustomProperty || needsWordCount || needsTasks;
     }
 
     protected async processFile(
@@ -347,6 +449,8 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             settings.showFilePreview && (!fileData || fileModified || fileData.previewStatus === 'unprocessed') && !isExcalidraw;
         const needsWordCount = !fileData || fileModified || fileData.wordCount === null;
         const needsWordCountContent = needsWordCount && !isExcalidraw;
+        const needsTasks = !fileData || fileModified || fileData.taskTotal === null || fileData.taskIncomplete === null;
+        const needsTasksContent = needsTasks && !isExcalidraw;
         const needsFeatureImage =
             settings.showFeatureImage &&
             (!fileData || fileModified || fileData.featureImageKey === null || fileData.featureImageStatus === 'unprocessed') &&
@@ -365,11 +469,16 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                 : null;
 
         const needsContent =
-            needsPreview || needsWordCountContent || (needsFeatureImage && !featureImageExcluded && !frontmatterFeatureImageReference);
+            needsPreview ||
+            needsWordCountContent ||
+            needsTasksContent ||
+            (needsFeatureImage && !featureImageExcluded && !frontmatterFeatureImageReference);
 
         const update: {
             path: string;
             wordCount?: number | null;
+            taskTotal?: number | null;
+            taskIncomplete?: number | null;
             preview?: string;
             featureImage?: Blob | null;
             featureImageKey?: string | null;
@@ -384,6 +493,12 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
 
                 if (needsWordCountContent && (!fileData || fileData.wordCount !== 0)) {
                     update.wordCount = 0;
+                    hasSafeUpdate = true;
+                }
+
+                if (needsTasksContent && (!fileData || fileData.taskTotal !== 0 || fileData.taskIncomplete !== 0)) {
+                    update.taskTotal = 0;
+                    update.taskIncomplete = 0;
                     hasSafeUpdate = true;
                 }
 
@@ -465,6 +580,19 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                 const shouldSetWordCountZero = !fileData || fileData.wordCount === null || (shouldFallback && fileData.wordCount !== 0);
                 if (shouldSetWordCountZero) {
                     update.wordCount = 0;
+                    hasSafeUpdate = true;
+                }
+            }
+
+            if (needsTasksContent) {
+                const shouldSetTasksZero =
+                    !fileData ||
+                    fileData.taskTotal === null ||
+                    fileData.taskIncomplete === null ||
+                    (shouldFallback && (fileData.taskTotal !== 0 || fileData.taskIncomplete !== 0));
+                if (shouldSetTasksZero) {
+                    update.taskTotal = 0;
+                    update.taskIncomplete = 0;
                     hasSafeUpdate = true;
                 }
             }
@@ -572,6 +700,12 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             if (processorUpdate.wordCount !== undefined) {
                 update.wordCount = processorUpdate.wordCount;
             }
+            if (processorUpdate.taskTotal !== undefined) {
+                update.taskTotal = processorUpdate.taskTotal;
+            }
+            if (processorUpdate.taskIncomplete !== undefined) {
+                update.taskIncomplete = processorUpdate.taskIncomplete;
+            }
             if (processorUpdate.preview !== undefined) {
                 update.preview = processorUpdate.preview;
             }
@@ -588,6 +722,8 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
 
         const hasContentUpdate =
             update.wordCount !== undefined ||
+            update.taskTotal !== undefined ||
+            update.taskIncomplete !== undefined ||
             update.preview !== undefined ||
             update.customProperty !== undefined ||
             update.featureImageKey !== undefined;
@@ -642,6 +778,35 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             console.error(`Error generating word count for ${context.file.path}:`, error);
             if (!context.fileData || context.fileData.wordCount === null) {
                 return { wordCount: 0 };
+            }
+            return null;
+        }
+    }
+
+    private async processTasks(context: MarkdownPipelineContext): Promise<MarkdownPipelineUpdate | null> {
+        try {
+            const counts = context.isExcalidraw
+                ? { taskTotal: 0, taskIncomplete: 0 }
+                : countMarkdownTasks(context.content, context.bodyStartIndex);
+
+            if (
+                !context.fileData ||
+                context.fileData.taskTotal === null ||
+                context.fileData.taskIncomplete === null ||
+                context.fileData.taskTotal !== counts.taskTotal ||
+                context.fileData.taskIncomplete !== counts.taskIncomplete
+            ) {
+                return {
+                    taskTotal: counts.taskTotal,
+                    taskIncomplete: counts.taskIncomplete
+                };
+            }
+
+            return null;
+        } catch (error) {
+            console.error(`Error generating tasks for ${context.file.path}:`, error);
+            if (!context.fileData || context.fileData.taskTotal === null || context.fileData.taskIncomplete === null) {
+                return { taskTotal: 0, taskIncomplete: 0 };
             }
             return null;
         }

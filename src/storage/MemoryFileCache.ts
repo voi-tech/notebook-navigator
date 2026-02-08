@@ -30,6 +30,8 @@ function cloneFileData(data: FileData): FileData {
         fileThumbnailsMtime: data.fileThumbnailsMtime,
         tags: data.tags ? [...data.tags] : null,
         wordCount: data.wordCount,
+        taskTotal: data.taskTotal,
+        taskIncomplete: data.taskIncomplete,
         // Clone custom property items to prevent consumers from mutating cached records.
         customProperty: cloneCustomPropertyItems(data.customProperty),
         previewStatus: data.previewStatus,

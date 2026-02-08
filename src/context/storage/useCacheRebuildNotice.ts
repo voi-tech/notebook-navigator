@@ -75,6 +75,7 @@ export function useCacheRebuildNotice(params: { app: App; stoppedRef: RefObject<
             const trackFeatureImage = enabledTypes.includes('featureImage');
             const trackMetadata = enabledTypes.includes('metadata');
             const trackWordCount = enabledTypes.includes('wordCount');
+            const trackTasks = enabledTypes.includes('tasks');
             const trackCustomProperty = enabledTypes.includes('customProperty');
 
             let progressBarEl: HTMLProgressElement | null = null;
@@ -163,9 +164,18 @@ export function useCacheRebuildNotice(params: { app: App; stoppedRef: RefObject<
                         trackFeatureImage && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed');
                     const needsMetadata = trackMetadata && isMarkdown && data.metadata === null;
                     const needsWordCount = trackWordCount && isMarkdown && data.wordCount === null;
+                    const needsTasks = trackTasks && isMarkdown && (data.taskTotal === null || data.taskIncomplete === null);
                     const needsCustomProperty = trackCustomProperty && isMarkdown && data.customProperty === null;
 
-                    if (!needsPreview && !needsTags && !needsFeatureImage && !needsMetadata && !needsWordCount && !needsCustomProperty) {
+                    if (
+                        !needsPreview &&
+                        !needsTags &&
+                        !needsFeatureImage &&
+                        !needsMetadata &&
+                        !needsWordCount &&
+                        !needsTasks &&
+                        !needsCustomProperty
+                    ) {
                         return;
                     }
 
@@ -189,6 +199,7 @@ export function useCacheRebuildNotice(params: { app: App; stoppedRef: RefObject<
                         hasMetadataCache &&
                         (needsPreview ||
                             needsWordCount ||
+                            needsTasks ||
                             needsCustomProperty ||
                             (needsFeatureImage && isMarkdown) ||
                             needsTags ||
