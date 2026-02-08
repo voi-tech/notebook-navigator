@@ -2561,6 +2561,7 @@ body {
     font-size: var(--nn-nav-calendar-header-font-size);
     font-weight: 600;
     color: var(--nn-theme-calendar-header-color);
+    flex: 0 1 auto;
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
@@ -2573,10 +2574,13 @@ body {
 
 .nn-navigation-calendar-month .nn-navigation-calendar-period-month {
     flex: 0 1 auto;
+    display: block;
+    max-width: 100%;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: left;
 }
 
 .nn-navigation-calendar-month .nn-navigation-calendar-period-year {
