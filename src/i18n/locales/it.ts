@@ -1030,7 +1030,7 @@ export const STRINGS_IT = {
             },
             calendarShowInfoButton: {
                 name: 'Mostra pulsanti informazioni',
-                desc: 'Mostra i pulsanti informazioni nella barra di ricerca e nell\'intestazione del calendario.'
+                desc: "Mostra i pulsanti informazioni nella barra di ricerca e nell'intestazione del calendario."
             },
             calendarWeeksToShow: {
                 name: 'Settimane da mostrare nella barra laterale sinistra',

@@ -1032,8 +1032,8 @@ export const STRINGS_FR = {
                 }
             },
             calendarShowInfoButton: {
-                name: 'Afficher les boutons d\'information',
-                desc: 'Afficher les boutons d\'information dans la barre de recherche et l\'en-tête du calendrier.'
+                name: "Afficher les boutons d'information",
+                desc: "Afficher les boutons d'information dans la barre de recherche et l'en-tête du calendrier."
             },
             calendarWeeksToShow: {
                 name: 'Semaines à afficher dans la barre latérale gauche',
