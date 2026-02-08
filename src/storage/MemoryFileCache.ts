@@ -31,7 +31,7 @@ function cloneFileData(data: FileData): FileData {
         tags: data.tags ? [...data.tags] : null,
         wordCount: data.wordCount,
         taskTotal: data.taskTotal,
-        taskIncomplete: data.taskIncomplete,
+        taskUnfinished: data.taskUnfinished,
         // Clone custom property items to prevent consumers from mutating cached records.
         customProperty: cloneCustomPropertyItems(data.customProperty),
         previewStatus: data.previewStatus,

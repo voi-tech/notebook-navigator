@@ -30,14 +30,14 @@ class TestMarkdownPipelineContentProvider extends MarkdownPipelineContentProvide
         file: TFile,
         fileData: FileData | null,
         settings: NotebookNavigatorSettings
-    ): Promise<{ total: number; incomplete: number } | null> {
+    ): Promise<{ total: number; unfinished: number } | null> {
         const result = await this.processFile({ file, path: file.path }, fileData, settings);
         const total = result.update?.taskTotal;
-        const incomplete = result.update?.taskIncomplete;
-        if (typeof total !== 'number' || typeof incomplete !== 'number') {
+        const unfinished = result.update?.taskUnfinished;
+        if (typeof total !== 'number' || typeof unfinished !== 'number') {
             return null;
         }
-        return { total, incomplete };
+        return { total, unfinished };
     }
 
     async runProcessFile(file: TFile, fileData: FileData | null, settings: NotebookNavigatorSettings) {
@@ -138,7 +138,7 @@ function createFileData(overrides: Partial<FileData>): FileData {
         tags: null,
         wordCount: 0,
         taskTotal: null,
-        taskIncomplete: null,
+        taskUnfinished: null,
         customProperty: null,
         previewStatus: 'unprocessed',
         featureImage: null,
@@ -161,7 +161,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
         const fileData = createFileData({ mtime: file.stat.mtime, markdownPipelineMtime: file.stat.mtime });
         const result = await provider.runTasks(file, fileData, settings);
 
-        expect(result).toEqual({ total: 3, incomplete: 1 });
+        expect(result).toEqual({ total: 3, unfinished: 1 });
     });
 
     it('ignores plus markers and non-list checkboxes', async () => {
@@ -175,7 +175,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
         const fileData = createFileData({ mtime: file.stat.mtime, markdownPipelineMtime: file.stat.mtime });
         const result = await provider.runTasks(file, fileData, settings);
 
-        expect(result).toEqual({ total: 1, incomplete: 1 });
+        expect(result).toEqual({ total: 1, unfinished: 1 });
     });
 
     it('ignores YAML frontmatter', async () => {
@@ -189,7 +189,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
         const fileData = createFileData({ mtime: file.stat.mtime, markdownPipelineMtime: file.stat.mtime });
         const result = await provider.runTasks(file, fileData, settings);
 
-        expect(result).toEqual({ total: 1, incomplete: 1 });
+        expect(result).toEqual({ total: 1, unfinished: 1 });
     });
 
     it('ignores fenced code blocks', async () => {
@@ -203,7 +203,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
         const fileData = createFileData({ mtime: file.stat.mtime, markdownPipelineMtime: file.stat.mtime });
         const result = await provider.runTasks(file, fileData, settings);
 
-        expect(result).toEqual({ total: 2, incomplete: 1 });
+        expect(result).toEqual({ total: 2, unfinished: 1 });
     });
 
     it('ignores fenced code blocks inside blockquotes', async () => {
@@ -217,7 +217,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
         const fileData = createFileData({ mtime: file.stat.mtime, markdownPipelineMtime: file.stat.mtime });
         const result = await provider.runTasks(file, fileData, settings);
 
-        expect(result).toEqual({ total: 1, incomplete: 1 });
+        expect(result).toEqual({ total: 1, unfinished: 1 });
     });
 
     it('sets 0/0 for stale tasks when file is too large to read', async () => {
@@ -233,13 +233,13 @@ describe('MarkdownPipelineContentProvider task counters', () => {
             mtime: file.stat.mtime,
             markdownPipelineMtime: 100,
             taskTotal: 5,
-            taskIncomplete: 2
+            taskUnfinished: 2
         });
 
         const result = await provider.runProcessFile(file, fileData, settings);
 
         expect(result.processed).toBe(true);
-        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskIncomplete: 0 });
+        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskUnfinished: 0 });
     });
 
     it('sets 0/0 for pending tasks when file is too large to read', async () => {
@@ -255,13 +255,13 @@ describe('MarkdownPipelineContentProvider task counters', () => {
             mtime: file.stat.mtime,
             markdownPipelineMtime: file.stat.mtime,
             taskTotal: null,
-            taskIncomplete: null
+            taskUnfinished: null
         });
 
         const result = await provider.runProcessFile(file, fileData, settings);
 
         expect(result.processed).toBe(true);
-        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskIncomplete: 0 });
+        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskUnfinished: 0 });
     });
 
     it('falls back to safe defaults after repeated read failures', async () => {
@@ -281,7 +281,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
             mtime: file.stat.mtime,
             markdownPipelineMtime: 100,
             taskTotal: 5,
-            taskIncomplete: 2
+            taskUnfinished: 2
         });
 
         for (let attempt = 0; attempt < LIMITS.contentProvider.retry.maxAttempts - 1; attempt += 1) {
@@ -292,7 +292,7 @@ describe('MarkdownPipelineContentProvider task counters', () => {
 
         const result = await provider.runProcessFile(file, fileData, settings);
         expect(result.processed).toBe(true);
-        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskIncomplete: 0 });
+        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskUnfinished: 0 });
     });
 
     it('sets 0/0 immediately when pending tasks cannot be read', async () => {
@@ -312,11 +312,11 @@ describe('MarkdownPipelineContentProvider task counters', () => {
             mtime: file.stat.mtime,
             markdownPipelineMtime: file.stat.mtime,
             taskTotal: null,
-            taskIncomplete: null
+            taskUnfinished: null
         });
 
         const result = await provider.runProcessFile(file, fileData, settings);
         expect(result.processed).toBe(false);
-        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskIncomplete: 0 });
+        expect(result.update).toEqual({ path: file.path, taskTotal: 0, taskUnfinished: 0 });
     });
 });

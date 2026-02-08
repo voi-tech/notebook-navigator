@@ -51,7 +51,7 @@ type MarkdownPipelineContext = {
 type MarkdownPipelineUpdate = {
     wordCount?: number | null;
     taskTotal?: number | null;
-    taskIncomplete?: number | null;
+    taskUnfinished?: number | null;
     preview?: string;
     customProperty?: FileData['customProperty'];
     featureImageKey?: string | null;
@@ -104,16 +104,16 @@ function countBlockquoteDepth(prefix: string): number {
     return depth;
 }
 
-function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTotal: number; taskIncomplete: number } {
+function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTotal: number; taskUnfinished: number } {
     const safeBodyStartIndex = Math.min(Math.max(0, bodyStartIndex), content.length);
     const body = safeBodyStartIndex === 0 ? content : content.slice(safeBodyStartIndex);
 
     if (body.length === 0) {
-        return { taskTotal: 0, taskIncomplete: 0 };
+        return { taskTotal: 0, taskUnfinished: 0 };
     }
 
     let taskTotal = 0;
-    let taskIncomplete = 0;
+    let taskUnfinished = 0;
     let lineStart = 0;
     let inFence = false;
     let fenceChar = '';
@@ -152,7 +152,7 @@ function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTota
                 if (match) {
                     taskTotal += 1;
                     if (match[1] === ' ') {
-                        taskIncomplete += 1;
+                        taskUnfinished += 1;
                     }
                 }
             }
@@ -165,7 +165,7 @@ function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTota
         lineStart = lineEnd + 1;
     }
 
-    return { taskTotal, taskIncomplete };
+    return { taskTotal, taskUnfinished };
 }
 
 // Converts frontmatter values into a list of pill strings.
@@ -262,7 +262,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                     !context.fileData ||
                     context.fileModified ||
                     context.fileData.taskTotal === null ||
-                    context.fileData.taskIncomplete === null
+                    context.fileData.taskUnfinished === null
                 ) {
                     return context.isExcalidraw || context.hasContent;
                 }
@@ -416,7 +416,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             settings.showFeatureImage && (fileData.featureImageKey === null || fileData.featureImageStatus === 'unprocessed');
         const needsCustomProperty = customPropertyEnabled && fileData.customProperty === null;
         const needsWordCount = fileData.wordCount === null;
-        const needsTasks = fileData.taskTotal === null || fileData.taskIncomplete === null;
+        const needsTasks = fileData.taskTotal === null || fileData.taskUnfinished === null;
 
         return needsPreview || needsFeatureImage || needsCustomProperty || needsWordCount || needsTasks;
     }
@@ -449,7 +449,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             settings.showFilePreview && (!fileData || fileModified || fileData.previewStatus === 'unprocessed') && !isExcalidraw;
         const needsWordCount = !fileData || fileModified || fileData.wordCount === null;
         const needsWordCountContent = needsWordCount && !isExcalidraw;
-        const needsTasks = !fileData || fileModified || fileData.taskTotal === null || fileData.taskIncomplete === null;
+        const needsTasks = !fileData || fileModified || fileData.taskTotal === null || fileData.taskUnfinished === null;
         const needsTasksContent = needsTasks && !isExcalidraw;
         const needsFeatureImage =
             settings.showFeatureImage &&
@@ -478,7 +478,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             path: string;
             wordCount?: number | null;
             taskTotal?: number | null;
-            taskIncomplete?: number | null;
+            taskUnfinished?: number | null;
             preview?: string;
             featureImage?: Blob | null;
             featureImageKey?: string | null;
@@ -496,9 +496,9 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                     hasSafeUpdate = true;
                 }
 
-                if (needsTasksContent && (!fileData || fileData.taskTotal !== 0 || fileData.taskIncomplete !== 0)) {
+                if (needsTasksContent && (!fileData || fileData.taskTotal !== 0 || fileData.taskUnfinished !== 0)) {
                     update.taskTotal = 0;
-                    update.taskIncomplete = 0;
+                    update.taskUnfinished = 0;
                     hasSafeUpdate = true;
                 }
 
@@ -588,11 +588,11 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
                 const shouldSetTasksZero =
                     !fileData ||
                     fileData.taskTotal === null ||
-                    fileData.taskIncomplete === null ||
-                    (shouldFallback && (fileData.taskTotal !== 0 || fileData.taskIncomplete !== 0));
+                    fileData.taskUnfinished === null ||
+                    (shouldFallback && (fileData.taskTotal !== 0 || fileData.taskUnfinished !== 0));
                 if (shouldSetTasksZero) {
                     update.taskTotal = 0;
-                    update.taskIncomplete = 0;
+                    update.taskUnfinished = 0;
                     hasSafeUpdate = true;
                 }
             }
@@ -703,8 +703,8 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
             if (processorUpdate.taskTotal !== undefined) {
                 update.taskTotal = processorUpdate.taskTotal;
             }
-            if (processorUpdate.taskIncomplete !== undefined) {
-                update.taskIncomplete = processorUpdate.taskIncomplete;
+            if (processorUpdate.taskUnfinished !== undefined) {
+                update.taskUnfinished = processorUpdate.taskUnfinished;
             }
             if (processorUpdate.preview !== undefined) {
                 update.preview = processorUpdate.preview;
@@ -723,7 +723,7 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
         const hasContentUpdate =
             update.wordCount !== undefined ||
             update.taskTotal !== undefined ||
-            update.taskIncomplete !== undefined ||
+            update.taskUnfinished !== undefined ||
             update.preview !== undefined ||
             update.customProperty !== undefined ||
             update.featureImageKey !== undefined;
@@ -786,27 +786,27 @@ export class MarkdownPipelineContentProvider extends FeatureImageContentProvider
     private async processTasks(context: MarkdownPipelineContext): Promise<MarkdownPipelineUpdate | null> {
         try {
             const counts = context.isExcalidraw
-                ? { taskTotal: 0, taskIncomplete: 0 }
+                ? { taskTotal: 0, taskUnfinished: 0 }
                 : countMarkdownTasks(context.content, context.bodyStartIndex);
 
             if (
                 !context.fileData ||
                 context.fileData.taskTotal === null ||
-                context.fileData.taskIncomplete === null ||
+                context.fileData.taskUnfinished === null ||
                 context.fileData.taskTotal !== counts.taskTotal ||
-                context.fileData.taskIncomplete !== counts.taskIncomplete
+                context.fileData.taskUnfinished !== counts.taskUnfinished
             ) {
                 return {
                     taskTotal: counts.taskTotal,
-                    taskIncomplete: counts.taskIncomplete
+                    taskUnfinished: counts.taskUnfinished
                 };
             }
 
             return null;
         } catch (error) {
             console.error(`Error generating tasks for ${context.file.path}:`, error);
-            if (!context.fileData || context.fileData.taskTotal === null || context.fileData.taskIncomplete === null) {
-                return { taskTotal: 0, taskIncomplete: 0 };
+            if (!context.fileData || context.fileData.taskTotal === null || context.fileData.taskUnfinished === null) {
+                return { taskTotal: 0, taskUnfinished: 0 };
             }
             return null;
         }

@@ -30,7 +30,7 @@ function createFileData(overrides: Partial<FileData>): FileData {
         tags: [],
         wordCount: null,
         taskTotal: 0,
-        taskIncomplete: 0,
+        taskUnfinished: 0,
         customProperty: null,
         previewStatus: 'none',
         featureImage: null,
@@ -84,14 +84,14 @@ describe('IndexedDBStorage.getFilesNeedingContent', () => {
             'docs/file.pdf',
             createFileData({
                 taskTotal: null,
-                taskIncomplete: null
+                taskUnfinished: null
             })
         );
         cache.updateFile(
             'notes/note.md',
             createFileData({
                 taskTotal: null,
-                taskIncomplete: null
+                taskUnfinished: null
             })
         );
 

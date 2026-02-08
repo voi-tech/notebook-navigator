@@ -59,7 +59,7 @@ function createFileData(overrides: Partial<FileData>): FileData {
         tags: null,
         wordCount: null,
         taskTotal: 0,
-        taskIncomplete: 0,
+        taskUnfinished: 0,
         customProperty: null,
         previewStatus: 'unprocessed',
         featureImage: null,
@@ -163,7 +163,7 @@ describe('Storage queue filters', () => {
                 markdownPipelineMtime: file.stat.mtime,
                 wordCount: 0,
                 taskTotal: null,
-                taskIncomplete: null,
+                taskUnfinished: null,
                 previewStatus: 'none',
                 featureImageStatus: 'none',
                 featureImageKey: ''

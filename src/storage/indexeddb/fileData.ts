@@ -64,27 +64,27 @@ export function isCustomPropertyData(value: unknown): value is CustomPropertyIte
 // - `null/null`: pending extraction (or tasks disabled upstream)
 // - `number/number`: extracted values (finite integers, >= 0)
 //
-// Callers must not send partial updates (only `taskTotal` or only `taskIncomplete`).
+// Callers must not send partial updates (only `taskTotal` or only `taskUnfinished`).
 // Partial/invalid values are normalized to `null/null` so the counters can re-converge.
 export function normalizeTaskCounters(
     taskTotal: unknown,
-    taskIncomplete: unknown
-): { taskTotal: number | null; taskIncomplete: number | null } {
+    taskUnfinished: unknown
+): { taskTotal: number | null; taskUnfinished: number | null } {
     const hasValidTaskTotal = typeof taskTotal === 'number' && Number.isFinite(taskTotal) && taskTotal >= 0;
-    const hasValidTaskIncomplete = typeof taskIncomplete === 'number' && Number.isFinite(taskIncomplete) && taskIncomplete >= 0;
+    const hasValidTaskUnfinished = typeof taskUnfinished === 'number' && Number.isFinite(taskUnfinished) && taskUnfinished >= 0;
 
-    if (taskTotal === null && taskIncomplete === null) {
-        return { taskTotal: null, taskIncomplete: null };
+    if (taskTotal === null && taskUnfinished === null) {
+        return { taskTotal: null, taskUnfinished: null };
     }
 
-    if (hasValidTaskTotal && hasValidTaskIncomplete) {
+    if (hasValidTaskTotal && hasValidTaskUnfinished) {
         return {
             taskTotal: Math.trunc(taskTotal),
-            taskIncomplete: Math.trunc(taskIncomplete)
+            taskUnfinished: Math.trunc(taskUnfinished)
         };
     }
 
-    return { taskTotal: null, taskIncomplete: null };
+    return { taskTotal: null, taskUnfinished: null };
 }
 
 export function getDefaultPreviewStatusForPath(path: string): PreviewStatus {
@@ -102,7 +102,7 @@ export function createDefaultFileData(params: { mtime: number; path: string }): 
         tags: isMarkdown ? null : [],
         wordCount: isMarkdown ? null : 0,
         taskTotal: isMarkdown ? null : 0,
-        taskIncomplete: isMarkdown ? null : 0,
+        taskUnfinished: isMarkdown ? null : 0,
         customProperty: null,
         previewStatus: getDefaultPreviewStatusForPath(params.path),
         featureImage: null,
@@ -152,7 +152,7 @@ export interface FileData {
     tags: string[] | null; // null = not extracted yet (e.g. when tags disabled)
     wordCount: number | null; // null = not generated yet
     taskTotal: number | null; // null = not generated yet
-    taskIncomplete: number | null; // null = not generated yet
+    taskUnfinished: number | null; // null = not generated yet
     customProperty: CustomPropertyItem[] | null; // null = not generated yet
     /**
      * Preview text processing state.
@@ -211,7 +211,7 @@ export interface FileContentChange {
         tags?: string[] | null;
         wordCount?: number | null;
         taskTotal?: number | null;
-        taskIncomplete?: number | null;
+        taskUnfinished?: number | null;
         customProperty?: FileData['customProperty'];
     };
     changeType?: 'metadata' | 'content' | 'both';

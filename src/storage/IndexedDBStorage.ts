@@ -1006,7 +1006,7 @@ export class IndexedDBStorage {
                 (type === 'featureImage' && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed')) ||
                 (type === 'metadata' && isMarkdownPath(path) && data.metadata === null) ||
                 (type === 'wordCount' && isMarkdownPath(path) && data.wordCount === null) ||
-                (type === 'tasks' && isMarkdownPath(path) && (data.taskTotal === null || data.taskIncomplete === null)) ||
+                (type === 'tasks' && isMarkdownPath(path) && (data.taskTotal === null || data.taskUnfinished === null)) ||
                 (type === 'customProperty' && isMarkdownPath(path) && data.customProperty === null)
             ) {
                 result.add(path);
@@ -1037,7 +1037,7 @@ export class IndexedDBStorage {
                 (needsFeatureImage && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed')) ||
                 (needsMetadata && isMarkdown && data.metadata === null) ||
                 (needsWordCount && isMarkdown && data.wordCount === null) ||
-                (needsTasks && isMarkdown && (data.taskTotal === null || data.taskIncomplete === null)) ||
+                (needsTasks && isMarkdown && (data.taskTotal === null || data.taskUnfinished === null)) ||
                 (needsCustomProperty && isMarkdown && data.customProperty === null)
             ) {
                 result.add(path);

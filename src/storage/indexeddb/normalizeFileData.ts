@@ -56,9 +56,9 @@ export function normalizeFileDataInPlace(data: Partial<FileData> & { preview?: s
     data.tags = Array.isArray(data.tags) ? data.tags : null;
     data.wordCount =
         typeof data.wordCount === 'number' && Number.isFinite(data.wordCount) && data.wordCount >= 0 ? Math.trunc(data.wordCount) : null;
-    const normalizedTaskCounters = normalizeTaskCounters(data.taskTotal, data.taskIncomplete);
+    const normalizedTaskCounters = normalizeTaskCounters(data.taskTotal, data.taskUnfinished);
     data.taskTotal = normalizedTaskCounters.taskTotal;
-    data.taskIncomplete = normalizedTaskCounters.taskIncomplete;
+    data.taskUnfinished = normalizedTaskCounters.taskUnfinished;
     data.customProperty = isCustomPropertyData(data.customProperty) ? data.customProperty : null;
     data.previewStatus = previewStatus;
     // Feature image blobs are stored separately from the main record.

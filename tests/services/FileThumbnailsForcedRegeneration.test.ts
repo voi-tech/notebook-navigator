@@ -53,7 +53,7 @@ function createFileData(overrides: Partial<FileData>): FileData {
         tags: [],
         wordCount: 0,
         taskTotal: 0,
-        taskIncomplete: 0,
+        taskUnfinished: 0,
         customProperty: null,
         previewStatus: 'none',
         featureImage: null,

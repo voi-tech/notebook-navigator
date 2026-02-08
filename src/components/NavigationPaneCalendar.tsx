@@ -234,25 +234,25 @@ function isWeekendDay(dayOfWeek: number, weekendDays: CalendarWeekendDays): bool
     }
 }
 
-function getIncompleteTaskCountForPath(db: IndexedDBStorage, path: string): number | null {
-    const taskIncomplete = db.getFile(path)?.taskIncomplete;
-    if (typeof taskIncomplete !== 'number' || taskIncomplete <= 0) {
+function getUnfinishedTaskCountForPath(db: IndexedDBStorage, path: string): number | null {
+    const taskUnfinished = db.getFile(path)?.taskUnfinished;
+    if (typeof taskUnfinished !== 'number' || taskUnfinished <= 0) {
         return null;
     }
-    return taskIncomplete;
+    return taskUnfinished;
 }
 
-function setIncompleteTaskCount<TKey>(counts: Map<TKey, number>, key: TKey, file: TFile | null, db: IndexedDBStorage): void {
+function setUnfinishedTaskCount<TKey>(counts: Map<TKey, number>, key: TKey, file: TFile | null, db: IndexedDBStorage): void {
     if (!file) {
         return;
     }
 
-    const taskIncomplete = getIncompleteTaskCountForPath(db, file.path);
-    if (taskIncomplete === null) {
+    const taskUnfinished = getUnfinishedTaskCountForPath(db, file.path);
+    if (taskUnfinished === null) {
         return;
     }
 
-    counts.set(key, taskIncomplete);
+    counts.set(key, taskUnfinished);
 }
 
 export interface NavigationPaneCalendarProps {
@@ -370,7 +370,7 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                 }
 
                 if ((!hasTaskIndicatorChange || !hasFeatureImageChange) && visibleIndicatorPaths.has(change.path)) {
-                    if (!hasTaskIndicatorChange && change.changes.taskIncomplete !== undefined) {
+                    if (!hasTaskIndicatorChange && change.changes.taskUnfinished !== undefined) {
                         hasTaskIndicatorChange = true;
                     }
 
@@ -637,23 +637,23 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
         return featureKeys;
     }, [db, featureImageVersion, settings.calendarShowFeatureImage, weeks]);
 
-    const incompleteTaskCountByIso = useMemo(() => {
+    const unfinishedTaskCountByIso = useMemo(() => {
         // Force refresh when calendar task metadata changes so day task indicators stay in sync with content updates.
         void taskIndicatorVersion;
 
-        const incompleteTaskCounts = new Map<string, number>();
+        const unfinishedTaskCounts = new Map<string, number>();
 
         if (!db) {
-            return incompleteTaskCounts;
+            return unfinishedTaskCounts;
         }
 
         for (const week of weeks) {
             for (const day of week.days) {
-                setIncompleteTaskCount(incompleteTaskCounts, day.iso, day.file, db);
+                setUnfinishedTaskCount(unfinishedTaskCounts, day.iso, day.file, db);
             }
         }
 
-        return incompleteTaskCounts;
+        return unfinishedTaskCounts;
     }, [db, taskIndicatorVersion, weeks]);
 
     useLayoutEffect(() => {
@@ -1333,7 +1333,7 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
         return entries;
     }, [cursorDate, displayLocale, getExistingCustomCalendarNoteFile, momentApi, showWeekNumbers, vaultVersion, weekNotesEnabled, weeks]);
 
-    const weekIncompleteTaskCountByKey = useMemo(() => {
+    const weekUnfinishedTaskCountByKey = useMemo(() => {
         // Force refresh when calendar task metadata changes so week number task indicators reflect the latest metadata.
         void taskIndicatorVersion;
 
@@ -1343,7 +1343,7 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
 
         const counts = new Map<string, number>();
         weekNoteFilesByKey.forEach((file, weekKey) => {
-            setIncompleteTaskCount(counts, weekKey, file, db);
+            setUnfinishedTaskCount(counts, weekKey, file, db);
         });
 
         return counts;
@@ -1605,7 +1605,7 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                     <div className="nn-navigation-calendar-weeks" data-weeknumbers={showWeekNumbers ? 'true' : undefined}>
                         {weeks.map(week => {
                             const weekNoteFile = weekNoteFilesByKey.get(week.key) ?? null;
-                            const weekHasUnfinishedTasks = (weekIncompleteTaskCountByKey.get(week.key) ?? 0) > 0;
+                            const weekHasUnfinishedTasks = (weekUnfinishedTaskCountByKey.get(week.key) ?? 0) > 0;
 
                             return (
                                 <div key={week.key} className="nn-navigation-calendar-week">
@@ -1677,8 +1677,8 @@ export function NavigationPaneCalendar({ onWeekCountChange, onNavigationAction, 
                                     {week.days.map(day => {
                                         const dayNumber = day.date.date();
                                         const hasDailyNote = Boolean(day.file);
-                                        const dayIncompleteTaskCount = hasDailyNote ? (incompleteTaskCountByIso.get(day.iso) ?? 0) : 0;
-                                        const hasUnfinishedTasks = dayIncompleteTaskCount > 0;
+                                        const dayUnfinishedTaskCount = hasDailyNote ? (unfinishedTaskCountByIso.get(day.iso) ?? 0) : 0;
+                                        const hasUnfinishedTasks = dayUnfinishedTaskCount > 0;
                                         const featureImageUrl = featureImageUrls[day.iso] ?? null;
                                         const hasFeatureImageKey = featureImageKeysByIso.has(day.iso);
                                         const isToday = todayIso === day.iso;

@@ -29,7 +29,7 @@ export interface BatchContentUpdate {
     tags?: string[] | null;
     wordCount?: number | null;
     taskTotal?: number | null;
-    taskIncomplete?: number | null;
+    taskUnfinished?: number | null;
     preview?: string;
     featureImage?: Blob | null;
     featureImageKey?: string | null;
@@ -177,14 +177,14 @@ export async function runBatchUpdateFileContentAndProviderProcessedMtimes(
                         changes.wordCount = guardedUpdate.wordCount;
                         hasContentChanges = true;
                     }
-                    const hasTaskUpdate = guardedUpdate.taskTotal !== undefined || guardedUpdate.taskIncomplete !== undefined;
+                    const hasTaskUpdate = guardedUpdate.taskTotal !== undefined || guardedUpdate.taskUnfinished !== undefined;
                     if (hasTaskUpdate) {
                         // Task counters must be written together; normalization preserves pair semantics.
-                        const normalizedTaskCounters = normalizeTaskCounters(guardedUpdate.taskTotal, guardedUpdate.taskIncomplete);
+                        const normalizedTaskCounters = normalizeTaskCounters(guardedUpdate.taskTotal, guardedUpdate.taskUnfinished);
                         newData.taskTotal = normalizedTaskCounters.taskTotal;
-                        newData.taskIncomplete = normalizedTaskCounters.taskIncomplete;
+                        newData.taskUnfinished = normalizedTaskCounters.taskUnfinished;
                         changes.taskTotal = normalizedTaskCounters.taskTotal;
-                        changes.taskIncomplete = normalizedTaskCounters.taskIncomplete;
+                        changes.taskUnfinished = normalizedTaskCounters.taskUnfinished;
                         hasContentChanges = true;
                     }
                     if (guardedUpdate.customProperty !== undefined) {
@@ -314,7 +314,7 @@ export async function runBatchUpdateFileContentAndProviderProcessedMtimes(
                             changes.featureImageStatus !== undefined ||
                             changes.wordCount !== undefined ||
                             changes.taskTotal !== undefined ||
-                            changes.taskIncomplete !== undefined ||
+                            changes.taskUnfinished !== undefined ||
                             changes.customProperty !== undefined;
                         const hasMetadataUpdates = changes.metadata !== undefined || changes.tags !== undefined;
                         const updateType = hasContentUpdates && hasMetadataUpdates ? 'both' : hasContentUpdates ? 'content' : 'metadata';

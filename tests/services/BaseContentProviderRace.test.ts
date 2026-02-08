@@ -128,7 +128,7 @@ function createFileData(overrides: Partial<FileData>): FileData {
         tags: null,
         wordCount: null,
         taskTotal: 0,
-        taskIncomplete: 0,
+        taskUnfinished: 0,
         customProperty: null,
         previewStatus: 'unprocessed',
         featureImage: null,

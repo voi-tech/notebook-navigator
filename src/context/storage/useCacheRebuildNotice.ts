@@ -164,7 +164,7 @@ export function useCacheRebuildNotice(params: { app: App; stoppedRef: RefObject<
                         trackFeatureImage && (data.featureImageKey === null || data.featureImageStatus === 'unprocessed');
                     const needsMetadata = trackMetadata && isMarkdown && data.metadata === null;
                     const needsWordCount = trackWordCount && isMarkdown && data.wordCount === null;
-                    const needsTasks = trackTasks && isMarkdown && (data.taskTotal === null || data.taskIncomplete === null);
+                    const needsTasks = trackTasks && isMarkdown && (data.taskTotal === null || data.taskUnfinished === null);
                     const needsCustomProperty = trackCustomProperty && isMarkdown && data.customProperty === null;
 
                     if (

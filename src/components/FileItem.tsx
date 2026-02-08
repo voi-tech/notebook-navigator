@@ -331,7 +331,7 @@ export const FileItem = React.memo(function FileItem({
         const featureImageStatus: FeatureImageStatus = record?.featureImageStatus ?? 'unprocessed';
         const customProperty = cloneCustomPropertyItems(record?.customProperty ?? null);
         const wordCount = record?.wordCount ?? null;
-        const taskIncomplete = record?.taskIncomplete ?? null;
+        const taskUnfinished = record?.taskUnfinished ?? null;
 
         let imageUrl: string | null = null;
         if (appearanceSettings.showImage && isImageFile(file)) {
@@ -342,7 +342,7 @@ export const FileItem = React.memo(function FileItem({
             }
         }
 
-        return { preview, tags: tagList, imageUrl, featureImageKey, featureImageStatus, customProperty, wordCount, taskIncomplete };
+        return { preview, tags: tagList, imageUrl, featureImageKey, featureImageStatus, customProperty, wordCount, taskUnfinished };
     }, [appearanceSettings.showImage, appearanceSettings.showPreview, app, file, getDB]);
 
     // === State ===
@@ -360,7 +360,7 @@ export const FileItem = React.memo(function FileItem({
     const [featureImageUrl, setFeatureImageUrl] = useState<string | null>(initialData.imageUrl);
     const [customProperty, setCustomProperty] = useState<CustomPropertyItem[] | null>(initialData.customProperty);
     const [wordCount, setWordCount] = useState<number | null>(initialData.wordCount);
-    const [taskIncomplete, setTaskIncomplete] = useState<number | null>(initialData.taskIncomplete);
+    const [taskUnfinished, setTaskUnfinished] = useState<number | null>(initialData.taskUnfinished);
     const [featureImageAspectRatio, setFeatureImageAspectRatio] = useState<number | null>(null);
     const [isFeatureImageHidden, setIsFeatureImageHidden] = useState(false);
     const [metadataVersion, setMetadataVersion] = useState(0);
@@ -394,7 +394,7 @@ export const FileItem = React.memo(function FileItem({
         shouldShowOpenInNewTab || shouldShowPinNote || shouldShowRevealIcon || shouldShowAddTagAction || shouldShowShortcutAction;
     const iconServiceVersion = useIconServiceVersion();
     const showFileIcons = settings.showFileIcons;
-    const hasUnfinishedTasks = typeof taskIncomplete === 'number' && taskIncomplete > 0;
+    const hasUnfinishedTasks = typeof taskUnfinished === 'number' && taskUnfinished > 0;
     const showFileIconUnfinishedTask = settings.showFileIconUnfinishedTask && hasUnfinishedTasks;
     const unfinishedTaskIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'file-unfinished-task'), [settings.interfaceIcons]);
 
@@ -1124,7 +1124,7 @@ export const FileItem = React.memo(function FileItem({
             featureImageStatus: initialFeatureImageStatus,
             customProperty: initialCustomProperty,
             wordCount: initialWordCount,
-            taskIncomplete: initialTaskIncomplete
+            taskUnfinished: initialTaskUnfinished
         } = loadFileData();
 
         // Only update state if values actually changed to prevent unnecessary re-renders
@@ -1134,7 +1134,7 @@ export const FileItem = React.memo(function FileItem({
         setFeatureImageStatus(prev => (prev === initialFeatureImageStatus ? prev : initialFeatureImageStatus));
         setCustomProperty(prev => (areCustomPropertyItemsEqual(prev, initialCustomProperty) ? prev : initialCustomProperty));
         setWordCount(prev => (prev === initialWordCount ? prev : initialWordCount));
-        setTaskIncomplete(prev => (prev === initialTaskIncomplete ? prev : initialTaskIncomplete));
+        setTaskUnfinished(prev => (prev === initialTaskUnfinished ? prev : initialTaskUnfinished));
 
         const db = getDB();
         const unsubscribe = db.onFileContentChange(file.path, (changes: FileContentChange['changes']) => {
@@ -1160,9 +1160,9 @@ export const FileItem = React.memo(function FileItem({
                 const nextWordCount = changes.wordCount ?? null;
                 setWordCount(prev => (prev === nextWordCount ? prev : nextWordCount));
             }
-            if (changes.taskIncomplete !== undefined) {
-                const nextTaskIncomplete = changes.taskIncomplete ?? null;
-                setTaskIncomplete(prev => (prev === nextTaskIncomplete ? prev : nextTaskIncomplete));
+            if (changes.taskUnfinished !== undefined) {
+                const nextTaskUnfinished = changes.taskUnfinished ?? null;
+                setTaskUnfinished(prev => (prev === nextTaskUnfinished ? prev : nextTaskUnfinished));
             }
             // Update custom property when it changes
             if (changes.customProperty !== undefined) {
