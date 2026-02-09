@@ -31,6 +31,20 @@ import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
  */
 type SettingsMutation = (settings: NotebookNavigatorSettings) => boolean;
 
+export interface FolderDisplayData {
+    displayName?: string;
+    color?: string;
+    backgroundColor?: string;
+    icon?: string;
+}
+
+interface FolderDisplayResolveOptions {
+    includeDisplayName: boolean;
+    includeColor: boolean;
+    includeBackgroundColor: boolean;
+    includeIcon: boolean;
+}
+
 export class FolderMetadataService extends BaseMetadataService {
     /**
      * Validates that a folder exists in the vault
@@ -79,30 +93,94 @@ export class FolderMetadataService extends BaseMetadataService {
         return this.removeEntityBackgroundColor(ItemType.FOLDER, folderPath);
     }
 
+    private resolveInheritedFolderColor(folderPath: string): string | undefined {
+        if (!this.settingsProvider.settings.inheritFolderColors) {
+            return undefined;
+        }
+
+        const pathParts = folderPath.split('/');
+        for (let i = pathParts.length - 1; i > 0; i--) {
+            const ancestorPath = pathParts.slice(0, i).join('/');
+            const ancestorColor = this.getEntityColor(ItemType.FOLDER, ancestorPath);
+            if (ancestorColor) {
+                return ancestorColor;
+            }
+        }
+
+        return undefined;
+    }
+
+    private resolveInheritedFolderBackground(folderPath: string): string | undefined {
+        if (!this.settingsProvider.settings.inheritFolderColors) {
+            return undefined;
+        }
+
+        const pathParts = folderPath.split('/');
+        for (let i = pathParts.length - 1; i > 0; i--) {
+            const ancestorPath = pathParts.slice(0, i).join('/');
+            const ancestorBackground = this.getEntityBackgroundColor(ItemType.FOLDER, ancestorPath);
+            if (ancestorBackground) {
+                return ancestorBackground;
+            }
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Resolves display metadata for a folder using settings and folder note frontmatter.
+     */
+    private resolveFolderDisplayData(folderPath: string, options: FolderDisplayResolveOptions): FolderDisplayData {
+        const directColor = options.includeColor ? this.getEntityColor(ItemType.FOLDER, folderPath) : undefined;
+        const directBackground = options.includeBackgroundColor ? this.getEntityBackgroundColor(ItemType.FOLDER, folderPath) : undefined;
+        const directIcon = options.includeIcon ? this.getEntityIcon(ItemType.FOLDER, folderPath) : undefined;
+        const shouldResolveDisplayName = options.includeDisplayName && this.settingsProvider.settings.useFrontmatterMetadata;
+
+        const shouldReadFolderNoteMetadata =
+            (options.includeColor && !directColor) || (options.includeIcon && !directIcon) || shouldResolveDisplayName;
+        const folderNoteMetadata = shouldReadFolderNoteMetadata ? this.getFolderNoteMetadata(folderPath) : null;
+
+        const color = options.includeColor
+            ? directColor || folderNoteMetadata?.color || this.resolveInheritedFolderColor(folderPath)
+            : undefined;
+        const backgroundColor = options.includeBackgroundColor
+            ? directBackground || this.resolveInheritedFolderBackground(folderPath)
+            : undefined;
+        const icon = options.includeIcon ? directIcon || folderNoteMetadata?.icon : undefined;
+        const displayName = shouldResolveDisplayName ? folderNoteMetadata?.name : undefined;
+
+        return {
+            displayName,
+            color,
+            backgroundColor,
+            icon
+        };
+    }
+
+    /**
+     * Resolves display metadata for a folder using settings and folder note frontmatter.
+     */
+    getFolderDisplayData(folderPath: string): FolderDisplayData {
+        return this.resolveFolderDisplayData(folderPath, {
+            includeDisplayName: true,
+            includeColor: true,
+            includeBackgroundColor: true,
+            includeIcon: true
+        });
+    }
+
     /**
      * Gets the custom color for a folder, checking ancestors if inheritance is enabled
      * @param folderPath - Path of the folder
      * @returns The color value or undefined
      */
     getFolderColor(folderPath: string): string | undefined {
-        // First check if this folder has a color directly set
-        const directColor = this.getEntityColor(ItemType.FOLDER, folderPath);
-        if (directColor) return directColor;
-
-        const folderNoteColor = this.getFolderNoteMetadata(folderPath)?.color;
-        if (folderNoteColor) return folderNoteColor;
-
-        // If no direct color and inheritance is enabled, check ancestors
-        if (this.settingsProvider.settings.inheritFolderColors) {
-            const pathParts = folderPath.split('/');
-            for (let i = pathParts.length - 1; i > 0; i--) {
-                const ancestorPath = pathParts.slice(0, i).join('/');
-                const ancestorColor = this.getEntityColor(ItemType.FOLDER, ancestorPath);
-                if (ancestorColor) return ancestorColor;
-            }
-        }
-
-        return undefined;
+        return this.resolveFolderDisplayData(folderPath, {
+            includeDisplayName: false,
+            includeColor: true,
+            includeBackgroundColor: false,
+            includeIcon: false
+        }).color;
     }
 
     /**
@@ -111,19 +189,12 @@ export class FolderMetadataService extends BaseMetadataService {
      * @returns The background color value or undefined
      */
     getFolderBackgroundColor(folderPath: string): string | undefined {
-        const directBackground = this.getEntityBackgroundColor(ItemType.FOLDER, folderPath);
-        if (directBackground) return directBackground;
-
-        if (this.settingsProvider.settings.inheritFolderColors) {
-            const pathParts = folderPath.split('/');
-            for (let i = pathParts.length - 1; i > 0; i--) {
-                const ancestorPath = pathParts.slice(0, i).join('/');
-                const ancestorBackground = this.getEntityBackgroundColor(ItemType.FOLDER, ancestorPath);
-                if (ancestorBackground) return ancestorBackground;
-            }
-        }
-
-        return undefined;
+        return this.resolveFolderDisplayData(folderPath, {
+            includeDisplayName: false,
+            includeColor: false,
+            includeBackgroundColor: true,
+            includeIcon: false
+        }).backgroundColor;
     }
 
     /**
@@ -152,12 +223,12 @@ export class FolderMetadataService extends BaseMetadataService {
      * @returns The icon ID or undefined
      */
     getFolderIcon(folderPath: string): string | undefined {
-        const directIcon = this.getEntityIcon(ItemType.FOLDER, folderPath);
-        if (directIcon) {
-            return directIcon;
-        }
-
-        return this.getFolderNoteMetadata(folderPath)?.icon;
+        return this.resolveFolderDisplayData(folderPath, {
+            includeDisplayName: false,
+            includeColor: false,
+            includeBackgroundColor: false,
+            includeIcon: true
+        }).icon;
     }
 
     /**
@@ -340,9 +411,9 @@ export class FolderMetadataService extends BaseMetadataService {
     }
 
     /**
-     * Returns icon/color metadata extracted from the folder's folder note (if any)
+     * Returns display name, icon, and color metadata extracted from the folder's folder note (if any)
      */
-    private getFolderNoteMetadata(folderPath: string): { icon?: string; color?: string } | null {
+    private getFolderNoteMetadata(folderPath: string): { name?: string; icon?: string; color?: string } | null {
         const settings = this.settingsProvider.settings;
         if (!settings.enableFolderNotes) {
             return null;
@@ -366,14 +437,16 @@ export class FolderMetadataService extends BaseMetadataService {
             return null;
         }
 
+        const nameValue = typeof fileData.metadata.name === 'string' ? fileData.metadata.name.trim() : undefined;
         const iconValue = typeof fileData.metadata.icon === 'string' ? normalizeCanonicalIconId(fileData.metadata.icon.trim()) : undefined;
         const colorValue = typeof fileData.metadata.color === 'string' ? fileData.metadata.color.trim() : undefined;
 
-        if (!iconValue && !colorValue) {
+        if (!nameValue && !iconValue && !colorValue) {
             return null;
         }
 
         return {
+            name: nameValue || undefined,
             icon: iconValue || undefined,
             color: colorValue || undefined
         };

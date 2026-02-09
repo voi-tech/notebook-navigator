@@ -71,6 +71,7 @@ import { ItemType, type CSSPropertiesWithVars } from '../types';
 
 interface FolderItemProps {
     folder: TFolder;
+    displayName?: string;
     level: number;
     indentGuideLevels?: number[];
     isExpanded: boolean;
@@ -107,6 +108,7 @@ interface FolderItemProps {
  */
 export const FolderItem = React.memo(function FolderItem({
     folder,
+    displayName,
     level,
     indentGuideLevels,
     isExpanded,
@@ -218,7 +220,7 @@ export const FolderItem = React.memo(function FolderItem({
     }, [folder, settings, noteCounts.current, vaultChangeVersion]);
 
     const isRootFolder = folder.path === '/';
-    const displayName = isRootFolder ? settings.customVaultName || app.vault.getName() : folder.name;
+    const effectiveDisplayName = isRootFolder ? settings.customVaultName || app.vault.getName() : displayName || folder.name;
     const shouldShowFolderIcon = settings.showFolderIcons || isRootFolder;
 
     const dragIconId = useMemo(() => {
@@ -321,12 +323,12 @@ export const FolderItem = React.memo(function FolderItem({
                 : `${folderStats.folderCount} ${strings.tooltips.folders}`;
         const statsTooltip = `${fileText}, ${folderText}`;
 
-        const tooltip = folder.path === '/' ? statsTooltip : `${folder.name}\n\n${statsTooltip}`;
+        const tooltip = folder.path === '/' ? statsTooltip : `${effectiveDisplayName}\n\n${statsTooltip}`;
 
         setTooltip(folderRef.current, tooltip, {
             placement: getTooltipPlacement()
         });
-    }, [folder.path, folder.name, folderStats.fileCount, folderStats.folderCount, settings, isMobile]);
+    }, [folder.path, folderStats.fileCount, folderStats.folderCount, settings, isMobile, effectiveDisplayName]);
 
     useEffect(() => {
         if (chevronRef.current) {
@@ -423,7 +425,7 @@ export const FolderItem = React.memo(function FolderItem({
                     onClick={handleNameClick}
                     onMouseDown={handleNameMouseDown}
                 >
-                    {displayName}
+                    {effectiveDisplayName}
                 </span>
                 <span className="nn-navitem-spacer" />
                 {shouldDisplayCount && <span className="nn-navitem-count">{noteCountLabel}</span>}

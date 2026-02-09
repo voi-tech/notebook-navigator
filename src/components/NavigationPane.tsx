@@ -2103,7 +2103,7 @@ export const NavigationPane = React.memo(
                                 return settings.customVaultName || app.vault.getName();
                             }
                             if (canInteract && folder) {
-                                return folder.name;
+                                return item.displayName || folder.name;
                             }
                             return getPathBaseName(folderPath);
                         })();
@@ -2368,6 +2368,7 @@ export const NavigationPane = React.memo(
                         return (
                             <FolderItem
                                 folder={item.data}
+                                displayName={item.displayName}
                                 level={item.level}
                                 indentGuideLevels={indentGuideLevels}
                                 isExpanded={expansionState.expandedFolders.has(item.data.path)}

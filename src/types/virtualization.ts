@@ -52,6 +52,7 @@ export interface FolderTreeItem {
     level: number;
     path: string;
     key: string;
+    displayName?: string;
     color?: string;
     backgroundColor?: string;
     icon?: string;
@@ -119,6 +120,7 @@ export interface ShortcutHeaderItem {
 export interface ShortcutFolderNavItem extends ShortcutNavigationBase {
     type: typeof NavigationPaneItemType.SHORTCUT_FOLDER;
     folder: TFolder | null;
+    displayName?: string;
 }
 
 export interface ShortcutNoteNavItem extends ShortcutNavigationBase {

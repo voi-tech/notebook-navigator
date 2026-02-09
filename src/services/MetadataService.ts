@@ -25,6 +25,7 @@ import {
     TagMetadataService,
     FileMetadataService,
     NavigationSeparatorService,
+    type FolderDisplayData,
     type TagColorData,
     type FileMetadataMigrationResult
 } from './metadata';
@@ -123,6 +124,10 @@ export class MetadataService {
 
     getFolderIcon(folderPath: string): string | undefined {
         return this.folderService.getFolderIcon(folderPath);
+    }
+
+    getFolderDisplayData(folderPath: string): FolderDisplayData {
+        return this.folderService.getFolderDisplayData(folderPath);
     }
 
     async setFolderSortOverride(folderPath: string, sortOption: SortOption): Promise<void> {

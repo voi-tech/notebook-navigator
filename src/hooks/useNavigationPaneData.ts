@@ -149,14 +149,27 @@ function decorateNavigationItems(
         fileTypeIconMap: settings.fileTypeIconMap
     };
     const fileIconFallbackMode = 'file';
+    const folderDisplayDataByPath = new Map<string, ReturnType<MetadataService['getFolderDisplayData']>>();
+    const getFolderDisplayData = (folderPath: string): ReturnType<MetadataService['getFolderDisplayData']> => {
+        const cachedData = folderDisplayDataByPath.get(folderPath);
+        if (cachedData) {
+            return cachedData;
+        }
+
+        const nextData = metadataService.getFolderDisplayData(folderPath);
+        folderDisplayDataByPath.set(folderPath, nextData);
+        return nextData;
+    };
 
     return source.map(item => {
         if (item.type === NavigationPaneItemType.FOLDER) {
+            const folderDisplayData = getFolderDisplayData(item.data.path);
             return {
                 ...item,
-                color: metadataService.getFolderColor(item.data.path),
-                backgroundColor: metadataService.getFolderBackgroundColor(item.data.path),
-                icon: metadataService.getFolderIcon(item.data.path),
+                displayName: folderDisplayData.displayName,
+                color: folderDisplayData.color,
+                backgroundColor: folderDisplayData.backgroundColor,
+                icon: folderDisplayData.icon,
                 parsedExcludedFolders
             };
         }
@@ -173,15 +186,14 @@ function decorateNavigationItems(
         }
         if (item.type === NavigationPaneItemType.SHORTCUT_FOLDER) {
             const folderPath = item.folder?.path;
-            const folderColor = folderPath ? metadataService.getFolderColor(folderPath) : undefined;
-            const folderBackground = folderPath ? metadataService.getFolderBackgroundColor(folderPath) : undefined;
-            const customIcon = folderPath ? metadataService.getFolderIcon(folderPath) : undefined;
+            const folderDisplayData = folderPath ? getFolderDisplayData(folderPath) : undefined;
             const defaultIcon = folderPath === '/' ? 'vault' : 'lucide-folder';
             return {
                 ...item,
-                icon: customIcon || defaultIcon,
-                color: folderColor,
-                backgroundColor: folderBackground
+                displayName: folderDisplayData?.displayName,
+                icon: folderDisplayData?.icon || defaultIcon,
+                color: folderDisplayData?.color,
+                backgroundColor: folderDisplayData?.backgroundColor
             };
         }
         if (item.type === NavigationPaneItemType.SHORTCUT_TAG) {
