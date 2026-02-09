@@ -94,6 +94,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New search filter: ==has:task==. Use this to filter notes that have unfinished tasks.'
         ],
         improved: [
+            'Folders with folder notes can now be clicked in the list pane header! This means you can go straight from the file list to your folder note.',
             'Many visual improvements to calendar. Days with notes now show as dots, and the overall look and feel is much improved.',
             'The calendar now also shows a small circle for notes with unfinished tasks.',
             'You can now remove individual icons from the recently used icons list.',
