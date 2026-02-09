@@ -595,9 +595,10 @@ export function Calendar({
     );
 
     const openCalendarHelp = useCallback(() => {
-        const dateFilterItem = settings.multiSelectModifier === 'optionAlt'
-            ? strings.navigationCalendar.helpModal.dateFilterOptionAlt
-            : strings.navigationCalendar.helpModal.dateFilterCmdCtrl;
+        const dateFilterItem =
+            settings.multiSelectModifier === 'optionAlt'
+                ? strings.navigationCalendar.helpModal.dateFilterOptionAlt
+                : strings.navigationCalendar.helpModal.dateFilterCmdCtrl;
 
         new InfoModal(app, {
             title: strings.navigationCalendar.helpModal.title,
