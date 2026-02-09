@@ -108,7 +108,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         fixed: [
             'The setting Folders & tags > “Auto-select first note” did not work correctly and was fixed. Also significantly improved performance when navigating in navpane by debouncing file open commands just like in list pane, so scrolling through folders and tags should now be blazingly fast.',
             'Weekly periodic note patterns previously used custom calendar locale, where others like month and year used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.',
-            'Fixed two display issues in Android: A small gap at the bottom of the left sidebar and text fonts were cropped on some devices.'
+            'Fixed two display issues in Android: A small gap at the bottom of the left sidebar and text fonts were cropped on some devices.',
+            'Fixed a crash/reload issue on mobile devices when generating PDF cover thumbnails for PDFs with extreme amounts of embedded images (example: PDFs with hundreds of unique images stacked on top of each other). PDF thumbnails on mobile now run a two-stage preflight before rendering: Stage A scans the raw PDF bytes for embedded image dictionaries and transparency/soft mask signals, and Stage B parses the page 1 operator list to count image paint operations. If the preflight is uncertain or the estimate exceeds the mobile memory budget, the PDF is logged and thumbnail is skipped.'
         ]
     },
     {
