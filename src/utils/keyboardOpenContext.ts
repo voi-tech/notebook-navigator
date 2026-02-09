@@ -61,3 +61,22 @@ export function isMultiSelectModifierPressed(event: MultiSelectModifierEventStat
 
     return isCmdCtrlModifierPressed(event);
 }
+
+export function resolveFolderNoteClickOpenContext(
+    event: CmdCtrlEventState,
+    openFolderNotesInNewTab: boolean,
+    multiSelectModifier: MultiSelectModifier,
+    isMobile: boolean
+): 'tab' | null {
+    // Explicit setting takes precedence over modifier-driven behavior.
+    if (openFolderNotesInNewTab) {
+        return 'tab';
+    }
+
+    // Folder note click-to-tab modifier is desktop-only and tied to optionAlt mode.
+    if (isMobile || multiSelectModifier !== 'optionAlt') {
+        return null;
+    }
+
+    return isCmdCtrlModifierPressed(event) ? 'tab' : null;
+}

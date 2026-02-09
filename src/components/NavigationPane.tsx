@@ -119,7 +119,7 @@ import {
 import { localStorage } from '../utils/localStorage';
 import { runAsyncAction } from '../utils/async';
 import { extractFilePathsFromDataTransfer, parseTagDragPayload } from '../utils/dragData';
-import { isCmdCtrlModifierPressed } from '../utils/keyboardOpenContext';
+import { resolveFolderNoteClickOpenContext } from '../utils/keyboardOpenContext';
 import { openFileInContext } from '../utils/openFileInContext';
 import { useShortcuts } from '../context/ShortcutsContext';
 import { ShortcutItem } from './ShortcutItem';
@@ -1244,13 +1244,14 @@ export const NavigationPane = React.memo(
 
                 selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder, autoSelectedFile: null });
 
-                const isCmdCtrlClick = event ? isCmdCtrlModifierPressed(event) : false;
-                const shouldOpenInNewTab =
-                    settings.openFolderNotesInNewTab || (!isMobile && settings.multiSelectModifier === 'optionAlt' && isCmdCtrlClick);
+                // Uses the same click-to-open rules as list pane header/title folder note links.
+                const openContext = event
+                    ? resolveFolderNoteClickOpenContext(event, settings.openFolderNotesInNewTab, settings.multiSelectModifier, isMobile)
+                    : settings.openFolderNotesInNewTab
+                      ? 'tab'
+                      : null;
 
-                runAsyncAction(() =>
-                    openFolderNoteFile({ app, commandQueue, folder, folderNote, context: shouldOpenInNewTab ? 'tab' : null })
-                );
+                runAsyncAction(() => openFolderNoteFile({ app, commandQueue, folder, folderNote, context: openContext }));
             },
             [settings, handleFolderClick, selectionDispatch, isMobile, app, commandQueue]
         );

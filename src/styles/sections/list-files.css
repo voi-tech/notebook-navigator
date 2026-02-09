@@ -56,6 +56,15 @@
     white-space: nowrap;
 }
 
+.nn-list-title-label--folder-note {
+    text-decoration: var(--nn-theme-navitem-folder-note-name-decoration) !important;
+}
+
+.nn-list-title-label--folder-note:hover {
+    cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
+}
+
 /* File - container for each file in the list */
 .nn-file {
     background: transparent;

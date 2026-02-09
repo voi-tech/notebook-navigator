@@ -1475,7 +1475,7 @@ export const ListPane = React.memo(
                             />
                         )}
                     </div>
-                    {shouldShowDesktopTitleArea ? <ListPaneTitleArea isVisible={shouldShowDesktopTitleArea} /> : null}
+                    {shouldShowDesktopTitleArea ? <ListPaneTitleArea /> : null}
                 </div>
                 <div className="nn-list-pane-panel">
                     <div

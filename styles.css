@@ -1014,6 +1014,15 @@ body {
     flex: 0 1 auto;
 }
 
+.nn-pane-header-folder-note {
+    text-decoration: var(--nn-theme-navitem-folder-note-name-decoration) !important;
+}
+
+.nn-pane-header-folder-note:hover {
+    cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
+}
+
 /* ========================================================================
    Mobile Headers + Breadcrumb
    ======================================================================== */
@@ -3426,6 +3435,15 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.nn-list-title-label--folder-note {
+    text-decoration: var(--nn-theme-navitem-folder-note-name-decoration) !important;
+}
+
+.nn-list-title-label--folder-note:hover {
+    cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
 }
 
 /* File - container for each file in the list */

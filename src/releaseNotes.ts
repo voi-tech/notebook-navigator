@@ -76,14 +76,15 @@ export interface ReleaseNote {
 const RELEASE_NOTES: ReleaseNote[] = [
     {
         version: '2.3.0',
-        date: '2026-02-09',
+        date: '2026-02-10',
         showOnUpdate: true,
         new: [
-            '==Vault icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
+            '==Tasks==. Notebook Navigator now keeps track of tasks for each document. You can now show notes with unfinished tasks in search, list pane and the calendar. You can also set a custom icon for notes with unfinished tasks in settings.',
+            '==Custom SVG icons==. You can now use SVG images from your vault for icons. Just pick the new "Vault" tab in the icon picker.',
             '==Date filters in search==! You can now filter notes by date using the "@" symbol. Some examples: @today, @2026W02, @2026-Q1, @13/02/2026, or ranges like @2026-01-01..2026-02-07. You can specifically choose created date with @c:, modified date with @m:, or exclude date matches with -@.',
             '==Date filters in calendar==! You can CMD+Click day, week, month, quarter or year in the calendar to show all notes for that period in the list pane!',
-            '==Emojis in tags==! You can now use emojis when naming and renaming tags. Inline tag operations show a warning confirmation when a tag contains characters Obsidian cannot parse inline (example: ‼ can split an inline tag). YAML frontmatter tags can contain any characters.',
             '==Quickly switch between filter search and Omnisearch==! Quickly switch between filter search and Omnisearch by pressing the search icon or pressing UP/DOWN when the search input is focused.',
+            '==Emojis in tags==! You can now use emojis when naming and renaming tags. Inline tag operations show a warning confirmation when a tag contains characters Obsidian cannot parse inline (example: ‼ can split an inline tag). YAML frontmatter tags can contain any characters.',
             'You can now set individual colors for property values in ==Notes > Property colors==! Use property:value=color to set colors for individual property values, like status:done=green and status:todo=red. If no value color is set it will fall back to the property color if defined.',
             'New setting: ==Notes > Show icon for notes with unfinished tasks==. Enable to show an icon in listpane for notes with unfinished tasks. Tasks now will also show in the calendar for daily notes with unfinished tasks. You can also set a custom color for the task icon in Style settings.',
             'New setting: ==Folders & tags > Folder note name pattern==. You can now add prefixes and suffixes to folder note names, like _foldername to make them appear on top of alphabetically sorted lists.',
@@ -95,6 +96,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         improved: [
             'Folders with folder notes can now be clicked in the list pane header! This means you can go straight from the file list to your folder note.',
+            'Folder notes with "frontmatter metadata name" now show that name in the navigation pane instead of the folder name.',
             'Many visual improvements to calendar. Days with notes now show as dots, and the overall look and feel is much improved.',
             'The calendar now also shows a small circle for notes with unfinished tasks.',
             'You can now remove individual icons from the recently used icons list.',

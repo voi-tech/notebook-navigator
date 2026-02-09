@@ -19,7 +19,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Platform } from 'obsidian';
 import { useSelectionState, useSelectionDispatch } from '../context/SelectionContext';
-import { useServices } from '../context/ServicesContext';
+import { useCommandQueue, useServices } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
 import { useUXPreferences } from '../context/UXPreferencesContext';
 import { useUIState, useUIDispatch } from '../context/UIStateContext';
@@ -28,6 +28,10 @@ import { getIconService, useIconServiceVersion } from '../services/icons';
 import { ServiceIcon } from './ServiceIcon';
 import { useListActions } from '../hooks/useListActions';
 import { useListPaneTitle } from '../hooks/useListPaneTitle';
+import { useSelectedFolderFileVersion } from '../hooks/useSelectedFolderFileVersion';
+import { ItemType } from '../types';
+import { getFolderNote, openFolderNoteFile } from '../utils/folderNotes';
+import { resolveFolderNoteClickOpenContext } from '../utils/keyboardOpenContext';
 import { normalizeTagPath } from '../utils/tagUtils';
 import { runAsyncAction } from '../utils/async';
 import { resolveUXIcon } from '../utils/uxIcons';
@@ -41,6 +45,7 @@ interface ListPaneHeaderProps {
 export function ListPaneHeader({ onHeaderClick, isSearchActive, onSearchToggle }: ListPaneHeaderProps) {
     const iconRef = React.useRef<HTMLSpanElement>(null);
     const { app, isMobile } = useServices();
+    const commandQueue = useCommandQueue();
     const settings = useSettingsState();
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
@@ -92,18 +97,122 @@ export function ListPaneHeader({ onHeaderClick, isSearchActive, onSearchToggle }
         return resolveUXIcon(settings.interfaceIcons, sortOption.endsWith('-desc') ? 'list-sort-descending' : 'list-sort-ascending');
     }, [getCurrentSortOption, settings.interfaceIcons]);
 
+    // Folder note interactions only apply when a folder is the active selection.
+    const selectedFolder = selectionState.selectionType === ItemType.FOLDER ? selectionState.selectedFolder : null;
+    // Folder note lookup is only needed when the title/breadcrumb is rendered.
+    const shouldResolveSelectedFolderNote = shouldRenderBreadcrumbSegments || shouldShowHeaderTitle;
+    // Tracks direct child file changes so folder note lookup recalculates when names move.
+    const selectedFolderFileVersion = useSelectedFolderFileVersion(
+        app.vault,
+        selectedFolder,
+        settings.enableFolderNotes && shouldResolveSelectedFolderNote
+    );
+    // Resolves the selected folder's note file with current folder note settings.
+    const selectedFolderNote = useMemo(() => {
+        void selectedFolderFileVersion;
+
+        if (!selectedFolder || !settings.enableFolderNotes || !shouldResolveSelectedFolderNote) {
+            return null;
+        }
+
+        return getFolderNote(selectedFolder, {
+            enableFolderNotes: settings.enableFolderNotes,
+            folderNoteName: settings.folderNoteName,
+            folderNoteNamePattern: settings.folderNoteNamePattern
+        });
+    }, [
+        selectedFolder,
+        settings.enableFolderNotes,
+        settings.folderNoteName,
+        settings.folderNoteNamePattern,
+        shouldResolveSelectedFolderNote,
+        selectedFolderFileVersion
+    ]);
+
+    const handleSelectedFolderNoteClick = React.useCallback(
+        (event: React.MouseEvent<HTMLElement>) => {
+            if (!selectedFolder || !selectedFolderNote) {
+                return;
+            }
+
+            // Prevents header click handlers from also running.
+            event.stopPropagation();
+
+            const openContext = resolveFolderNoteClickOpenContext(
+                event,
+                settings.openFolderNotesInNewTab,
+                settings.multiSelectModifier,
+                isMobile
+            );
+
+            runAsyncAction(() =>
+                openFolderNoteFile({
+                    app,
+                    commandQueue,
+                    folder: selectedFolder,
+                    folderNote: selectedFolderNote,
+                    context: openContext
+                })
+            );
+        },
+        [selectedFolder, selectedFolderNote, settings.openFolderNotesInNewTab, settings.multiSelectModifier, isMobile, app, commandQueue]
+    );
+
+    const handleSelectedFolderNoteMouseDown = React.useCallback(
+        (event: React.MouseEvent<HTMLElement>) => {
+            if (event.button !== 1 || !selectedFolder || !selectedFolderNote) {
+                return;
+            }
+
+            // Middle-click opens in a new tab and suppresses default browser behavior.
+            event.preventDefault();
+            event.stopPropagation();
+
+            runAsyncAction(() =>
+                openFolderNoteFile({
+                    app,
+                    commandQueue,
+                    folder: selectedFolder,
+                    folderNote: selectedFolderNote,
+                    context: 'tab'
+                })
+            );
+        },
+        [selectedFolder, selectedFolderNote, app, commandQueue]
+    );
+
     const breadcrumbContent = useMemo((): React.ReactNode => {
         if (!shouldRenderBreadcrumbSegments) {
-            return desktopTitle;
+            if (!selectedFolderNote) {
+                return desktopTitle;
+            }
+
+            // Desktop header title becomes clickable when a folder note exists.
+            return (
+                <span
+                    className="nn-pane-header-folder-note"
+                    onClick={handleSelectedFolderNoteClick}
+                    onMouseDown={handleSelectedFolderNoteMouseDown}
+                >
+                    {desktopTitle}
+                </span>
+            );
         }
 
         const parts: React.ReactNode[] = [];
         breadcrumbSegments.forEach((segment, index) => {
             const key = `${segment.label}-${index}`;
+            // The last breadcrumb segment maps to the selected folder.
+            const isCurrentFolderNoteSegment = segment.isLast && Boolean(selectedFolderNote);
 
             if (segment.isLast || segment.targetType === 'none' || !segment.targetPath) {
                 parts.push(
-                    <span key={key} className="nn-path-current">
+                    <span
+                        key={key}
+                        className={`nn-path-current${isCurrentFolderNoteSegment ? ' nn-pane-header-folder-note' : ''}`}
+                        onClick={isCurrentFolderNoteSegment ? handleSelectedFolderNoteClick : undefined}
+                        onMouseDown={isCurrentFolderNoteSegment ? handleSelectedFolderNoteMouseDown : undefined}
+                    >
                         {segment.label}
                     </span>
                 );
@@ -138,7 +247,16 @@ export function ListPaneHeader({ onHeaderClick, isSearchActive, onSearchToggle }
         });
 
         return parts;
-    }, [app.vault, breadcrumbSegments, desktopTitle, selectionDispatch, shouldRenderBreadcrumbSegments]);
+    }, [
+        app.vault,
+        breadcrumbSegments,
+        desktopTitle,
+        selectionDispatch,
+        shouldRenderBreadcrumbSegments,
+        selectedFolderNote,
+        handleSelectedFolderNoteClick,
+        handleSelectedFolderNoteMouseDown
+    ]);
 
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
     const [showFade, setShowFade] = React.useState(false);

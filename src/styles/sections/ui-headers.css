@@ -137,6 +137,15 @@
     flex: 0 1 auto;
 }
 
+.nn-pane-header-folder-note {
+    text-decoration: var(--nn-theme-navitem-folder-note-name-decoration) !important;
+}
+
+.nn-pane-header-folder-note:hover {
+    cursor: pointer;
+    text-decoration: var(--nn-theme-navitem-folder-note-name-hover-decoration) !important;
+}
+
 /* ========================================================================
    Mobile Headers + Breadcrumb
    ======================================================================== */
