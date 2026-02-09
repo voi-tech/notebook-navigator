@@ -87,9 +87,10 @@ export const STRINGS_ZH_CN = {
             items: [
                 '点击任意日期以打开或创建每日笔记。周、月、季度和年份的操作方式相同。',
                 '日期下方的实心圆点表示有笔记。空心圆点表示有未完成的任务。',
-                '如果笔记有特色图片，它会显示为该日期的背景。',
-                '`Cmd/Ctrl+Click` 日期可将其添加为搜索过滤器。在设置中启用选项修饰键后，`Option/Alt+Click` 同样有效。'
-            ]
+                '如果笔记有特色图片，它会显示为该日期的背景。'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+点击日期，按该日期筛选文件列表。',
+            dateFilterOptionAlt: '`Option/Alt`+点击日期，按该日期筛选文件列表。'
         }
     },
 

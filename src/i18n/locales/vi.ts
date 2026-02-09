@@ -88,9 +88,10 @@ export const STRINGS_VI = {
             items: [
                 'Nhấp vào bất kỳ ngày nào để mở hoặc tạo ghi chú hàng ngày. Tuần, tháng, quý và năm hoạt động tương tự.',
                 'Chấm đặc dưới một ngày nghĩa là có ghi chú. Chấm rỗng nghĩa là có nhiệm vụ chưa hoàn thành.',
-                'Nếu ghi chú có ảnh nổi bật, nó sẽ hiển thị làm nền của ngày.',
-                '`Cmd/Ctrl+Click` vào ngày để thêm làm bộ lọc tìm kiếm. `Option/Alt+Click` cũng hoạt động khi bật phím bổ trợ tùy chọn trong cài đặt.'
-            ]
+                'Nếu ghi chú có ảnh nổi bật, nó sẽ hiển thị làm nền của ngày.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+nhấp vào ngày để lọc theo ngày đó trong danh sách tệp.',
+            dateFilterOptionAlt: '`Option/Alt`+nhấp vào ngày để lọc theo ngày đó trong danh sách tệp.'
         }
     },
 

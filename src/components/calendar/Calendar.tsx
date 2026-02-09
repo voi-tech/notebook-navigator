@@ -595,11 +595,15 @@ export function Calendar({
     );
 
     const openCalendarHelp = useCallback(() => {
+        const dateFilterItem = settings.multiSelectModifier === 'optionAlt'
+            ? strings.navigationCalendar.helpModal.dateFilterOptionAlt
+            : strings.navigationCalendar.helpModal.dateFilterCmdCtrl;
+
         new InfoModal(app, {
             title: strings.navigationCalendar.helpModal.title,
-            items: strings.navigationCalendar.helpModal.items
+            items: [...strings.navigationCalendar.helpModal.items, dateFilterItem]
         }).open();
-    }, [app]);
+    }, [app, settings.multiSelectModifier]);
 
     const handleDateFilterModifiedClick = useCallback(
         (event: React.MouseEvent<HTMLElement>, kind: CalendarNoteKind, date: MomentInstance): boolean => {

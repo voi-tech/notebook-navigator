@@ -88,9 +88,10 @@ export const STRINGS_PT = {
             items: [
                 'Clique em qualquer dia para abrir ou criar uma nota diária. Semanas, meses, trimestres e anos funcionam da mesma forma.',
                 'Um ponto preenchido sob um dia significa que tem uma nota. Um ponto oco significa que tem tarefas inacabadas.',
-                'Se uma nota tiver uma imagem de destaque, ela aparece como fundo do dia.',
-                '`Cmd/Ctrl+Click` numa data para adicioná-la como filtro de pesquisa. `Option/Alt+Click` também funciona quando o modificador de opção está ativado nas definições.'
-            ]
+                'Se uma nota tiver uma imagem de destaque, ela aparece como fundo do dia.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+clique numa data para filtrar por essa data na lista de ficheiros.',
+            dateFilterOptionAlt: '`Option/Alt`+clique numa data para filtrar por essa data na lista de ficheiros.'
         }
     },
 

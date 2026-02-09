@@ -88,9 +88,10 @@ export const STRINGS_TR = {
             items: [
                 'Günlük not açmak veya oluşturmak için herhangi bir güne tıklayın. Haftalar, aylar, çeyrekler ve yıllar aynı şekilde çalışır.',
                 'Bir günün altındaki dolu nokta, notu olduğu anlamına gelir. Boş nokta, tamamlanmamış görevleri olduğu anlamına gelir.',
-                'Bir notun öne çıkan görseli varsa, günün arka planı olarak görünür.',
-                'Bir tarihe `Cmd/Ctrl+Click` yaparak arama filtresi olarak ekleyin. Ayarlarda seçenek değiştirici etkinleştirildiğinde `Option/Alt+Click` de çalışır.'
-            ]
+                'Bir notun öne çıkan görseli varsa, günün arka planı olarak görünür.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+tıklayarak dosya listesinde o tarihe göre filtreleyin.',
+            dateFilterOptionAlt: '`Option/Alt`+tıklayarak dosya listesinde o tarihe göre filtreleyin.'
         }
     },
 

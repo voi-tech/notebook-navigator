@@ -87,9 +87,10 @@ export const STRINGS_DE = {
             items: [
                 'Klicken Sie auf einen Tag, um eine tägliche Notiz zu öffnen oder zu erstellen. Wochen, Monate, Quartale und Jahre funktionieren genauso.',
                 'Ein gefüllter Punkt unter einem Tag bedeutet, dass eine Notiz vorhanden ist. Ein hohler Punkt bedeutet, dass unerledigte Aufgaben vorhanden sind.',
-                'Wenn eine Notiz ein Feature-Bild hat, wird es als Tageshintergrund angezeigt.',
-                '`Cmd/Ctrl+Click` auf ein Datum, um es als Suchfilter hinzuzufügen. `Option/Alt+Click` funktioniert ebenfalls, wenn der Options-Modifikator in den Einstellungen aktiviert ist.'
-            ]
+                'Wenn eine Notiz ein Feature-Bild hat, wird es als Tageshintergrund angezeigt.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+Klick auf ein Datum, um in der Dateiliste nach diesem Datum zu filtern.',
+            dateFilterOptionAlt: '`Option/Alt`+Klick auf ein Datum, um in der Dateiliste nach diesem Datum zu filtern.'
         }
     },
 

@@ -87,9 +87,10 @@ export const STRINGS_ZH_TW = {
             items: [
                 '點擊任意日期以開啟或建立每日筆記。週、月、季度和年份的操作方式相同。',
                 '日期下方的實心圓點表示有筆記。空心圓點表示有未完成的任務。',
-                '如果筆記有特色圖片，它會顯示為該日期的背景。',
-                '`Cmd/Ctrl+Click` 日期可將其新增為搜尋篩選器。在設定中啟用選項修飾鍵後，`Option/Alt+Click` 同樣有效。'
-            ]
+                '如果筆記有特色圖片，它會顯示為該日期的背景。'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+點擊日期，按該日期篩選檔案列表。',
+            dateFilterOptionAlt: '`Option/Alt`+點擊日期，按該日期篩選檔案列表。'
         }
     },
 

@@ -87,9 +87,10 @@ export const STRINGS_PL = {
             items: [
                 'Kliknij dowolny dzień, aby otworzyć lub utworzyć notatkę dzienną. Tygodnie, miesiące, kwartały i lata działają w ten sam sposób.',
                 'Wypełniona kropka pod dniem oznacza, że ma notatkę. Pusta kropka oznacza, że ma nieukończone zadania.',
-                'Jeśli notatka ma obraz wyróżniający, pojawia się jako tło dnia.',
-                '`Cmd/Ctrl+Click` na dacie, aby dodać ją jako filtr wyszukiwania. `Option/Alt+Click` również działa, gdy modyfikator opcji jest włączony w ustawieniach.'
-            ]
+                'Jeśli notatka ma obraz wyróżniający, pojawia się jako tło dnia.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+kliknij datę, aby filtrować według tej daty na liście plików.',
+            dateFilterOptionAlt: '`Option/Alt`+kliknij datę, aby filtrować według tej daty na liście plików.'
         }
     },
 

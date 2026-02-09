@@ -88,9 +88,10 @@ export const STRINGS_EN = {
             items: [
                 'Click any day to open or create a daily note. Weeks, months, quarters, and years work the same way.',
                 'A filled dot under a day means it has a note. A hollow dot means it has unfinished tasks.',
-                "If a note has a feature image, it appears as the day's background.",
-                'Click a date with the selected multi-select modifier. This adds a search filter.'
-            ]
+                "If a note has a feature image, it appears as the day's background."
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+click a date to filter by that date in the file list.',
+            dateFilterOptionAlt: '`Option/Alt`+click a date to filter by that date in the file list.'
         }
     },
 

@@ -88,9 +88,10 @@ export const STRINGS_ID = {
             items: [
                 'Klik hari mana pun untuk membuka atau membuat catatan harian. Minggu, bulan, kuartal, dan tahun berfungsi dengan cara yang sama.',
                 'Titik terisi di bawah hari berarti memiliki catatan. Titik kosong berarti memiliki tugas yang belum selesai.',
-                'Jika catatan memiliki gambar fitur, gambar tersebut muncul sebagai latar belakang hari.',
-                '`Cmd/Ctrl+Click` pada tanggal untuk menambahkannya sebagai filter pencarian. `Option/Alt+Click` juga berfungsi saat pengubah opsi diaktifkan di pengaturan.'
-            ]
+                'Jika catatan memiliki gambar fitur, gambar tersebut muncul sebagai latar belakang hari.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+klik pada tanggal untuk memfilter berdasarkan tanggal tersebut di daftar file.',
+            dateFilterOptionAlt: '`Option/Alt`+klik pada tanggal untuk memfilter berdasarkan tanggal tersebut di daftar file.'
         }
     },
 

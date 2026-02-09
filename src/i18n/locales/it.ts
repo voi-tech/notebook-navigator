@@ -88,9 +88,10 @@ export const STRINGS_IT = {
             items: [
                 'Fai clic su un giorno per aprire o creare una nota giornaliera. Settimane, mesi, trimestri e anni funzionano allo stesso modo.',
                 'Un punto pieno sotto un giorno indica che ha una nota. Un punto vuoto indica che ha attività incomplete.',
-                "Se una nota ha un'immagine in evidenza, appare come sfondo del giorno.",
-                '`Cmd/Ctrl+Click` su una data per aggiungerla come filtro di ricerca. `Option/Alt+Click` funziona anche quando il modificatore opzione è abilitato nelle impostazioni.'
-            ]
+                "Se una nota ha un'immagine in evidenza, appare come sfondo del giorno."
+            ],
+            dateFilterCmdCtrl: "`Cmd/Ctrl`+clic su una data per filtrare per quella data nell'elenco dei file.",
+            dateFilterOptionAlt: "`Option/Alt`+clic su una data per filtrare per quella data nell'elenco dei file."
         }
     },
 

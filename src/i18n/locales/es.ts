@@ -87,9 +87,10 @@ export const STRINGS_ES = {
             items: [
                 'Haz clic en cualquier día para abrir o crear una nota diaria. Las semanas, meses, trimestres y años funcionan de la misma manera.',
                 'Un punto relleno debajo de un día significa que tiene una nota. Un punto hueco significa que tiene tareas pendientes.',
-                'Si una nota tiene una imagen destacada, aparece como fondo del día.',
-                '`Cmd/Ctrl+Click` en una fecha para añadirla como filtro de búsqueda. `Option/Alt+Click` también funciona cuando el modificador de opción está activado en los ajustes.'
-            ]
+                'Si una nota tiene una imagen destacada, aparece como fondo del día.'
+            ],
+            dateFilterCmdCtrl: '`Cmd/Ctrl`+clic en una fecha para filtrar por esa fecha en la lista de archivos.',
+            dateFilterOptionAlt: '`Option/Alt`+clic en una fecha para filtrar por esa fecha en la lista de archivos.'
         }
     },
 
