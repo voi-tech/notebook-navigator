@@ -16,11 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { FileOpenContext } from '../settings/types';
+import { Platform } from 'obsidian';
+import type { FileOpenContext, MultiSelectModifier } from '../settings/types';
 
 interface KeyboardOpenContextSettings {
     shiftEnterOpenContext: FileOpenContext;
     cmdCtrlEnterOpenContext: FileOpenContext;
+}
+
+interface CmdCtrlEventState {
+    ctrlKey: boolean;
+    metaKey: boolean;
+}
+
+interface MultiSelectModifierEventState extends CmdCtrlEventState {
+    altKey: boolean;
 }
 
 export function isEnterKey(e: KeyboardEvent): boolean {
@@ -38,4 +48,16 @@ export function resolveKeyboardOpenContext(e: KeyboardEvent, settings: KeyboardO
     }
 
     return null;
+}
+
+export function isCmdCtrlModifierPressed(event: CmdCtrlEventState): boolean {
+    return Platform.isMacOS ? event.metaKey : event.metaKey || event.ctrlKey;
+}
+
+export function isMultiSelectModifierPressed(event: MultiSelectModifierEventState, modifierSetting: MultiSelectModifier): boolean {
+    if (modifierSetting === 'optionAlt') {
+        return event.altKey;
+    }
+
+    return isCmdCtrlModifierPressed(event);
 }

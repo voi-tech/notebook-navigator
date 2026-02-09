@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Platform, TFile, getAllTags, type App } from 'obsidian';
+import { TFile, getAllTags, type App } from 'obsidian';
 import { MultiSelectModifier, NotebookNavigatorSettings } from '../settings';
 import { TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import { IndexedDBStorage, type FileData } from '../storage/IndexedDBStorage';
 import { getDBInstanceOrNull } from '../storage/fileOperations';
+import { isMultiSelectModifierPressed } from './keyboardOpenContext';
 import { normalizeTagPathValue } from './tagPrefixMatcher';
 import { findTagNode } from './tagTree';
 import type { TagTreeNode } from '../types/storage';
@@ -273,9 +274,7 @@ export function getTagSearchModifierOperator(
         return null;
     }
 
-    const prefersCmdCtrl = modifierSetting === 'cmdCtrl';
-    const hasCmdCtrl = Platform.isMacOS ? event.metaKey : event.metaKey || event.ctrlKey;
-    const modifierPressed = prefersCmdCtrl ? hasCmdCtrl : event.altKey;
+    const modifierPressed = isMultiSelectModifierPressed(event, modifierSetting);
 
     if (!modifierPressed) {
         return null;

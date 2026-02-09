@@ -1715,11 +1715,19 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
      */
     private stopNavigatorContentProcessing(): void {
         try {
-            const leaves = this.app.workspace.getLeavesOfType(NOTEBOOK_NAVIGATOR_VIEW);
-            for (const leaf of leaves) {
+            const navigatorLeaves = this.app.workspace.getLeavesOfType(NOTEBOOK_NAVIGATOR_VIEW);
+            for (const leaf of navigatorLeaves) {
                 const view = leaf.view;
                 if (view instanceof NotebookNavigatorView) {
                     // Halt preview/tag generation loops inside each React view
+                    view.stopContentProcessing();
+                }
+            }
+
+            const calendarLeaves = this.app.workspace.getLeavesOfType(NOTEBOOK_NAVIGATOR_CALENDAR_VIEW);
+            for (const leaf of calendarLeaves) {
+                const view = leaf.view;
+                if (view instanceof NotebookNavigatorCalendarView) {
                     view.stopContentProcessing();
                 }
             }

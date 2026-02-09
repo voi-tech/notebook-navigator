@@ -104,7 +104,7 @@ import { getTagSearchModifierOperator, resolveCanonicalTagPath } from '../utils/
 import { FolderItem } from './FolderItem';
 import { NavigationPaneHeader } from './NavigationPaneHeader';
 import { NavigationToolbar } from './NavigationToolbar';
-import { NavigationPaneCalendar } from './NavigationPaneCalendar';
+import { Calendar } from './calendar';
 import { TagTreeItem } from './TagTreeItem';
 import { VaultTitleArea } from './VaultTitleArea';
 import { VirtualFolderComponent } from './VirtualFolderItem';
@@ -119,6 +119,7 @@ import {
 import { localStorage } from '../utils/localStorage';
 import { runAsyncAction } from '../utils/async';
 import { extractFilePathsFromDataTransfer, parseTagDragPayload } from '../utils/dragData';
+import { isCmdCtrlModifierPressed } from '../utils/keyboardOpenContext';
 import { openFileInContext } from '../utils/openFileInContext';
 import { useShortcuts } from '../context/ShortcutsContext';
 import { ShortcutItem } from './ShortcutItem';
@@ -1243,7 +1244,7 @@ export const NavigationPane = React.memo(
 
                 selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder, autoSelectedFile: null });
 
-                const isCmdCtrlClick = Boolean(event && (event.metaKey || event.ctrlKey));
+                const isCmdCtrlClick = event ? isCmdCtrlModifierPressed(event) : false;
                 const shouldOpenInNewTab =
                     settings.openFolderNotesInNewTab || (!isMobile && settings.multiSelectModifier === 'optionAlt' && isCmdCtrlClick);
 
@@ -2913,7 +2914,7 @@ export const NavigationPane = React.memo(
                 </div>
                 {shouldRenderCalendarOverlay ? (
                     <div className="nn-navigation-calendar-overlay">
-                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={onModifySearchWithDateFilter} />
+                        <Calendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={onModifySearchWithDateFilter} />
                     </div>
                 ) : null}
                 {shouldRenderBottomToolbarOutsidePanel ? <div className="nn-pane-bottom-toolbar">{navigationToolbar}</div> : null}

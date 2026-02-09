@@ -71,7 +71,7 @@ import { getEffectiveSortOption } from '../utils/sortUtils';
 import { FileItem } from './FileItem';
 import { ListPaneHeader } from './ListPaneHeader';
 import { ListToolbar } from './ListToolbar';
-import { NavigationPaneCalendar } from './NavigationPaneCalendar';
+import { Calendar } from './calendar';
 import { SearchInput } from './SearchInput';
 import { ListPaneTitleArea } from './ListPaneTitleArea';
 import { InputModal } from '../modals/InputModal';
@@ -90,6 +90,7 @@ import {
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { LIST_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
 import { runAsyncAction } from '../utils/async';
+import { isCmdCtrlModifierPressed, isMultiSelectModifierPressed } from '../utils/keyboardOpenContext';
 import { openFileInContext } from '../utils/openFileInContext';
 import { getListPaneMeasurements } from '../utils/listPaneMeasurements';
 import { ServiceIcon } from './ServiceIcon';
@@ -987,11 +988,8 @@ export const ListPane = React.memo(
                 isUserSelectionRef.current = true; // Mark this as a user selection
 
                 const isShiftKey = e.shiftKey;
-                const isCmdCtrlClick = e.metaKey || e.ctrlKey;
-                const isOptionClick = e.altKey;
-                const prefersCmdCtrl = settings.multiSelectModifier === 'cmdCtrl';
-
-                const shouldMultiSelect = !isMobile && ((prefersCmdCtrl && isCmdCtrlClick) || (!prefersCmdCtrl && isOptionClick));
+                const isCmdCtrlClick = isCmdCtrlModifierPressed(e);
+                const shouldMultiSelect = !isMobile && isMultiSelectModifierPressed(e, settings.multiSelectModifier);
 
                 const shouldOpenInNewTab =
                     !isMobile && !shouldMultiSelect && settings.multiSelectModifier === 'optionAlt' && isCmdCtrlClick;
@@ -1661,7 +1659,7 @@ export const ListPane = React.memo(
                 </div>
                 {shouldRenderCalendarOverlay ? (
                     <div className="nn-navigation-calendar-overlay">
-                        <NavigationPaneCalendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={modifySearchWithDateToken} />
+                        <Calendar onWeekCountChange={setCalendarWeekCount} onAddDateFilter={modifySearchWithDateToken} />
                     </div>
                 ) : null}
                 {shouldRenderBottomToolbarOutsidePanel ? <div className="nn-pane-bottom-toolbar">{listToolbar}</div> : null}

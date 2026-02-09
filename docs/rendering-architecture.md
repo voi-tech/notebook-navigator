@@ -126,7 +126,7 @@ graph TD
     SC -->|normal mode| NPL["Virtualized navigation list"];
     SC -->|root reorder| NRP["NavigationRootReorderPanel"];
     NPR --> NTBI["NavigationToolbar iOS"];
-    NPR --> CAL["NavigationPaneCalendar overlay"];
+    NPR --> CAL["Calendar overlay"];
 ```
 
 ### ListPane subtree
@@ -141,7 +141,7 @@ graph TD
     OVL --> LTA["ListPaneTitleArea"];
     SC --> LPL["Virtualized file list"];
     LPR --> LTBI["ListToolbar iOS"];
-    LPR --> CAL["NavigationPaneCalendar overlay"];
+    LPR --> CAL["Calendar overlay"];
 ```
 
 ## Component Responsibilities
@@ -256,12 +256,14 @@ graph TD
 
 - Renders the configured banner image by resolving the vault file path to a resource URL.
 
-### NavigationPaneCalendar
+### Calendar
 
-**Location**: `src/components/NavigationPaneCalendar.tsx`
+**Location**: `src/components/calendar/Calendar.tsx`
 
 - Renders the calendar overlay and integrates daily note creation/opening workflows.
 - Calls `onWeekCountChange` so parent panes can update scroll padding and CSS variables for the calendar layout.
+- Delegates presentation to `src/components/calendar/CalendarHeader.tsx`, `src/components/calendar/CalendarGrid.tsx`,
+  and `src/components/calendar/CalendarYearPanel.tsx`.
 
 ### NavigationRootReorderPanel
 

@@ -107,4 +107,9 @@ export class NotebookNavigatorCalendarView extends ItemView {
         teardownNotebookNavigatorViewContainer(container);
         this.root = null;
     }
+
+    stopContentProcessing() {
+        this.root?.unmount();
+        this.root = null;
+    }
 }

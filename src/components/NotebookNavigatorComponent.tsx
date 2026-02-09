@@ -54,7 +54,7 @@ import { ListPane } from './ListPane';
 import type { ListPaneHandle } from './ListPane';
 import { NavigationPane } from './NavigationPane';
 import type { NavigationPaneHandle } from './NavigationPane';
-import { NavigationPaneCalendar } from './NavigationPaneCalendar';
+import { Calendar } from './calendar';
 import type { SearchShortcut } from '../types/shortcuts';
 import { UpdateNoticeBanner } from './UpdateNoticeBanner';
 import { UpdateNoticeIndicator } from './UpdateNoticeIndicator';
@@ -1021,7 +1021,7 @@ export const NotebookNavigatorComponent = React.memo(
                     />
                     {shouldRenderSinglePaneCalendar ? (
                         <div className="nn-single-pane-calendar">
-                            <NavigationPaneCalendar
+                            <Calendar
                                 onWeekCountChange={handleSinglePaneCalendarWeekCountChange}
                                 onAddDateFilter={handleModifySearchWithDateFilter}
                             />

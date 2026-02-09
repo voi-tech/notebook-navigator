@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useServices } from '../context/ServicesContext';
 import { runAsyncAction } from '../utils/async';
 import { NotebookNavigatorView } from '../view/NotebookNavigatorView';
-import { NavigationPaneCalendar } from './NavigationPaneCalendar';
+import { Calendar } from './calendar';
 
 export function CalendarRightSidebar() {
     const { app, plugin } = useServices();
@@ -40,7 +40,7 @@ export function CalendarRightSidebar() {
     return (
         <div className="nn-calendar-right-sidebar nn-list-pane">
             <div className="nn-calendar-right-sidebar-content">
-                <NavigationPaneCalendar weeksToShowOverride={6} onAddDateFilter={handleAddDateFilter} isRightSidebar={true} />
+                <Calendar weeksToShowOverride={6} onAddDateFilter={handleAddDateFilter} isRightSidebar={true} />
             </div>
         </div>
     );

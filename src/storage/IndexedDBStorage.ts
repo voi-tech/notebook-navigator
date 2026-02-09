@@ -387,7 +387,19 @@ export class IndexedDBStorage {
             };
 
             request.onsuccess = async () => {
-                this.db = request.result;
+                const openedDb = request.result;
+                if (this.isClosing) {
+                    try {
+                        openedDb.close();
+                    } catch {
+                        // noop
+                    }
+                    this.db = null;
+                    resolve();
+                    return;
+                }
+
+                this.db = openedDb;
                 // Reset blob caches whenever a new database connection is opened.
                 this.featureImageBlobs.clearMemoryCaches();
 
