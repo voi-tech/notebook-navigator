@@ -1,6 +1,6 @@
 # Notebook Navigator Theming Guide
 
-Updated: February 8, 2026
+Updated: February 10, 2026
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@ Updated: February 8, 2026
   - [Theme foreground](#theme-foreground)
   - [Calendar](#calendar)
   - [Navigation pane](#navigation-pane)
+  - [Borders](#borders)
   - [Pane divider](#pane-divider-desktop-only)
   - [List pane (files)](#list-pane-files)
   - [Headers (desktop only)](#headers-desktop-only)
@@ -128,6 +129,38 @@ Priority order: folder note styles override custom color styles, which override 
 | `--nn-theme-navitem-folder-note-name-font-weight`       | `400`       | Font weight for folders with notes (overrides all others)                     |
 | `--nn-theme-navitem-folder-note-name-decoration`        | `underline` | Text decoration for folders with notes (none, underline, underline dotted)    |
 | `--nn-theme-navitem-folder-note-name-hover-decoration`  | `underline` | Text decoration when hovering folders with notes                              |
+
+### Borders
+
+Border variables apply to folder/tag rows, file rows, count badges, and file pills.
+
+#### Border widths
+
+| Variable                              | Default | Description                                                       |
+| ------------------------------------- | ------- | ----------------------------------------------------------------- |
+| `--nn-theme-navitem-border-width`     | `0px`   | Border width for navigation custom backgrounds, hover, and selection |
+| `--nn-theme-navitem-count-border-width` | `0px` | Border width for navigation file count badges                     |
+| `--nn-theme-file-border-width`        | `0px`   | Border width for file item hover and selection                    |
+| `--nn-theme-file-pill-border-width`   | `1px`   | Border width for tag and custom property pills                    |
+
+#### Border colors
+
+| Variable                                                  | Default                                           | Description                                                      |
+| --------------------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------------------- |
+| `--nn-theme-navitem-custom-border-color`                  | `transparent`                                     | Border color for rows with custom backgrounds                   |
+| `--nn-theme-navitem-hover-border-color`                   | `transparent`                                     | Border color for hovered navigation rows                        |
+| `--nn-theme-navitem-selected-border-color`                | `transparent`                                     | Border color for selected navigation rows                       |
+| `--nn-theme-navitem-selected-inactive-border-color`       | `var(--nn-theme-navitem-selected-border-color)`   | Border color for selected navigation rows when pane is inactive |
+| `--nn-theme-navitem-count-border-color`                   | `transparent`                                     | Border color for navigation file count badges                   |
+| `--nn-theme-navitem-selected-count-border-color`          | `var(--nn-theme-navitem-count-border-color)`      | Border color for selected navigation file count badges          |
+| `--nn-theme-navitem-selected-inactive-count-border-color` | `var(--nn-theme-navitem-selected-count-border-color)` | Border color for selected navigation file count badges when pane is inactive |
+| `--nn-theme-file-hover-border-color`                      | `transparent`                                     | Border color for hovered file rows                              |
+| `--nn-theme-file-selected-border-color`                   | `transparent`                                     | Border color for selected file rows                             |
+| `--nn-theme-file-selected-inactive-border-color`          | `var(--nn-theme-file-selected-border-color)`      | Border color for selected file rows when pane is inactive       |
+| `--nn-theme-file-tag-border-color`                        | `color-mix(in srgb, var(--nn-theme-foreground) 30%, transparent)` | Border color for tag pills                                      |
+| `--nn-theme-file-custom-property-border-color`            | `var(--nn-theme-file-tag-border-color)`           | Border color for custom property pills                          |
+| `--nn-theme-file-selected-tag-border-color`               | `var(--nn-theme-file-tag-border-color)`           | Border color for tag pills in selected file rows                |
+| `--nn-theme-file-selected-custom-property-border-color`   | `var(--nn-theme-file-custom-property-border-color)` | Border color for custom property pills in selected file rows    |
 
 ### Pane divider (desktop only)
 
@@ -298,6 +331,15 @@ body {
   --nn-theme-navitem-selected-inactive-icon-color: #b9bec6;
   --nn-theme-navitem-selected-inactive-count-color: #b9bec6;
   --nn-theme-navitem-selected-inactive-count-bg: rgba(0, 0, 0, 0.25);
+  --nn-theme-navitem-border-width: 1px;
+  --nn-theme-navitem-count-border-width: 1px;
+  --nn-theme-navitem-custom-border-color: rgba(0, 0, 0, 0.18);
+  --nn-theme-navitem-hover-border-color: rgba(255, 255, 255, 0.18);
+  --nn-theme-navitem-selected-border-color: rgba(255, 255, 255, 0.25);
+  --nn-theme-navitem-selected-inactive-border-color: rgba(255, 255, 255, 0.14);
+  --nn-theme-navitem-count-border-color: rgba(255, 255, 255, 0.2);
+  --nn-theme-navitem-selected-count-border-color: rgba(255, 255, 255, 0.3);
+  --nn-theme-navitem-selected-inactive-count-border-color: rgba(255, 255, 255, 0.2);
 
   /* Tag highlights and drop targets */
   --nn-theme-tag-positive-bg: rgba(106, 135, 89, 0.2);
@@ -363,6 +405,15 @@ body {
   --nn-theme-file-selected-inactive-tag-bg: #4c5058;
   --nn-theme-file-selected-inactive-custom-property-color: #dfe3e8;
   --nn-theme-file-selected-inactive-custom-property-bg: #4c5058;
+  --nn-theme-file-border-width: 1px;
+  --nn-theme-file-pill-border-width: 1px;
+  --nn-theme-file-hover-border-color: rgba(255, 255, 255, 0.16);
+  --nn-theme-file-selected-border-color: rgba(255, 255, 255, 0.24);
+  --nn-theme-file-selected-inactive-border-color: rgba(255, 255, 255, 0.14);
+  --nn-theme-file-tag-border-color: rgba(255, 255, 255, 0.2);
+  --nn-theme-file-custom-property-border-color: rgba(255, 255, 255, 0.2);
+  --nn-theme-file-selected-tag-border-color: rgba(255, 255, 255, 0.3);
+  --nn-theme-file-selected-custom-property-border-color: rgba(255, 255, 255, 0.3);
 
   /* File text styling */
   --nn-theme-list-heading-font-weight: 600;
@@ -464,6 +515,8 @@ theme through inline styles.
 ## Style Settings Support
 
 Notebook Navigator includes a Style Settings `@settings` block for most theming variables.
+
+Border variables are available in the Style Settings **Borders** section.
 
 Not currently exposed in the Style Settings UI:
 
