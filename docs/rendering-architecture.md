@@ -1,6 +1,6 @@
 # Notebook Navigator Rendering Architecture
 
-Updated: January 19, 2026
+Updated: February 10, 2026
 
 ## Table of Contents
 
@@ -15,12 +15,16 @@ Updated: January 19, 2026
 
 ## Overview
 
-The Notebook Navigator plugin renders a React application inside an Obsidian `ItemView` (`NotebookNavigatorView`). The
-React tree is mounted with `createRoot` and wrapped in `React.StrictMode`.
+The Notebook Navigator plugin renders React applications inside two Obsidian `ItemView` implementations:
+`NotebookNavigatorView` (main navigator) and `NotebookNavigatorCalendarView` (calendar right sidebar). Both trees are
+mounted with `createRoot` and wrapped in `React.StrictMode`.
 
-The UI is a two-pane layout (`NavigationPane` and `ListPane`). Each pane uses a single scroll container that contains a
-sticky “chrome” overlay (headers, toolbars, pinned sections) and a virtualized list below it. Both panes use
-`@tanstack/react-virtual` to mount only the rows required for the viewport plus overscan.
+The main navigator UI is a two-pane layout (`NavigationPane` and `ListPane`). Each pane uses a single scroll container
+that contains a sticky “chrome” overlay (headers, toolbars, pinned sections) and a virtualized list below it. Both
+panes use `@tanstack/react-virtual` to mount only the rows required for the viewport plus overscan.
+
+The calendar right-sidebar view renders `CalendarRightSidebar`, which hosts `Calendar` in sidebar mode and forwards
+date-filter actions to the main navigator view.
 
 Storage is provided through `StorageContext`, which coordinates `IndexedDBStorage`, an in-memory mirror, and the
 `ContentProviderRegistry`. Components read cached preview data, metadata, and tag trees synchronously during render, and
@@ -67,7 +71,7 @@ Expensive data shaping lives outside component bodies. Examples:
 
 ### 4. Context-Based State Layers
 
-Nine providers wrap the React tree:
+Nine providers wrap the primary navigator React tree:
 
 - `SettingsContext` – persisted plugin settings and mutation helpers
 - `UXPreferencesContext` – runtime-only preferences (search active, include descendant notes, show hidden items, pin
@@ -82,6 +86,8 @@ Nine providers wrap the React tree:
 - `UIStateContext` – pane mode (single vs dual), focused pane, current single-pane view, navigation pane width, pinned
   shortcuts toggle
 
+The calendar right-sidebar tree uses `SettingsContext` and `ServicesContext` only.
+
 ### 5. Stable Rendering Contracts
 
 Heavy components (`NavigationPane`, `ListPane`, `FolderItem`, `TagTreeItem`, `FileItem`, `ShortcutItem`,
@@ -95,7 +101,7 @@ colors used for background compositing.
 
 ## Component Hierarchy
 
-### Top-level stack
+### Navigator view stack
 
 ```mermaid
 graph TD
@@ -109,6 +115,14 @@ graph TD
     NNC --> UNI["UpdateNoticeIndicator"];
     NNC --> NPR["NavigationPane"];
     NNC --> LPR["ListPane"];
+```
+
+### Calendar right-sidebar stack
+
+```mermaid
+graph TD
+    CV["NotebookNavigatorCalendarView"] --> SM["React.StrictMode"] --> SP["SettingsProvider"] --> SVC["ServicesProvider"] --> CRS["CalendarRightSidebar"];
+    CRS --> CAL["Calendar"];
 ```
 
 ### NavigationPane subtree
@@ -159,6 +173,23 @@ graph TD
 - Dispatches `notebook-navigator-visible` on mobile when the drawer becomes visible so scroll hooks can resume pending
   reveal operations.
 - Cleans up container classes and unmounts the React tree on view close.
+
+### NotebookNavigatorCalendarView
+
+**Location**: `src/view/NotebookNavigatorCalendarView.tsx`
+
+- Creates a React root for the calendar right-sidebar leaf and mounts `SettingsProvider` + `ServicesProvider`.
+- Renders `CalendarRightSidebar` as the calendar-only UI surface.
+- Registers a settings listener to keep platform-specific container classes in sync.
+- Unregisters listeners, unmounts the React tree, and tears down view container classes on close.
+
+### CalendarRightSidebar
+
+**Location**: `src/components/CalendarRightSidebar.tsx`
+
+- Hosts the `Calendar` component configured for right-sidebar mode (`weeksToShowOverride={6}`, `isRightSidebar={true}`).
+- Resolves the primary navigator leaf, opening it through `plugin.activateView()` when needed.
+- Forwards calendar date-filter actions to `NotebookNavigatorView.addDateFilterToSearch(...)` and reveals the navigator leaf when applicable.
 
 ### NotebookNavigatorContainer
 

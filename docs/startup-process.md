@@ -1,6 +1,6 @@
 # Notebook Navigator Startup Process
 
-Updated: January 19, 2026
+Updated: February 10, 2026
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@ Updated: January 19, 2026
   - [Version System](#version-system)
 - [Startup Phases](#startup-phases)
   - [Phase 1: Plugin Registration](#phase-1-plugin-registration-maints)
-  - [Phase 2: View Creation](#phase-2-view-creation-notebooknavigatorviewtsx)
+  - [Phase 2: View Creation](#phase-2-view-creation)
   - [Phase 3: Database Version Check](#phase-3-database-version-check-and-initialization)
   - [Phase 4: Initial Data Load](#phase-4-initial-data-load-and-metadata-resolution)
   - [Phase 5: Background Processing](#phase-5-background-processing)
@@ -21,7 +21,7 @@ Updated: January 19, 2026
   - [Debouncing](#debouncing)
 - [Shutdown Process](#shutdown-process)
   - [Phase 1: Plugin Unload](#phase-1-plugin-unload-maints)
-  - [Phase 2: View Cleanup](#phase-2-view-cleanup-notebooknavigatorviewtsx)
+  - [Phase 2: View Cleanup](#phase-2-view-cleanup)
   - [Key Principles](#key-principles)
 
 ## Overview
@@ -68,6 +68,7 @@ Obsidian can restore open tabs/leaves from the saved workspace layout.
 For Notebook Navigator this matters because:
 
 - On warm boots, the navigator view is often created by layout restore (not by `activateView()`).
+- When `calendarPlacement` is `right-sidebar`, the calendar sidebar leaf is restored and managed independently of navigator leaves.
 - On first launch, the plugin explicitly activates the view in `HomepageController.handleWorkspaceReady()` after
   `workspace.onLayoutReady()`.
 
@@ -126,6 +127,8 @@ show progress.
    - `OmnisearchService`, `NotebookNavigatorAPI`, and `ReleaseCheckService`.
    - `ExternalIconProviderController` initializes icon providers and syncs settings.
 9. Register view, commands, settings tab, and workspace integrations.
+   - Register both `NOTEBOOK_NAVIGATOR_VIEW` (`NotebookNavigatorView`) and
+     `NOTEBOOK_NAVIGATOR_CALENDAR_VIEW` (`NotebookNavigatorCalendarView`).
    - `registerNavigatorCommands` wires command palette entries.
    - `registerWorkspaceEvents` adds editor context menu actions, the ribbon icon, recent-note tracking, and
      rename/delete handlers.
@@ -133,10 +136,14 @@ show progress.
    - `HomepageController.handleWorkspaceReady()` activates the view on first launch and opens the configured homepage (if set).
    - On first launch, the Welcome modal is opened after the workspace is ready.
    - Triggers Style Settings parsing, version notice checks, and optional release polling.
+   - `applyCalendarPlacementView({ force: true, reveal: false })` syncs the calendar right-sidebar leaf with `settings.calendarPlacement`.
 
-### Phase 2: View Creation (NotebookNavigatorView.tsx)
+### Phase 2: View Creation
 
-**Trigger**: Obsidian restores the view from workspace layout, or the plugin calls `activateView()` (commands/ribbon/menu)
+**Trigger**: Obsidian restores leaves from workspace layout, the plugin calls `activateView()` (commands/ribbon/menu),
+or calendar placement changes run after layout/settings updates.
+
+#### Navigator view (`NotebookNavigatorView.tsx`)
 
 `activateView()` delegates to `WorkspaceCoordinator.activateNavigatorView()`:
 
@@ -163,6 +170,18 @@ show progress.
    - `NavigationPaneHeader` and `ListPaneHeader` render at the top of the scroll content area.
    - Android mobile renders `NavigationToolbar` / `ListToolbar` at the top.
    - iOS mobile renders `NavigationToolbar` / `ListToolbar` in a bottom toolbar container.
+
+#### Calendar right sidebar view (`NotebookNavigatorCalendarView.tsx`)
+
+1. `applyCalendarPlacementView()` evaluates `settings.calendarPlacement` after layout readiness and on settings updates.
+2. When placement is `right-sidebar`, it calls `WorkspaceCoordinator.ensureCalendarViewInRightSidebar(...)`.
+3. Obsidian calls `NotebookNavigatorCalendarView.onOpen()` when the calendar leaf is created/restored.
+4. React app mounts with:
+   - `SettingsProvider`
+   - `ServicesProvider`
+   - `CalendarRightSidebar`
+5. `CalendarRightSidebar` renders `Calendar` with `weeksToShowOverride={6}` and forwards date-filter actions to the navigator view.
+6. When placement changes away from `right-sidebar`, `WorkspaceCoordinator.detachCalendarViewLeaves()` removes calendar leaves.
 
 ### Phase 3: Database Version Check and Initialization
 
@@ -397,29 +416,30 @@ The plugin uses debouncers in a few specific places where Obsidian emits bursty 
    - `CommandQueueService.clearAllOperations()` then set to `null`
    - `OmnisearchService` reference cleared
    - `RecentDataManager` reference cleared after disposal
-5. Stop content processing in every navigator leaf:
-   - Iterate leaves via `getLeavesOfType(NOTEBOOK_NAVIGATOR_VIEW)`
-   - Call `stopContentProcessing()` on each view to halt the `ContentProviderRegistry`
+5. Stop content processing in mounted navigator and calendar leaves:
+   - Iterate leaves via `getLeavesOfType(NOTEBOOK_NAVIGATOR_VIEW)` and call `NotebookNavigatorView.stopContentProcessing()`.
+   - Iterate leaves via `getLeavesOfType(NOTEBOOK_NAVIGATOR_CALENDAR_VIEW)` and call `NotebookNavigatorCalendarView.stopContentProcessing()`.
 6. Remove the ribbon icon element.
 7. Call `shutdownDatabase()` to:
    - Close the IndexedDB connection
    - Clear the in-memory cache
    - Keep the operation idempotent for repeated unloads
 
-### Phase 2: View Cleanup (NotebookNavigatorView.tsx)
+### Phase 2: View Cleanup
 
-**Trigger**: View.onClose() when view is destroyed
+**Trigger**: `ItemView.onClose()` when a navigator or calendar leaf is destroyed
 
-1. Remove CSS classes from container:
+1. `NotebookNavigatorView.onClose()` removes CSS classes from the container:
    - notebook-navigator
    - notebook-navigator-mobile (if applicable)
    - notebook-navigator-android / notebook-navigator-ios (if applicable)
    - notebook-navigator-obsidian-1-11-plus-android / notebook-navigator-obsidian-1-11-plus-ios (if applicable)
-2. Unmount React root:
+2. `NotebookNavigatorView.onClose()` unmounts the React root:
    - Call root.unmount()
    - Set root to null
    - Clear the container element
-3. StorageContext cleanup (via useEffect return):
+3. `NotebookNavigatorCalendarView.onClose()` unregisters the settings listener, unmounts the React root, and tears down the view container classes.
+4. StorageContext cleanup (via useEffect return):
    - Stop all content processing in ContentProviderRegistry
    - Cancel any pending timers
    - Prevent setState calls after unmount

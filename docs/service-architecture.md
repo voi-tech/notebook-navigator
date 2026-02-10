@@ -1,6 +1,6 @@
 # Notebook Navigator Service Architecture
 
-Updated: January 19, 2026
+Updated: February 10, 2026
 
 ## Table of Contents
 
@@ -44,10 +44,12 @@ startup and must be guarded. `IconService` is a global singleton accessed throug
 ### Ownership and lifetimes
 
 - `NotebookNavigatorPlugin` owns plugin-wide singletons (services, controllers, managers) created during `onload()`.
-- Each mounted `NotebookNavigatorView` owns a React provider tree. `ServicesContext` provides references to plugin
-  singletons, while `StorageProvider` owns view-scoped storage state and background queues.
-- `ContentProviderRegistry` is created by each mounted `StorageProvider` (via `useInitializeContentProviderRegistry`)
-  and is stopped during teardown.
+- Each mounted `NotebookNavigatorView` owns the primary React provider tree. `ServicesContext` provides references to
+  plugin singletons, while `StorageProvider` owns view-scoped storage state and background queues.
+- Each mounted `NotebookNavigatorCalendarView` owns a calendar sidebar tree (`SettingsProvider` →
+  `ServicesProvider` → `CalendarRightSidebar`) without storage, selection, or expansion providers.
+- `ContentProviderRegistry` is created by `StorageProvider` inside navigator view trees (via
+  `useInitializeContentProviderRegistry`) and is stopped during teardown.
 - `IndexedDBStorage` is initialized once per vault via `initializeDatabase()` and is accessed through `getDBInstance()`.
 
 `StorageContext` owns the IndexedDB sync lifecycle and the background content pipeline through `ContentProviderRegistry`.
@@ -106,7 +108,7 @@ graph TB
         RecentNotes["RecentNotesService<br/>Vault-local recents"]
         RecentData["RecentDataManager<br/>Vault-local persistence"]
         SyncModeRegistry["Sync mode registry<br/>Local/synced resolution"]
-        WorkspaceCoordinator["WorkspaceCoordinator<br/>Navigator leaves"]
+        WorkspaceCoordinator["WorkspaceCoordinator<br/>Navigator + calendar leaves"]
         HomepageController["HomepageController<br/>Homepage opening"]
         ExternalIcons["ExternalIconProviderController<br/>External icon packs"]
         API["NotebookNavigatorAPI<br/>Public surface"]
@@ -498,6 +500,7 @@ getProviderVersion(id: ExternalIconProviderId): string | null
 **Responsibilities:**
 
 - Ensures navigator leaves exist and are revealed.
+- Ensures the calendar view leaf is attached to the right sidebar when `calendarPlacement` is `right-sidebar`.
 - Coordinates manual and contextual reveal actions for files across all navigator instances.
 
 **Key Methods:**
@@ -505,6 +508,12 @@ getProviderVersion(id: ExternalIconProviderId): string | null
 ```typescript
 activateNavigatorView(): Promise<WorkspaceLeaf | null>
 getNavigatorLeaves(): WorkspaceLeaf[]
+detachCalendarViewLeaves(): void
+ensureCalendarViewInRightSidebar(options?: {
+  reveal?: boolean
+  activate?: boolean
+  shouldContinue?: () => boolean
+}): Promise<WorkspaceLeaf | null>
 revealFileInActualFolder(file: TFile, options?: RevealFileOptions): void
 revealFileInNearestFolder(file: TFile, options?: RevealFileOptions): void
 ```
