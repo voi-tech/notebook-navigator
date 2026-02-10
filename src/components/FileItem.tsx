@@ -1013,16 +1013,23 @@ export const FileItem = React.memo(function FileItem({
         if (shouldShowParentLabel && parentFolderSource.path !== '/') {
             // Use custom icon if set, otherwise use default folder icon
             const shouldShowParentFolderIcon = settings.showParentFolderIcon;
-            const customParentIcon = shouldShowParentFolderIcon ? metadataService.getFolderIcon(parentFolderSource.path) : undefined;
+            const shouldShowParentFolderColor = settings.showParentFolderColor;
+            const parentFolderDisplayData = metadataService.getFolderDisplayData(parentFolderSource.path, {
+                includeDisplayName: true,
+                includeColor: shouldShowParentFolderColor,
+                includeBackgroundColor: false,
+                includeIcon: shouldShowParentFolderIcon
+            });
+            const customParentIcon = shouldShowParentFolderIcon ? parentFolderDisplayData.icon : undefined;
             const fallbackParentIcon = 'lucide-folder-closed';
 
-            const parentFolderColor = settings.showParentFolderColor ? metadataService.getFolderColor(parentFolderSource.path) : undefined;
-            const shouldShowParentFolderColor = Boolean(parentFolderColor);
+            const parentFolderColor = shouldShowParentFolderColor ? parentFolderDisplayData.color : undefined;
+            const shouldApplyParentFolderColor = Boolean(parentFolderColor);
             parentFolderMeta = {
-                name: parentFolderSource.name,
+                name: parentFolderDisplayData.displayName || parentFolderSource.name,
                 iconId: customParentIcon ?? fallbackParentIcon,
-                color: shouldShowParentFolderColor ? parentFolderColor : undefined,
-                applyColorToName: shouldShowParentFolderColor && !settings.colorIconOnly,
+                color: shouldApplyParentFolderColor ? parentFolderColor : undefined,
+                applyColorToName: shouldApplyParentFolderColor && !settings.colorIconOnly,
                 showIcon: shouldShowParentFolderIcon
             };
         }

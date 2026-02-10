@@ -50,6 +50,7 @@ import type { MaybePromise } from '../utils/async';
 import { showNotice } from '../utils/noticeUtils';
 import type { ISettingsProvider } from '../interfaces/ISettingsProvider';
 import { ensureRecord, isStringRecordValue } from '../utils/recordUtils';
+import type { MetadataService } from './MetadataService';
 import {
     ensureVaultProfiles,
     normalizeHiddenFolderPath,
@@ -58,6 +59,7 @@ import {
 } from '../utils/vaultProfiles';
 import { EXCALIDRAW_PLUGIN_ID, TLDRAW_PLUGIN_ID } from '../constants/pluginIds';
 import { createDrawingWithPlugin, DrawingType, getDrawingFilePath, getDrawingTemplate } from '../utils/drawingFileUtils';
+import { resolveFolderDisplayName } from '../utils/folderDisplayName';
 
 /**
  * Selection context for file operations
@@ -162,14 +164,33 @@ export class FileSystemOperations {
      * @param app - The Obsidian app instance for vault operations
      * @param getTagTreeService - Function to get the TagTreeService instance
      * @param getCommandQueue - Function to get the CommandQueueService instance
+     * @param getMetadataService - Function to get the MetadataService instance
      */
     constructor(
         private app: App,
         private getTagTreeService: () => TagTreeService | null,
         private getCommandQueue: () => CommandQueueService | null,
+        private getMetadataService: () => MetadataService | null,
         private getVisibilityPreferences: () => VisibilityPreferences, // Function to get current visibility preferences for descendant/hidden items state
         private settingsProvider: ISettingsProvider
     ) {}
+
+    /**
+     * Resolves UI label for a folder, including frontmatter display names.
+     */
+    private resolveFolderDisplayLabel(folder: TFolder): string {
+        const metadataService = this.getMetadataService();
+        if (!metadataService) {
+            return folder.path === '/' ? this.settingsProvider.settings.customVaultName || this.app.vault.getName() : folder.name;
+        }
+        return resolveFolderDisplayName({
+            app: this.app,
+            metadataService,
+            settings: { customVaultName: this.settingsProvider.settings.customVaultName },
+            folderPath: folder.path,
+            fallbackName: folder.name
+        });
+    }
 
     /**
      * Shows a notification with a formatted error message
@@ -672,6 +693,7 @@ export class FileSystemOperations {
      * @param onSuccess - Optional callback on successful deletion
      */
     async deleteFolder(folder: TFolder, confirmBeforeDelete: boolean, onSuccess?: () => void): Promise<void> {
+        const folderDisplayName = this.resolveFolderDisplayLabel(folder);
         const deleteFolderWithCleanup = async () => {
             const deletedPath = folder.path;
             await this.app.fileManager.trashFile(folder);
@@ -684,7 +706,7 @@ export class FileSystemOperations {
         if (confirmBeforeDelete) {
             const confirmModal = new ConfirmModal(
                 this.app,
-                strings.modals.fileSystem.deleteFolderTitle.replace('{name}', folder.name),
+                strings.modals.fileSystem.deleteFolderTitle.replace('{name}', folderDisplayName),
                 strings.modals.fileSystem.deleteFolderConfirm,
                 async () => {
                     try {
@@ -997,6 +1019,7 @@ export class FileSystemOperations {
      * @returns Status object describing success with the new location data, a cancel signal, or an error payload
      */
     async moveFolderWithModal(folder: TFolder): Promise<MoveFolderModalResult> {
+        const folderDisplayName = this.resolveFolderDisplayLabel(folder);
         const excludePaths = new Set<string>();
 
         const collectPaths = (current: TFolder) => {
@@ -1041,13 +1064,15 @@ export class FileSystemOperations {
 
                     try {
                         const moveData = await this.moveFolderToTarget(folder, targetFolder);
-                        showNotice(strings.fileSystem.notifications.folderMoved.replace('{name}', folder.name), { variant: 'success' });
+                        showNotice(strings.fileSystem.notifications.folderMoved.replace('{name}', folderDisplayName), {
+                            variant: 'success'
+                        });
                         modal.close();
                         finish({ status: 'success', data: moveData });
                     } catch (error) {
                         if (error instanceof FolderMoveError) {
                             if (error.code === 'destination-exists') {
-                                showNotice(strings.fileSystem.errors.folderAlreadyExists.replace('{name}', folder.name), {
+                                showNotice(strings.fileSystem.errors.folderAlreadyExists.replace('{name}', folderDisplayName), {
                                     variant: 'warning'
                                 });
                                 return;
@@ -1058,12 +1083,12 @@ export class FileSystemOperations {
                             }
                         }
                         console.error('Failed to move folder via modal:', error);
-                        showNotice(strings.dragDrop.errors.failedToMoveFolder.replace('{name}', folder.name), { variant: 'warning' });
+                        showNotice(strings.dragDrop.errors.failedToMoveFolder.replace('{name}', folderDisplayName), { variant: 'warning' });
                         modal.close();
                         finish({ status: 'error', error });
                     }
                 },
-                this.getMovePlaceholder(folder.name, true),
+                this.getMovePlaceholder(folderDisplayName, true),
                 strings.modals.folderSuggest.instructions.move,
                 excludePaths,
                 () => finish({ status: 'cancelled' })

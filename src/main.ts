@@ -932,6 +932,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             this.app,
             () => this.tagTreeService,
             () => this.commandQueue,
+            () => this.metadataService,
             (): VisibilityPreferences => ({
                 includeDescendantNotes: this.uxPreferences.includeDescendantNotes,
                 showHiddenItems: this.uxPreferences.showHiddenItems

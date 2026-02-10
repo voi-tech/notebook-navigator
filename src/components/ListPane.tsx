@@ -55,6 +55,7 @@ import { useMultiSelection } from '../hooks/useMultiSelection';
 import { useListPaneKeyboard } from '../hooks/useListPaneKeyboard';
 import { useListPaneData } from '../hooks/useListPaneData';
 import { useListPaneScroll } from '../hooks/useListPaneScroll';
+import { useListPaneTitle } from '../hooks/useListPaneTitle';
 import { useListPaneAppearance } from '../hooks/useListPaneAppearance';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useFileOpener } from '../hooks/useFileOpener';
@@ -166,6 +167,39 @@ interface ListPaneProps {
      * Callback invoked whenever tag-related search tokens change.
      */
     onSearchTokensChange?: (state: SearchTagFilterState) => void;
+}
+
+interface ListPaneTitleChromeProps {
+    onHeaderClick?: () => void;
+    isSearchActive?: boolean;
+    onSearchToggle?: () => void;
+    shouldShowDesktopTitleArea: boolean;
+    children: React.ReactNode;
+}
+
+function ListPaneTitleChrome({
+    onHeaderClick,
+    isSearchActive,
+    onSearchToggle,
+    shouldShowDesktopTitleArea,
+    children
+}: ListPaneTitleChromeProps) {
+    const { desktopTitle, breadcrumbSegments, iconName, showIcon } = useListPaneTitle();
+    return (
+        <>
+            <ListPaneHeader
+                onHeaderClick={onHeaderClick}
+                isSearchActive={isSearchActive}
+                onSearchToggle={onSearchToggle}
+                desktopTitle={desktopTitle}
+                breadcrumbSegments={breadcrumbSegments}
+                iconName={iconName}
+                showIcon={showIcon}
+            />
+            {children}
+            {shouldShowDesktopTitleArea ? <ListPaneTitleArea desktopTitle={desktopTitle} /> : null}
+        </>
+    );
 }
 
 export const ListPane = React.memo(
@@ -1447,35 +1481,40 @@ export const ListPane = React.memo(
             >
                 {props.resizeHandleProps && <div className="nn-resize-handle" {...props.resizeHandleProps} />}
                 <div className="nn-list-pane-chrome">
-                    <ListPaneHeader onHeaderClick={handleScrollToTop} isSearchActive={isSearchActive} onSearchToggle={handleSearchToggle} />
-                    {/* Android - toolbar at top */}
-                    {isMobile && isAndroid ? listToolbar : null}
-                    {/* Search bar - collapsible */}
-                    <div className={`nn-search-bar-container ${isSearchActive ? 'nn-search-bar-visible' : ''}`}>
-                        {isSearchActive && (
-                            <SearchInput
-                                searchQuery={searchQuery}
-                                onSearchQueryChange={setSearchQuery}
-                                shouldFocus={shouldFocusSearch}
-                                onFocusComplete={() => setShouldFocusSearch(false)}
-                                onClose={() => {
-                                    setIsSearchActive(false);
-                                    uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
-                                }}
-                                onFocusFiles={() => {
-                                    // Ensure selection exists when focusing list from search (no editor open)
-                                    ensureSelectionForCurrentFilter({ openInEditor: false });
-                                }}
-                                containerRef={props.rootContainerRef}
-                                onSaveShortcut={!activeSearchShortcut ? handleSaveSearchShortcut : undefined}
-                                onRemoveShortcut={activeSearchShortcut ? handleRemoveSearchShortcut : undefined}
-                                isShortcutSaved={Boolean(activeSearchShortcut)}
-                                isShortcutDisabled={isSavingSearchShortcut}
-                                searchProvider={searchProvider}
-                            />
-                        )}
-                    </div>
-                    {shouldShowDesktopTitleArea ? <ListPaneTitleArea /> : null}
+                    <ListPaneTitleChrome
+                        onHeaderClick={handleScrollToTop}
+                        isSearchActive={isSearchActive}
+                        onSearchToggle={handleSearchToggle}
+                        shouldShowDesktopTitleArea={shouldShowDesktopTitleArea}
+                    >
+                        {/* Android - toolbar at top */}
+                        {isMobile && isAndroid ? listToolbar : null}
+                        {/* Search bar - collapsible */}
+                        <div className={`nn-search-bar-container ${isSearchActive ? 'nn-search-bar-visible' : ''}`}>
+                            {isSearchActive && (
+                                <SearchInput
+                                    searchQuery={searchQuery}
+                                    onSearchQueryChange={setSearchQuery}
+                                    shouldFocus={shouldFocusSearch}
+                                    onFocusComplete={() => setShouldFocusSearch(false)}
+                                    onClose={() => {
+                                        setIsSearchActive(false);
+                                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
+                                    }}
+                                    onFocusFiles={() => {
+                                        // Ensure selection exists when focusing list from search (no editor open)
+                                        ensureSelectionForCurrentFilter({ openInEditor: false });
+                                    }}
+                                    containerRef={props.rootContainerRef}
+                                    onSaveShortcut={!activeSearchShortcut ? handleSaveSearchShortcut : undefined}
+                                    onRemoveShortcut={activeSearchShortcut ? handleRemoveSearchShortcut : undefined}
+                                    isShortcutSaved={Boolean(activeSearchShortcut)}
+                                    isShortcutDisabled={isSavingSearchShortcut}
+                                    searchProvider={searchProvider}
+                                />
+                            )}
+                        </div>
+                    </ListPaneTitleChrome>
                 </div>
                 <div className="nn-list-pane-panel">
                     <div

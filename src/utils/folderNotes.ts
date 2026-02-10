@@ -21,7 +21,7 @@ import { strings } from '../i18n';
 import { FolderNoteType, FOLDER_NOTE_TYPE_EXTENSIONS, FolderNoteCreationPreference } from '../types/folderNote';
 import { createDatabaseContent, createMarkdownFileFromTemplate } from './fileCreationUtils';
 import { type FolderNoteNameSettings, resolveFolderNoteName } from './folderNoteName';
-import { isExcalidrawFile, stripExcalidrawSuffix } from './fileNameUtils';
+import { EXCALIDRAW_BASENAME_SUFFIX, isExcalidrawFile, stripExcalidrawSuffix } from './fileNameUtils';
 import { CommandQueueService } from '../services/CommandQueueService';
 import { promptForFolderNoteType } from '../modals/FolderNoteTypeModal';
 import { showNotice } from './noticeUtils';
@@ -49,6 +49,10 @@ export interface FolderNoteDetectionSettings extends FolderNoteNameSettings {
 export interface FolderNoteCreationSettings extends FolderNoteNameSettings {
     folderNoteType: FolderNoteCreationPreference;
     folderNoteTemplate: string | null;
+}
+
+interface CreateFolderNoteOptions {
+    folderDisplayName?: string;
 }
 
 /**
@@ -86,30 +90,58 @@ export function getFolderNote(folder: TFolder, settings: FolderNoteDetectionSett
     }
 
     const expectedName = resolveFolderNoteName(folder.name, settings);
+    const prefix = folder.path === '/' ? '' : `${folder.path}/`;
+    const exactCandidates: TFile[] = [];
+
+    for (const extension of Object.values(FOLDER_NOTE_TYPE_EXTENSIONS)) {
+        const candidatePath = normalizePath(`${prefix}${expectedName}.${extension}`);
+        const candidate = folder.vault.getAbstractFileByPath(candidatePath);
+
+        if (!(candidate instanceof TFile) || candidate.parent?.path !== folder.path) {
+            continue;
+        }
+
+        if (!SUPPORTED_FOLDER_NOTE_EXTENSIONS.has(candidate.extension)) {
+            continue;
+        }
+
+        if (candidate.basename === expectedName) {
+            exactCandidates.push(candidate);
+        }
+    }
+
     let excalidrawCandidate: TFile | null = null;
-
-    for (const child of folder.children) {
-        if (!(child instanceof TFile)) {
-            continue;
+    const excalidrawPath = normalizePath(`${prefix}${expectedName}${EXCALIDRAW_BASENAME_SUFFIX}.md`);
+    const abstractExcalidrawCandidate = folder.vault.getAbstractFileByPath(excalidrawPath);
+    if (abstractExcalidrawCandidate instanceof TFile && abstractExcalidrawCandidate.parent?.path === folder.path) {
+        if (isExcalidrawFile(abstractExcalidrawCandidate) && stripExcalidrawSuffix(abstractExcalidrawCandidate.basename) === expectedName) {
+            excalidrawCandidate = abstractExcalidrawCandidate;
         }
+    }
 
-        if (child.parent?.path !== folder.path) {
-            continue;
-        }
+    if (exactCandidates.length === 1) {
+        return exactCandidates[0];
+    }
 
-        if (!SUPPORTED_FOLDER_NOTE_EXTENSIONS.has(child.extension)) {
-            continue;
-        }
+    if (exactCandidates.length > 1) {
+        const candidatePaths = new Set<string>(exactCandidates.map(candidate => candidate.path));
+        for (const child of folder.children) {
+            if (!(child instanceof TFile)) {
+                continue;
+            }
 
-        if (child.basename === expectedName) {
-            // Prefer exact basename matches when both regular and Excalidraw notes exist.
+            if (child.parent?.path !== folder.path) {
+                continue;
+            }
+
+            if (!candidatePaths.has(child.path)) {
+                continue;
+            }
+
             return child;
         }
 
-        if (!excalidrawCandidate && isExcalidrawFile(child) && stripExcalidrawSuffix(child.basename) === expectedName) {
-            // Keep Excalidraw variant as fallback when no exact match is present.
-            excalidrawCandidate = child;
-        }
+        return exactCandidates[0] ?? null;
     }
 
     return excalidrawCandidate;
@@ -188,13 +220,15 @@ export function isFolderNote(file: TFile, folder: TFolder, settings: FolderNoteD
  * @param folder - The folder to create a folder note for
  * @param settings - Settings for folder note creation
  * @param commandQueue - Optional command queue service for opening the note
+ * @param options - Optional display metadata for folder note UI prompts
  * @returns The created folder note file, or null if creation failed
  */
 export async function createFolderNote(
     app: App,
     folder: TFolder,
     settings: FolderNoteCreationSettings,
-    commandQueue?: CommandQueueService | null
+    commandQueue?: CommandQueueService | null,
+    options?: CreateFolderNoteOptions
 ): Promise<TFile | null> {
     const existingNote = getFolderNote(
         folder,
@@ -213,7 +247,7 @@ export async function createFolderNote(
     let selectedType: FolderNoteType | null = null;
 
     if (settings.folderNoteType === 'ask') {
-        selectedType = await promptForFolderNoteType(app, folder);
+        selectedType = await promptForFolderNoteType(app, folder, options?.folderDisplayName);
         if (!selectedType) {
             return null;
         }

@@ -34,16 +34,26 @@ import { casefold } from '../../utils/recordUtils';
 import { EXCALIDRAW_PLUGIN_ID, TLDRAW_PLUGIN_ID } from '../../constants/pluginIds';
 import { addStyleMenu } from './styleMenuBuilder';
 import { getTemplaterCreateNewNoteFromTemplate } from '../templaterIntegration';
+import { resolveFolderDisplayName } from '../folderDisplayName';
 
 /**
  * Adds folder creation commands (new note/folder/canvas/base/drawing) to a menu.
  */
-export function buildFolderCreationMenu(params: FolderMenuBuilderParams): void {
+export function buildFolderCreationMenu(params: FolderMenuBuilderParams, folderDisplayNameOverride?: string): void {
     const { folder, menu, services, state, dispatchers } = params;
-    const { app, fileSystemOps } = services;
+    const { app, fileSystemOps, metadataService } = services;
     const { selectionState, expandedFolders } = state;
     const { selectionDispatch, expansionDispatch, uiDispatch } = dispatchers;
     const isVaultRoot = folder.path === '/';
+    const folderDisplayName =
+        folderDisplayNameOverride ??
+        resolveFolderDisplayName({
+            app,
+            metadataService,
+            settings: params.settings,
+            folderPath: folder.path,
+            fallbackName: folder.name
+        });
 
     const ensureFolderSelected = () => {
         if (
@@ -146,7 +156,6 @@ export function buildFolderCreationMenu(params: FolderMenuBuilderParams): void {
 
     // Folder note operations
     const { settings } = params;
-    const { metadataService } = services;
     if (settings.enableFolderNotes) {
         const folderNote = getFolderNote(folder, settings);
         const canDeleteFolderNote = Boolean(folderNote);
@@ -184,7 +193,8 @@ export function buildFolderCreationMenu(params: FolderMenuBuilderParams): void {
                             folderNoteNamePattern: settings.folderNoteNamePattern,
                             folderNoteTemplate: settings.folderNoteTemplate
                         },
-                        services.commandQueue
+                        services.commandQueue,
+                        { folderDisplayName }
                     );
                     handleFileCreation(createdNote);
                     if (createdNote && settings.pinCreatedFolderNote) {
@@ -213,15 +223,22 @@ export function buildFolderMenu(params: FolderMenuBuilderParams): void {
     const { app, fileSystemOps, metadataService, plugin } = services;
     const { selectionState, expandedFolders } = state;
     const { selectionDispatch, expansionDispatch } = dispatchers;
+    const folderDisplayName = resolveFolderDisplayName({
+        app,
+        metadataService,
+        settings,
+        folderPath: folder.path,
+        fallbackName: folder.name
+    });
 
     // Show folder name on mobile
     if (services.isMobile) {
         menu.addItem((item: MenuItem) => {
-            item.setTitle(folder.name).setIsLabel(true);
+            item.setTitle(folderDisplayName).setIsLabel(true);
         });
     }
 
-    buildFolderCreationMenu(params);
+    buildFolderCreationMenu(params, folderDisplayName);
 
     menu.addSeparator();
 
@@ -362,7 +379,7 @@ export function buildFolderMenu(params: FolderMenuBuilderParams): void {
 
         if (existingShortcutKey) {
             const existingShortcut = shortcutMap.get(existingShortcutKey);
-            const defaultLabel = folder.path === '/' ? settings.customVaultName || app.vault.getName() : folder.name;
+            const defaultLabel = folderDisplayName;
 
             addShortcutRenameMenuItem({
                 app,
@@ -503,7 +520,7 @@ export function buildFolderMenu(params: FolderMenuBuilderParams): void {
                     });
                     await services.plugin.saveSettingsAndUpdate();
 
-                    showNotice(strings.fileSystem.notices.showFolder.replace('{name}', folder.name), { variant: 'success' });
+                    showNotice(strings.fileSystem.notices.showFolder.replace('{name}', folderDisplayName), { variant: 'success' });
                 });
             });
         } else if (!isExcluded) {
@@ -525,7 +542,7 @@ export function buildFolderMenu(params: FolderMenuBuilderParams): void {
                     });
                     await services.plugin.saveSettingsAndUpdate();
 
-                    showNotice(strings.fileSystem.notices.hideFolder.replace('{name}', folder.name), { variant: 'success' });
+                    showNotice(strings.fileSystem.notices.hideFolder.replace('{name}', folderDisplayName), { variant: 'success' });
                 });
             });
         }

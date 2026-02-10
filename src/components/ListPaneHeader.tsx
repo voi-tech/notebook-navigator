@@ -27,7 +27,7 @@ import { strings } from '../i18n';
 import { getIconService, useIconServiceVersion } from '../services/icons';
 import { ServiceIcon } from './ServiceIcon';
 import { useListActions } from '../hooks/useListActions';
-import { useListPaneTitle } from '../hooks/useListPaneTitle';
+import type { BreadcrumbSegment } from '../hooks/useListPaneTitle';
 import { useSelectedFolderFileVersion } from '../hooks/useSelectedFolderFileVersion';
 import { ItemType } from '../types';
 import { getFolderNote, openFolderNoteFile } from '../utils/folderNotes';
@@ -40,9 +40,21 @@ interface ListPaneHeaderProps {
     onHeaderClick?: () => void;
     isSearchActive?: boolean;
     onSearchToggle?: () => void;
+    desktopTitle: string;
+    breadcrumbSegments: BreadcrumbSegment[];
+    iconName: string;
+    showIcon: boolean;
 }
 
-export function ListPaneHeader({ onHeaderClick, isSearchActive, onSearchToggle }: ListPaneHeaderProps) {
+export function ListPaneHeader({
+    onHeaderClick,
+    isSearchActive,
+    onSearchToggle,
+    desktopTitle,
+    breadcrumbSegments,
+    iconName,
+    showIcon
+}: ListPaneHeaderProps) {
     const iconRef = React.useRef<HTMLSpanElement>(null);
     const { app, isMobile } = useServices();
     const commandQueue = useCommandQueue();
@@ -53,7 +65,6 @@ export function ListPaneHeader({ onHeaderClick, isSearchActive, onSearchToggle }
     const selectionDispatch = useSelectionDispatch();
     const uiState = useUIState();
     const uiDispatch = useUIDispatch();
-    const { desktopTitle, breadcrumbSegments, iconName, showIcon } = useListPaneTitle();
     const listPaneTitlePreference = settings.listPaneTitle ?? 'header';
     const iconVersion = useIconServiceVersion();
 

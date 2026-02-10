@@ -20,15 +20,17 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelectionState } from '../context/SelectionContext';
 import { useCommandQueue, useServices } from '../context/ServicesContext';
 import { useSettingsState } from '../context/SettingsContext';
-import { useListPaneTitle } from '../hooks/useListPaneTitle';
 import { useSelectedFolderFileVersion } from '../hooks/useSelectedFolderFileVersion';
 import { ItemType } from '../types';
 import { runAsyncAction } from '../utils/async';
 import { getFolderNote, openFolderNoteFile } from '../utils/folderNotes';
 import { resolveFolderNoteClickOpenContext } from '../utils/keyboardOpenContext';
 
-export function ListPaneTitleArea() {
-    const { desktopTitle } = useListPaneTitle();
+interface ListPaneTitleAreaProps {
+    desktopTitle: string;
+}
+
+export function ListPaneTitleArea({ desktopTitle }: ListPaneTitleAreaProps) {
     const { app, isMobile } = useServices();
     const commandQueue = useCommandQueue();
     const settings = useSettingsState();

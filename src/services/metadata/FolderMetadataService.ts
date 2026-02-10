@@ -160,12 +160,20 @@ export class FolderMetadataService extends BaseMetadataService {
     /**
      * Resolves display metadata for a folder using settings and folder note frontmatter.
      */
-    getFolderDisplayData(folderPath: string): FolderDisplayData {
+    getFolderDisplayData(
+        folderPath: string,
+        options?: {
+            includeDisplayName?: boolean;
+            includeColor?: boolean;
+            includeBackgroundColor?: boolean;
+            includeIcon?: boolean;
+        }
+    ): FolderDisplayData {
         return this.resolveFolderDisplayData(folderPath, {
-            includeDisplayName: true,
-            includeColor: true,
-            includeBackgroundColor: true,
-            includeIcon: true
+            includeDisplayName: options?.includeDisplayName ?? true,
+            includeColor: options?.includeColor ?? true,
+            includeBackgroundColor: options?.includeBackgroundColor ?? true,
+            includeIcon: options?.includeIcon ?? true
         });
     }
 

@@ -126,8 +126,16 @@ export class MetadataService {
         return this.folderService.getFolderIcon(folderPath);
     }
 
-    getFolderDisplayData(folderPath: string): FolderDisplayData {
-        return this.folderService.getFolderDisplayData(folderPath);
+    getFolderDisplayData(
+        folderPath: string,
+        options?: {
+            includeDisplayName?: boolean;
+            includeColor?: boolean;
+            includeBackgroundColor?: boolean;
+            includeIcon?: boolean;
+        }
+    ): FolderDisplayData {
+        return this.folderService.getFolderDisplayData(folderPath, options);
     }
 
     async setFolderSortOverride(folderPath: string, sortOption: SortOption): Promise<void> {

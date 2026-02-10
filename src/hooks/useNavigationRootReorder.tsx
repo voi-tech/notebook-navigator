@@ -36,6 +36,7 @@ import { shouldExcludeFolder } from '../utils/fileFilters';
 import { createHiddenTagMatcher, matchesHiddenTagPattern } from '../utils/tagPrefixMatcher';
 import { NOTEBOOK_NAVIGATOR_ICON_ID } from '../constants/notebookNavigatorIcon';
 import { resolveUXIcon } from '../utils/uxIcons';
+import { resolveFolderDisplayName } from '../utils/folderDisplayName';
 
 export interface RootFolderDescriptor {
     key: string;
@@ -338,6 +339,7 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
     const rootItemMaps = useMemo(() => {
         const folderIconMap = new Map<string, string | undefined>();
         const folderColorMap = new Map<string, string | undefined>();
+        const folderDisplayNameMap = new Map<string, string | undefined>();
         const tagIconMap = new Map<string, string | undefined>();
         const tagColorMap = new Map<string, string | undefined>();
 
@@ -346,6 +348,7 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
                 const path = item.data.path;
                 folderIconMap.set(path, item.icon);
                 folderColorMap.set(path, item.color);
+                folderDisplayNameMap.set(path, item.displayName);
                 return;
             }
             if (item.type === NavigationPaneItemType.TAG) {
@@ -358,12 +361,13 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
         return {
             rootFolderIconMap: folderIconMap,
             rootFolderColorMap: folderColorMap,
+            rootFolderDisplayNameMap: folderDisplayNameMap,
             rootTagIconMap: tagIconMap,
             rootTagColorMap: tagColorMap
         };
     }, [items]);
 
-    const { rootFolderIconMap, rootFolderColorMap, rootTagIconMap, rootTagColorMap } = rootItemMaps;
+    const { rootFolderIconMap, rootFolderColorMap, rootFolderDisplayNameMap, rootTagIconMap, rootTagColorMap } = rootItemMaps;
     const vaultRootDescriptor = useMemo(() => rootFolderDescriptors.find(entry => entry.isVault), [rootFolderDescriptors]);
 
     const handleRootOrderChange = useCallback(
@@ -476,7 +480,17 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
             const isMissing = entry.isMissing === true;
             const baseName = entry.folder ? entry.folder.name : getPathBaseName(entry.key);
             const isHidden = hiddenFolders.length > 0 && shouldExcludeFolder(baseName, hiddenFolders, entry.key);
-            const displayLabel = entry.folder ? entry.folder.name : getPathBaseName(entry.key);
+            const displayLabel =
+                entry.folder === null
+                    ? getPathBaseName(entry.key)
+                    : rootFolderDisplayNameMap.get(entry.key) ||
+                      resolveFolderDisplayName({
+                          app,
+                          metadataService,
+                          settings: { customVaultName },
+                          folderPath: entry.key,
+                          fallbackName: entry.folder.name
+                      });
             // Hidden roots are not present in navigation maps, so read icon data directly from metadata
             const iconName = rootFolderIconMap.get(entry.key) ?? (isMissing ? undefined : metadataService.getFolderIcon(entry.key));
             const iconColor = rootFolderColorMap.get(entry.key) ?? (isMissing ? undefined : metadataService.getFolderColor(entry.key));
@@ -507,11 +521,14 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
             };
         });
     }, [
+        app,
         reorderableRootFolders,
         rootFolderIconMap,
         rootFolderColorMap,
+        rootFolderDisplayNameMap,
         metadataService,
         settings.interfaceIcons,
+        customVaultName,
         buildRemoveMissingAction,
         handleRemoveMissingRootFolder,
         hiddenFolders,
