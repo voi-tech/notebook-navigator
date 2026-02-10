@@ -274,3 +274,36 @@ export function isReleaseAutoDisplayEnabled(version: string): boolean {
     }
     return note.showOnUpdate !== false;
 }
+
+/**
+ * Determines whether release notes should appear automatically when upgrading between two versions.
+ *
+ * Upgrade decision rule:
+ * - Evaluate release notes in the semantic range (fromVersion, toVersion]
+ * - Return true when at least one note in that range has showOnUpdate not explicitly set to false
+ *
+ * Range resolution:
+ * - If both versions exist in RELEASE_NOTES, use their index range in the ordered list
+ * - If either version is missing, resolve the range by semantic version comparisons
+ *
+ * Non-upgrade transitions (same version or downgrade) use the target version setting.
+ */
+export function shouldAutoDisplayReleaseNotesForUpdate(fromVersion: string, toVersion: string): boolean {
+    if (compareVersions(toVersion, fromVersion) <= 0) {
+        return isReleaseAutoDisplayEnabled(toVersion);
+    }
+
+    const fromIndex = RELEASE_NOTES.findIndex(note => note.version === fromVersion);
+    const toIndex = RELEASE_NOTES.findIndex(note => note.version === toVersion);
+
+    const releaseNotesInUpgradePath =
+        fromIndex === -1 || toIndex === -1
+            ? RELEASE_NOTES.filter(note => compareVersions(note.version, fromVersion) > 0 && compareVersions(note.version, toVersion) <= 0)
+            : RELEASE_NOTES.slice(Math.min(fromIndex, toIndex), Math.max(fromIndex, toIndex));
+
+    if (releaseNotesInUpgradePath.length === 0) {
+        return isReleaseAutoDisplayEnabled(toVersion);
+    }
+
+    return releaseNotesInUpgradePath.some(note => note.showOnUpdate !== false);
+}

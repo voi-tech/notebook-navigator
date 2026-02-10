@@ -2434,11 +2434,22 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         // Check if version has changed
         if (lastShownVersion !== currentVersion) {
             // Import release notes helpers dynamically
-            const { getReleaseNotesBetweenVersions, getLatestReleaseNotes, compareVersions, isReleaseAutoDisplayEnabled } = await import(
-                './releaseNotes'
-            );
+            const {
+                getReleaseNotesBetweenVersions,
+                getLatestReleaseNotes,
+                compareVersions,
+                isReleaseAutoDisplayEnabled,
+                shouldAutoDisplayReleaseNotesForUpdate
+            } = await import('./releaseNotes');
 
-            if (!isReleaseAutoDisplayEnabled(currentVersion)) {
+            const isUpgrade = compareVersions(currentVersion, lastShownVersion) > 0;
+            if (isUpgrade) {
+                // For upgrades, auto-display is enabled when any release note in (lastShownVersion, currentVersion]
+                // has showOnUpdate not explicitly set to false.
+                if (!shouldAutoDisplayReleaseNotesForUpdate(lastShownVersion, currentVersion)) {
+                    return;
+                }
+            } else if (!isReleaseAutoDisplayEnabled(currentVersion)) {
                 return;
             }
 
@@ -2446,7 +2457,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
             // Get release notes between versions
             let releaseNotes;
-            if (compareVersions(currentVersion, lastShownVersion) > 0) {
+            if (isUpgrade) {
                 // Show notes from last shown to current
                 releaseNotes = getReleaseNotesBetweenVersions(lastShownVersion, currentVersion);
             } else {
