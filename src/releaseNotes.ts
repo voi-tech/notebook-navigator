@@ -92,7 +92,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New setting: ==Navigation pane > Show indent guides==. You can now show vertical indent guides in the navigation pane to better visualize the folder and tag hierarchy.',
             'New setting: ==Calendar > Single pane placement==. You can now choose to show the left sidebar calendar in the navigation pane (default) or below both panes.',
             'New command: ==Toggle compact mode==. Quickly toggle between default and compact mode in list pane. Bind it to a hot key or a button with the Commander plugin.',
-            'New search filter: ==has:task==. Use this to filter notes that have unfinished tasks.'
+            'New search filter: ==has:task==. Use this to filter notes that have unfinished tasks.',
+            'Many new ==theming variables for borders==! You can now set border width and border color for most visual elements.'
         ],
         improved: [
             'Folders with folder notes can now be clicked in the list pane header! This means you can go straight from the file list to your folder note.',
@@ -103,8 +104,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are now less likely to be pushed out by matches from other parts of the vault.'
         ],
         changed: [
-            '**Breaking change** - the setting "Folder note properties" used to set frontmatter properties for folder notes was removed. If you were using that setting, please migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
-            '**Breaking change** - The search bar now uses "-" instead of "!" to exclude terms from search to match industry standards. To exclude a term you now use "-term" instead of "!term". Saved searches will be migrated on first launch.',
+            '==Breaking change== - the setting "Folder note properties" used to set frontmatter properties for folder notes was removed. If you were using that setting, please migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
+            '==Breaking change== - The search bar now uses "-" instead of "!" to exclude terms from search to match industry standards. To exclude a term you now use "-term" instead of "!term". Saved searches will be migrated on first launch.',
             'All date format settings now use **Moment format**. Existing date-fns formats migrate automatically on first launch.',
             'Removed the settings tab **Settings > "Search & hotkeys"**. The search setting is now local and toggled in the list pane by pressing up/down or clicking the magnifying glass.'
         ],
