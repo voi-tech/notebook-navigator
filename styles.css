@@ -210,6 +210,15 @@ body {
     --nn-theme-navitem-count-bg: transparent;
     --nn-theme-navitem-count-border-radius: 8px;
     --nn-theme-navitem-border-radius: 4px;
+    --nn-theme-navitem-border-width: 0px;
+    --nn-theme-navitem-count-border-width: 0px;
+    --nn-theme-navitem-custom-border-color: transparent;
+    --nn-theme-navitem-hover-border-color: transparent;
+    --nn-theme-navitem-selected-border-color: transparent;
+    --nn-theme-navitem-selected-inactive-border-color: var(--nn-theme-navitem-selected-border-color);
+    --nn-theme-navitem-count-border-color: transparent;
+    --nn-theme-navitem-selected-count-border-color: var(--nn-theme-navitem-count-border-color);
+    --nn-theme-navitem-selected-inactive-count-border-color: var(--nn-theme-navitem-selected-count-border-color);
     --nn-theme-navitem-hover-bg: var(--background-modifier-hover);
     --nn-theme-navitem-selected-bg: var(--text-selection);
     --nn-theme-navitem-selected-chevron-color: var(--nn-theme-navitem-chevron-color);
@@ -260,7 +269,10 @@ body {
     --nn-theme-file-date-color: var(--nn-theme-foreground-faded);
     --nn-theme-file-parent-color: var(--nn-theme-foreground-faded);
     --nn-theme-file-tag-color: var(--nn-theme-foreground-faded);
-    --nn-file-pill-border-color: color-mix(in srgb, var(--nn-theme-foreground) 30%, transparent);
+    --nn-theme-file-tag-border-color: color-mix(in srgb, var(--nn-theme-foreground) 30%, transparent);
+    --nn-theme-file-custom-property-border-color: var(--nn-theme-file-tag-border-color);
+    --nn-theme-file-selected-tag-border-color: var(--nn-theme-file-tag-border-color);
+    --nn-theme-file-selected-custom-property-border-color: var(--nn-theme-file-custom-property-border-color);
     --nn-theme-file-tag-custom-color-text-color: var(--nn-theme-navitem-name-color);
     --nn-theme-file-tag-bg: transparent;
     --nn-theme-file-custom-property-color: var(--nn-theme-foreground-faded);
@@ -268,6 +280,11 @@ body {
     --nn-theme-file-tag-border-radius: 10px;
     --nn-theme-file-custom-property-border-radius: 10px;
     --nn-theme-file-border-radius: 8px;
+    --nn-theme-file-border-width: 0px;
+    --nn-theme-file-pill-border-width: 1px;
+    --nn-theme-file-hover-border-color: transparent;
+    --nn-theme-file-selected-border-color: transparent;
+    --nn-theme-file-selected-inactive-border-color: var(--nn-theme-file-selected-border-color);
     --nn-theme-file-selected-bg: var(--text-selection);
     --nn-theme-file-selected-name-color: var(--nn-theme-file-name-color);
     --nn-theme-file-selected-preview-color: var(--nn-theme-file-preview-color);
@@ -387,12 +404,15 @@ body {
     --nn-selected-file-tag-bg: var(--nn-theme-file-selected-tag-bg);
     --nn-selected-file-custom-property-color: var(--nn-theme-file-selected-custom-property-color);
     --nn-selected-file-custom-property-bg: var(--nn-theme-file-selected-custom-property-bg);
+    --nn-selected-file-border-color: var(--nn-theme-file-selected-border-color);
     --nn-selected-navitem-bg-color: var(--nn-computed-navitem-selected-bg, var(--nn-theme-navitem-selected-bg));
     --nn-selected-navitem-name-color: var(--nn-theme-navitem-selected-name-color);
     --nn-selected-navitem-chevron-color: var(--nn-theme-navitem-selected-chevron-color);
     --nn-selected-navitem-icon-color: var(--nn-theme-navitem-selected-icon-color);
     --nn-selected-navitem-count-color: var(--nn-theme-navitem-selected-count-color);
     --nn-selected-navitem-count-bg: var(--nn-theme-navitem-selected-count-bg);
+    --nn-selected-navitem-border-color: var(--nn-theme-navitem-selected-border-color);
+    --nn-selected-navitem-count-border-color: var(--nn-theme-navitem-selected-count-border-color);
 }
 
 .nn-split-container:is([data-navigator-focused='false'], [data-focus-pane='navigation'], [data-focus-pane='search']) {
@@ -405,6 +425,7 @@ body {
     --nn-selected-file-tag-bg: var(--nn-theme-file-selected-inactive-tag-bg);
     --nn-selected-file-custom-property-color: var(--nn-theme-file-selected-inactive-custom-property-color);
     --nn-selected-file-custom-property-bg: var(--nn-theme-file-selected-inactive-custom-property-bg);
+    --nn-selected-file-border-color: var(--nn-theme-file-selected-inactive-border-color);
 }
 
 .nn-split-container:is([data-navigator-focused='false'], [data-focus-pane='files'], [data-focus-pane='search']) {
@@ -414,6 +435,8 @@ body {
     --nn-selected-navitem-icon-color: var(--nn-theme-navitem-selected-inactive-icon-color);
     --nn-selected-navitem-count-color: var(--nn-theme-navitem-selected-inactive-count-color);
     --nn-selected-navitem-count-bg: var(--nn-theme-navitem-selected-inactive-count-bg);
+    --nn-selected-navitem-border-color: var(--nn-theme-navitem-selected-inactive-border-color);
+    --nn-selected-navitem-count-border-color: var(--nn-theme-navitem-selected-inactive-count-border-color);
 }
 
 .nn-scale-wrapper {
@@ -1909,6 +1932,7 @@ body {
     border-top-right-radius: var(--nn-navitem-top-right-radius, min(14px, var(--nn-theme-navitem-border-radius)));
     border-bottom-left-radius: var(--nn-navitem-bottom-left-radius, min(14px, var(--nn-theme-navitem-border-radius)));
     border-bottom-right-radius: var(--nn-navitem-bottom-right-radius, min(14px, var(--nn-theme-navitem-border-radius)));
+    box-shadow: inset 0 0 0 var(--nn-theme-navitem-border-width) var(--nn-theme-navitem-custom-border-color);
     z-index: 0;
     pointer-events: none;
 }
@@ -2035,6 +2059,7 @@ body {
     inset-inline-end: 0;
     background-color: var(--nn-theme-navitem-hover-bg);
     border-radius: min(14px, var(--nn-theme-navitem-border-radius));
+    box-shadow: inset 0 0 0 var(--nn-theme-navitem-border-width) var(--nn-theme-navitem-hover-border-color);
     z-index: 1;
     pointer-events: none;
 }
@@ -2165,6 +2190,7 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset 0 0 0 var(--nn-theme-navitem-count-border-width) var(--nn-theme-navitem-count-border-color);
 }
 
 /* Hover action button - replaces badge/count on hover */
@@ -3899,6 +3925,7 @@ body {
 
 /* Individual tag pill */
 .nn-file-tag {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-tag-border-color);
     display: inline-flex;
     align-items: center;
     height: 20px;
@@ -3907,8 +3934,9 @@ body {
     background-color: var(--nn-theme-file-tag-bg);
     color: var(--nn-theme-file-tag-color);
     border-radius: min(10px, var(--nn-theme-file-tag-border-radius));
-    border: 1px solid transparent;
-    border-color: var(--nn-file-pill-border-color);
+    border-style: solid;
+    border-width: var(--nn-theme-file-pill-border-width);
+    border-color: var(--nn-file-pill-border-color-resolved);
     font-size: 12px;
     font-weight: var(--nn-theme-file-tag-font-weight);
     white-space: nowrap;
@@ -3917,10 +3945,11 @@ body {
 
 .nn-file-tag[data-has-color='true'],
 .nn-file-tag[data-has-background='true'] {
-    --nn-file-pill-border-color: color-mix(in srgb, currentColor 30%, transparent);
+    --nn-file-pill-border-color-resolved: color-mix(in srgb, currentColor 30%, transparent);
 }
 
 .nn-file-custom-property {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-custom-property-border-color);
     background-color: var(--nn-theme-file-custom-property-bg);
     color: var(--nn-theme-file-custom-property-color);
     border-radius: min(10px, var(--nn-theme-file-custom-property-border-radius));
@@ -3967,11 +3996,13 @@ body {
 
 /* Selected file tag styles - only for tags without custom colors */
 .nn-file.nn-selected .nn-file-tag:not(.nn-file-custom-property):not([data-has-color='true']):not([data-has-background='true']) {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-selected-tag-border-color);
     background-color: var(--nn-selected-file-tag-bg);
     color: var(--nn-selected-file-tag-color);
 }
 
 .nn-file.nn-selected .nn-file-tag.nn-file-custom-property:not([data-has-color='true']):not([data-has-background='true']) {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-selected-custom-property-border-color);
     background-color: var(--nn-selected-file-custom-property-bg);
     color: var(--nn-selected-file-custom-property-color);
 }
@@ -4312,6 +4343,7 @@ body {
     /* Pre-composited solid color prevents hairlines by blending alpha with pane background */
     background-color: var(--nn-selected-file-bg-color);
     border-radius: min(16px, var(--nn-theme-file-border-radius));
+    box-shadow: inset 0 0 0 var(--nn-theme-file-border-width) var(--nn-selected-file-border-color);
     z-index: 0; /* Below separator lines */
 }
 
@@ -4349,6 +4381,7 @@ body {
     border-top-right-radius: var(--nn-navitem-top-right-radius, min(14px, var(--nn-theme-navitem-border-radius)));
     border-bottom-left-radius: var(--nn-navitem-bottom-left-radius, min(14px, var(--nn-theme-navitem-border-radius)));
     border-bottom-right-radius: var(--nn-navitem-bottom-right-radius, min(14px, var(--nn-theme-navitem-border-radius)));
+    box-shadow: inset 0 0 0 var(--nn-theme-navitem-border-width) var(--nn-selected-navitem-border-color);
     z-index: 1;
     pointer-events: none;
 }
@@ -4389,6 +4422,7 @@ body {
 .nn-navitem.nn-selected .nn-navitem-count {
     color: var(--nn-selected-navitem-count-color);
     background-color: var(--nn-selected-navitem-count-bg);
+    box-shadow: inset 0 0 0 var(--nn-theme-navitem-count-border-width) var(--nn-selected-navitem-count-border-color);
 }
 /* Source: src/styles/sections/state-hover.css */
 
@@ -4397,13 +4431,14 @@ body {
    ======================================================================== */
 
 /* File hover states - maintains transparency - desktop only */
-.nn-desktop .nn-file:hover .nn-file-content {
+.nn-desktop .nn-file:not(.nn-selected):hover .nn-file-content {
     background-color: transparent;
+    box-shadow: inset 0 0 0 var(--nn-theme-file-border-width) var(--nn-theme-file-hover-border-color);
 }
 
-.nn-desktop .nn-file.nn-selected:hover .nn-file-content,
-.theme-dark .nn-desktop .nn-file.nn-selected:hover .nn-file-content {
+.nn-desktop .nn-file.nn-selected:hover .nn-file-content {
     background-color: transparent;
+    box-shadow: none;
 }
 /* Source: src/styles/sections/state-drag-and-drop.css */
 
@@ -7538,6 +7573,203 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
+        id: nn-borders-heading
+        title: Borders
+        description: Border colors and border widths on navigation and file items.
+        type: heading
+        level: 1
+        collapsed: true
+    -
+        id: nn-border-widths-heading
+        title: Border widths
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-navitem-border-width
+        title: Navigation item border width
+        description: Border width on navigation item backgrounds, hover state, and selection.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-navitem-count-border-width
+        title: File count border width
+        description: Border width on navigation file count badges.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-file-border-width
+        title: File item border width
+        description: Border width on file item hover and selection states.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-file-pill-border-width
+        title: Pill border width
+        description: Border width on tag and custom property pills.
+        type: variable-number-slider
+        default: 1
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-border-nav-heading
+        title: Navigation borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-navitem-custom-border-color
+        title: Custom background border color
+        description: Border color on folders and tags with custom backgrounds.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-hover-border-color
+        title: Hover border color
+        description: Border color on hovered navigation items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-border-color
+        title: Selection border color
+        description: Border color on selected navigation items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-inactive-border-color
+        title: Selection border color (inactive)
+        description: Border color on selected navigation items when pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-count-border-color
+        title: File count border color
+        description: Border color on navigation file count badges.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-count-border-color
+        title: Selected file count border color
+        description: Border color on file count badges when selected.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-inactive-count-border-color
+        title: Selected file count border color (inactive)
+        description: Border color on file count badges when selected and pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-border-file-heading
+        title: File item borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-file-hover-border-color
+        title: Hover border color
+        description: Border color on hovered file items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-border-color
+        title: Selection border color
+        description: Border color on selected file items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-inactive-border-color
+        title: Selection border color (inactive)
+        description: Border color on selected file items when pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-border-pill-heading
+        title: Pill borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-file-tag-border-color
+        title: Tag pill border color
+        description: Border color on tag pills.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-custom-property-border-color
+        title: Custom property pill border color
+        description: Border color on custom property pills.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-tag-border-color
+        title: Selected tag pill border color
+        description: Border color on tag pills in selected files.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-custom-property-border-color
+        title: Selected custom property pill border color
+        description: Border color on custom property pills in selected files.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
         id: nn-header-heading
         title: Headers
         description: Customize pane header appearance.
@@ -8044,7 +8276,8 @@ settings:
         title: Search border color
         description: Border and focus ring color for the search field.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -
@@ -8464,7 +8697,8 @@ settings:
         title: Toolbar border color
         description: Border color of quick actions toolbar.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -
@@ -8513,7 +8747,8 @@ settings:
         title: Divider border color
         description: Color of the vertical border between panes.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -

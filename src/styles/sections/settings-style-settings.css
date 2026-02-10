@@ -51,6 +51,203 @@ settings:
         default-light: '#'
         default-dark: '#'
     -
+        id: nn-borders-heading
+        title: Borders
+        description: Border colors and border widths on navigation and file items.
+        type: heading
+        level: 1
+        collapsed: true
+    -
+        id: nn-border-widths-heading
+        title: Border widths
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-navitem-border-width
+        title: Navigation item border width
+        description: Border width on navigation item backgrounds, hover state, and selection.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-navitem-count-border-width
+        title: File count border width
+        description: Border width on navigation file count badges.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-file-border-width
+        title: File item border width
+        description: Border width on file item hover and selection states.
+        type: variable-number-slider
+        default: 0
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-theme-file-pill-border-width
+        title: Pill border width
+        description: Border width on tag and custom property pills.
+        type: variable-number-slider
+        default: 1
+        format: px
+        min: 0
+        max: 4
+        step: 1
+    -
+        id: nn-border-nav-heading
+        title: Navigation borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-navitem-custom-border-color
+        title: Custom background border color
+        description: Border color on folders and tags with custom backgrounds.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-hover-border-color
+        title: Hover border color
+        description: Border color on hovered navigation items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-border-color
+        title: Selection border color
+        description: Border color on selected navigation items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-inactive-border-color
+        title: Selection border color (inactive)
+        description: Border color on selected navigation items when pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-count-border-color
+        title: File count border color
+        description: Border color on navigation file count badges.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-count-border-color
+        title: Selected file count border color
+        description: Border color on file count badges when selected.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-navitem-selected-inactive-count-border-color
+        title: Selected file count border color (inactive)
+        description: Border color on file count badges when selected and pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-border-file-heading
+        title: File item borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-file-hover-border-color
+        title: Hover border color
+        description: Border color on hovered file items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-border-color
+        title: Selection border color
+        description: Border color on selected file items.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-inactive-border-color
+        title: Selection border color (inactive)
+        description: Border color on selected file items when pane is inactive.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-border-pill-heading
+        title: Pill borders
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: nn-theme-file-tag-border-color
+        title: Tag pill border color
+        description: Border color on tag pills.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-custom-property-border-color
+        title: Custom property pill border color
+        description: Border color on custom property pills.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-tag-border-color
+        title: Selected tag pill border color
+        description: Border color on tag pills in selected files.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
+        id: nn-theme-file-selected-custom-property-border-color
+        title: Selected custom property pill border color
+        description: Border color on custom property pills in selected files.
+        type: variable-themed-color
+        opacity: true
+        format: rgb
+        default-light: '#'
+        default-dark: '#'
+    -
         id: nn-header-heading
         title: Headers
         description: Customize pane header appearance.
@@ -557,7 +754,8 @@ settings:
         title: Search border color
         description: Border and focus ring color for the search field.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -
@@ -977,7 +1175,8 @@ settings:
         title: Toolbar border color
         description: Border color of quick actions toolbar.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -
@@ -1026,7 +1225,8 @@ settings:
         title: Divider border color
         description: Color of the vertical border between panes.
         type: variable-themed-color
-        format: hex
+        opacity: true
+        format: rgb
         default-light: '#'
         default-dark: '#'
     -

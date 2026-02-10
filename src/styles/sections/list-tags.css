@@ -71,6 +71,7 @@
 
 /* Individual tag pill */
 .nn-file-tag {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-tag-border-color);
     display: inline-flex;
     align-items: center;
     height: 20px;
@@ -79,8 +80,9 @@
     background-color: var(--nn-theme-file-tag-bg);
     color: var(--nn-theme-file-tag-color);
     border-radius: min(10px, var(--nn-theme-file-tag-border-radius));
-    border: 1px solid transparent;
-    border-color: var(--nn-file-pill-border-color);
+    border-style: solid;
+    border-width: var(--nn-theme-file-pill-border-width);
+    border-color: var(--nn-file-pill-border-color-resolved);
     font-size: 12px;
     font-weight: var(--nn-theme-file-tag-font-weight);
     white-space: nowrap;
@@ -89,10 +91,11 @@
 
 .nn-file-tag[data-has-color='true'],
 .nn-file-tag[data-has-background='true'] {
-    --nn-file-pill-border-color: color-mix(in srgb, currentColor 30%, transparent);
+    --nn-file-pill-border-color-resolved: color-mix(in srgb, currentColor 30%, transparent);
 }
 
 .nn-file-custom-property {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-custom-property-border-color);
     background-color: var(--nn-theme-file-custom-property-bg);
     color: var(--nn-theme-file-custom-property-color);
     border-radius: min(10px, var(--nn-theme-file-custom-property-border-radius));
@@ -139,11 +142,13 @@
 
 /* Selected file tag styles - only for tags without custom colors */
 .nn-file.nn-selected .nn-file-tag:not(.nn-file-custom-property):not([data-has-color='true']):not([data-has-background='true']) {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-selected-tag-border-color);
     background-color: var(--nn-selected-file-tag-bg);
     color: var(--nn-selected-file-tag-color);
 }
 
 .nn-file.nn-selected .nn-file-tag.nn-file-custom-property:not([data-has-color='true']):not([data-has-background='true']) {
+    --nn-file-pill-border-color-resolved: var(--nn-theme-file-selected-custom-property-border-color);
     background-color: var(--nn-selected-file-custom-property-bg);
     color: var(--nn-selected-file-custom-property-color);
 }
