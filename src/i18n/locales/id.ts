@@ -182,6 +182,13 @@ export const STRINGS_ID = {
                         'Cmd/Ctrl+Klik tag untuk menambahkan dengan AND. Cmd/Ctrl+Shift+Klik untuk menambahkan dengan OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Tugas',
+                    items: [
+                        '`has:task` Sertakan catatan dengan tugas yang belum selesai.',
+                        'Gabungkan dengan tag, nama, dan tanggal (contoh: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Perilaku AND/OR',
                     items: [

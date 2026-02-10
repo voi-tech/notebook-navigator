@@ -183,6 +183,13 @@ export const STRINGS_NL = {
                         'Cmd/Ctrl+Klik op een tag om toe te voegen met AND. Cmd/Ctrl+Shift+Klik om toe te voegen met OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Taken',
+                    items: [
+                        '`has:task` Notities met onvoltooide taken opnemen.',
+                        'Combineer met tags, namen en datums (bijvoorbeeld: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'AND/OR-gedrag',
                     items: [

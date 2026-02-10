@@ -181,6 +181,13 @@ export const STRINGS_PL = {
                         'Cmd/Ctrl+Kliknij tag, aby dodać z AND. Cmd/Ctrl+Shift+Kliknij, aby dodać z OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Zadania',
+                    items: [
+                        '`has:task` Uwzględnij notatki z nieukończonymi zadaniami.',
+                        'Łącz z tagami, nazwami i datami (na przykład: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Zachowanie AND/OR',
                     items: [

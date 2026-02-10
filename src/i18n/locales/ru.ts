@@ -182,6 +182,13 @@ export const STRINGS_RU = {
                         'Cmd/Ctrl+Клик по тегу для добавления с AND. Cmd/Ctrl+Shift+Клик для добавления с OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Задачи',
+                    items: [
+                        '`has:task` Включить заметки с незавершёнными задачами.',
+                        'Комбинируйте с тегами, именами и датами (например: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Поведение AND/OR',
                     items: [

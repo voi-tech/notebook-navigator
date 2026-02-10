@@ -181,6 +181,13 @@ export const STRINGS_DE = {
                         'Cmd/Ctrl+Klick auf einen Tag zum Hinzufügen mit AND. Cmd/Ctrl+Shift+Klick zum Hinzufügen mit OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Aufgaben',
+                    items: [
+                        '`has:task` Notizen mit unerledigten Aufgaben einbeziehen.',
+                        'Mit Tags, Namen und Daten kombinieren (zum Beispiel: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'AND/OR-Verhalten',
                     items: [

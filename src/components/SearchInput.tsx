@@ -283,8 +283,8 @@ export function SearchInput({
     const openSearchHelp = useCallback(() => {
         tagSuggestRef.current?.close();
         dateSuggestRef.current?.close();
-        const { fileNames, tags, connectors, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
-        const sections = [fileNames, dates, tags, connectors, omnisearch];
+        const { fileNames, tags, tasks, connectors, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
+        const sections = [fileNames, dates, tags, tasks, connectors, omnisearch];
         new InfoModal(app, {
             title: strings.searchInput.searchHelpTitle,
             intro: strings.searchInput.searchHelpModal.intro,

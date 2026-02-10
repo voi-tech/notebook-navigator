@@ -181,6 +181,13 @@ export const STRINGS_AR = {
                         'Cmd/Ctrl+النقر على وسم لإضافته مع AND. Cmd/Ctrl+Shift+النقر لإضافته مع OR.'
                     ]
                 },
+                tasks: {
+                    title: 'المهام',
+                    items: [
+                        '`has:task` تضمين الملاحظات التي تحتوي على مهام غير مكتملة.',
+                        'دمج مع الوسوم والأسماء والتواريخ (على سبيل المثال: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'سلوك AND/OR',
                     items: [

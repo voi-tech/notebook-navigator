@@ -180,6 +180,13 @@ export const STRINGS_JA = {
                         'Cmd/Ctrl+クリックでタグを AND として追加。Cmd/Ctrl+Shift+クリックで OR として追加。'
                     ]
                 },
+                tasks: {
+                    title: 'タスク',
+                    items: [
+                        '`has:task` 未完了のタスクを含むノートを表示。',
+                        'タグ、名前、日付と組み合わせて使用（例：`#work has:task @thisweek`）。'
+                    ]
+                },
                 connectors: {
                     title: 'AND/ORの動作',
                     items: [

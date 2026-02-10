@@ -182,6 +182,13 @@ export const STRINGS_TR = {
                         'Cmd/Ctrl+Tıklama ile etiketi AND olarak ekleyin. Cmd/Ctrl+Shift+Tıklama ile OR olarak ekleyin.'
                     ]
                 },
+                tasks: {
+                    title: 'Görevler',
+                    items: [
+                        '`has:task` Tamamlanmamış görevleri olan notları dahil et.',
+                        'Etiketler, isimler ve tarihlerle birleştirin (örneğin: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'AND/OR davranışı',
                     items: [

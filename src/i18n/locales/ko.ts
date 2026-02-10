@@ -180,6 +180,13 @@ export const STRINGS_KO = {
                         'Cmd/Ctrl+클릭으로 AND로 태그 추가. Cmd/Ctrl+Shift+클릭으로 OR로 추가.'
                     ]
                 },
+                tasks: {
+                    title: '작업',
+                    items: [
+                        '`has:task` 미완료 작업이 있는 노트를 포함.',
+                        '태그, 이름, 날짜와 결합하여 사용 (예: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'AND/OR 동작',
                     items: [

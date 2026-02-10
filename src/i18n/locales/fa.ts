@@ -181,6 +181,13 @@ export const STRINGS_FA = {
                         'Cmd/Ctrl+کلیک روی برچسب برای افزودن با AND. Cmd/Ctrl+Shift+کلیک برای افزودن با OR.'
                     ]
                 },
+                tasks: {
+                    title: 'وظایف',
+                    items: [
+                        '`has:task` شامل یادداشت‌هایی با وظایف ناتمام.',
+                        'ترکیب با برچسب‌ها، نام‌ها و تاریخ‌ها (به عنوان مثال: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'رفتار AND/OR',
                     items: [

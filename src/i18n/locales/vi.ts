@@ -181,6 +181,13 @@ export const STRINGS_VI = {
                         'Cmd/Ctrl+Nhấp vào thẻ để thêm với AND. Cmd/Ctrl+Shift+Nhấp để thêm với OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Nhiệm vụ',
+                    items: [
+                        '`has:task` Bao gồm ghi chú có nhiệm vụ chưa hoàn thành.',
+                        'Kết hợp với thẻ, tên và ngày tháng (ví dụ: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Hành vi AND/OR',
                     items: [

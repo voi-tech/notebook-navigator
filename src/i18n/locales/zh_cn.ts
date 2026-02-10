@@ -180,6 +180,10 @@ export const STRINGS_ZH_CN = {
                         'Cmd/Ctrl+点击标签以 AND 方式添加。Cmd/Ctrl+Shift+点击以 OR 方式添加。'
                     ]
                 },
+                tasks: {
+                    title: '任务',
+                    items: ['`has:task` 包含有未完成任务的笔记。', '与标签、名称和日期组合使用（例如：`#work has:task @thisweek`）。']
+                },
                 connectors: {
                     title: 'AND/OR 行为',
                     items: [

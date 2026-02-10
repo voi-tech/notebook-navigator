@@ -183,6 +183,13 @@ export const STRINGS_PT_BR = {
                         'Cmd/Ctrl+Clique em uma tag para adicionar com AND. Cmd/Ctrl+Shift+Clique para adicionar com OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Tarefas',
+                    items: [
+                        '`has:task` Incluir notas com tarefas pendentes.',
+                        'Combinar com tags, nomes e datas (por exemplo: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Comportamento AND/OR',
                     items: [

@@ -181,6 +181,13 @@ export const STRINGS_TH = {
                         'Cmd/Ctrl+คลิกแท็กเพื่อเพิ่มด้วย AND Cmd/Ctrl+Shift+คลิกเพื่อเพิ่มด้วย OR'
                     ]
                 },
+                tasks: {
+                    title: 'งาน',
+                    items: [
+                        '`has:task` รวมบันทึกที่มีงานที่ยังไม่เสร็จ',
+                        'รวมกับแท็ก ชื่อ และวันที่ (ตัวอย่าง: `#work has:task @thisweek`)'
+                    ]
+                },
                 connectors: {
                     title: 'พฤติกรรม AND/OR',
                     items: [

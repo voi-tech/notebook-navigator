@@ -182,6 +182,13 @@ export const STRINGS_UK = {
                         'Cmd/Ctrl+Клік по тегу для додавання з AND. Cmd/Ctrl+Shift+Клік для додавання з OR.'
                     ]
                 },
+                tasks: {
+                    title: 'Завдання',
+                    items: [
+                        '`has:task` Включити нотатки з незавершеними завданнями.',
+                        'Поєднуйте з тегами, назвами та датами (наприклад: `#work has:task @thisweek`).'
+                    ]
+                },
                 connectors: {
                     title: 'Поведінка AND/OR',
                     items: [
