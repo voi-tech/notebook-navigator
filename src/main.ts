@@ -1010,7 +1010,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
                 // Check for version updates after a short delay.
                 // Obsidian Sync can update the plugin settings shortly after startup, so defer the check to avoid using cached settings.
-                const versionUpdateGracePeriodMs = 3000;
+                const versionUpdateGracePeriodMs = 1000;
                 if (typeof window === 'undefined') {
                     await this.checkForVersionUpdate({ isFirstLaunch });
                 } else {
