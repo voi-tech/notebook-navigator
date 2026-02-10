@@ -113,7 +113,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Weekly periodic note patterns previously used custom calendar locale, where others like month and year used display locale. Now all note patterns use display locale for consistency. The user defined locale is now only used for week numbers and first day of the week.',
             'Fixed two display issues in Android: A small gap at the bottom of the left sidebar and text fonts were cropped on some devices.',
             'Fixed a crash/reload issue on mobile devices when generating PDF cover thumbnails for PDFs with extreme amounts of embedded images (example: PDFs with hundreds of unique images stacked on top of each other). PDF thumbnails on mobile now run a two-stage preflight before rendering: Stage A scans the raw PDF bytes for embedded image dictionaries and transparency/soft mask signals, and Stage B parses the page 1 operator list to count image paint operations. If the preflight is uncertain or the estimate exceeds the mobile memory budget, the PDF is logged and thumbnail is skipped.',
-            'Fixed an issue where Unicode keycap emojis (like 1️⃣) were not saved to frontmatter if frontmatter metadata icon field was enabled.',
+            'Fixed an issue where some emojis like Unicode keycap emojis (like 1️⃣) were not saved to frontmatter.'
         ]
     },
     {
