@@ -96,9 +96,11 @@ export const CalendarGrid = React.memo(function CalendarGrid({
                 data-weeknumbers={showWeekNumbers ? 'true' : undefined}
                 data-has-trailing-spacer={trailingSpacerWeekCount > 0 ? 'true' : undefined}
             >
-                {weeks.map(week => {
+                {weeks.map((week, weekIndex) => {
                     const weekNoteFile = weekNoteFilesByKey.get(week.key) ?? null;
                     const weekHasUnfinishedTasks = (weekUnfinishedTaskCountByKey.get(week.key) ?? 0) > 0;
+                    const previousWeek = weekIndex > 0 ? weeks[weekIndex - 1] : null;
+                    const nextWeek = weekIndex < weeks.length - 1 ? weeks[weekIndex + 1] : null;
 
                     return (
                         <div key={week.key} className="nn-navigation-calendar-week">
@@ -145,16 +147,32 @@ export const CalendarGrid = React.memo(function CalendarGrid({
                                 const isWeekend = isWeekendDay(dayOfWeek, calendarWeekendDays);
                                 const previousDay = dayIndex > 0 ? week.days[dayIndex - 1] : null;
                                 const nextDay = dayIndex < week.days.length - 1 ? week.days[dayIndex + 1] : null;
+                                const dayAbove = previousWeek ? (previousWeek.days[dayIndex] ?? null) : null;
+                                const dayBelow = nextWeek ? (nextWeek.days[dayIndex] ?? null) : null;
                                 const hasWeekendBefore =
                                     isWeekend &&
                                     Boolean(previousDay && isWeekendDay(previousDay.date.toDate().getDay(), calendarWeekendDays));
                                 const hasWeekendAfter =
                                     isWeekend && Boolean(nextDay && isWeekendDay(nextDay.date.toDate().getDay(), calendarWeekendDays));
+                                const hasWeekendAbove =
+                                    isWeekend && Boolean(dayAbove && isWeekendDay(dayAbove.date.toDate().getDay(), calendarWeekendDays));
+                                const hasWeekendBelow =
+                                    isWeekend && Boolean(dayBelow && isWeekendDay(dayBelow.date.toDate().getDay(), calendarWeekendDays));
+                                const roundWeekendTopLeft = isWeekend && !hasWeekendAbove && !hasWeekendBefore;
+                                const roundWeekendTopRight = isWeekend && !hasWeekendAbove && !hasWeekendAfter;
+                                const roundWeekendBottomLeft = isWeekend && !hasWeekendBelow && !hasWeekendBefore;
+                                const roundWeekendBottomRight = isWeekend && !hasWeekendBelow && !hasWeekendAfter;
                                 const dayCellClassName = [
                                     'nn-navigation-calendar-day-cell',
                                     isWeekend ? 'is-weekend' : 'is-weekday',
                                     hasWeekendBefore ? 'has-weekend-before' : '',
-                                    hasWeekendAfter ? 'has-weekend-after' : ''
+                                    hasWeekendAfter ? 'has-weekend-after' : '',
+                                    hasWeekendAbove ? 'has-weekend-above' : '',
+                                    hasWeekendBelow ? 'has-weekend-below' : '',
+                                    roundWeekendTopLeft ? 'round-weekend-top-left' : '',
+                                    roundWeekendTopRight ? 'round-weekend-top-right' : '',
+                                    roundWeekendBottomLeft ? 'round-weekend-bottom-left' : '',
+                                    roundWeekendBottomRight ? 'round-weekend-bottom-right' : ''
                                 ]
                                     .filter(Boolean)
                                     .join(' ');

@@ -42,6 +42,7 @@
     --nn-calendar-note-indicator-max-size: 5px;
     --nn-calendar-note-indicator-center-offset: clamp(6px, calc(var(--nn-calendar-day-font-size) * 0.65), 12px);
     --nn-calendar-task-indicator-offset-x: clamp(5px, calc(var(--nn-calendar-day-font-size) * 0.42), 9px);
+    --nn-calendar-weekend-corner-radius: 6px;
     --nn-calendar-header-chip-bg: var(--nn-theme-nav-bg);
     --nn-calendar-note-indicator-color: var(--nn-theme-calendar-day-has-note-bg);
     --nn-calendar-task-indicator-color: var(--nn-theme-calendar-day-has-unfinished-task-color);
@@ -623,9 +624,9 @@
 .nn-navigation-calendar-day-cell.is-weekend::before {
     content: '';
     position: absolute;
-    inset-block: -0.5px;
-    inset-inline: 0;
+    inset: 0;
     background-color: var(--nn-theme-calendar-weekend-bg);
+    border-radius: 0;
     pointer-events: none;
     z-index: 0;
 }
@@ -636,6 +637,30 @@
 
 .nn-navigation-calendar-day-cell.is-weekend.has-weekend-after::before {
     inset-inline-end: -0.5px;
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.has-weekend-above::before {
+    inset-block-start: -0.5px;
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.has-weekend-below::before {
+    inset-block-end: -0.5px;
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.round-weekend-top-left::before {
+    border-top-left-radius: var(--nn-calendar-weekend-corner-radius);
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.round-weekend-top-right::before {
+    border-top-right-radius: var(--nn-calendar-weekend-corner-radius);
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.round-weekend-bottom-left::before {
+    border-bottom-left-radius: var(--nn-calendar-weekend-corner-radius);
+}
+
+.nn-navigation-calendar-day-cell.is-weekend.round-weekend-bottom-right::before {
+    border-bottom-right-radius: var(--nn-calendar-weekend-corner-radius);
 }
 
 .nn-navigation-calendar-day {
