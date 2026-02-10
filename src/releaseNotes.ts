@@ -101,7 +101,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'Many visual improvements to calendar. Days with notes now show as dots, and the overall look and feel is much improved.',
             'The calendar now also shows a small circle for notes with unfinished tasks.',
             'You can now remove individual icons from the recently used icons list.',
-            'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are now less likely to be pushed out by matches from other parts of the vault.'
+            'Omnisearch now scopes searches to the selected folder when possible. In folder view, notes from the selected folder and its subfolders are now less likely to be pushed out by matches from other parts of the vault.',
+            'Many improvements to Omnisearch match highlights in the search results.'
         ],
         changed: [
             '==Breaking change== - the setting "Folder note properties" used to set frontmatter properties for folder notes was removed. If you were using that setting, please migrate by creating a template file with the desired frontmatter properties and setting that as the new "Folder note template".',
