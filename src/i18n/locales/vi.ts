@@ -156,7 +156,7 @@ export const STRINGS_VI = {
         searchHelp: 'Cú pháp tìm kiếm',
         searchHelpTitle: 'Cú pháp tìm kiếm',
         searchHelpModal: {
-            intro: 'Kết hợp tên tệp, thẻ và ngày trong một truy vấn (ví dụ: `meeting #work @thisweek`). Cài đặt plugin Omnisearch để sử dụng tìm kiếm toàn văn.',
+            intro: 'Kết hợp tên tệp, thẻ, ngày và bộ lọc trong một truy vấn (ví dụ: `meeting #work @thisweek has:task`). Cài đặt plugin Omnisearch để sử dụng tìm kiếm toàn văn.',
             introSwitching: 'Chuyển đổi giữa tìm kiếm bộ lọc và Omnisearch bằng phím mũi tên lên/xuống hoặc nhấp vào biểu tượng tìm kiếm.',
             sections: {
                 fileNames: {
@@ -182,10 +182,18 @@ export const STRINGS_VI = {
                     ]
                 },
                 tasks: {
-                    title: 'Nhiệm vụ',
+                    title: 'Bộ lọc',
                     items: [
                         '`has:task` Bao gồm ghi chú có nhiệm vụ chưa hoàn thành.',
-                        'Kết hợp với thẻ, tên và ngày tháng (ví dụ: `#work has:task @thisweek`).'
+                        '`-has:task` Loại trừ ghi chú có nhiệm vụ chưa hoàn thành.',
+                        '`folder:meetings` Bao gồm ghi chú có tên thư mục chứa `meetings`.',
+                        '`folder:/work/meetings` Bao gồm ghi chú chỉ trong `work/meetings` (không bao gồm thư mục con).',
+                        '`folder:/` Bao gồm ghi chú chỉ trong thư mục gốc của kho.',
+                        '`-folder:archive` Loại trừ ghi chú có tên thư mục chứa `archive`.',
+                        '`-folder:/archive` Loại trừ ghi chú chỉ trong `archive` (không bao gồm thư mục con).',
+                        '`ext:md` Bao gồm ghi chú có phần mở rộng `md` (`ext:.md` cũng được hỗ trợ).',
+                        '`-ext:pdf` Loại trừ ghi chú có phần mở rộng `pdf`.',
+                        'Kết hợp với thẻ, tên và ngày tháng (ví dụ: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_VI = {
                     items: [
                         '`AND` và `OR` chỉ là toán tử trong các truy vấn chỉ chứa thẻ.',
                         'Truy vấn chỉ chứa thẻ chỉ bao gồm bộ lọc thẻ: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Nếu truy vấn bao gồm tên, ngày (`@...`) hoặc bộ lọc nhiệm vụ (`has:task`), `AND` và `OR` được tìm kiếm như từ.',
+                        'Nếu truy vấn bao gồm tên, ngày (`@...`), bộ lọc nhiệm vụ (`has:task`), bộ lọc thư mục (`folder:...`) hoặc bộ lọc phần mở rộng (`ext:...`), `AND` và `OR` được tìm kiếm như từ.',
                         'Ví dụ truy vấn toán tử: `#work OR #home`.',
-                        'Ví dụ truy vấn hỗn hợp: `#work OR has:task` (`OR` được tìm kiếm trong tên tệp).'
+                        'Ví dụ truy vấn hỗn hợp: `#work OR ext:md` (`OR` được tìm kiếm trong tên tệp).'
                     ]
                 },
                 dates: {

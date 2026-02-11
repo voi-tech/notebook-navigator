@@ -59,7 +59,7 @@ import {
     filterSearchRequiresTagsForEveryMatch
 } from '../utils/filterSearch';
 import type { NotebookNavigatorSettings } from '../settings';
-import type { FilterSearchTokens } from '../utils/filterSearch';
+import type { FilterSearchMatchOptions, FilterSearchTokens } from '../utils/filterSearch';
 import type { SearchResultMeta } from '../types/search';
 import { createHiddenTagVisibility, normalizeTagPathValue } from '../utils/tagPrefixMatcher';
 import { resolveListGrouping } from '../utils/listGrouping';
@@ -424,6 +424,8 @@ export function useListPaneData({
         // Check if date filtering is needed and resolve which date field to use
         const hasDateFilters = tokens.dateRanges.length > 0 || tokens.excludeDateRanges.length > 0;
         const hasTaskFilters = tokens.requireUnfinishedTasks || tokens.excludeUnfinishedTasks;
+        const hasFolderFilters = tokens.folderTokens.length > 0 || tokens.excludeFolderTokens.length > 0;
+        const hasExtensionFilters = tokens.extensionTokens.length > 0 || tokens.excludeExtensionTokens.length > 0;
         const defaultDateField = resolveDefaultDateField(sortOption, settings.alphabeticalDateMode ?? 'modified');
 
         // Check if we need to access tag metadata for any file
@@ -452,8 +454,20 @@ export function useListPaneData({
         const filteredByFilterSearch = baseFiles.filter(file => {
             const lowercaseName = searchableNames.get(file.path) || '';
             const fileData = hasTaskFilters || needsTagLookup ? db.getFile(file.path) : null;
-            const hasUnfinishedTasks = typeof fileData?.taskUnfinished === 'number' && fileData.taskUnfinished > 0;
-            const matchOptions = hasTaskFilters ? { hasUnfinishedTasks } : undefined;
+            const hasUnfinishedTasks = hasTaskFilters && typeof fileData?.taskUnfinished === 'number' && fileData.taskUnfinished > 0;
+            const needsMatchOptions = hasTaskFilters || hasFolderFilters || hasExtensionFilters;
+            let matchOptions: FilterSearchMatchOptions | undefined;
+            if (needsMatchOptions) {
+                matchOptions = { hasUnfinishedTasks };
+
+                if (hasFolderFilters) {
+                    matchOptions.lowercaseFolderPath = (file.parent?.path ?? '').toLowerCase();
+                }
+
+                if (hasExtensionFilters) {
+                    matchOptions.lowercaseExtension = file.extension.toLowerCase();
+                }
+            }
 
             // Skip tag lookup if tokens do not reference tags
             if (!needsTagLookup) {

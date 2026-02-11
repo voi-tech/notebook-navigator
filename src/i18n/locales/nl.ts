@@ -157,7 +157,7 @@ export const STRINGS_NL = {
         searchHelp: 'Zoeksyntax',
         searchHelpTitle: 'Zoeksyntax',
         searchHelpModal: {
-            intro: 'Combineer bestandsnamen, tags en datums in één zoekopdracht (bijv. `meeting #work @thisweek`). Installeer de Omnisearch-plugin om zoeken in volledige tekst te gebruiken.',
+            intro: 'Combineer bestandsnamen, tags, datums en filters in één zoekopdracht (bijv. `meeting #work @thisweek has:task`). Installeer de Omnisearch-plugin om zoeken in volledige tekst te gebruiken.',
             introSwitching:
                 'Schakel tussen filterzoeken en Omnisearch met de pijltoetsen omhoog/omlaag of door op het zoekpictogram te klikken.',
             sections: {
@@ -184,10 +184,18 @@ export const STRINGS_NL = {
                     ]
                 },
                 tasks: {
-                    title: 'Taken',
+                    title: 'Filters',
                     items: [
                         '`has:task` Notities met onvoltooide taken opnemen.',
-                        'Combineer met tags, namen en datums (bijvoorbeeld: `#work has:task @thisweek`).'
+                        '`-has:task` Notities met onvoltooide taken uitsluiten.',
+                        '`folder:meetings` Notities opnemen waarvan een mapnaam `meetings` bevat.',
+                        '`folder:/work/meetings` Notities alleen in `work/meetings` opnemen (geen submappen).',
+                        '`folder:/` Notities alleen in de vault-root opnemen.',
+                        '`-folder:archive` Notities uitsluiten waarvan een mapnaam `archive` bevat.',
+                        '`-folder:/archive` Notities alleen in `archive` uitsluiten (geen submappen).',
+                        '`ext:md` Notities met extensie `md` opnemen (`ext:.md` wordt ook ondersteund).',
+                        '`-ext:pdf` Notities met extensie `pdf` uitsluiten.',
+                        'Combineer met tags, namen en datums (bijvoorbeeld: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -195,9 +203,9 @@ export const STRINGS_NL = {
                     items: [
                         '`AND` en `OR` zijn alleen operatoren in zoekopdrachten met uitsluitend tags.',
                         'Zoekopdrachten met uitsluitend tags bevatten alleen tagfilters: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Als een zoekopdracht namen, datums (`@...`) of taakfilters (`has:task`) bevat, worden `AND` en `OR` als woorden gezocht.',
+                        'Als een zoekopdracht namen, datums (`@...`), taakfilters (`has:task`), mapfilters (`folder:...`) of extensiefilters (`ext:...`) bevat, worden `AND` en `OR` als woorden gezocht.',
                         'Voorbeeld operatorzoekopdracht: `#work OR #home`.',
-                        'Voorbeeld gemengde zoekopdracht: `#work OR has:task` (`OR` wordt gezocht in bestandsnamen).'
+                        'Voorbeeld gemengde zoekopdracht: `#work OR ext:md` (`OR` wordt gezocht in bestandsnamen).'
                     ]
                 },
                 dates: {

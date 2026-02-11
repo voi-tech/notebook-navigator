@@ -155,7 +155,7 @@ export const STRINGS_ZH_TW = {
         searchHelp: '搜尋語法',
         searchHelpTitle: '搜尋語法',
         searchHelpModal: {
-            intro: '在一個查詢中組合檔案名稱、標籤和日期（例如：`meeting #work @thisweek`）。安裝 Omnisearch 外掛程式以使用全文搜尋。',
+            intro: '在一個查詢中組合檔案名稱、標籤、日期和篩選器（例如：`meeting #work @thisweek has:task`）。安裝 Omnisearch 外掛程式以使用全文搜尋。',
             introSwitching: '使用上/下箭頭鍵或點擊搜尋圖示在篩選搜尋和 Omnisearch 之間切換。',
             sections: {
                 fileNames: {
@@ -181,17 +181,28 @@ export const STRINGS_ZH_TW = {
                     ]
                 },
                 tasks: {
-                    title: '任務',
-                    items: ['`has:task` 包含有未完成任務的筆記。', '與標籤、名稱和日期組合使用（例如：`#work has:task @thisweek`）。']
+                    title: '篩選器',
+                    items: [
+                        '`has:task` 包含有未完成任務的筆記。',
+                        '`-has:task` 排除有未完成任務的筆記。',
+                        '`folder:meetings` 包含資料夾名稱含有 `meetings` 的筆記。',
+                        '`folder:/work/meetings` 僅包含 `work/meetings` 中的筆記（不含子資料夾）。',
+                        '`folder:/` 僅包含保管庫根目錄中的筆記。',
+                        '`-folder:archive` 排除資料夾名稱含有 `archive` 的筆記。',
+                        '`-folder:/archive` 僅排除 `archive` 中的筆記（不含子資料夾）。',
+                        '`ext:md` 包含副檔名為 `md` 的筆記（也支援 `ext:.md`）。',
+                        '`-ext:pdf` 排除副檔名為 `pdf` 的筆記。',
+                        '與標籤、名稱和日期組合使用（例如：`folder:/work/meetings ext:md @thisweek`）。'
+                    ]
                 },
                 connectors: {
                     title: 'AND/OR 行為',
                     items: [
                         '`AND` 和 `OR` 僅在純標籤查詢中作為運算子。',
                         '純標籤查詢僅包含標籤篩選器：`#tag`、`-#tag`、`#`、`-#`。',
-                        '如果查詢包含名稱、日期（`@...`）或任務篩選器（`has:task`），`AND` 和 `OR` 將作為詞語進行比對。',
+                        '如果查詢包含名稱、日期（`@...`）、任務篩選器（`has:task`）、資料夾篩選器（`folder:...`）或副檔名篩選器（`ext:...`），`AND` 和 `OR` 將作為詞語進行比對。',
                         '運算子查詢範例：`#work OR #home`。',
-                        '混合查詢範例：`#work OR has:task`（`OR` 在檔案名稱中進行比對）。'
+                        '混合查詢範例：`#work OR ext:md`（`OR` 在檔案名稱中進行比對）。'
                     ]
                 },
                 dates: {

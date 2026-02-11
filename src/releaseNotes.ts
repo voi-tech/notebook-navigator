@@ -75,6 +75,15 @@ export interface ReleaseNote {
  */
 const RELEASE_NOTES: ReleaseNote[] = [
     {
+        version: '2.3.2',
+        date: '2026-02-16',
+        showOnUpdate: true,
+        new: [
+            '==Filter search: folder filters==. You can now filter notes by specific folder with "folder:" and "-folder:" tokens. You can use both wildcards "notes" and specific paths "/work/meetingnotes".',
+            '==Filter search: extension filters==. You can now filter files by extension with "ext:" and "-ext:" tokens. For example, "ext:pdf" to show only PDF files or "-ext:md" to exclude markdown files. Can be combined with other filters.',
+        ]
+    },
+    {
         version: '2.3.1',
         date: '2026-02-10',
         showOnUpdate: false,

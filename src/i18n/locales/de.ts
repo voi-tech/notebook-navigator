@@ -155,7 +155,7 @@ export const STRINGS_DE = {
         searchHelp: 'Suchsyntax',
         searchHelpTitle: 'Suchsyntax',
         searchHelpModal: {
-            intro: 'Kombinieren Sie Dateinamen, Tags und Daten in einer Abfrage (z.B. `meeting #work @thisweek`). Installieren Sie das Omnisearch-Plugin für Volltextsuche.',
+            intro: 'Kombinieren Sie Dateinamen, Tags, Daten und Filter in einer Abfrage (z.B. `meeting #work @thisweek has:task`). Installieren Sie das Omnisearch-Plugin für Volltextsuche.',
             introSwitching:
                 'Wechseln Sie zwischen Filtersuche und Omnisearch mit den Auf-/Ab-Pfeiltasten oder durch Klicken auf das Suchsymbol.',
             sections: {
@@ -182,10 +182,18 @@ export const STRINGS_DE = {
                     ]
                 },
                 tasks: {
-                    title: 'Aufgaben',
+                    title: 'Filter',
                     items: [
                         '`has:task` Notizen mit unerledigten Aufgaben einbeziehen.',
-                        'Mit Tags, Namen und Daten kombinieren (zum Beispiel: `#work has:task @thisweek`).'
+                        '`-has:task` Notizen mit unerledigten Aufgaben ausschließen.',
+                        '`folder:meetings` Notizen einbeziehen, deren Ordnername `meetings` enthält.',
+                        '`folder:/work/meetings` Notizen nur in `work/meetings` einbeziehen (keine Unterordner).',
+                        '`folder:/` Notizen nur im Vault-Stammverzeichnis einbeziehen.',
+                        '`-folder:archive` Notizen ausschließen, deren Ordnername `archive` enthält.',
+                        '`-folder:/archive` Notizen nur in `archive` ausschließen (keine Unterordner).',
+                        '`ext:md` Notizen mit der Erweiterung `md` einbeziehen (`ext:.md` wird ebenfalls unterstützt).',
+                        '`-ext:pdf` Notizen mit der Erweiterung `pdf` ausschließen.',
+                        'Mit Tags, Namen und Daten kombinieren (zum Beispiel: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_DE = {
                     items: [
                         '`AND` und `OR` sind nur in reinen Tag-Abfragen Operatoren.',
                         'Reine Tag-Abfragen enthalten nur Tag-Filter: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Wenn eine Abfrage Namen, Daten (`@...`) oder Aufgabenfilter (`has:task`) enthält, werden `AND` und `OR` als Wörter abgeglichen.',
+                        'Wenn eine Abfrage Namen, Daten (`@...`), Aufgabenfilter (`has:task`), Ordnerfilter (`folder:...`) oder Erweiterungsfilter (`ext:...`) enthält, werden `AND` und `OR` als Wörter abgeglichen.',
                         'Beispiel für Operator-Abfrage: `#work OR #home`.',
-                        'Beispiel für gemischte Abfrage: `#work OR has:task` (`OR` wird in Dateinamen abgeglichen).'
+                        'Beispiel für gemischte Abfrage: `#work OR ext:md` (`OR` wird in Dateinamen abgeglichen).'
                     ]
                 },
                 dates: {

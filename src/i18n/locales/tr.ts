@@ -156,7 +156,7 @@ export const STRINGS_TR = {
         searchHelp: 'Arama sözdizimi',
         searchHelpTitle: 'Arama sözdizimi',
         searchHelpModal: {
-            intro: 'Dosya adlarını, etiketleri ve tarihleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek`). Tam metin araması kullanmak için Omnisearch eklentisini yükleyin.',
+            intro: 'Dosya adlarını, etiketleri, tarihleri ve filtreleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek has:task`). Tam metin araması kullanmak için Omnisearch eklentisini yükleyin.',
             introSwitching:
                 'Yukarı/aşağı ok tuşlarını kullanarak veya arama simgesine tıklayarak filtre araması ve Omnisearch arasında geçiş yapın.',
             sections: {
@@ -183,10 +183,18 @@ export const STRINGS_TR = {
                     ]
                 },
                 tasks: {
-                    title: 'Görevler',
+                    title: 'Filtreler',
                     items: [
                         '`has:task` Tamamlanmamış görevleri olan notları dahil et.',
-                        'Etiketler, isimler ve tarihlerle birleştirin (örneğin: `#work has:task @thisweek`).'
+                        '`-has:task` Tamamlanmamış görevleri olan notları hariç tut.',
+                        '`folder:meetings` Klasör adı `meetings` içeren notları dahil et.',
+                        '`folder:/work/meetings` Yalnızca `work/meetings` içindeki notları dahil et (alt klasörler hariç).',
+                        '`folder:/` Yalnızca kasa kök dizinindeki notları dahil et.',
+                        '`-folder:archive` Klasör adı `archive` içeren notları hariç tut.',
+                        '`-folder:/archive` Yalnızca `archive` içindeki notları hariç tut (alt klasörler hariç).',
+                        '`ext:md` Uzantısı `md` olan notları dahil et (`ext:.md` de desteklenir).',
+                        '`-ext:pdf` Uzantısı `pdf` olan notları hariç tut.',
+                        'Etiketler, isimler ve tarihlerle birleştirin (örneğin: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -194,9 +202,9 @@ export const STRINGS_TR = {
                     items: [
                         '`AND` ve `OR` yalnızca etiket sorgularında operatör olarak çalışır.',
                         'Etiket sorguları yalnızca etiket filtreleri içerir: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Bir sorgu adlar, tarihler (`@...`) veya görev filtreleri (`has:task`) içeriyorsa, `AND` ve `OR` kelime olarak aranır.',
+                        'Bir sorgu adlar, tarihler (`@...`), görev filtreleri (`has:task`), klasör filtreleri (`folder:...`) veya uzantı filtreleri (`ext:...`) içeriyorsa, `AND` ve `OR` kelime olarak aranır.',
                         'Operatör sorgusu örneği: `#work OR #home`.',
-                        'Karma sorgu örneği: `#work OR has:task` (`OR` dosya adlarında aranır).'
+                        'Karma sorgu örneği: `#work OR ext:md` (`OR` dosya adlarında aranır).'
                     ]
                 },
                 dates: {

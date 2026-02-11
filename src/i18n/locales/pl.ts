@@ -155,7 +155,7 @@ export const STRINGS_PL = {
         searchHelp: 'Składnia wyszukiwania',
         searchHelpTitle: 'Składnia wyszukiwania',
         searchHelpModal: {
-            intro: 'Łącz nazwy plików, tagi i daty w jednym zapytaniu (np. `meeting #work @thisweek`). Zainstaluj wtyczkę Omnisearch, aby użyć wyszukiwania pełnotekstowego.',
+            intro: 'Łącz nazwy plików, tagi, daty i filtry w jednym zapytaniu (np. `meeting #work @thisweek has:task`). Zainstaluj wtyczkę Omnisearch, aby użyć wyszukiwania pełnotekstowego.',
             introSwitching:
                 'Przełączaj między wyszukiwaniem filtrowym a Omnisearch za pomocą klawiszy strzałek góra/dół lub klikając ikonę wyszukiwania.',
             sections: {
@@ -182,10 +182,18 @@ export const STRINGS_PL = {
                     ]
                 },
                 tasks: {
-                    title: 'Zadania',
+                    title: 'Filtry',
                     items: [
                         '`has:task` Uwzględnij notatki z nieukończonymi zadaniami.',
-                        'Łącz z tagami, nazwami i datami (na przykład: `#work has:task @thisweek`).'
+                        '`-has:task` Wyklucz notatki z nieukończonymi zadaniami.',
+                        '`folder:meetings` Uwzględnij notatki, gdzie nazwa folderu zawiera `meetings`.',
+                        '`folder:/work/meetings` Uwzględnij notatki tylko w `work/meetings` (nie podfoldery).',
+                        '`folder:/` Uwzględnij notatki tylko w katalogu głównym sejfu.',
+                        '`-folder:archive` Wyklucz notatki, gdzie nazwa folderu zawiera `archive`.',
+                        '`-folder:/archive` Wyklucz notatki tylko w `archive` (nie podfoldery).',
+                        '`ext:md` Uwzględnij notatki z rozszerzeniem `md` (`ext:.md` jest również obsługiwane).',
+                        '`-ext:pdf` Wyklucz notatki z rozszerzeniem `pdf`.',
+                        'Łącz z tagami, nazwami i datami (na przykład: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_PL = {
                     items: [
                         '`AND` i `OR` są operatorami tylko w zapytaniach składających się wyłącznie z tagów.',
                         'Zapytania wyłącznie z tagów zawierają tylko filtry tagów: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Jeśli zapytanie zawiera nazwy, daty (`@...`) lub filtry zadań (`has:task`), `AND` i `OR` są wyszukiwane jako słowa.',
+                        'Jeśli zapytanie zawiera nazwy, daty (`@...`), filtry zadań (`has:task`), filtry folderów (`folder:...`) lub filtry rozszerzeń (`ext:...`), `AND` i `OR` są wyszukiwane jako słowa.',
                         'Przykład zapytania z operatorami: `#work OR #home`.',
-                        'Przykład zapytania mieszanego: `#work OR has:task` (`OR` jest wyszukiwane w nazwach plików).'
+                        'Przykład zapytania mieszanego: `#work OR ext:md` (`OR` jest wyszukiwane w nazwach plików).'
                     ]
                 },
                 dates: {

@@ -155,7 +155,7 @@ export const STRINGS_JA = {
         searchHelp: '検索構文',
         searchHelpTitle: '検索構文',
         searchHelpModal: {
-            intro: 'ファイル名、タグ、日付を1つのクエリで組み合わせ可能（例：`meeting #work @thisweek`）。Omnisearch プラグインをインストールすると全文検索が使用できます。',
+            intro: 'ファイル名、タグ、日付、フィルターを1つのクエリで組み合わせ可能（例：`meeting #work @thisweek has:task`）。Omnisearch プラグインをインストールすると全文検索が使用できます。',
             introSwitching: '上下矢印キーまたは検索アイコンのクリックで、フィルター検索と Omnisearch を切り替えられます。',
             sections: {
                 fileNames: {
@@ -181,10 +181,18 @@ export const STRINGS_JA = {
                     ]
                 },
                 tasks: {
-                    title: 'タスク',
+                    title: 'フィルター',
                     items: [
                         '`has:task` 未完了のタスクを含むノートを表示。',
-                        'タグ、名前、日付と組み合わせて使用（例：`#work has:task @thisweek`）。'
+                        '`-has:task` 未完了のタスクを含むノートを除外。',
+                        '`folder:meetings` フォルダ名に `meetings` を含むノートを表示。',
+                        '`folder:/work/meetings` `work/meetings` 内のノートのみを表示（サブフォルダを除く）。',
+                        '`folder:/` ボールトルート内のノートのみを表示。',
+                        '`-folder:archive` フォルダ名に `archive` を含むノートを除外。',
+                        '`-folder:/archive` `archive` 内のノートのみを除外（サブフォルダを除く）。',
+                        '`ext:md` 拡張子が `md` のノートを表示（`ext:.md` もサポート）。',
+                        '`-ext:pdf` 拡張子が `pdf` のノートを除外。',
+                        'タグ、名前、日付と組み合わせて使用（例：`folder:/work/meetings ext:md @thisweek`）。'
                     ]
                 },
                 connectors: {
@@ -192,9 +200,9 @@ export const STRINGS_JA = {
                     items: [
                         '`AND`と`OR`はタグのみのクエリでのみ演算子として機能します。',
                         'タグのみのクエリにはタグフィルターのみが含まれます: `#tag`、`-#tag`、`#`、`-#`。',
-                        'クエリに名前、日付（`@...`）、またはタスクフィルター（`has:task`）が含まれる場合、`AND`と`OR`は単語として検索されます。',
+                        'クエリに名前、日付（`@...`）、タスクフィルター（`has:task`）、フォルダフィルター（`folder:...`）、または拡張子フィルター（`ext:...`）が含まれる場合、`AND`と`OR`は単語として検索されます。',
                         '演算子クエリの例: `#work OR #home`。',
-                        '混合クエリの例: `#work OR has:task`（`OR`はファイル名で検索されます）。'
+                        '混合クエリの例: `#work OR ext:md`（`OR`はファイル名で検索されます）。'
                     ]
                 },
                 dates: {

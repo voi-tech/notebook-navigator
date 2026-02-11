@@ -156,7 +156,7 @@ export const STRINGS_EN = {
         searchHelp: 'Search syntax',
         searchHelpTitle: 'Search syntax',
         searchHelpModal: {
-            intro: 'Combine file names, tags, and dates in one query (e.g., `meeting #work @thisweek`). Install the Omnisearch plugin to use full-text search.',
+            intro: 'Combine file names, tags, dates, and filters in one query (e.g., `meeting #work @thisweek has:task`). Install the Omnisearch plugin to use full-text search.',
             introSwitching: 'Switch between filter search and Omnisearch using the up/down arrow keys or by clicking the search icon.',
             sections: {
                 fileNames: {
@@ -182,10 +182,18 @@ export const STRINGS_EN = {
                     ]
                 },
                 tasks: {
-                    title: 'Tasks',
+                    title: 'Filters',
                     items: [
                         '`has:task` Include notes with unfinished tasks.',
-                        'Combine with tags, names, and dates (for example: `#work has:task @thisweek`).'
+                        '`-has:task` Exclude notes with unfinished tasks.',
+                        '`folder:meetings` Include notes where a folder name contains `meetings`.',
+                        '`folder:/work/meetings` Include notes only in `work/meetings` (not subfolders).',
+                        '`folder:/` Include notes only in the vault root.',
+                        '`-folder:archive` Exclude notes where a folder name contains `archive`.',
+                        '`-folder:/archive` Exclude notes only in `archive` (not subfolders).',
+                        '`ext:md` Include notes with extension `md` (`ext:.md` is also supported).',
+                        '`-ext:pdf` Exclude notes with extension `pdf`.',
+                        'Combine with tags, names, and dates (for example: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_EN = {
                     items: [
                         '`AND` and `OR` are operators only in tag-only queries.',
                         'Tag-only queries contain only tag filters: `#tag`, `-#tag`, `#`, `-#`.',
-                        'If a query includes names, dates (`@...`), or task filters (`has:task`), `AND` and `OR` are matched as words.',
+                        'If a query includes names, dates (`@...`), task filters (`has:task`), folder filters (`folder:...`), or extension filters (`ext:...`), `AND` and `OR` are matched as words.',
                         'Example operator query: `#work OR #home`.',
-                        'Example mixed query: `#work OR has:task` (`OR` is matched in file names).'
+                        'Example mixed query: `#work OR ext:md` (`OR` is matched in file names).'
                     ]
                 },
                 dates: {

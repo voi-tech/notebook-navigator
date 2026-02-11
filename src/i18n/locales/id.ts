@@ -156,7 +156,7 @@ export const STRINGS_ID = {
         searchHelp: 'Sintaks pencarian',
         searchHelpTitle: 'Sintaks pencarian',
         searchHelpModal: {
-            intro: 'Gabungkan nama file, tag, dan tanggal dalam satu kueri (contoh: `meeting #work @thisweek`). Instal plugin Omnisearch untuk menggunakan pencarian teks lengkap.',
+            intro: 'Gabungkan nama file, tag, tanggal, dan filter dalam satu kueri (contoh: `meeting #work @thisweek has:task`). Instal plugin Omnisearch untuk menggunakan pencarian teks lengkap.',
             introSwitching:
                 'Beralih antara pencarian filter dan Omnisearch menggunakan tombol panah atas/bawah atau dengan mengklik ikon pencarian.',
             sections: {
@@ -183,10 +183,18 @@ export const STRINGS_ID = {
                     ]
                 },
                 tasks: {
-                    title: 'Tugas',
+                    title: 'Filter',
                     items: [
                         '`has:task` Sertakan catatan dengan tugas yang belum selesai.',
-                        'Gabungkan dengan tag, nama, dan tanggal (contoh: `#work has:task @thisweek`).'
+                        '`-has:task` Kecualikan catatan dengan tugas yang belum selesai.',
+                        '`folder:meetings` Sertakan catatan di mana nama folder mengandung `meetings`.',
+                        '`folder:/work/meetings` Sertakan catatan hanya di `work/meetings` (tidak termasuk subfolder).',
+                        '`folder:/` Sertakan catatan hanya di root vault.',
+                        '`-folder:archive` Kecualikan catatan di mana nama folder mengandung `archive`.',
+                        '`-folder:/archive` Kecualikan catatan hanya di `archive` (tidak termasuk subfolder).',
+                        '`ext:md` Sertakan catatan dengan ekstensi `md` (`ext:.md` juga didukung).',
+                        '`-ext:pdf` Kecualikan catatan dengan ekstensi `pdf`.',
+                        'Gabungkan dengan tag, nama, dan tanggal (contoh: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -194,9 +202,9 @@ export const STRINGS_ID = {
                     items: [
                         '`AND` dan `OR` adalah operator hanya dalam kueri khusus tag.',
                         'Kueri khusus tag hanya berisi filter tag: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Jika kueri menyertakan nama, tanggal (`@...`), atau filter tugas (`has:task`), `AND` dan `OR` dicocokkan sebagai kata.',
+                        'Jika kueri menyertakan nama, tanggal (`@...`), filter tugas (`has:task`), filter folder (`folder:...`), atau filter ekstensi (`ext:...`), `AND` dan `OR` dicocokkan sebagai kata.',
                         'Contoh kueri operator: `#work OR #home`.',
-                        'Contoh kueri campuran: `#work OR has:task` (`OR` dicocokkan dalam nama file).'
+                        'Contoh kueri campuran: `#work OR ext:md` (`OR` dicocokkan dalam nama file).'
                     ]
                 },
                 dates: {

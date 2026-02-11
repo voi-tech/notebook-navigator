@@ -155,7 +155,7 @@ export const STRINGS_ES = {
         searchHelp: 'Sintaxis de búsqueda',
         searchHelpTitle: 'Sintaxis de búsqueda',
         searchHelpModal: {
-            intro: 'Combina nombres de archivo, etiquetas y fechas en una consulta (ej. `meeting #work @thisweek`). Instala el plugin Omnisearch para usar búsqueda de texto completo.',
+            intro: 'Combina nombres de archivo, etiquetas, fechas y filtros en una consulta (ej. `meeting #work @thisweek has:task`). Instala el plugin Omnisearch para usar búsqueda de texto completo.',
             introSwitching:
                 'Cambia entre búsqueda por filtro y Omnisearch usando las teclas de flecha arriba/abajo o haciendo clic en el icono de búsqueda.',
             sections: {
@@ -182,10 +182,18 @@ export const STRINGS_ES = {
                     ]
                 },
                 tasks: {
-                    title: 'Tareas',
+                    title: 'Filtros',
                     items: [
                         '`has:task` Incluir notas con tareas pendientes.',
-                        'Combinar con etiquetas, nombres y fechas (por ejemplo: `#work has:task @thisweek`).'
+                        '`-has:task` Excluir notas con tareas pendientes.',
+                        '`folder:meetings` Incluir notas donde un nombre de carpeta contiene `meetings`.',
+                        '`folder:/work/meetings` Incluir notas solo en `work/meetings` (no subcarpetas).',
+                        '`folder:/` Incluir notas solo en la raíz del vault.',
+                        '`-folder:archive` Excluir notas donde un nombre de carpeta contiene `archive`.',
+                        '`-folder:/archive` Excluir notas solo en `archive` (no subcarpetas).',
+                        '`ext:md` Incluir notas con extensión `md` (`ext:.md` también es compatible).',
+                        '`-ext:pdf` Excluir notas con extensión `pdf`.',
+                        'Combinar con etiquetas, nombres y fechas (por ejemplo: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_ES = {
                     items: [
                         '`AND` y `OR` son operadores solo en consultas exclusivas de etiquetas.',
                         'Las consultas exclusivas de etiquetas contienen solo filtros de etiquetas: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Si una consulta incluye nombres, fechas (`@...`) o filtros de tareas (`has:task`), `AND` y `OR` se buscan como palabras.',
+                        'Si una consulta incluye nombres, fechas (`@...`), filtros de tareas (`has:task`), filtros de carpetas (`folder:...`) o filtros de extensión (`ext:...`), `AND` y `OR` se buscan como palabras.',
                         'Ejemplo de consulta con operadores: `#work OR #home`.',
-                        'Ejemplo de consulta mixta: `#work OR has:task` (`OR` se busca en los nombres de archivos).'
+                        'Ejemplo de consulta mixta: `#work OR ext:md` (`OR` se busca en los nombres de archivos).'
                     ]
                 },
                 dates: {

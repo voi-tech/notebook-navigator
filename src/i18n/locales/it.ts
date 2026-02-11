@@ -156,7 +156,7 @@ export const STRINGS_IT = {
         searchHelp: 'Sintassi di ricerca',
         searchHelpTitle: 'Sintassi di ricerca',
         searchHelpModal: {
-            intro: 'Combina nomi file, tag e date in una query (es. `meeting #work @thisweek`). Installa il plugin Omnisearch per usare la ricerca full-text.',
+            intro: 'Combina nomi file, tag, date e filtri in una query (es. `meeting #work @thisweek has:task`). Installa il plugin Omnisearch per usare la ricerca full-text.',
             introSwitching: "Passa tra ricerca con filtro e Omnisearch usando i tasti freccia su/giù o cliccando sull'icona di ricerca.",
             sections: {
                 fileNames: {
@@ -182,10 +182,18 @@ export const STRINGS_IT = {
                     ]
                 },
                 tasks: {
-                    title: 'Attività',
+                    title: 'Filtri',
                     items: [
                         '`has:task` Includi note con attività non completate.',
-                        'Combina con tag, nomi e date (ad esempio: `#work has:task @thisweek`).'
+                        '`-has:task` Escludi note con attività non completate.',
+                        '`folder:meetings` Includi note in cui un nome di cartella contiene `meetings`.',
+                        '`folder:/work/meetings` Includi note solo in `work/meetings` (non sottocartelle).',
+                        '`folder:/` Includi note solo nella radice del vault.',
+                        '`-folder:archive` Escludi note in cui un nome di cartella contiene `archive`.',
+                        '`-folder:/archive` Escludi note solo in `archive` (non sottocartelle).',
+                        '`ext:md` Includi note con estensione `md` (`ext:.md` è anche supportato).',
+                        '`-ext:pdf` Escludi note con estensione `pdf`.',
+                        'Combina con tag, nomi e date (ad esempio: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_IT = {
                     items: [
                         '`AND` e `OR` sono operatori solo nelle query composte esclusivamente da tag.',
                         'Le query di soli tag contengono solo filtri tag: `#tag`, `-#tag`, `#`, `-#`.',
-                        'Se una query include nomi, date (`@...`) o filtri attività (`has:task`), `AND` e `OR` vengono cercati come parole.',
+                        'Se una query include nomi, date (`@...`), filtri attività (`has:task`), filtri cartella (`folder:...`) o filtri estensione (`ext:...`), `AND` e `OR` vengono cercati come parole.',
                         'Esempio di query con operatori: `#work OR #home`.',
-                        'Esempio di query mista: `#work OR has:task` (`OR` viene cercato nei nomi dei file).'
+                        'Esempio di query mista: `#work OR ext:md` (`OR` viene cercato nei nomi dei file).'
                     ]
                 },
                 dates: {

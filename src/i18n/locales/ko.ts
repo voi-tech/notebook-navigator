@@ -155,7 +155,7 @@ export const STRINGS_KO = {
         searchHelp: '검색 구문',
         searchHelpTitle: '검색 구문',
         searchHelpModal: {
-            intro: '파일 이름, 태그, 날짜를 하나의 쿼리에서 결합 (예: `meeting #work @thisweek`). Omnisearch 플러그인을 설치하면 전체 텍스트 검색을 사용할 수 있습니다.',
+            intro: '파일 이름, 태그, 날짜, 필터를 하나의 쿼리에서 결합 (예: `meeting #work @thisweek has:task`). Omnisearch 플러그인을 설치하면 전체 텍스트 검색을 사용할 수 있습니다.',
             introSwitching: '위/아래 화살표 키 또는 검색 아이콘 클릭으로 필터 검색과 Omnisearch 간에 전환할 수 있습니다.',
             sections: {
                 fileNames: {
@@ -181,10 +181,18 @@ export const STRINGS_KO = {
                     ]
                 },
                 tasks: {
-                    title: '작업',
+                    title: '필터',
                     items: [
                         '`has:task` 미완료 작업이 있는 노트를 포함.',
-                        '태그, 이름, 날짜와 결합하여 사용 (예: `#work has:task @thisweek`).'
+                        '`-has:task` 미완료 작업이 있는 노트를 제외.',
+                        '`folder:meetings` 폴더 이름에 `meetings`를 포함하는 노트를 포함.',
+                        '`folder:/work/meetings` `work/meetings` 내의 노트만 포함 (하위 폴더 제외).',
+                        '`folder:/` 보관소 루트에 있는 노트만 포함.',
+                        '`-folder:archive` 폴더 이름에 `archive`를 포함하는 노트를 제외.',
+                        '`-folder:/archive` `archive` 내의 노트만 제외 (하위 폴더 제외).',
+                        '`ext:md` 확장자가 `md`인 노트를 포함 (`ext:.md`도 지원).',
+                        '`-ext:pdf` 확장자가 `pdf`인 노트를 제외.',
+                        '태그, 이름, 날짜와 결합하여 사용 (예: `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -192,9 +200,9 @@ export const STRINGS_KO = {
                     items: [
                         '`AND`와 `OR`는 태그 전용 쿼리에서만 연산자로 작동합니다.',
                         '태그 전용 쿼리는 태그 필터만 포함합니다: `#tag`, `-#tag`, `#`, `-#`.',
-                        '쿼리에 이름, 날짜(`@...`), 또는 작업 필터(`has:task`)가 포함되면 `AND`와 `OR`는 단어로 검색됩니다.',
+                        '쿼리에 이름, 날짜(`@...`), 작업 필터(`has:task`), 폴더 필터(`folder:...`), 또는 확장자 필터(`ext:...`)가 포함되면 `AND`와 `OR`는 단어로 검색됩니다.',
                         '연산자 쿼리 예시: `#work OR #home`.',
-                        '혼합 쿼리 예시: `#work OR has:task` (`OR`가 파일 이름에서 검색됩니다).'
+                        '혼합 쿼리 예시: `#work OR ext:md` (`OR`가 파일 이름에서 검색됩니다).'
                     ]
                 },
                 dates: {

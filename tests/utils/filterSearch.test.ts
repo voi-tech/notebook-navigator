@@ -43,6 +43,10 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.includeUntagged).toBe(false);
         expect(tokens.excludeNameTokens).toEqual([]);
         expect(tokens.excludeTagTokens).toEqual([]);
+        expect(tokens.folderTokens).toEqual([]);
+        expect(tokens.excludeFolderTokens).toEqual([]);
+        expect(tokens.extensionTokens).toEqual([]);
+        expect(tokens.excludeExtensionTokens).toEqual([]);
         expect(tokens.excludeDateRanges).toEqual([]);
         expect(tokens.excludeTagged).toBe(false);
     });
@@ -364,6 +368,88 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.excludeUnfinishedTasks).toBe(false);
     });
 
+    it('parses folder filter tokens', () => {
+        const tokens = parseFilterSearchTokens('has:task folder:meetings');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(true);
+        expect(tokens.requireUnfinishedTasks).toBe(true);
+        expect(tokens.folderTokens).toEqual([{ mode: 'segment', value: 'meetings' }]);
+        expect(tokens.excludeFolderTokens).toEqual([]);
+    });
+
+    it('parses exact folder filter tokens with leading slash', () => {
+        const tokens = parseFilterSearchTokens('folder:/archive/2025');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(true);
+        expect(tokens.folderTokens).toEqual([{ mode: 'exact', value: 'archive/2025' }]);
+        expect(tokens.excludeFolderTokens).toEqual([]);
+    });
+
+    it('parses negated exact folder filter tokens', () => {
+        const tokens = parseFilterSearchTokens('-folder:/archive/2025');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.folderTokens).toEqual([]);
+        expect(tokens.excludeFolderTokens).toEqual([{ mode: 'exact', value: 'archive/2025' }]);
+    });
+
+    it('normalizes slash variants in exact folder filter tokens', () => {
+        const tokens = parseFilterSearchTokens('folder:/work\\meetings/');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.folderTokens).toEqual([{ mode: 'exact', value: 'work/meetings' }]);
+    });
+
+    it('parses root folder filter tokens', () => {
+        const tokens = parseFilterSearchTokens('folder:/');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.folderTokens).toEqual([{ mode: 'exact', value: '' }]);
+    });
+
+    it('ignores segment folder filters containing slashes', () => {
+        const tokens = parseFilterSearchTokens('folder:team/meetings');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.folderTokens).toEqual([]);
+    });
+
+    it('treats connectors as literal text when folder filters are mixed with tags', () => {
+        const tokens = parseFilterSearchTokens('#alpha OR folder:meetings');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.nameTokens).toEqual(['or']);
+        expect(tokens.includedTagTokens).toEqual(['alpha']);
+        expect(tokens.folderTokens).toEqual([{ mode: 'segment', value: 'meetings' }]);
+    });
+
+    it('parses extension filter tokens', () => {
+        const tokens = parseFilterSearchTokens('ext:.md');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.extensionTokens).toEqual(['md']);
+        expect(tokens.excludeExtensionTokens).toEqual([]);
+    });
+
+    it('normalizes extension filter tokens with multiple dots', () => {
+        const tokens = parseFilterSearchTokens('ext:tar.gz');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.extensionTokens).toEqual(['gz']);
+        expect(tokens.excludeExtensionTokens).toEqual([]);
+    });
+
+    it('parses negated extension filter tokens', () => {
+        const tokens = parseFilterSearchTokens('-ext:pdf');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.extensionTokens).toEqual([]);
+        expect(tokens.excludeExtensionTokens).toEqual(['pdf']);
+    });
+
+    it('ignores partial extension filter tokens', () => {
+        const tokens = parseFilterSearchTokens('ext:');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.extensionTokens).toEqual([]);
+        expect(tokens.excludeExtensionTokens).toEqual([]);
+    });
+
     it('parses negated unfinished task filter tokens', () => {
         const tokens = parseFilterSearchTokens('-has:task');
         expect(tokens.mode).toBe('filter');
@@ -418,6 +504,14 @@ describe('parseFilterSearchTokens', () => {
         expect(tokens.hasInclusions).toBe(false);
         expect(tokens.nameTokens).toEqual([]);
         expect(tokens.dateRanges).toEqual([]);
+    });
+
+    it('ignores partial folder filter tokens', () => {
+        const tokens = parseFilterSearchTokens('folder:');
+        expect(tokens.mode).toBe('filter');
+        expect(tokens.hasInclusions).toBe(false);
+        expect(tokens.folderTokens).toEqual([]);
+        expect(tokens.excludeFolderTokens).toEqual([]);
     });
 });
 
@@ -625,6 +719,71 @@ describe('fileMatchesFilterTokens', () => {
         const tokens = parseFilterSearchTokens('-has:task');
         expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false })).toBe(true);
         expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: true })).toBe(false);
+    });
+
+    it('filters notes by included folder tokens', () => {
+        const tokens = parseFilterSearchTokens('folder:meetings');
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'work/meetings' })
+        ).toBe(true);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'work/projects' })
+        ).toBe(false);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'notes/team-meetings' })
+        ).toBe(true);
+    });
+
+    it('filters notes by excluded folder tokens', () => {
+        const tokens = parseFilterSearchTokens('-folder:archive');
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'notes/archive' })
+        ).toBe(false);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'notes/current' })
+        ).toBe(true);
+    });
+
+    it('filters notes by exact folder path tokens', () => {
+        const tokens = parseFilterSearchTokens('folder:/work/meetings');
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, {
+                hasUnfinishedTasks: false,
+                lowercaseFolderPath: 'work/meetings'
+            })
+        ).toBe(true);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, {
+                hasUnfinishedTasks: false,
+                lowercaseFolderPath: 'work/meetings/weekly'
+            })
+        ).toBe(false);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, {
+                hasUnfinishedTasks: false,
+                lowercaseFolderPath: 'notes/work/meetings'
+            })
+        ).toBe(false);
+    });
+
+    it('filters root notes with folder:/', () => {
+        const tokens = parseFilterSearchTokens('folder:/');
+        expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: '' })).toBe(true);
+        expect(
+            fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseFolderPath: 'work/meetings' })
+        ).toBe(false);
+    });
+
+    it('filters notes by included extension tokens', () => {
+        const tokens = parseFilterSearchTokens('ext:md');
+        expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseExtension: 'md' })).toBe(true);
+        expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseExtension: 'pdf' })).toBe(false);
+    });
+
+    it('filters notes by excluded extension tokens', () => {
+        const tokens = parseFilterSearchTokens('-ext:pdf');
+        expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseExtension: 'md' })).toBe(true);
+        expect(fileMatchesFilterTokens('platform plan', [], tokens, { hasUnfinishedTasks: false, lowercaseExtension: 'pdf' })).toBe(false);
     });
 
     it('treats OR as a literal word when unfinished task filters are mixed with tags', () => {

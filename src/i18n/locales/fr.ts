@@ -155,7 +155,7 @@ export const STRINGS_FR = {
         searchHelp: 'Syntaxe de recherche',
         searchHelpTitle: 'Syntaxe de recherche',
         searchHelpModal: {
-            intro: 'Combinez noms de fichiers, étiquettes et dates dans une requête (ex. `meeting #work @thisweek`). Installez le plugin Omnisearch pour utiliser la recherche plein texte.',
+            intro: 'Combinez noms de fichiers, étiquettes, dates et filtres dans une requête (ex. `meeting #work @thisweek has:task`). Installez le plugin Omnisearch pour utiliser la recherche plein texte.',
             introSwitching:
                 "Basculez entre la recherche par filtre et Omnisearch avec les touches fléchées haut/bas ou en cliquant sur l'icône de recherche.",
             sections: {
@@ -182,10 +182,18 @@ export const STRINGS_FR = {
                     ]
                 },
                 tasks: {
-                    title: 'Tâches',
+                    title: 'Filtres',
                     items: [
                         '`has:task` Inclure les notes avec des tâches inachevées.',
-                        'Combiner avec des tags, des noms et des dates (par exemple : `#work has:task @thisweek`).'
+                        '`-has:task` Exclure les notes avec des tâches inachevées.',
+                        '`folder:meetings` Inclure les notes dont un nom de dossier contient `meetings`.',
+                        '`folder:/work/meetings` Inclure les notes uniquement dans `work/meetings` (pas les sous-dossiers).',
+                        '`folder:/` Inclure les notes uniquement à la racine du coffre.',
+                        '`-folder:archive` Exclure les notes dont un nom de dossier contient `archive`.',
+                        '`-folder:/archive` Exclure les notes uniquement dans `archive` (pas les sous-dossiers).',
+                        "`ext:md` Inclure les notes avec l'extension `md` (`ext:.md` est aussi supporté).",
+                        "`-ext:pdf` Exclure les notes avec l'extension `pdf`.",
+                        'Combiner avec des tags, des noms et des dates (par exemple : `folder:/work/meetings ext:md @thisweek`).'
                     ]
                 },
                 connectors: {
@@ -193,9 +201,9 @@ export const STRINGS_FR = {
                     items: [
                         '`AND` et `OR` sont des opérateurs uniquement dans les requêtes composées exclusivement de tags.',
                         'Les requêtes de tags exclusives ne contiennent que des filtres de tags : `#tag`, `-#tag`, `#`, `-#`.',
-                        'Si une requête inclut des noms, des dates (`@...`) ou des filtres de tâches (`has:task`), `AND` et `OR` sont recherchés comme des mots.',
+                        "Si une requête inclut des noms, des dates (`@...`), des filtres de tâches (`has:task`), des filtres de dossiers (`folder:...`) ou des filtres d'extension (`ext:...`), `AND` et `OR` sont recherchés comme des mots.",
                         'Exemple de requête avec opérateurs : `#work OR #home`.',
-                        'Exemple de requête mixte : `#work OR has:task` (`OR` est recherché dans les noms de fichiers).'
+                        'Exemple de requête mixte : `#work OR ext:md` (`OR` est recherché dans les noms de fichiers).'
                     ]
                 },
                 dates: {

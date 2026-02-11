@@ -155,7 +155,7 @@ export const STRINGS_ZH_CN = {
         searchHelp: '搜索语法',
         searchHelpTitle: '搜索语法',
         searchHelpModal: {
-            intro: '在一个查询中组合文件名、标签和日期（例如：`meeting #work @thisweek`）。安装 Omnisearch 插件以使用全文搜索。',
+            intro: '在一个查询中组合文件名、标签、日期和过滤器（例如：`meeting #work @thisweek has:task`）。安装 Omnisearch 插件以使用全文搜索。',
             introSwitching: '使用上/下箭头键或点击搜索图标在过滤搜索和 Omnisearch 之间切换。',
             sections: {
                 fileNames: {
@@ -181,17 +181,28 @@ export const STRINGS_ZH_CN = {
                     ]
                 },
                 tasks: {
-                    title: '任务',
-                    items: ['`has:task` 包含有未完成任务的笔记。', '与标签、名称和日期组合使用（例如：`#work has:task @thisweek`）。']
+                    title: '过滤器',
+                    items: [
+                        '`has:task` 包含有未完成任务的笔记。',
+                        '`-has:task` 排除有未完成任务的笔记。',
+                        '`folder:meetings` 包含文件夹名称含有 `meetings` 的笔记。',
+                        '`folder:/work/meetings` 仅包含 `work/meetings` 中的笔记（不含子文件夹）。',
+                        '`folder:/` 仅包含仓库根目录中的笔记。',
+                        '`-folder:archive` 排除文件夹名称含有 `archive` 的笔记。',
+                        '`-folder:/archive` 仅排除 `archive` 中的笔记（不含子文件夹）。',
+                        '`ext:md` 包含扩展名为 `md` 的笔记（也支持 `ext:.md`）。',
+                        '`-ext:pdf` 排除扩展名为 `pdf` 的笔记。',
+                        '与标签、名称和日期组合使用（例如：`folder:/work/meetings ext:md @thisweek`）。'
+                    ]
                 },
                 connectors: {
                     title: 'AND/OR 行为',
                     items: [
                         '`AND` 和 `OR` 仅在纯标签查询中作为运算符。',
                         '纯标签查询仅包含标签过滤器：`#tag`、`-#tag`、`#`、`-#`。',
-                        '如果查询包含名称、日期（`@...`）或任务过滤器（`has:task`），`AND` 和 `OR` 将作为词语进行匹配。',
+                        '如果查询包含名称、日期（`@...`）、任务过滤器（`has:task`）、文件夹过滤器（`folder:...`）或扩展名过滤器（`ext:...`），`AND` 和 `OR` 将作为词语进行匹配。',
                         '运算符查询示例：`#work OR #home`。',
-                        '混合查询示例：`#work OR has:task`（`OR` 在文件名中进行匹配）。'
+                        '混合查询示例：`#work OR ext:md`（`OR` 在文件名中进行匹配）。'
                     ]
                 },
                 dates: {

@@ -36,6 +36,11 @@ interface DateFilterRange {
     endMs: number | null;
 }
 
+export interface FolderFilterToken {
+    mode: 'exact' | 'segment';
+    value: string;
+}
+
 // Operands in a tag filter expression tree
 type TagExpressionOperand =
     | {
@@ -80,6 +85,10 @@ export interface FilterSearchTokens {
     includeUntagged: boolean;
     excludeNameTokens: string[];
     excludeTagTokens: string[];
+    folderTokens: FolderFilterToken[];
+    excludeFolderTokens: FolderFilterToken[];
+    extensionTokens: string[];
+    excludeExtensionTokens: string[];
     excludeDateRanges: DateFilterRange[];
     excludeTagged: boolean;
 }
@@ -101,6 +110,10 @@ const EMPTY_TOKENS: FilterSearchTokens = {
     includeUntagged: false,
     excludeNameTokens: [],
     excludeTagTokens: [],
+    folderTokens: [],
+    excludeFolderTokens: [],
+    extensionTokens: [],
+    excludeExtensionTokens: [],
     excludeDateRanges: [],
     excludeTagged: false
 };
@@ -144,6 +157,22 @@ type ClassifiedToken =
     | {
           kind: 'dateNegation';
           range: DateFilterRange;
+      }
+    | {
+          kind: 'folder';
+          value: FolderFilterToken;
+      }
+    | {
+          kind: 'folderNegation';
+          value: FolderFilterToken;
+      }
+    | {
+          kind: 'extension';
+          value: string;
+      }
+    | {
+          kind: 'extensionNegation';
+          value: string;
       }
     | {
           kind: 'unfinishedTask';
@@ -197,6 +226,125 @@ const getNegationPrefix = (token: string): '-' | null => {
 
 const isUnfinishedTaskFilterToken = (token: string): boolean => {
     return UNFINISHED_TASK_FILTER_TOKEN_SET.has(token);
+};
+
+const FOLDER_FILTER_PREFIX = 'folder:';
+const EXT_FILTER_PREFIX = 'ext:';
+
+// Normalizes folder filter values for exact (`folder:/path`) and segment (`folder:name`) matching.
+const normalizeFolderFilterToken = (value: string): FolderFilterToken | null => {
+    if (!value) {
+        return null;
+    }
+
+    const normalizedSlashes = value.trim().replace(/\\/g, '/').replace(/\/+/g, '/');
+    if (!normalizedSlashes) {
+        return null;
+    }
+
+    if (normalizedSlashes.startsWith('/')) {
+        const withoutTrailingSlash = normalizedSlashes.replace(/\/+$/u, '');
+        if (!withoutTrailingSlash) {
+            return { mode: 'exact', value: '' };
+        }
+
+        const withoutLeadingSlash = withoutTrailingSlash.replace(/^\/+/u, '');
+        if (!withoutLeadingSlash) {
+            return { mode: 'exact', value: '' };
+        }
+
+        return { mode: 'exact', value: withoutLeadingSlash };
+    }
+
+    const segmentQuery = normalizedSlashes.replace(/^\/+/u, '').replace(/\/+$/u, '');
+    if (!segmentQuery || segmentQuery.includes('/')) {
+        return null;
+    }
+
+    return { mode: 'segment', value: segmentQuery };
+};
+
+// Checks if a token starts with the folder filter prefix.
+const isFolderFilterCandidate = (token: string): boolean => {
+    return token.startsWith(FOLDER_FILTER_PREFIX);
+};
+
+// Parses folder:... tokens into normalized folder path filters.
+const parseFolderFilterToken = (token: string): FolderFilterToken | null => {
+    return normalizeFolderFilterToken(token.slice(FOLDER_FILTER_PREFIX.length));
+};
+
+// Checks if a token starts with the extension filter prefix.
+const isExtensionFilterCandidate = (token: string): boolean => {
+    return token.startsWith(EXT_FILTER_PREFIX);
+};
+
+// Parses ext:... tokens into normalized file extension filters.
+const parseExtensionFilterToken = (token: string): string | null => {
+    const raw = token.slice(EXT_FILTER_PREFIX.length).trim();
+    if (!raw) {
+        return null;
+    }
+
+    const withoutLeadingDots = raw.replace(/^\.+/u, '');
+    if (!withoutLeadingDots || withoutLeadingDots.includes('/') || withoutLeadingDots.includes('\\')) {
+        return null;
+    }
+
+    // Obsidian's `TFile.extension` is derived from the last "." segment in the file name.
+    // Example: "johan.test.txt" => extension "txt", basename "johan.test".
+    const segments = withoutLeadingDots.split('.').filter(Boolean);
+    const lastSegment = segments.length > 0 ? segments[segments.length - 1] : '';
+    if (!lastSegment) {
+        return null;
+    }
+
+    return lastSegment;
+};
+
+const normalizeFolderPathForMatch = (folderPath: string): string => {
+    if (!folderPath) {
+        return '';
+    }
+
+    let normalized = folderPath;
+    if (normalized.includes('\\')) {
+        normalized = normalized.replace(/\\/g, '/');
+    }
+    if (normalized.startsWith('/')) {
+        normalized = normalized.replace(/^\/+/u, '');
+    }
+    if (normalized.endsWith('/')) {
+        normalized = normalized.replace(/\/+$/u, '');
+    }
+
+    return normalized;
+};
+
+const folderMatchesTokenWithNormalizedPath = (
+    normalizedFolderPath: string,
+    segments: readonly string[] | null,
+    token: FolderFilterToken
+): boolean => {
+    if (token.mode === 'exact') {
+        return normalizedFolderPath === token.value;
+    }
+
+    if (!token.value || !normalizedFolderPath) {
+        return false;
+    }
+
+    const resolvedSegments = segments ?? normalizedFolderPath.split('/').filter(Boolean);
+    return resolvedSegments.some(segment => segment.includes(token.value));
+};
+
+// Checks whether a file extension matches an extension filter token.
+const extensionMatchesToken = (fileExtension: string, token: string): boolean => {
+    if (!fileExtension || !token) {
+        return false;
+    }
+
+    return fileExtension === token;
 };
 
 // Recognized relative date keywords for @today, @yesterday, etc.
@@ -743,6 +891,28 @@ const classifyRawTokens = (rawTokens: string[]): TokenClassificationResult => {
                 continue;
             }
 
+            if (isFolderFilterCandidate(negatedToken)) {
+                const folderValue = parseFolderFilterToken(negatedToken);
+                if (folderValue) {
+                    tokens.push({ kind: 'folderNegation', value: folderValue });
+                    // Folder filters are non-tag operands.
+                    hasNonTagOperand = true;
+                }
+                // Ignore partial/invalid folder filters (for example `-folder:`) until the token is complete.
+                continue;
+            }
+
+            if (isExtensionFilterCandidate(negatedToken)) {
+                const extensionValue = parseExtensionFilterToken(negatedToken);
+                if (extensionValue) {
+                    tokens.push({ kind: 'extensionNegation', value: extensionValue });
+                    // Extension filters are non-tag operands.
+                    hasNonTagOperand = true;
+                }
+                // Ignore partial/invalid extension filters (for example `-ext:`) until the token is complete.
+                continue;
+            }
+
             if (negatedToken.startsWith('#')) {
                 const tagValue = negatedToken.slice(1);
                 tokens.push({ kind: 'tagNegation', value: tagValue.length > 0 ? tagValue : null });
@@ -777,6 +947,28 @@ const classifyRawTokens = (rawTokens: string[]): TokenClassificationResult => {
 
             hasNonTagOperand = true;
             tokens.push({ kind: 'name', value: token });
+            continue;
+        }
+
+        if (isFolderFilterCandidate(token)) {
+            const folderValue = parseFolderFilterToken(token);
+            if (folderValue) {
+                tokens.push({ kind: 'folder', value: folderValue });
+                // Folder filters are non-tag operands.
+                hasNonTagOperand = true;
+            }
+            // Ignore partial/invalid folder filters (for example `folder:`) until the token is complete.
+            continue;
+        }
+
+        if (isExtensionFilterCandidate(token)) {
+            const extensionValue = parseExtensionFilterToken(token);
+            if (extensionValue) {
+                tokens.push({ kind: 'extension', value: extensionValue });
+                // Extension filters are non-tag operands.
+                hasNonTagOperand = true;
+            }
+            // Ignore partial/invalid extension filters (for example `ext:`) until the token is complete.
             continue;
         }
 
@@ -1024,6 +1216,10 @@ const parseTagModeTokens = (classifiedTokens: ClassifiedToken[], excludeTagToken
         includeUntagged,
         excludeNameTokens: [],
         excludeTagTokens,
+        folderTokens: [],
+        excludeFolderTokens: [],
+        extensionTokens: [],
+        excludeExtensionTokens: [],
         excludeDateRanges: [],
         excludeTagged: false
     };
@@ -1037,9 +1233,13 @@ const parseFilterModeTokens = (
 ): FilterSearchTokens => {
     const nameTokens: string[] = [];
     const tagTokens: string[] = [];
+    const folderTokens: FolderFilterToken[] = [];
+    const extensionTokens: string[] = [];
     const dateRanges: DateFilterRange[] = [];
     const connectorCandidates: string[] = [];
     const excludeNameTokens: string[] = [];
+    const excludeFolderTokens: FolderFilterToken[] = [];
+    const excludeExtensionTokens: string[] = [];
     const excludeDateRanges: DateFilterRange[] = [];
     let requireUnfinishedTasks = false;
     let excludeUnfinishedTasks = false;
@@ -1060,6 +1260,12 @@ const parseFilterModeTokens = (
                 }
                 requireTagged = true;
                 break;
+            case 'folder':
+                folderTokens.push(token.value);
+                break;
+            case 'extension':
+                extensionTokens.push(token.value);
+                break;
             case 'date':
                 dateRanges.push(token.range);
                 break;
@@ -1074,6 +1280,12 @@ const parseFilterModeTokens = (
                 break;
             case 'tagNegation':
                 break;
+            case 'folderNegation':
+                excludeFolderTokens.push(token.value);
+                break;
+            case 'extensionNegation':
+                excludeExtensionTokens.push(token.value);
+                break;
             case 'dateNegation':
                 excludeDateRanges.push(token.range);
                 break;
@@ -1087,7 +1299,14 @@ const parseFilterModeTokens = (
         nameTokens.push(...connectorCandidates);
     }
 
-    const hasInclusions = nameTokens.length > 0 || tagTokens.length > 0 || dateRanges.length > 0 || requireTagged || requireUnfinishedTasks;
+    const hasInclusions =
+        nameTokens.length > 0 ||
+        tagTokens.length > 0 ||
+        folderTokens.length > 0 ||
+        extensionTokens.length > 0 ||
+        dateRanges.length > 0 ||
+        requireTagged ||
+        requireUnfinishedTasks;
     const requiresTags = requireTagged || tagTokens.length > 0;
     const allRequireTags = hasInclusions ? requiresTags : false;
     const includedTagTokens = tagTokens.slice();
@@ -1108,13 +1327,17 @@ const parseFilterModeTokens = (
         includeUntagged: hasUntaggedOperand,
         excludeNameTokens,
         excludeTagTokens,
+        folderTokens,
+        excludeFolderTokens,
+        extensionTokens,
+        excludeExtensionTokens,
         excludeDateRanges,
         excludeTagged: hasUntaggedOperand
     };
 };
 
 /**
- * Parse a filter search query into name and tag tokens with support for negations.
+ * Parse a filter search query into name, tag, folder, and extension tokens with support for negations.
  *
  * Inclusion patterns (must match):
  * - #tag - Include notes with tags containing "tag"
@@ -1128,6 +1351,10 @@ const parseFilterModeTokens = (
  * - @YYYY-MM-DD..YYYY-MM-DD - Include notes matching the default date field inside an inclusive day range (open ends supported)
  * - @c:... / @m:... - Target created/modified date field for a date token
  * - has:task - Include notes with unfinished tasks
+ * - folder:meetings - Include notes where any folder segment contains "meetings"
+ * - folder:/work/meetings - Include notes whose parent folder path is exactly "work/meetings"
+ * - folder:/ - Include notes in the vault root
+ * - ext:md - Include notes with extension "md"
  * - word - Include notes with "word" in their name
  *
  * Exclusion patterns (must NOT match):
@@ -1135,6 +1362,9 @@ const parseFilterModeTokens = (
  * - -# - Exclude all tagged notes (show only untagged)
  * - -@... - Exclude notes matching a date token or range
  * - -has:task - Exclude notes with unfinished tasks
+ * - -folder:archive - Exclude notes where any folder segment contains "archive"
+ * - -folder:/archive - Exclude notes whose parent folder path is exactly "archive"
+ * - -ext:pdf - Exclude notes with extension "pdf"
  * - -word - Exclude notes with "word" in their name
  *
  * Special handling:
@@ -1350,6 +1580,8 @@ export function filterSearchHasActiveCriteria(tokens: FilterSearchTokens): boole
         tokens.hasInclusions ||
         tokens.excludeNameTokens.length > 0 ||
         tokens.excludeTagTokens.length > 0 ||
+        tokens.excludeFolderTokens.length > 0 ||
+        tokens.excludeExtensionTokens.length > 0 ||
         tokens.excludeDateRanges.length > 0 ||
         tokens.excludeUnfinishedTasks ||
         tokens.excludeTagged
@@ -1372,6 +1604,8 @@ export function filterSearchRequiresTagsForEveryMatch(tokens: FilterSearchTokens
 
 export interface FilterSearchMatchOptions {
     hasUnfinishedTasks: boolean;
+    lowercaseFolderPath?: string;
+    lowercaseExtension?: string;
 }
 
 /**
@@ -1380,12 +1614,13 @@ export interface FilterSearchMatchOptions {
  * Filtering logic:
  * - Inclusion clauses are evaluated with AND semantics; the file must satisfy every token inside a clause
  * - If any clause matches, the file is accepted (OR across clauses)
- * - All exclusion tokens (-name, -#tag) are ANDed - file must match NONE
+ * - All exclusion tokens (-name, -#tag, -folder:..., -ext:...) are ANDed - file must match NONE
  * - Tag requirements (# or -#) control whether tagged/untagged notes are shown
  *
  * @param lowercaseName - File display name in lowercase
  * @param lowercaseTags - File tags in lowercase
  * @param tokens - Parsed query tokens with include/exclude criteria
+ * @param options - Match options containing task, folder path, and extension context
  * @returns True when the file passes all filter criteria
  */
 export function fileMatchesFilterTokens(
@@ -1395,6 +1630,8 @@ export function fileMatchesFilterTokens(
     options?: FilterSearchMatchOptions
 ): boolean {
     const hasUnfinishedTasks = options?.hasUnfinishedTasks ?? false;
+    const lowercaseFolderPath = options?.lowercaseFolderPath ?? '';
+    const lowercaseExtension = options?.lowercaseExtension ?? '';
 
     if (tokens.excludeUnfinishedTasks && hasUnfinishedTasks) {
         return false;
@@ -1405,9 +1642,33 @@ export function fileMatchesFilterTokens(
     }
 
     if (tokens.mode === 'filter') {
+        const hasFolderCriteria = tokens.excludeFolderTokens.length > 0 || tokens.folderTokens.length > 0;
+        const normalizedFolderPath = hasFolderCriteria ? normalizeFolderPathForMatch(lowercaseFolderPath) : '';
+        const needsFolderSegments =
+            hasFolderCriteria &&
+            (tokens.excludeFolderTokens.some(token => token.mode === 'segment') ||
+                tokens.folderTokens.some(token => token.mode === 'segment'));
+        const folderSegments = needsFolderSegments ? normalizedFolderPath.split('/').filter(Boolean) : null;
+
         if (tokens.excludeNameTokens.length > 0) {
             const hasExcludedName = tokens.excludeNameTokens.some(token => lowercaseName.includes(token));
             if (hasExcludedName) {
+                return false;
+            }
+        }
+
+        if (tokens.excludeFolderTokens.length > 0) {
+            const hasExcludedFolder = tokens.excludeFolderTokens.some(token =>
+                folderMatchesTokenWithNormalizedPath(normalizedFolderPath, folderSegments, token)
+            );
+            if (hasExcludedFolder) {
+                return false;
+            }
+        }
+
+        if (tokens.excludeExtensionTokens.length > 0) {
+            const hasExcludedExtension = tokens.excludeExtensionTokens.some(token => extensionMatchesToken(lowercaseExtension, token));
+            if (hasExcludedExtension) {
                 return false;
             }
         }
@@ -1426,6 +1687,22 @@ export function fileMatchesFilterTokens(
         if (tokens.nameTokens.length > 0) {
             const matchesName = tokens.nameTokens.every(token => lowercaseName.includes(token));
             if (!matchesName) {
+                return false;
+            }
+        }
+
+        if (tokens.folderTokens.length > 0) {
+            const matchesFolders = tokens.folderTokens.every(token =>
+                folderMatchesTokenWithNormalizedPath(normalizedFolderPath, folderSegments, token)
+            );
+            if (!matchesFolders) {
+                return false;
+            }
+        }
+
+        if (tokens.extensionTokens.length > 0) {
+            const matchesExtensions = tokens.extensionTokens.every(token => extensionMatchesToken(lowercaseExtension, token));
+            if (!matchesExtensions) {
                 return false;
             }
         }
