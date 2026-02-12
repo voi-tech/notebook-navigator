@@ -979,7 +979,7 @@ export const STRINGS_IT = {
                 name: 'Disabilita auto-scroll per scorciatoie',
                 desc: 'Non scorrere il pannello navigazione quando clicchi elementi nelle scorciatoie.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Espandi alla selezione',
                 desc: 'Espandi cartelle e tag quando selezionati. In modalità pannello singolo, la prima selezione espande, la seconda mostra i file.'
             },

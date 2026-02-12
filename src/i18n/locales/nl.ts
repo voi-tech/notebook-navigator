@@ -982,7 +982,7 @@ export const STRINGS_NL = {
                 name: 'Automatisch scrollen voor snelkoppelingen uitschakelen',
                 desc: 'Het navigatiepaneel niet scrollen bij klikken op items in snelkoppelingen.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Uitvouwen bij selectie',
                 desc: 'Mappen en tags uitvouwen bij selectie. In enkelvoudige paneelmodus: eerste selectie vouwt uit, tweede selectie toont bestanden.'
             },

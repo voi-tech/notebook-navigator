@@ -978,7 +978,7 @@ export const STRINGS_ZH_TW = {
                 name: '停用捷徑自動捲動',
                 desc: '點按捷徑中的項目時不捲動導覽面板。'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: '選取時展開',
                 desc: '選取時展開資料夾和標籤。在單窗格模式下，首次選取展開，再次選取顯示檔案。'
             },

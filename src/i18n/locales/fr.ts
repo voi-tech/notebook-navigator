@@ -982,7 +982,7 @@ export const STRINGS_FR = {
                 name: 'Désactiver le défilement automatique pour les raccourcis',
                 desc: 'Ne pas faire défiler le panneau de navigation lors du clic sur les éléments de raccourcis.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Développer à la sélection',
                 desc: 'Développer les dossiers et étiquettes lors de la sélection. En mode panneau unique, la première sélection développe, la seconde affiche les fichiers.'
             },

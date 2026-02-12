@@ -980,7 +980,7 @@ export const STRINGS_JA = {
                 name: 'ショートカットの自動スクロールを無効化',
                 desc: 'ショートカット内のアイテムをクリックしてもナビゲーションパネルをスクロールしない。'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: '選択時に展開',
                 desc: '選択時にフォルダとタグを展開します。シングルペインモードでは、最初の選択で展開、2回目の選択でファイルを表示します。'
             },

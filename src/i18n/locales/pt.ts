@@ -981,7 +981,7 @@ export const STRINGS_PT = {
                 name: 'Desativar deslocamento automático para atalhos',
                 desc: 'Não deslocar o painel de navegação ao clicar em itens nos atalhos.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Expandir ao selecionar',
                 desc: 'Expandir pastas e etiquetas quando selecionadas. No modo de painel único, a primeira seleção expande, a segunda mostra ficheiros.'
             },

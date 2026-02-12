@@ -170,7 +170,7 @@ export function useNavigationPaneKeyboard({ items, virtualizer, containerRef, pa
                 selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder });
 
                 // Auto-expand if enabled and folder has children
-                if (settings.autoExpandFoldersTags && folder.children.some(child => child instanceof TFolder)) {
+                if (settings.autoExpandNavItems && folder.children.some(child => child instanceof TFolder)) {
                     // Only expand if not already expanded
                     if (!expansionState.expandedFolders.has(folder.path)) {
                         expansionDispatch({ type: 'TOGGLE_FOLDER_EXPANDED', folderPath: folder.path });
@@ -182,7 +182,7 @@ export function useNavigationPaneKeyboard({ items, virtualizer, containerRef, pa
                 selectionDispatch({ type: 'SET_SELECTED_TAG', tag: tagNode.path });
 
                 // Auto-expand if enabled and tag has children
-                if (settings.autoExpandFoldersTags && tagNode.children.size > 0) {
+                if (settings.autoExpandNavItems && tagNode.children.size > 0) {
                     // Only expand if not already expanded
                     if (!expansionState.expandedTags.has(tagNode.path)) {
                         expansionDispatch({ type: 'TOGGLE_TAG_EXPANDED', tagPath: tagNode.path });
@@ -195,7 +195,7 @@ export function useNavigationPaneKeyboard({ items, virtualizer, containerRef, pa
                     nodeId: propertyNode.id
                 });
 
-                if (settings.autoExpandFoldersTags && propertyNode.children.size > 0) {
+                if (settings.autoExpandNavItems && propertyNode.children.size > 0) {
                     if (!expansionState.expandedProperties.has(propertyNode.id)) {
                         expansionDispatch({ type: 'TOGGLE_PROPERTY_EXPANDED', propertyNodeId: propertyNode.id });
                     }
@@ -426,7 +426,7 @@ export function useNavigationPaneKeyboard({ items, virtualizer, containerRef, pa
                         shouldSwitchPane = true;
                     }
 
-                    if (expandedInThisAction && uiState.singlePane && settings.autoExpandFoldersTags) {
+                    if (expandedInThisAction && uiState.singlePane && settings.autoExpandNavItems) {
                         uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
                     } else if (shouldSwitchPane) {
                         if (uiState.singlePane && !isMobile) {

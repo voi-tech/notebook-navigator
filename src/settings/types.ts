@@ -292,7 +292,7 @@ export interface NotebookNavigatorSettings {
 
     // Folders & tags tab
     autoSelectFirstFileOnFocusChange: boolean;
-    autoExpandFoldersTags: boolean;
+    autoExpandNavItems: boolean;
     springLoadedFolders: boolean;
     springLoadedFoldersInitialDelay: number;
     springLoadedFoldersSubsequentDelay: number;

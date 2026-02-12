@@ -983,7 +983,7 @@ export const STRINGS_PT_BR = {
                 name: 'Desativar rolagem automática para atalhos',
                 desc: 'Não rolar o painel de navegação ao clicar em itens nos atalhos.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Expandir ao selecionar',
                 desc: 'Expandir pastas e tags ao selecionar. No modo de painel único, a primeira seleção expande, a segunda mostra arquivos.'
             },

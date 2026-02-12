@@ -980,7 +980,7 @@ export const STRINGS_VI = {
                 name: 'Tắt tự động cuộn cho lối tắt',
                 desc: 'Không cuộn ngăn điều hướng khi nhấn mục trong lối tắt.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Mở rộng khi chọn',
                 desc: 'Mở rộng thư mục và thẻ khi chọn. Ở chế độ một ngăn, chọn lần đầu mở rộng, chọn lần hai hiện tệp.'
             },

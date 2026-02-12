@@ -980,7 +980,7 @@ export const STRINGS_ID = {
                 name: 'Nonaktifkan auto-gulir untuk pintasan',
                 desc: 'Jangan gulir panel navigasi saat mengklik item di pintasan.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Luaskan saat dipilih',
                 desc: 'Luaskan folder dan tag saat dipilih. Dalam mode panel tunggal, pilihan pertama meluaskan, pilihan kedua menampilkan file.'
             },

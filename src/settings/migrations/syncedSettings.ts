@@ -112,6 +112,12 @@ export function migrateLegacySyncedSettings(params: {
     }
     delete mutableSettings.groupByDate;
 
+    const legacyAutoExpandNavItems = mutableSettings['autoExpandFoldersTags'];
+    if (typeof legacyAutoExpandNavItems === 'boolean' && typeof storedData?.['autoExpandNavItems'] === 'undefined') {
+        settings.autoExpandNavItems = legacyAutoExpandNavItems;
+    }
+    delete mutableSettings['autoExpandFoldersTags'];
+
     // Validate noteGrouping value and reset to default if invalid
     if (settings.noteGrouping !== 'none' && settings.noteGrouping !== 'date' && settings.noteGrouping !== 'folder') {
         settings.noteGrouping = defaultSettings.noteGrouping;

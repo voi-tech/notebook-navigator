@@ -172,7 +172,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
 
     // Folders & tags tab
     autoSelectFirstFileOnFocusChange: false,
-    autoExpandFoldersTags: false,
+    autoExpandNavItems: false,
     springLoadedFolders: true,
     springLoadedFoldersInitialDelay: 0.5,
     springLoadedFoldersSubsequentDelay: 0.5,

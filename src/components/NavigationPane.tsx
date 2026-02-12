@@ -102,7 +102,7 @@ import { PropertyTreeNode, TagTreeNode } from '../types/storage';
 import { getFolderNote, getFolderNoteDetectionSettings, openFolderNoteFile } from '../utils/folderNotes';
 import { findTagNode, getTotalNoteCount } from '../utils/tagTree';
 import { FILE_VISIBILITY, getExtensionSuffix, shouldShowExtensionSuffix } from '../utils/fileTypeUtils';
-import { getTagSearchModifierOperator, resolveCanonicalTagPath } from '../utils/tagUtils';
+import { getTagSearchModifierOperator, normalizeTagPath, resolveCanonicalTagPath } from '../utils/tagUtils';
 import { FolderItem } from './FolderItem';
 import { NavigationPaneHeader } from './NavigationPaneHeader';
 import { NavigationToolbar } from './NavigationToolbar';
@@ -168,6 +168,13 @@ import { createHiddenFileNameMatcherForVisibility } from '../utils/fileFilters';
 import { createHiddenTagVisibility } from '../utils/tagPrefixMatcher';
 import { getDBInstanceOrNull } from '../storage/fileOperations';
 import { resolvePropertyColorMapColor } from '../utils/propertyColorMapFormat';
+import {
+    buildPropertyKeyNodeId,
+    buildPropertyValueNodeId,
+    isPropertyKeyOnlyValuePath,
+    normalizePropertyTreeValuePath
+} from '../utils/propertyTree';
+import { casefold } from '../utils/recordUtils';
 
 export interface NavigationPaneHandle {
     getIndexOfPath: (itemType: ItemType, path: string) => number;
@@ -939,24 +946,75 @@ export const NavigationPane = React.memo(
         const propertyTree = fileData.propertyTree;
 
         useEffect(() => {
-            if (expansionState.expandedProperties.size === 0) {
+            const shouldCleanupTags = expansionState.expandedTags.size > 0;
+            const shouldCleanupProperties = expansionState.expandedProperties.size > 0;
+            if (!shouldCleanupTags && !shouldCleanupProperties) {
                 return;
             }
 
-            const existingPropertyNodeIds = new Set<string>();
-            const collectPropertyNodeIds = (node: PropertyTreeNode) => {
-                existingPropertyNodeIds.add(node.id);
-                node.children.forEach(childNode => {
-                    collectPropertyNodeIds(childNode);
-                });
-            };
+            const db = getDBInstanceOrNull();
+            if (!db) {
+                return;
+            }
 
-            propertyTree.forEach(node => {
-                collectPropertyNodeIds(node);
+            const existingTags = shouldCleanupTags ? new Set<string>() : null;
+            const existingPropertyNodeIds = shouldCleanupProperties ? new Set<string>() : null;
+
+            db.forEachFile((_path, cachedFileData) => {
+                if (existingTags) {
+                    const tags = cachedFileData.tags;
+                    if (tags && tags.length > 0) {
+                        tags.forEach(tag => {
+                            const normalizedTag = normalizeTagPath(tag);
+                            if (normalizedTag) {
+                                existingTags.add(normalizedTag);
+                            }
+                        });
+                    }
+                }
+
+                if (existingPropertyNodeIds) {
+                    const customProperty = cachedFileData.customProperty;
+                    if (!customProperty || customProperty.length === 0) {
+                        return;
+                    }
+
+                    customProperty.forEach(propertyEntry => {
+                        const normalizedKey = casefold(propertyEntry.fieldKey);
+                        if (!normalizedKey) {
+                            return;
+                        }
+
+                        existingPropertyNodeIds.add(buildPropertyKeyNodeId(normalizedKey));
+
+                        const normalizedValuePath = normalizePropertyTreeValuePath(propertyEntry.value);
+                        if (isPropertyKeyOnlyValuePath(normalizedValuePath, propertyEntry.valueKind)) {
+                            return;
+                        }
+
+                        if (!normalizedValuePath) {
+                            return;
+                        }
+
+                        existingPropertyNodeIds.add(buildPropertyValueNodeId(normalizedKey, normalizedValuePath));
+                    });
+                }
             });
 
-            expansionDispatch({ type: 'CLEANUP_DELETED_PROPERTIES', existingPropertyNodeIds });
-        }, [expansionDispatch, expansionState.expandedProperties.size, propertyTree]);
+            if (existingTags) {
+                expansionDispatch({ type: 'CLEANUP_DELETED_TAGS', existingTags });
+            }
+
+            if (existingPropertyNodeIds) {
+                expansionDispatch({ type: 'CLEANUP_DELETED_PROPERTIES', existingPropertyNodeIds });
+            }
+        }, [
+            expansionDispatch,
+            expansionState.expandedProperties.size,
+            expansionState.expandedTags.size,
+            fileData.propertyTree,
+            fileData.tagTree
+        ]);
 
         // Use the new data hook - now returns filtered items and pathToIndex
         // Determine if shortcuts should be pinned based on UI state and settings
@@ -1229,18 +1287,18 @@ export const NavigationPane = React.memo(
                 }
 
                 // Auto-expand behavior in single-pane mode:
-                // When autoExpandFoldersTags is enabled:
+                // When autoExpandNavItems is enabled:
                 //   1. First click on a collapsed folder with children → Expands it, stays in navigation pane
                 //   2. Second click (now expanded) or click on folder without children → Shows files pane
-                // When autoExpandFoldersTags is disabled:
+                // When autoExpandNavItems is disabled:
                 //   - Click always shows files pane immediately
                 const hasChildFolders = folder.children.some(child => child instanceof TFolder);
                 const isExpanded = expansionState.expandedFolders.has(folder.path);
                 const isSelectedFolder =
                     selectionState.selectionType === ItemType.FOLDER && selectionState.selectedFolder?.path === folder.path;
                 const shouldCollapseOnSelect =
-                    settings.autoExpandFoldersTags && !uiState.singlePane && hasChildFolders && isExpanded && isSelectedFolder;
-                const shouldExpandOnly = uiState.singlePane && settings.autoExpandFoldersTags && hasChildFolders && !isExpanded;
+                    settings.autoExpandNavItems && !uiState.singlePane && hasChildFolders && isExpanded && isSelectedFolder;
+                const shouldExpandOnly = uiState.singlePane && settings.autoExpandNavItems && hasChildFolders && !isExpanded;
 
                 selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder });
 
@@ -1251,7 +1309,7 @@ export const NavigationPane = React.memo(
                 }
 
                 // Expand collapsed folder when auto-expand is enabled
-                if (settings.autoExpandFoldersTags && hasChildFolders && !isExpanded) {
+                if (settings.autoExpandNavItems && hasChildFolders && !isExpanded) {
                     expansionDispatch({ type: 'TOGGLE_FOLDER_EXPANDED', folderPath: folder.path });
                 }
 
@@ -1274,7 +1332,7 @@ export const NavigationPane = React.memo(
                 selectionDispatch,
                 uiDispatch,
                 uiState.singlePane,
-                settings.autoExpandFoldersTags,
+                settings.autoExpandNavItems,
                 expansionDispatch,
                 setActiveShortcut,
                 expansionState.expandedFolders,
@@ -1469,21 +1527,21 @@ export const NavigationPane = React.memo(
                 onSelect();
 
                 const shouldCollapseOnSelect =
-                    settings.autoExpandFoldersTags && !uiState.singlePane && hasChildren && isExpanded && isSelected;
+                    settings.autoExpandNavItems && !uiState.singlePane && hasChildren && isExpanded && isSelected;
                 if (shouldCollapseOnSelect) {
                     onToggleExpand();
                     uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
                     return;
                 }
 
-                const shouldExpandOnly = uiState.singlePane && settings.autoExpandFoldersTags && hasChildren && !isExpanded;
-                if (settings.autoExpandFoldersTags && hasChildren && !isExpanded) {
+                const shouldExpandOnly = uiState.singlePane && settings.autoExpandNavItems && hasChildren && !isExpanded;
+                if (settings.autoExpandNavItems && hasChildren && !isExpanded) {
                     onToggleExpand();
                 }
 
                 focusAfterTreeSelection(shouldExpandOnly);
             },
-            [focusAfterTreeSelection, setActiveShortcut, settings.autoExpandFoldersTags, uiDispatch, uiState.singlePane]
+            [focusAfterTreeSelection, setActiveShortcut, settings.autoExpandNavItems, uiDispatch, uiState.singlePane]
         );
 
         // Handle tag click

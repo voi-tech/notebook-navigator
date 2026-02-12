@@ -978,7 +978,7 @@ export const STRINGS_ZH_CN = {
                 name: '禁用快捷方式自动滚动',
                 desc: '点击快捷方式中的项目时不滚动导航面板。'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: '选中时展开',
                 desc: '选中时展开文件夹和标签。在单窗格模式下，首次选中展开，再次选中显示文件。'
             },

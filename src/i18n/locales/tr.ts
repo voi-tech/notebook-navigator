@@ -981,7 +981,7 @@ export const STRINGS_TR = {
                 name: 'Kısayollar için otomatik kaydırmayı devre dışı bırak',
                 desc: 'Kısayollardaki öğelere tıklarken gezinme bölmesini kaydırma.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Seçimde genişlet',
                 desc: 'Seçildiğinde klasörleri ve etiketleri genişlet. Tek bölme modunda ilk seçim genişletir, ikinci seçim dosyaları gösterir.'
             },

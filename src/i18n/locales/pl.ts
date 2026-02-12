@@ -982,7 +982,7 @@ export const STRINGS_PL = {
                 name: 'Wyłącz automatyczne przewijanie dla skrótów',
                 desc: 'Nie przewijaj panelu nawigacji przy klikaniu elementów w skrótach.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Rozwiń przy wyborze',
                 desc: 'Rozwiń foldery i tagi po wybraniu. W trybie pojedynczego panelu pierwsze kliknięcie rozwija, drugie pokazuje pliki.'
             },

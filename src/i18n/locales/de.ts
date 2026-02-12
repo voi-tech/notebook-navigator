@@ -982,7 +982,7 @@ export const STRINGS_DE = {
                 name: 'Auto-Scroll für Verknüpfungen deaktivieren',
                 desc: 'Navigationsbereich nicht scrollen beim Klicken auf Elemente in Verknüpfungen.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Bei Auswahl erweitern',
                 desc: 'Ordner und Tags bei Auswahl erweitern. Im Einzelfenster-Modus: erste Auswahl erweitert, zweite Auswahl zeigt Dateien.'
             },

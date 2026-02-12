@@ -979,9 +979,9 @@ export const STRINGS_EN = {
                 name: 'Disable auto-scroll for shortcuts',
                 desc: "Don't scroll the navigation pane when clicking items in shortcuts."
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Expand on selection',
-                desc: 'Expand folders and tags when selected. In single pane mode, first selection expands, second selection shows files.'
+                desc: 'Expand folders, tags, and properties when selected. In single pane mode, first selection expands, second selection shows files.'
             },
             springLoadedFolders: {
                 name: 'Spring-loaded folders',

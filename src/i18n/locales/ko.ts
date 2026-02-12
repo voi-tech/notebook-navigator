@@ -980,7 +980,7 @@ export const STRINGS_KO = {
                 name: '바로가기 자동 스크롤 비활성화',
                 desc: '바로가기 내 항목을 클릭할 때 탐색 패널을 스크롤하지 않습니다.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: '선택 시 확장',
                 desc: '선택 시 폴더와 태그를 확장합니다. 단일 창 모드에서는 첫 번째 선택이 확장하고 두 번째 선택이 파일을 표시합니다.'
             },

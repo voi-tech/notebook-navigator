@@ -982,7 +982,7 @@ export const STRINGS_ES = {
                 name: 'Desactivar desplazamiento automático para accesos directos',
                 desc: 'No desplazar el panel de navegación al hacer clic en elementos de accesos directos.'
             },
-            autoExpandFoldersTags: {
+            autoExpandNavItems: {
                 name: 'Expandir al seleccionar',
                 desc: 'Expandir carpetas y etiquetas al seleccionar. En modo de panel único, la primera selección expande, la segunda muestra archivos.'
             },

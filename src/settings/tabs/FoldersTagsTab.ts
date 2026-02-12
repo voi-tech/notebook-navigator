@@ -49,11 +49,11 @@ export function renderFoldersTagsTab(context: SettingsTabContext): void {
 
     addToggleSetting(
         topGroup.addSetting,
-        strings.settings.items.autoExpandFoldersTags.name,
-        strings.settings.items.autoExpandFoldersTags.desc,
-        () => plugin.settings.autoExpandFoldersTags,
+        strings.settings.items.autoExpandNavItems.name,
+        strings.settings.items.autoExpandNavItems.desc,
+        () => plugin.settings.autoExpandNavItems,
         value => {
-            plugin.settings.autoExpandFoldersTags = value;
+            plugin.settings.autoExpandNavItems = value;
         }
     );
 
