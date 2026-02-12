@@ -18,7 +18,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { App, TFile, TFolder } from 'obsidian';
-import { NavigationItemType, STORAGE_KEYS } from '../types';
+import { NavigationItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, STORAGE_KEYS } from '../types';
 import { getFilesForFolder, getFilesForProperty, getFilesForTag } from '../utils/fileFinder';
 import { useSettingsState } from './SettingsContext';
 import { useUXPreferences } from './UXPreferencesContext';
@@ -32,6 +32,7 @@ import {
     isPropertyFeatureEnabled,
     isPropertySelectionNodeIdConfigured,
     parseStoredPropertySelectionNodeId,
+    resolvePropertySelectionNodeId,
     type PropertySelectionNodeId
 } from '../utils/propertyTree';
 
@@ -716,6 +717,14 @@ export function SelectionProvider({
     useEffect(() => {
         stateRef.current = state;
     }, [state]);
+    const settingsRef = useRef(settings);
+    useEffect(() => {
+        settingsRef.current = settings;
+    }, [settings]);
+    const propertyFeatureEnabledRef = useRef(propertyFeatureEnabled);
+    useEffect(() => {
+        propertyFeatureEnabledRef.current = propertyFeatureEnabled;
+    }, [propertyFeatureEnabled]);
 
     const resolveAutoSelectedFile = useCallback(
         (filesInScope: TFile[]): TFile | null => {
@@ -782,6 +791,41 @@ export function SelectionProvider({
             resolveAutoSelectedFile
         ]
     );
+
+    useEffect(() => {
+        if (!propertyTreeService) {
+            return;
+        }
+
+        const removeListener = propertyTreeService.addTreeUpdateListener(() => {
+            const currentState = stateRef.current;
+            const selectedProperty = currentState.selectedProperty;
+            if (!propertyFeatureEnabledRef.current || currentState.selectionType !== 'property' || !selectedProperty) {
+                return;
+            }
+
+            if (!isPropertySelectionNodeIdConfigured(settingsRef.current, selectedProperty)) {
+                dispatch({ type: 'SET_SELECTED_FOLDER', folder: app.vault.getRoot() });
+                return;
+            }
+
+            if (selectedProperty === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID) {
+                return;
+            }
+
+            const propertyTree = propertyTreeService.getPropertyTree();
+            if (propertyTree.size === 0) {
+                return;
+            }
+
+            const resolvedSelectionNodeId = resolvePropertySelectionNodeId(propertyTree, selectedProperty);
+            if (resolvedSelectionNodeId !== selectedProperty) {
+                dispatch({ type: 'SET_SELECTED_PROPERTY', nodeId: resolvedSelectionNodeId });
+            }
+        });
+
+        return removeListener;
+    }, [app.vault, dispatch, propertyTreeService]);
 
     // Subscribe to tag operations and update selection when tags are renamed or deleted
     useEffect(() => {
@@ -886,11 +930,26 @@ export function SelectionProvider({
         }
 
         if (isPropertySelectionNodeIdConfigured(settings, state.selectedProperty)) {
+            if (state.selectedProperty === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID || !propertyTreeService) {
+                return;
+            }
+
+            const propertyTree = propertyTreeService.getPropertyTree();
+            if (propertyTree.size === 0) {
+                return;
+            }
+
+            const resolvedSelectionNodeId = resolvePropertySelectionNodeId(propertyTree, state.selectedProperty);
+            if (resolvedSelectionNodeId === state.selectedProperty) {
+                return;
+            }
+
+            dispatch({ type: 'SET_SELECTED_PROPERTY', nodeId: resolvedSelectionNodeId });
             return;
         }
 
         dispatch({ type: 'SET_SELECTED_FOLDER', folder: app.vault.getRoot() });
-    }, [app.vault, dispatch, propertyFeatureEnabled, settings, state.selectedProperty, state.selectionType]);
+    }, [app.vault, dispatch, propertyFeatureEnabled, propertyTreeService, settings, state.selectedProperty, state.selectionType]);
 
     useEffect(() => {
         try {

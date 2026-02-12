@@ -25,6 +25,7 @@ import type { PropertyTreeNode } from '../types/storage';
 export class PropertyTreeService {
     private propertyTree: Map<string, PropertyTreeNode> = new Map();
     private propertyNodeById: Map<string, PropertyTreeNode> = new Map();
+    private treeUpdateListeners = new Set<() => void>();
 
     /**
      * Updates the property tree data from StorageContext.
@@ -32,6 +33,7 @@ export class PropertyTreeService {
     updatePropertyTree(tree: Map<string, PropertyTreeNode>): void {
         this.propertyTree = tree;
         this.rebuildIndexes(tree);
+        this.notifyTreeUpdateListeners();
     }
 
     /**
@@ -39,6 +41,17 @@ export class PropertyTreeService {
      */
     getPropertyTree(): Map<string, PropertyTreeNode> {
         return this.propertyTree;
+    }
+
+    /**
+     * Subscribes to tree updates.
+     * Returns an unsubscribe callback.
+     */
+    addTreeUpdateListener(listener: () => void): () => void {
+        this.treeUpdateListeners.add(listener);
+        return () => {
+            this.treeUpdateListeners.delete(listener);
+        };
     }
 
     /**
@@ -98,5 +111,11 @@ export class PropertyTreeService {
         }
 
         this.propertyNodeById = nodeById;
+    }
+
+    private notifyTreeUpdateListeners(): void {
+        this.treeUpdateListeners.forEach(listener => {
+            listener();
+        });
     }
 }

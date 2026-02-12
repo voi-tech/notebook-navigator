@@ -20,7 +20,7 @@ import { Platform, type CachedMetadata, type FrontMatterCache, type TFile } from
 import { LIMITS } from '../../constants/limits';
 import { type ContentProviderType } from '../../interfaces/IContentProvider';
 import { NotebookNavigatorSettings } from '../../settings';
-import { type CustomPropertyItem, FileData } from '../../storage/IndexedDBStorage';
+import { type CustomPropertyItem, type CustomPropertyValueKind, FileData } from '../../storage/IndexedDBStorage';
 import { getDBInstance } from '../../storage/fileOperations';
 import { getCachedCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
 import { areStringArraysEqual } from '../../utils/arrayUtils';
@@ -206,27 +206,32 @@ function countMarkdownTasks(content: string, bodyStartIndex: number): { taskTota
     return { taskTotal, taskUnfinished };
 }
 
+type ExtractedCustomPropertyValue = {
+    value: string;
+    valueKind: CustomPropertyValueKind;
+};
+
 // Converts frontmatter values into a list of pill strings.
 // Supports scalars and nested arrays; skips empty strings and non-finite numbers.
-function extractFrontmatterValues(value: unknown): string[] {
+function extractFrontmatterValues(value: unknown): ExtractedCustomPropertyValue[] {
     if (typeof value === 'string') {
         const trimmed = value.trim();
-        return trimmed.length > 0 ? [trimmed] : [];
+        return trimmed.length > 0 ? [{ value: trimmed, valueKind: 'string' }] : [];
     }
 
     if (typeof value === 'number') {
         if (!Number.isFinite(value)) {
             return [];
         }
-        return [value.toString()];
+        return [{ value: value.toString(), valueKind: 'number' }];
     }
 
     if (typeof value === 'boolean') {
-        return [value ? 'true' : 'false'];
+        return [{ value: value ? 'true' : 'false', valueKind: 'boolean' }];
     }
 
     if (Array.isArray(value)) {
-        const parts: string[] = [];
+        const parts: ExtractedCustomPropertyValue[] = [];
         for (const entry of value) {
             parts.push(...extractFrontmatterValues(entry));
         }
@@ -259,7 +264,7 @@ function resolveCustomPropertyItemsFromFrontmatter(
 
         for (let valueIndex = 0; valueIndex < values.length; valueIndex += 1) {
             const value = values[valueIndex];
-            entries.push({ fieldKey: field, value });
+            entries.push({ fieldKey: field, value: value.value, valueKind: value.valueKind });
         }
     }
 

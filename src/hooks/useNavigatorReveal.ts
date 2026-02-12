@@ -31,7 +31,7 @@ import { useUIState, useUIDispatch } from '../context/UIStateContext';
 import { useFileCache } from '../context/StorageContext';
 import { useCommandQueue } from '../context/ServicesContext';
 import { determineTagToReveal, findNearestVisibleTagAncestor, normalizeTagPath } from '../utils/tagUtils';
-import { ItemType, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
+import { ItemType, TAGGED_TAG_ID, TAGS_ROOT_VIRTUAL_FOLDER_ID, UNTAGGED_TAG_ID } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { normalizeNavigationPath } from '../utils/navigationIndex';
 import { doesFolderContainPath } from '../utils/pathUtils';
@@ -348,12 +348,14 @@ export function useNavigatorReveal({
                     if (normalizedResolvedTag) {
                         if (includeDescendantNotes) {
                             const isTagsRootCollapsed =
-                                settings.showTags && settings.showAllTagsFolder && !expansionState.expandedVirtualFolders.has('tags-root');
+                                settings.showTags &&
+                                settings.showAllTagsFolder &&
+                                !expansionState.expandedVirtualFolders.has(TAGS_ROOT_VIRTUAL_FOLDER_ID);
 
                             if (isTagsRootCollapsed) {
                                 if (normalizedResolvedTag === UNTAGGED_TAG_ID) {
                                     const nextExpandedVirtualFolders = new Set(expansionState.expandedVirtualFolders);
-                                    nextExpandedVirtualFolders.add('tags-root');
+                                    nextExpandedVirtualFolders.add(TAGS_ROOT_VIRTUAL_FOLDER_ID);
                                     expansionDispatch({ type: 'SET_EXPANDED_VIRTUAL_FOLDERS', folders: nextExpandedVirtualFolders });
                                     targetTag = UNTAGGED_TAG_ID;
                                 } else {
@@ -366,10 +368,10 @@ export function useNavigatorReveal({
                             if (
                                 settings.showTags &&
                                 settings.showAllTagsFolder &&
-                                !expansionState.expandedVirtualFolders.has('tags-root')
+                                !expansionState.expandedVirtualFolders.has(TAGS_ROOT_VIRTUAL_FOLDER_ID)
                             ) {
                                 const nextExpandedVirtualFolders = new Set(expansionState.expandedVirtualFolders);
-                                nextExpandedVirtualFolders.add('tags-root');
+                                nextExpandedVirtualFolders.add(TAGS_ROOT_VIRTUAL_FOLDER_ID);
                                 expansionDispatch({ type: 'SET_EXPANDED_VIRTUAL_FOLDERS', folders: nextExpandedVirtualFolders });
                             }
 

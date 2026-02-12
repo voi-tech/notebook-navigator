@@ -49,6 +49,12 @@ export const UNTAGGED_TAG_ID = '__untagged__';
 export const TAGGED_TAG_ID = '__tagged__';
 
 /**
+ * Virtual folder id for the root Tags row in navigation.
+ * Used by virtual-folder expansion state and tag section rendering.
+ */
+export const TAGS_ROOT_VIRTUAL_FOLDER_ID = 'tags-root';
+
+/**
  * Virtual folder id for the root Properties row in navigation.
  * Stored in property selection state for the "all configured properties" view.
  */

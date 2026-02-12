@@ -17,15 +17,19 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { FileData } from '../src/storage/IndexedDBStorage';
+import type { CustomPropertyItem, FileData } from '../src/storage/IndexedDBStorage';
+import { PROPERTIES_ROOT_VIRTUAL_FOLDER_ID } from '../src/types';
 import {
     type PropertyTreeDatabaseLike,
     buildPropertyKeyNodeId,
     buildPropertyTreeFromDatabase,
     buildPropertyValueNodeId,
     clearPropertyNoteCountCache,
+    collectPropertyKeyFilePaths,
     collectPropertyValueFilePaths,
+    getDirectPropertyKeyNoteCount,
     getPropertyKeyNodeIdFromNodeId,
+    resolvePropertySelectionNodeId,
     getTotalPropertyNoteCount,
     normalizePropertyTreeValuePath,
     parsePropertyNodeId
@@ -33,10 +37,10 @@ import {
 
 interface MockFile {
     path: string;
-    customProperty: { fieldKey: string; value: string }[] | null;
+    customProperty: CustomPropertyItem[] | null;
 }
 
-function createFileData(customProperty: { fieldKey: string; value: string }[] | null): FileData {
+function createFileData(customProperty: CustomPropertyItem[] | null): FileData {
     return {
         mtime: 0,
         markdownPipelineMtime: 0,
@@ -156,6 +160,53 @@ describe('buildPropertyTreeFromDatabase', () => {
         expect(keyNode?.notesWithValue).toEqual(new Set(['notes/empty.md']));
         expect(keyNode?.children.size).toBe(0);
     });
+
+    it('keeps key nodes for boolean values without creating value nodes', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/true.md',
+                customProperty: [{ fieldKey: 'Status', value: 'true', valueKind: 'boolean' }]
+            },
+            {
+                path: 'notes/false.md',
+                customProperty: [{ fieldKey: 'Status', value: 'false', valueKind: 'boolean' }]
+            }
+        ]);
+
+        const tree = buildPropertyTreeFromDatabase(db, {
+            includedPropertyKeys: new Set(['status'])
+        });
+
+        const keyNode = tree.get('status');
+        expect(keyNode?.notesWithValue).toEqual(new Set(['notes/true.md', 'notes/false.md']));
+        expect(keyNode?.children.size).toBe(0);
+    });
+
+    it('keeps string literals "true" and "false" as value nodes', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/true-string.md',
+                customProperty: [{ fieldKey: 'Status', value: 'true', valueKind: 'string' }]
+            },
+            {
+                path: 'notes/false-string.md',
+                customProperty: [{ fieldKey: 'Status', value: 'false', valueKind: 'string' }]
+            }
+        ]);
+
+        const tree = buildPropertyTreeFromDatabase(db, {
+            includedPropertyKeys: new Set(['status'])
+        });
+
+        const keyNode = tree.get('status');
+        expect(keyNode?.notesWithValue).toEqual(new Set(['notes/true-string.md', 'notes/false-string.md']));
+
+        const trueNode = keyNode?.children.get(buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('true')));
+        expect(trueNode?.notesWithValue).toEqual(new Set(['notes/true-string.md']));
+
+        const falseNode = keyNode?.children.get(buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('false')));
+        expect(falseNode?.notesWithValue).toEqual(new Set(['notes/false-string.md']));
+    });
 });
 
 describe('property value descendants', () => {
@@ -176,6 +227,17 @@ describe('property value descendants', () => {
             {
                 path: 'notes/d.md',
                 customProperty: [{ fieldKey: 'Status', value: 'Personal/Home' }]
+            },
+            {
+                path: 'notes/e.md',
+                customProperty: [{ fieldKey: 'Status', value: '   ' }]
+            },
+            {
+                path: 'notes/f.md',
+                customProperty: [
+                    { fieldKey: 'Status', value: 'true', valueKind: 'boolean' },
+                    { fieldKey: 'Status', value: 'Work/Done' }
+                ]
             }
         ]);
 
@@ -188,14 +250,21 @@ describe('property value descendants', () => {
             return;
         }
 
-        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work'))).toBe(3);
-        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work/Done'))).toBe(1);
+        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work'))).toBe(4);
+        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work/Done'))).toBe(2);
 
         const directPaths = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'), false);
         expect(directPaths).toEqual(new Set(['notes/c.md']));
 
         const descendantPaths = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'), true);
-        expect(descendantPaths).toEqual(new Set(['notes/a.md', 'notes/b.md', 'notes/c.md']));
+        expect(descendantPaths).toEqual(new Set(['notes/a.md', 'notes/b.md', 'notes/c.md', 'notes/f.md']));
+
+        const directKeyPaths = collectPropertyKeyFilePaths(keyNode, false);
+        expect(directKeyPaths).toEqual(new Set(['notes/e.md', 'notes/f.md']));
+        expect(getDirectPropertyKeyNoteCount(keyNode)).toBe(2);
+
+        const allKeyPaths = collectPropertyKeyFilePaths(keyNode, true);
+        expect(allKeyPaths).toEqual(new Set(['notes/a.md', 'notes/b.md', 'notes/c.md', 'notes/d.md', 'notes/e.md', 'notes/f.md']));
     });
 
     it('clears cached descendant totals when requested', () => {
@@ -250,5 +319,49 @@ describe('property node id encoding', () => {
         expect(parsePropertyNodeId(keyId)).toEqual({ key: 'status=phase', valuePath: null });
         expect(parsePropertyNodeId(valueId)).toEqual({ key: 'status=phase', valuePath });
         expect(getPropertyKeyNodeIdFromNodeId(valueId)).toBe(keyId);
+    });
+});
+
+describe('property selection resolution', () => {
+    it('falls back from a missing value node to the key node', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/a.md',
+                customProperty: [{ fieldKey: 'Status', value: 'true', valueKind: 'boolean' }]
+            }
+        ]);
+        const tree = buildPropertyTreeFromDatabase(db, {
+            includedPropertyKeys: new Set(['status'])
+        });
+
+        const missingValueSelection = buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('true'));
+        const resolved = resolvePropertySelectionNodeId(tree, missingValueSelection);
+        expect(resolved).toBe(buildPropertyKeyNodeId('status'));
+    });
+
+    it('falls back to properties root when selected key does not exist', () => {
+        const tree = buildPropertyTreeFromDatabase(createMockDb([]), {
+            includedPropertyKeys: new Set(['status'])
+        });
+
+        const keySelection = buildPropertyKeyNodeId('status');
+        const resolved = resolvePropertySelectionNodeId(tree, keySelection);
+        expect(resolved).toBe(PROPERTIES_ROOT_VIRTUAL_FOLDER_ID);
+    });
+
+    it('keeps selected value node when a string literal value node exists', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/a.md',
+                customProperty: [{ fieldKey: 'Status', value: 'true', valueKind: 'string' }]
+            }
+        ]);
+        const tree = buildPropertyTreeFromDatabase(db, {
+            includedPropertyKeys: new Set(['status'])
+        });
+
+        const valueSelection = buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('true'));
+        const resolved = resolvePropertySelectionNodeId(tree, valueSelection);
+        expect(resolved).toBe(valueSelection);
     });
 });

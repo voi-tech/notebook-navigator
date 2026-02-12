@@ -41,7 +41,14 @@ import {
 import { normalizeFileData as normalizeFileDataValue } from './indexeddb/normalizeFileData';
 import { handleUpgradeNeeded } from './indexeddb/schemaUpgrade';
 import { createDefaultFileData, METADATA_SENTINEL } from './indexeddb/fileData';
-import type { CustomPropertyItem, FeatureImageStatus, FileContentChange, FileData, PreviewStatus } from './indexeddb/fileData';
+import type {
+    CustomPropertyItem,
+    CustomPropertyValueKind,
+    FeatureImageStatus,
+    FileContentChange,
+    FileData,
+    PreviewStatus
+} from './indexeddb/fileData';
 import {
     runBatchUpdateFileContentAndProviderProcessedMtimes,
     type BatchUpdateFileContentAndProviderProcessedMtimesParams
@@ -56,7 +63,7 @@ import {
 } from './indexeddb/contentMutationOperations';
 
 export { createDefaultFileData, METADATA_SENTINEL };
-export type { CustomPropertyItem, FeatureImageStatus, FileContentChange, FileData, PreviewStatus };
+export type { CustomPropertyItem, CustomPropertyValueKind, FeatureImageStatus, FileContentChange, FileData, PreviewStatus };
 
 interface IndexedDBStorageOptions {
     featureImageCacheMaxEntries?: number;

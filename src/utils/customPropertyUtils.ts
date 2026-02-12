@@ -109,6 +109,11 @@ export function areCustomPropertyItemsEqual(
         if (firstItem.value !== secondItem.value) {
             return false;
         }
+        const firstValueKind = firstItem.valueKind ?? 'string';
+        const secondValueKind = secondItem.valueKind ?? 'string';
+        if (firstValueKind !== secondValueKind) {
+            return false;
+        }
     }
     return true;
 }

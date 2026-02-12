@@ -21,6 +21,11 @@ import { isPlainObjectRecordValue } from '../../utils/recordUtils';
 
 export type FeatureImageStatus = 'unprocessed' | 'none' | 'has';
 export type PreviewStatus = 'unprocessed' | 'none' | 'has';
+export type CustomPropertyValueKind = 'string' | 'number' | 'boolean';
+
+function isCustomPropertyValueKind(value: unknown): value is CustomPropertyValueKind {
+    return value === 'string' || value === 'number' || value === 'boolean';
+}
 
 export interface CustomPropertyItem {
     // Frontmatter field name that produced the value.
@@ -28,6 +33,9 @@ export interface CustomPropertyItem {
     fieldKey: string;
     // Rendered pill text (raw frontmatter value after frontmatter flattening).
     value: string;
+    // Original frontmatter value type.
+    // Omitted in legacy cache entries created before value-kind metadata was stored.
+    valueKind?: CustomPropertyValueKind;
 }
 
 function isCustomPropertyItem(value: unknown): value is CustomPropertyItem {
@@ -45,6 +53,11 @@ function isCustomPropertyItem(value: unknown): value is CustomPropertyItem {
 
     const rawValue = value['value'];
     if (typeof rawValue !== 'string') {
+        return false;
+    }
+
+    const rawValueKind = value['valueKind'];
+    if (rawValueKind !== undefined && !isCustomPropertyValueKind(rawValueKind)) {
         return false;
     }
 

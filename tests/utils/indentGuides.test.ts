@@ -17,7 +17,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { NavigationPaneItemType } from '../../src/types';
+import { NavigationPaneItemType, TAGS_ROOT_VIRTUAL_FOLDER_ID } from '../../src/types';
 import { buildIndentGuideLevelsMap, type IndentGuideItem } from '../../src/utils/navigationIndex';
 
 const createItem = (key: string, type: NavigationPaneItemType, level?: number): IndentGuideItem => ({
@@ -47,7 +47,7 @@ describe('buildIndentGuideLevelsMap', () => {
 
     it('ignores non-indent guide item types while keeping indent guide descendants connected', () => {
         const items: IndentGuideItem[] = [
-            createItem('tags-root', NavigationPaneItemType.VIRTUAL_FOLDER, 0),
+            createItem(TAGS_ROOT_VIRTUAL_FOLDER_ID, NavigationPaneItemType.VIRTUAL_FOLDER, 0),
             createItem('shortcut-note', NavigationPaneItemType.SHORTCUT_NOTE, 1),
             createItem('tag-alpha', NavigationPaneItemType.TAG, 1),
             createItem('tag-beta', NavigationPaneItemType.TAG, 1)
@@ -64,14 +64,14 @@ describe('buildIndentGuideLevelsMap', () => {
         const items: IndentGuideItem[] = [
             createItem('folders-root', NavigationPaneItemType.FOLDER, 0),
             createItem('folders-child', NavigationPaneItemType.FOLDER, 1),
-            createItem('tags-root', NavigationPaneItemType.VIRTUAL_FOLDER, 0),
+            createItem(TAGS_ROOT_VIRTUAL_FOLDER_ID, NavigationPaneItemType.VIRTUAL_FOLDER, 0),
             createItem('tags-child', NavigationPaneItemType.TAG, 1)
         ];
 
         const connectors = buildIndentGuideLevelsMap(items);
 
         expect(connectors.get('folders-child')).toEqual([0]);
-        expect(connectors.has('tags-root')).toBe(false);
+        expect(connectors.has(TAGS_ROOT_VIRTUAL_FOLDER_ID)).toBe(false);
         expect(connectors.get('tags-child')).toEqual([0]);
     });
 

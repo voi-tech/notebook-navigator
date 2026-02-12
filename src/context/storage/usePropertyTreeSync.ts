@@ -25,7 +25,12 @@ import { getDBInstance } from '../../storage/fileOperations';
 import type { StorageFileData } from './storageFileData';
 import type { NotebookNavigatorSettings } from '../../settings';
 import type { FileVisibility } from '../../utils/fileTypeUtils';
-import { buildPropertyKeyNodeId, buildPropertyTreeFromDatabase, isPropertyFeatureEnabled } from '../../utils/propertyTree';
+import {
+    buildPropertyKeyNodeId,
+    buildPropertyTreeFromDatabase,
+    isPropertyFeatureEnabled,
+    registerPropertyKeyDirectPaths
+} from '../../utils/propertyTree';
 import { casefold } from '../../utils/recordUtils';
 import { getCachedCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
 import type { PropertyTreeNode } from '../../types/storage';
@@ -57,7 +62,7 @@ function includeConfiguredPropertyKeys(tree: Map<string, PropertyTreeNode>, disp
             continue;
         }
 
-        tree.set(normalizedKey, {
+        const keyNode: PropertyTreeNode = {
             id: buildPropertyKeyNodeId(normalizedKey),
             kind: 'key',
             key: normalizedKey,
@@ -66,7 +71,9 @@ function includeConfiguredPropertyKeys(tree: Map<string, PropertyTreeNode>, disp
             displayPath: displayName,
             children: new Map(),
             notesWithValue: new Set()
-        });
+        };
+        tree.set(normalizedKey, keyNode);
+        registerPropertyKeyDirectPaths(keyNode);
     }
 }
 

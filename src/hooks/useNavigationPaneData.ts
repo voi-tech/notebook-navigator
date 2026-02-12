@@ -41,6 +41,7 @@ import { useUXPreferences } from '../context/UXPreferencesContext';
 import { strings } from '../i18n';
 import {
     TAGGED_TAG_ID,
+    TAGS_ROOT_VIRTUAL_FOLDER_ID,
     UNTAGGED_TAG_ID,
     PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
     NavigationPaneItemType,
@@ -80,7 +81,7 @@ import { calculateFolderNoteCounts } from '../utils/noteCountUtils';
 import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
 import { sanitizeNavigationSectionOrder } from '../utils/navigationSections';
 import { getVirtualTagCollection, isVirtualTagCollectionId, VIRTUAL_TAG_COLLECTION_IDS } from '../utils/virtualTagCollections';
-import { getTotalPropertyNoteCount } from '../utils/propertyTree';
+import { getDirectPropertyKeyNoteCount, getTotalPropertyNoteCount } from '../utils/propertyTree';
 import {
     buildFolderSeparatorKey,
     buildSectionSeparatorKey,
@@ -626,7 +627,7 @@ export function useNavigationPaneData({
 
         if (visibleTagTree.size === 0) {
             if (settings.showAllTagsFolder) {
-                const folderId = 'tags-root';
+                const folderId = TAGS_ROOT_VIRTUAL_FOLDER_ID;
                 addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: shouldIncludeUntagged,
@@ -723,7 +724,7 @@ export function useNavigationPaneData({
 
         if (settings.showAllTagsFolder) {
             if (hasContent) {
-                const folderId = 'tags-root';
+                const folderId = TAGS_ROOT_VIRTUAL_FOLDER_ID;
                 addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: tagsVirtualFolderHasChildren,
@@ -1849,8 +1850,21 @@ export function useNavigationPaneData({
         const propertyTree = fileData.propertyTree ?? new Map<string, PropertyTreeNode>();
 
         visiblePropertyNodes.forEach(node => {
+            if (node.kind === 'key') {
+                const current = getDirectPropertyKeyNoteCount(node);
+                if (!includeDescendantNotes) {
+                    counts.set(node.id, { current, descendants: 0, total: current });
+                    return;
+                }
+
+                const total = node.notesWithValue.size;
+                const descendants = Math.max(total - current, 0);
+                counts.set(node.id, { current, descendants, total });
+                return;
+            }
+
             const current = node.notesWithValue.size;
-            if (node.kind === 'key' || !includeDescendantNotes || !node.valuePath) {
+            if (!includeDescendantNotes || !node.valuePath) {
                 counts.set(node.id, { current, descendants: 0, total: current });
                 return;
             }

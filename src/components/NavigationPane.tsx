@@ -92,6 +92,7 @@ import {
     NavigationPaneItemType,
     ItemType,
     PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
+    TAGS_ROOT_VIRTUAL_FOLDER_ID,
     TAGGED_TAG_ID,
     UNTAGGED_TAG_ID,
     type CSSPropertiesWithVars
@@ -1503,7 +1504,7 @@ export const NavigationPane = React.memo(
 
                 const isVirtualTagRoot = settings.showAllTagsFolder && canonicalPath === TAGGED_TAG_ID;
                 const isExpanded = isVirtualTagRoot
-                    ? expansionState.expandedVirtualFolders.has('tags-root')
+                    ? expansionState.expandedVirtualFolders.has(TAGS_ROOT_VIRTUAL_FOLDER_ID)
                     : Boolean(tagNode && expansionState.expandedTags.has(tagNode.path));
                 const isSelectedTag = selectionState.selectionType === ItemType.TAG && selectionState.selectedTag === canonicalPath;
                 const hasChildren = isVirtualTagRoot ? tagsVirtualFolderHasChildren : Boolean(tagNode && tagNode.children.size > 0);
@@ -1517,7 +1518,7 @@ export const NavigationPane = React.memo(
                     },
                     onToggleExpand: () => {
                         if (isVirtualTagRoot) {
-                            expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: 'tags-root' });
+                            expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: TAGS_ROOT_VIRTUAL_FOLDER_ID });
                         } else if (tagNode) {
                             expansionDispatch({ type: 'TOGGLE_TAG_EXPANDED', tagPath: tagNode.path });
                         }
@@ -2633,7 +2634,7 @@ export const NavigationPane = React.memo(
                         }
 
                         const dropConfig =
-                            virtualFolder.id === 'tags-root'
+                            virtualFolder.id === TAGS_ROOT_VIRTUAL_FOLDER_ID
                                 ? {
                                       zone: 'tag-root',
                                       path: '__nn-tag-root__',
@@ -2645,7 +2646,7 @@ export const NavigationPane = React.memo(
                             ? NavigationSectionId.SHORTCUTS
                             : isRecentNotesGroup
                               ? NavigationSectionId.RECENT
-                              : virtualFolder.id === 'tags-root'
+                              : virtualFolder.id === TAGS_ROOT_VIRTUAL_FOLDER_ID
                                 ? NavigationSectionId.TAGS
                                 : null;
 
@@ -2941,8 +2942,8 @@ export const NavigationPane = React.memo(
             if (settings.showAllTagsFolder) {
                 const shouldAutoExpandTags = !prevShowAllTagsFolder.current && settings.showAllTagsFolder;
 
-                if (shouldAutoExpandTags && !expansionState.expandedVirtualFolders.has('tags-root')) {
-                    expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: 'tags-root' });
+                if (shouldAutoExpandTags && !expansionState.expandedVirtualFolders.has(TAGS_ROOT_VIRTUAL_FOLDER_ID)) {
+                    expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: TAGS_ROOT_VIRTUAL_FOLDER_ID });
                 }
             }
 

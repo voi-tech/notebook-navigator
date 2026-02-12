@@ -44,8 +44,12 @@ export interface PropertyTreeDatabaseLike {
     forEachFile: (callback: (path: string, fileData: FileData) => void) => void;
 }
 
+type PropertyTreeFilePropertyEntry = NonNullable<FileData['customProperty']>[number];
+
 let propertyDescendantNoteCountCache: WeakMap<PropertyTreeNode, Map<string, number>> | null = null;
+let propertyKeyDirectPathCache: WeakMap<PropertyTreeNode, Set<string>> | null = null;
 const configuredPropertyKeyCache = new Map<string, ReadonlySet<string>>();
+const PROPERTY_BOOLEAN_VALUE_PATHS = new Set(['true', 'false']);
 
 /**
  * Clears cached descendant note totals for property value nodes.
@@ -59,6 +63,13 @@ function getPropertyDescendantNoteCountCache(): WeakMap<PropertyTreeNode, Map<st
         propertyDescendantNoteCountCache = new WeakMap();
     }
     return propertyDescendantNoteCountCache;
+}
+
+function getPropertyKeyDirectPathCache(): WeakMap<PropertyTreeNode, Set<string>> {
+    if (!propertyKeyDirectPathCache) {
+        propertyKeyDirectPathCache = new WeakMap();
+    }
+    return propertyKeyDirectPathCache;
 }
 
 function buildPropertyDescendantNoteCounts(keyNode: PropertyTreeNode): Map<string, number> {
@@ -145,6 +156,70 @@ export function collectPropertyValueFilePaths(keyNode: PropertyTreeNode, valuePa
     return valuePaths;
 }
 
+/**
+ * Checks whether a normalized property value should be treated as a key-level value.
+ * Key-level values do not create child value nodes.
+ * Boolean literals are treated as key-level values when their original value kind is boolean.
+ * Legacy cache entries without value-kind metadata keep previous boolean handling.
+ */
+export function isPropertyKeyOnlyValuePath(valuePath: string, valueKind?: PropertyTreeFilePropertyEntry['valueKind']): boolean {
+    if (valuePath.length === 0) {
+        return true;
+    }
+
+    if (!PROPERTY_BOOLEAN_VALUE_PATHS.has(valuePath)) {
+        return false;
+    }
+
+    return valueKind === 'boolean' || valueKind === undefined;
+}
+
+/**
+ * Registers direct key-level note paths for a property key node.
+ */
+export function registerPropertyKeyDirectPaths(keyNode: PropertyTreeNode, directPaths: Iterable<string> = []): void {
+    getPropertyKeyDirectPathCache().set(keyNode, new Set(directPaths));
+}
+
+/**
+ * Collects note paths for the selected property key.
+ * Includes descendant values when requested.
+ */
+export function collectPropertyKeyFilePaths(keyNode: PropertyTreeNode, includeDescendants: boolean): Set<string> {
+    if (includeDescendants) {
+        return new Set(keyNode.notesWithValue);
+    }
+
+    return new Set(getOrBuildDirectPropertyKeyPaths(keyNode));
+}
+
+/**
+ * Returns the number of notes that match only the property key (no child value path).
+ */
+export function getDirectPropertyKeyNoteCount(keyNode: PropertyTreeNode): number {
+    return getOrBuildDirectPropertyKeyPaths(keyNode).size;
+}
+
+function buildDirectPropertyKeyPaths(keyNode: PropertyTreeNode): Set<string> {
+    const directPaths = new Set<string>(keyNode.notesWithValue);
+    keyNode.children.forEach(childNode => {
+        childNode.notesWithValue.forEach(path => directPaths.delete(path));
+    });
+    return directPaths;
+}
+
+function getOrBuildDirectPropertyKeyPaths(keyNode: PropertyTreeNode): Set<string> {
+    const cache = getPropertyKeyDirectPathCache();
+    const cachedPaths = cache.get(keyNode);
+    if (cachedPaths) {
+        return cachedPaths;
+    }
+
+    const directPaths = buildDirectPropertyKeyPaths(keyNode);
+    cache.set(keyNode, directPaths);
+    return directPaths;
+}
+
 export function isPropertyFeatureEnabled(settings: NotebookNavigatorSettings): boolean {
     if (settings.customPropertyType !== 'frontmatter') {
         return false;
@@ -191,6 +266,41 @@ export function isPropertySelectionNodeIdConfigured(
     }
 
     return getConfiguredPropertyKeySet(settings).has(parsed.key);
+}
+
+/**
+ * Resolves a property selection id against the current property tree.
+ * Falls back to the key node when a value node no longer exists.
+ * Falls back to properties root when the key does not exist.
+ */
+export function resolvePropertySelectionNodeId(
+    propertyTree: ReadonlyMap<string, PropertyTreeNode>,
+    selectionNodeId: PropertySelectionNodeId
+): PropertySelectionNodeId {
+    if (selectionNodeId === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID) {
+        return selectionNodeId;
+    }
+
+    const parsed = parsePropertyNodeId(selectionNodeId);
+    if (!parsed) {
+        return PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
+    }
+
+    const keyNode = propertyTree.get(parsed.key);
+    if (!keyNode) {
+        return PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
+    }
+
+    if (!parsed.valuePath) {
+        return keyNode.id;
+    }
+
+    const valueNodeId = buildPropertyValueNodeId(parsed.key, parsed.valuePath);
+    if (keyNode.children.has(valueNodeId)) {
+        return valueNodeId;
+    }
+
+    return keyNode.id;
 }
 
 const PROPERTY_NODE_ID_PREFIX = 'key:';
@@ -360,6 +470,9 @@ export function buildPropertyTreeFromDatabase(
     db: PropertyTreeDatabaseLike,
     options: BuildPropertyTreeOptions = {}
 ): Map<string, PropertyTreeNode> {
+    clearPropertyNoteCountCache();
+    propertyKeyDirectPathCache = new WeakMap<PropertyTreeNode, Set<string>>();
+
     const tree = new Map<string, PropertyTreeNode>();
     const excludedFolderPatterns = options.excludedFolderPatterns ?? [];
     const hasExcludedFolders = excludedFolderPatterns.length > 0;
@@ -408,13 +521,15 @@ export function buildPropertyTreeFromDatabase(
                     children: new Map(),
                     notesWithValue: new Set()
                 };
+                registerPropertyKeyDirectPaths(keyNode);
                 tree.set(normalizedKey, keyNode);
             }
 
             keyNode.notesWithValue.add(path);
 
             const normalizedValuePath = normalizePropertyTreeValuePath(propertyEntry.value);
-            if (!normalizedValuePath) {
+            if (isPropertyKeyOnlyValuePath(normalizedValuePath, propertyEntry.valueKind)) {
+                getOrBuildDirectPropertyKeyPaths(keyNode).add(path);
                 continue;
             }
 
@@ -443,6 +558,5 @@ export function buildPropertyTreeFromDatabase(
         }
     });
 
-    clearPropertyNoteCountCache();
     return tree;
 }

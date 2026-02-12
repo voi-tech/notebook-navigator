@@ -193,13 +193,13 @@ export function useListActions() {
      */
     const handleToggleDescendants = useCallback(() => {
         const wasShowingDescendants = includeDescendantNotes;
+        const activeFile = app.workspace.getActiveFile();
 
         // Toggle descendant notes preference using UX action
         setIncludeDescendantNotes(!wasShowingDescendants);
 
         // Special case: When enabling descendants, auto-select the active file if it's in the folder
         if (!wasShowingDescendants && selectionState.selectedFolder && !selectionState.selectedFile) {
-            const activeFile = app.workspace.getActiveFile();
             if (activeFile) {
                 // Check if the active file would be visible with descendants enabled
                 const filesInFolder = getFilesForFolder(

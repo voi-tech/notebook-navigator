@@ -51,7 +51,9 @@ import { getCachedFileTags } from './tagUtils';
 import { casefold, normalizePinnedNoteContext } from './recordUtils';
 import {
     buildPropertyValueNodeId,
+    collectPropertyKeyFilePaths,
     collectPropertyValueFilePaths,
+    isPropertyKeyOnlyValuePath,
     type PropertySelectionNodeId,
     normalizePropertyTreeValuePath,
     parsePropertyNodeId
@@ -90,6 +92,18 @@ function getParentFolderPath(path: string): string {
         return '/';
     }
     return path.slice(0, separatorIndex);
+}
+
+function matchesPathSelection(candidatePath: string, selectedPath: string, includeDescendants: boolean): boolean {
+    if (candidatePath === selectedPath) {
+        return true;
+    }
+
+    if (!includeDescendants) {
+        return false;
+    }
+
+    return candidatePath.startsWith(`${selectedPath}/`);
 }
 
 function extractPropertySortParts(value: unknown): string[] {
@@ -468,22 +482,9 @@ export function getFilesForTag(
         const selectedNode = tagTreeService?.findTagNode(tag) || null;
 
         if (selectedNode) {
-            // Collect tags to include based on setting:
-            // - When showing notes from descendants: include selected tag and all descendants
-            // - Otherwise: include only the exact selected tag
-            const tagsToInclude = visibility.includeDescendantNotes
-                ? tagTreeService?.collectTagPaths(selectedNode) || new Set<string>()
-                : new Set<string>([selectedNode.path]);
-            const normalizedTagPaths = new Set(Array.from(tagsToInclude).map(path => normalizeTagPathValue(path)));
-            const filteredTagPaths = shouldFilterHiddenTags
-                ? new Set(Array.from(normalizedTagPaths).filter(tagPath => hiddenTagVisibility.isTagVisible(tagPath)))
-                : normalizedTagPaths;
+            const selectedTagPath = selectedNode.path;
 
-            if (filteredTagPaths.size === 0) {
-                return [];
-            }
-
-            // Filter files that have any of the collected tags (case-insensitive)
+            // Filter files that match the selected tag path (and descendants when enabled).
             filteredFiles = markdownFiles.filter(file => {
                 const fileTags = getCachedFileTags({ app, file, db });
                 if (fileTags.length === 0) {
@@ -496,13 +497,13 @@ export function getFilesForTag(
 
                 return fileTags.some(tag => {
                     const normalizedTag = normalizeTagPathValue(tag);
-                    if (!filteredTagPaths.has(normalizedTag)) {
+                    if (!matchesPathSelection(normalizedTag, selectedTagPath, visibility.includeDescendantNotes)) {
                         return false;
                     }
                     if (!shouldFilterHiddenTags) {
                         return true;
                     }
-                    return hiddenTagVisibility.isTagVisible(tag);
+                    return hiddenTagVisibility.isTagVisible(normalizedTag);
                 });
             });
         } else {
@@ -565,6 +566,10 @@ export function getFilesForProperty(
     const shouldFilterHiddenFileTags = hiddenFileTagVisibility.hasHiddenRules && !visibility.showHiddenItems;
     const db = getDBInstanceOrNull();
     const candidatePaths = (() => {
+        if (includesAnyProperty && !visibility.includeDescendantNotes) {
+            return new Set<string>();
+        }
+
         if (!propertyTreeService) {
             return null;
         }
@@ -591,7 +596,7 @@ export function getFilesForProperty(
             if (!keyNode) {
                 return new Set<string>();
             }
-            return new Set(keyNode.notesWithValue);
+            return collectPropertyKeyFilePaths(keyNode, visibility.includeDescendantNotes);
         }
 
         const keyNode = propertyTree.get(selectedPropertyKey);
@@ -682,6 +687,7 @@ export function getFilesForProperty(
             }
 
             let hasMatchingKey = false;
+            let hasDirectMatchingKey = false;
             for (const entry of customProperty) {
                 if (casefold(entry.fieldKey) !== selectedPropertyKey) {
                     continue;
@@ -689,7 +695,14 @@ export function getFilesForProperty(
 
                 hasMatchingKey = true;
                 if (normalizedValue === null) {
-                    return true;
+                    const normalizedEntryValue = normalizePropertyTreeValuePath(entry.value);
+                    if (isPropertyKeyOnlyValuePath(normalizedEntryValue, entry.valueKind)) {
+                        hasDirectMatchingKey = true;
+                        if (!visibility.includeDescendantNotes) {
+                            return true;
+                        }
+                    }
+                    continue;
                 }
 
                 const normalizedEntryValue = normalizePropertyTreeValuePath(entry.value);
@@ -697,16 +710,16 @@ export function getFilesForProperty(
                     continue;
                 }
 
-                if (visibility.includeDescendantNotes) {
-                    if (normalizedEntryValue === normalizedValue || normalizedEntryValue.startsWith(`${normalizedValue}/`)) {
-                        return true;
-                    }
-                } else if (normalizedEntryValue === normalizedValue) {
+                if (matchesPathSelection(normalizedEntryValue, normalizedValue, visibility.includeDescendantNotes)) {
                     return true;
                 }
             }
 
-            return normalizedValue === null ? hasMatchingKey : false;
+            if (normalizedValue === null) {
+                return visibility.includeDescendantNotes ? hasMatchingKey : hasDirectMatchingKey;
+            }
+
+            return false;
         });
     })();
 
