@@ -78,7 +78,7 @@ import { ListPaneTitleArea } from './ListPaneTitleArea';
 import { InputModal } from '../modals/InputModal';
 import { useShortcuts } from '../context/ShortcutsContext';
 import type { SearchShortcut } from '../types/shortcuts';
-import { EMPTY_SEARCH_TAG_FILTER_STATE, type SearchProvider, type SearchTagFilterState } from '../types/search';
+import { EMPTY_SEARCH_NAV_FILTER_STATE, type SearchNavFilterState, type SearchProvider } from '../types/search';
 import { EMPTY_LIST_MENU_TYPE } from '../utils/contextMenu';
 import { useUXPreferenceActions, useUXPreferences } from '../context/UXPreferencesContext';
 import { normalizeTagPath } from '../utils/tagUtils';
@@ -86,6 +86,7 @@ import {
     parseFilterSearchTokens,
     updateFilterQueryWithDateToken,
     updateFilterQueryWithTag,
+    updateFilterQueryWithProperty,
     type InclusionOperator
 } from '../utils/filterSearch';
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
@@ -98,6 +99,7 @@ import { ServiceIcon } from './ServiceIcon';
 import { resolveUXIcon } from '../utils/uxIcons';
 import { showNotice } from '../utils/noticeUtils';
 import { focusElementPreventScroll, isKeyboardEventContextBlocked } from '../utils/domUtils';
+import { buildPropertyKeyNodeId, buildPropertyValueNodeId } from '../utils/propertyTree';
 
 /**
  * Renders the list pane displaying files from the selected folder.
@@ -131,6 +133,7 @@ export interface ListPaneHandle {
     selectFile: (file: TFile, options?: SelectFileOptions) => void;
     selectAdjacentFile: (direction: 'next' | 'previous') => boolean;
     modifySearchWithTag: (tag: string, operator: InclusionOperator) => void;
+    modifySearchWithProperty: (key: string, value: string | null, operator: InclusionOperator) => void;
     modifySearchWithDateToken: (dateToken: string) => void;
     toggleSearch: () => void;
     executeSearchShortcut: (params: ExecuteSearchShortcutParams) => Promise<void>;
@@ -166,7 +169,7 @@ interface ListPaneProps {
     /**
      * Callback invoked whenever tag-related search tokens change.
      */
-    onSearchTokensChange?: (state: SearchTagFilterState) => void;
+    onSearchTokensChange?: (state: SearchNavFilterState) => void;
 }
 
 interface ListPaneTitleChromeProps {
@@ -364,7 +367,7 @@ export const ListPane = React.memo(
 
             const trimmed = searchQuery.trim();
             if (!trimmed) {
-                onSearchTokensChange(EMPTY_SEARCH_TAG_FILTER_STATE);
+                onSearchTokensChange(EMPTY_SEARCH_NAV_FILTER_STATE);
                 return;
             }
 
@@ -387,12 +390,36 @@ export const ListPane = React.memo(
                 }
             });
 
+            const propertyIncludeSet = new Set<string>();
+            tokens.propertyTokens.forEach(token => {
+                if (token.value) {
+                    propertyIncludeSet.add(buildPropertyValueNodeId(token.key, token.value));
+                    return;
+                }
+                propertyIncludeSet.add(buildPropertyKeyNodeId(token.key));
+            });
+
+            const propertyExcludeSet = new Set<string>();
+            tokens.excludePropertyTokens.forEach(token => {
+                if (token.value) {
+                    propertyExcludeSet.add(buildPropertyValueNodeId(token.key, token.value));
+                    return;
+                }
+                propertyExcludeSet.add(buildPropertyKeyNodeId(token.key));
+            });
+
             onSearchTokensChange({
-                include: Array.from(includeSet),
-                exclude: Array.from(excludeSet),
-                excludeTagged: tokens.excludeTagged,
-                includeUntagged: tokens.includeUntagged,
-                requireTagged: tokens.requireTagged
+                tags: {
+                    include: Array.from(includeSet),
+                    exclude: Array.from(excludeSet),
+                    excludeTagged: tokens.excludeTagged,
+                    includeUntagged: tokens.includeUntagged,
+                    requireTagged: tokens.requireTagged
+                },
+                properties: {
+                    include: Array.from(propertyIncludeSet),
+                    exclude: Array.from(propertyExcludeSet)
+                }
             });
         }, [searchQuery, onSearchTokensChange]);
 
@@ -728,7 +755,7 @@ export const ListPane = React.memo(
         // Track render count
         const renderCountRef = useRef(0);
 
-        const { selectionType, selectedFolder, selectedTag, selectedFile } = selectionState;
+        const { selectionType, selectedFolder, selectedTag, selectedProperty, selectedFile } = selectionState;
 
         // Determine if list pane is visible early to optimize
         const isVisible = !uiState.singlePane || uiState.currentSinglePaneView === 'files';
@@ -738,6 +765,7 @@ export const ListPane = React.memo(
             selectionType,
             selectedFolder,
             selectedTag,
+            selectedProperty,
             settings,
             activeProfile,
             searchProvider,
@@ -765,6 +793,7 @@ export const ListPane = React.memo(
             selectedFile,
             selectedFolder,
             selectedTag,
+            selectedProperty,
             settings,
             folderSettings: appearanceSettings,
             isVisible,
@@ -1345,6 +1374,46 @@ export const ListPane = React.memo(
             ]
         );
 
+        const modifySearchWithProperty = useCallback(
+            (key: string, value: string | null, operator: InclusionOperator) => {
+                const normalizedKey = key.trim();
+                if (!normalizedKey) {
+                    return;
+                }
+
+                if (!isSearchActive) {
+                    setIsSearchActive(true);
+                    if (uiState.singlePane) {
+                        uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
+                    }
+                }
+
+                setShouldFocusSearch(true);
+                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'search' });
+
+                let nextQueryValue: string | null = null;
+
+                setSearchQuery(prev => {
+                    const result = updateFilterQueryWithProperty(prev, normalizedKey, value, operator);
+                    nextQueryValue = result.query;
+                    return result.query;
+                });
+
+                if (nextQueryValue !== null) {
+                    setDebouncedSearchQuery(nextQueryValue);
+                }
+            },
+            [
+                setIsSearchActive,
+                uiDispatch,
+                setShouldFocusSearch,
+                setSearchQuery,
+                setDebouncedSearchQuery,
+                isSearchActive,
+                uiState.singlePane
+            ]
+        );
+
         const modifySearchWithDateToken = useCallback(
             (dateToken: string) => {
                 const normalizedToken = dateToken.trim();
@@ -1403,6 +1472,8 @@ export const ListPane = React.memo(
                 selectAdjacentFile,
                 // Toggle or modify search query to include/exclude a tag with AND/OR operator
                 modifySearchWithTag,
+                // Toggle or modify search query to include/exclude a property with AND/OR operator
+                modifySearchWithProperty,
                 // Replace the active search query with a date token
                 modifySearchWithDateToken,
                 // Toggle search mode on/off or focus existing search
@@ -1443,6 +1514,7 @@ export const ListPane = React.memo(
                 selectFileFromList,
                 selectAdjacentFile,
                 modifySearchWithTag,
+                modifySearchWithProperty,
                 modifySearchWithDateToken
             ]
         );
@@ -1470,7 +1542,7 @@ export const ListPane = React.memo(
         });
 
         // Determine if we're showing empty state
-        const isEmptySelection = !selectedFolder && !selectedTag;
+        const isEmptySelection = !selectedFolder && !selectedTag && !selectedProperty;
         const hasNoFiles = files.length === 0;
 
         const shouldRenderBottomToolbar = isMobile && !isAndroid;

@@ -59,7 +59,7 @@ import type { SearchShortcut } from '../types/shortcuts';
 import { UpdateNoticeBanner } from './UpdateNoticeBanner';
 import { UpdateNoticeIndicator } from './UpdateNoticeIndicator';
 import { showNotice } from '../utils/noticeUtils';
-import { EMPTY_SEARCH_TAG_FILTER_STATE, type SearchTagFilterState } from '../types/search';
+import { EMPTY_SEARCH_NAV_FILTER_STATE, type SearchNavFilterState } from '../types/search';
 import { getListPaneMeasurements } from '../utils/listPaneMeasurements';
 import type { InclusionOperator } from '../utils/filterSearch';
 
@@ -120,7 +120,7 @@ export interface NotebookNavigatorHandle {
  */
 export const NotebookNavigatorComponent = React.memo(
     forwardRef<NotebookNavigatorHandle>(function NotebookNavigatorComponent(_, ref) {
-        const { app, isMobile, fileSystemOps, plugin, tagTreeService, commandQueue, tagOperations } = useServices();
+        const { app, isMobile, fileSystemOps, plugin, tagTreeService, propertyTreeService, commandQueue, tagOperations } = useServices();
         const settings = useSettingsState();
         const uxPreferences = useUXPreferences();
         const uxRef = useRef(uxPreferences);
@@ -170,35 +170,41 @@ export const NotebookNavigatorComponent = React.memo(
         const containerRef = useRef<HTMLDivElement>(null);
 
         const [isNavigatorFocused, setIsNavigatorFocused] = useState(false);
-        // Tracks tag-related search tokens for highlighting tags in navigation pane
-        const [searchTagFilters, setSearchTagFilters] = useState<SearchTagFilterState>(EMPTY_SEARCH_TAG_FILTER_STATE);
+        // Tracks search tokens for highlighting matching tags/properties in navigation pane
+        const [searchNavFilters, setSearchNavFilters] = useState<SearchNavFilterState>(EMPTY_SEARCH_NAV_FILTER_STATE);
         const [isPaneTransitioning, setIsPaneTransitioning] = useState(false);
         const [suppressPaneTransitions, setSuppressPaneTransitions] = useState(false);
         const navigationPaneRef = useRef<NavigationPaneHandle>(null);
         const listPaneRef = useRef<ListPaneHandle>(null);
         const lastDualPaneRef = useRef(uiState.dualPane);
 
-        // Updates search tag filters only when values actually change to avoid unnecessary re-renders
-        const handleSearchTokensChange = useCallback((next: SearchTagFilterState) => {
-            setSearchTagFilters(prev => {
-                // Skip update if all values match
+        // Updates search filter highlight state only when values actually change
+        const handleSearchTokensChange = useCallback((next: SearchNavFilterState) => {
+            setSearchNavFilters(prev => {
                 if (
-                    prev.excludeTagged === next.excludeTagged &&
-                    prev.includeUntagged === next.includeUntagged &&
-                    prev.requireTagged === next.requireTagged &&
-                    arraysEqual(prev.include, next.include) &&
-                    arraysEqual(prev.exclude, next.exclude)
+                    prev.tags.excludeTagged === next.tags.excludeTagged &&
+                    prev.tags.includeUntagged === next.tags.includeUntagged &&
+                    prev.tags.requireTagged === next.tags.requireTagged &&
+                    arraysEqual(prev.tags.include, next.tags.include) &&
+                    arraysEqual(prev.tags.exclude, next.tags.exclude) &&
+                    arraysEqual(prev.properties.include, next.properties.include) &&
+                    arraysEqual(prev.properties.exclude, next.properties.exclude)
                 ) {
                     return prev;
                 }
 
-                // Create new state with cloned arrays to prevent mutation
                 return {
-                    include: next.include.slice(),
-                    exclude: next.exclude.slice(),
-                    excludeTagged: next.excludeTagged,
-                    includeUntagged: next.includeUntagged,
-                    requireTagged: next.requireTagged
+                    tags: {
+                        include: next.tags.include.slice(),
+                        exclude: next.tags.exclude.slice(),
+                        excludeTagged: next.tags.excludeTagged,
+                        includeUntagged: next.tags.includeUntagged,
+                        requireTagged: next.tags.requireTagged
+                    },
+                    properties: {
+                        include: next.properties.include.slice(),
+                        exclude: next.properties.exclude.slice()
+                    }
                 };
             });
         }, []);
@@ -214,6 +220,10 @@ export const NotebookNavigatorComponent = React.memo(
 
         const handleModifySearchWithTag = useCallback((tag: string, operator: InclusionOperator) => {
             listPaneRef.current?.modifySearchWithTag(tag, operator);
+        }, []);
+
+        const handleModifySearchWithProperty = useCallback((key: string, value: string | null, operator: InclusionOperator) => {
+            listPaneRef.current?.modifySearchWithProperty(key, value, operator);
         }, []);
 
         const handleModifySearchWithDateFilter = useCallback((dateToken: string) => {
@@ -475,7 +485,12 @@ export const NotebookNavigatorComponent = React.memo(
                 return;
             }
 
-            const itemType = selectionState.selectionType === ItemType.TAG ? ItemType.TAG : ItemType.FOLDER;
+            const itemType =
+                selectionState.selectionType === ItemType.TAG
+                    ? ItemType.TAG
+                    : selectionState.selectionType === ItemType.PROPERTY
+                      ? ItemType.PROPERTY
+                      : ItemType.FOLDER;
             const normalizedPath = normalizeNavigationPath(itemType, selectedPath);
             navigationPaneRef.current?.requestScroll(normalizedPath, {
                 align: 'auto',
@@ -618,7 +633,8 @@ export const NotebookNavigatorComponent = React.memo(
                                 },
                                 selectionState,
                                 selectionDispatch,
-                                tagTreeService
+                                tagTreeService,
+                                propertyTreeService
                             });
                             return;
                         }
@@ -683,7 +699,8 @@ export const NotebookNavigatorComponent = React.memo(
                             showHiddenItems: uxRef.current.showHiddenItems
                         },
                         app,
-                        tagTreeService
+                        tagTreeService,
+                        propertyTreeService
                     );
 
                     // Move files with modal
@@ -841,6 +858,7 @@ export const NotebookNavigatorComponent = React.memo(
             settings,
             plugin,
             tagTreeService,
+            propertyTreeService,
             focusPane,
             focusNavigationPaneCallback,
             tagOperations,
@@ -1004,13 +1022,14 @@ export const NotebookNavigatorComponent = React.memo(
                         style={navigationPaneStyle}
                         uiScale={uiScale}
                         rootContainerRef={containerRef}
-                        searchTagFilters={searchTagFilters}
+                        searchNavFilters={searchNavFilters}
                         onExecuteSearchShortcut={handleSearchShortcutExecution}
                         onNavigateToFolder={navigateToFolder}
                         onRevealTag={revealTag}
                         onRevealFile={revealFileInNearestFolder}
                         onRevealShortcutFile={handleShortcutNoteReveal}
                         onModifySearchWithTag={handleModifySearchWithTag}
+                        onModifySearchWithProperty={handleModifySearchWithProperty}
                         onModifySearchWithDateFilter={handleModifySearchWithDateFilter}
                     />
                     <ListPane

@@ -20,7 +20,6 @@ import { Menu, MenuItem, TFile, TFolder, App, Platform, FileSystemAdapter } from
 import { FileMenuBuilderParams } from './menuTypes';
 import { strings } from '../../i18n';
 import { getInternalPlugin } from '../../utils/typeGuards';
-import { getFilesForFolder, getFilesForTag } from '../../utils/fileFinder';
 import { getFileDisplayName } from '../../utils/fileNameUtils';
 import { getExtensionSuffix, shouldShowExtensionSuffix } from '../../utils/fileTypeUtils';
 import { ItemType, NavigatorContext } from '../../types';
@@ -38,13 +37,14 @@ import { confirmRemoveAllTagsFromFiles, openAddTagToFilesModal, removeTagFromFil
 import { addStyleMenu } from './styleMenuBuilder';
 import { resolveUXIconForMenu } from '../uxIcons';
 import { isFolderNote } from '../../utils/folderNotes';
+import { getFilesForNavigationSelection } from '../selectionUtils';
 
 /**
  * Builds the context menu for a file
  */
 export function buildFileMenu(params: FileMenuBuilderParams): void {
     const { file, menu, services, settings, state, dispatchers } = params;
-    const { app, isMobile, fileSystemOps, metadataService, tagTreeService, commandQueue, visibility } = services;
+    const { app, isMobile, fileSystemOps, metadataService, tagTreeService, propertyTreeService, commandQueue, visibility } = services;
     const { selectionState } = state;
     const { selectionDispatch } = dispatchers;
 
@@ -74,12 +74,19 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
 
     // Cache the current file list to avoid regenerating it multiple times
     const cachedFileList = (() => {
-        if (selectionState.selectionType === ItemType.FOLDER && selectionState.selectedFolder) {
-            return getFilesForFolder(selectionState.selectedFolder, settings, visibility, app);
-        } else if (selectionState.selectionType === ItemType.TAG && selectionState.selectedTag) {
-            return getFilesForTag(selectionState.selectedTag, settings, visibility, app, tagTreeService);
-        }
-        return [];
+        return getFilesForNavigationSelection(
+            {
+                selectionType: selectionState.selectionType,
+                selectedFolder: selectionState.selectedFolder,
+                selectedTag: selectionState.selectedTag,
+                selectedProperty: selectionState.selectedProperty
+            },
+            settings,
+            visibility,
+            app,
+            tagTreeService,
+            propertyTreeService
+        );
     })();
 
     // Cache selected files to avoid repeated path-to-file conversions
@@ -291,7 +298,12 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
             });
         }
 
-        const pinContext: NavigatorContext = selectionState.selectionType === ItemType.TAG ? 'tag' : 'folder';
+        const pinContext: NavigatorContext =
+            selectionState.selectionType === ItemType.TAG
+                ? 'tag'
+                : selectionState.selectionType === ItemType.PROPERTY
+                  ? 'property'
+                  : 'folder';
         addSingleFilePinOption(menu, file, metadataService, pinContext);
 
         menu.addSeparator();
@@ -303,7 +315,12 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
             addMultipleFilesShortcutOption(menu, cachedSelectedFiles, selectionState, app, settings, services.shortcuts);
         }
 
-        const pinContext: NavigatorContext = selectionState.selectionType === ItemType.TAG ? 'tag' : 'folder';
+        const pinContext: NavigatorContext =
+            selectionState.selectionType === ItemType.TAG
+                ? 'tag'
+                : selectionState.selectionType === ItemType.PROPERTY
+                  ? 'property'
+                  : 'folder';
         addMultipleFilesPinOption(menu, cachedSelectedFiles, metadataService, pinContext);
 
         menu.addSeparator();
@@ -776,7 +793,8 @@ function addSingleFileDeleteOption(
                     {
                         selectionType: selectionState.selectionType,
                         selectedFolder: selectionState.selectedFolder || undefined,
-                        selectedTag: selectionState.selectedTag || undefined
+                        selectedTag: selectionState.selectedTag || undefined,
+                        selectedProperty: selectionState.selectedProperty ?? undefined
                     },
                     selectionDispatch,
                     settings.confirmBeforeDelete

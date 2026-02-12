@@ -49,13 +49,26 @@ import { showNotice } from '../../utils/noticeUtils';
 import { ConfirmModal } from '../../modals/ConfirmModal';
 import { SelectVaultProfileModal } from '../../modals/SelectVaultProfileModal';
 import { localStorage } from '../../utils/localStorage';
-import { NOTEBOOK_NAVIGATOR_VIEW, STORAGE_KEYS, type VisibilityPreferences } from '../../types';
+import {
+    ItemType,
+    NOTEBOOK_NAVIGATOR_VIEW,
+    PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
+    STORAGE_KEYS,
+    type VisibilityPreferences
+} from '../../types';
 import { normalizeTagPath } from '../../utils/tagUtils';
-import { getFilesForFolder, getFilesForTag } from '../../utils/fileFinder';
 import { isNoteShortcut, type ShortcutEntry } from '../../types/shortcuts';
 import { getTemplaterCreateNewNoteFromTemplate } from '../../utils/templaterIntegration';
 import { getLeafSplitLocation } from '../../utils/workspaceSplit';
 import { openFileInContext } from '../../utils/openFileInContext';
+import {
+    isPropertyFeatureEnabled,
+    isPropertySelectionNodeIdConfigured,
+    isPropertyTreeNodeId,
+    parseStoredPropertySelectionNodeId,
+    type PropertySelectionNodeId
+} from '../../utils/propertyTree';
+import { getFilesForNavigationSelection } from '../../utils/selectionUtils';
 
 /**
  * Reveals the navigator view and focuses whichever pane is currently visible
@@ -116,15 +129,108 @@ function getNavigatorViewIfMounted(plugin: NotebookNavigatorPlugin, existingLeav
 /**
  * Selects the adjacent file based on persisted navigation context without opening the navigator view.
  */
-async function selectAdjacentFileWithoutNavigatorView(plugin: NotebookNavigatorPlugin, direction: 'next' | 'previous'): Promise<boolean> {
-    const app = plugin.app;
-    const vault = app.vault;
+interface CommandNavigationSelectionScope {
+    selectionType: 'folder' | 'tag' | 'property' | null;
+    selectedFolder: TFolder | null;
+    selectedTag: string | null;
+    selectedProperty: PropertySelectionNodeId | null;
+}
 
+function getCommandVisibility(plugin: NotebookNavigatorPlugin): VisibilityPreferences {
     const uxPreferences = plugin.getUXPreferences();
-    const visibility: VisibilityPreferences = {
+    return {
         includeDescendantNotes: uxPreferences.includeDescendantNotes,
         showHiddenItems: uxPreferences.showHiddenItems
     };
+}
+
+function getFilesForCommandSelection(plugin: NotebookNavigatorPlugin, selectionScope: CommandNavigationSelectionScope): TFile[] {
+    return getFilesForNavigationSelection(
+        selectionScope,
+        plugin.settings,
+        getCommandVisibility(plugin),
+        plugin.app,
+        plugin.tagTreeService,
+        plugin.propertyTreeService
+    );
+}
+
+function resolveStoredCommandSelection(plugin: NotebookNavigatorPlugin, currentFile: TFile | null): CommandNavigationSelectionScope {
+    const vault = plugin.app.vault;
+    let selectedProperty: PropertySelectionNodeId | null = null;
+    let selectedTag: string | null = null;
+    let selectedFolder: TFolder | null = null;
+
+    if (isPropertyFeatureEnabled(plugin.settings)) {
+        try {
+            const savedPropertyRaw = localStorage.get<unknown>(STORAGE_KEYS.selectedPropertyKey);
+            selectedProperty = parseStoredPropertySelectionNodeId(savedPropertyRaw);
+            if (selectedProperty && !isPropertySelectionNodeIdConfigured(plugin.settings, selectedProperty)) {
+                selectedProperty = null;
+                try {
+                    localStorage.remove(STORAGE_KEYS.selectedPropertyKey);
+                } catch (error) {
+                    console.error('Failed to clear invalid selected property from localStorage:', error);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load selected property from localStorage:', error);
+        }
+    }
+
+    if (!selectedProperty) {
+        try {
+            const savedTag = localStorage.get<string>(STORAGE_KEYS.selectedTagKey);
+            selectedTag = normalizeTagPath(savedTag);
+        } catch (error) {
+            console.error('Failed to load selected tag from localStorage:', error);
+        }
+    }
+
+    if (!selectedProperty && !selectedTag) {
+        try {
+            const savedFolderPath = localStorage.get<string>(STORAGE_KEYS.selectedFolderKey);
+            if (savedFolderPath) {
+                const folder = vault.getFolderByPath(savedFolderPath);
+                if (folder) {
+                    selectedFolder = folder;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load selected folder from localStorage:', error);
+        }
+    }
+
+    if (selectedProperty) {
+        return {
+            selectionType: ItemType.PROPERTY,
+            selectedFolder: null,
+            selectedTag: null,
+            selectedProperty
+        };
+    }
+
+    if (selectedTag) {
+        return {
+            selectionType: ItemType.TAG,
+            selectedFolder: null,
+            selectedTag,
+            selectedProperty: null
+        };
+    }
+
+    const fallbackFolder = selectedFolder ?? (currentFile && currentFile.parent instanceof TFolder ? currentFile.parent : vault.getRoot());
+    return {
+        selectionType: ItemType.FOLDER,
+        selectedFolder: fallbackFolder,
+        selectedTag: null,
+        selectedProperty: null
+    };
+}
+
+async function selectAdjacentFileWithoutNavigatorView(plugin: NotebookNavigatorPlugin, direction: 'next' | 'previous'): Promise<boolean> {
+    const app = plugin.app;
+    const vault = app.vault;
 
     let currentFile: TFile | null = app.workspace.getActiveFile();
 
@@ -142,44 +248,8 @@ async function selectAdjacentFileWithoutNavigatorView(plugin: NotebookNavigatorP
         }
     }
 
-    let selectedTag: string | null = null;
-    let selectedFolder: TFolder | null = null;
-
-    try {
-        const savedTag = localStorage.get<string>(STORAGE_KEYS.selectedTagKey);
-        selectedTag = normalizeTagPath(savedTag);
-    } catch (error) {
-        console.error('Failed to load selected tag from localStorage:', error);
-    }
-
-    if (!selectedTag) {
-        try {
-            const savedFolderPath = localStorage.get<string>(STORAGE_KEYS.selectedFolderKey);
-            if (savedFolderPath) {
-                const folder = vault.getFolderByPath(savedFolderPath);
-                if (folder) {
-                    selectedFolder = folder;
-                }
-            }
-        } catch (error) {
-            console.error('Failed to load selected folder from localStorage:', error);
-        }
-    }
-
-    if (!selectedTag && !selectedFolder) {
-        if (currentFile && currentFile.parent instanceof TFolder) {
-            selectedFolder = currentFile.parent;
-        } else {
-            selectedFolder = vault.getRoot();
-        }
-    }
-
-    const files =
-        selectedTag !== null
-            ? getFilesForTag(selectedTag, plugin.settings, visibility, app, plugin.tagTreeService)
-            : selectedFolder
-              ? getFilesForFolder(selectedFolder, plugin.settings, visibility, app)
-              : [];
+    const selectionScope = resolveStoredCommandSelection(plugin, currentFile);
+    const files = getFilesForCommandSelection(plugin, selectionScope);
 
     if (files.length === 0) {
         return false;
@@ -244,42 +314,81 @@ function getSelectedTagForCommand(plugin: NotebookNavigatorPlugin): string | nul
     return normalizeTagPath(navItem.tag);
 }
 
-function getFilesForOpenAllFilesCommand(plugin: NotebookNavigatorPlugin, context: { folder: TFolder | null; tag: string | null }): TFile[] {
-    const uxPreferences = plugin.getUXPreferences();
-    const visibility: VisibilityPreferences = {
-        includeDescendantNotes: uxPreferences.includeDescendantNotes,
-        showHiddenItems: uxPreferences.showHiddenItems
-    };
-
-    if (context.tag) {
-        return getFilesForTag(context.tag, plugin.settings, visibility, plugin.app, plugin.tagTreeService);
+function getSelectedPropertyForCommand(plugin: NotebookNavigatorPlugin): PropertySelectionNodeId | null {
+    if (!isPropertyFeatureEnabled(plugin.settings)) {
+        return null;
     }
 
-    if (context.folder) {
-        return getFilesForFolder(context.folder, plugin.settings, visibility, plugin.app);
+    const api = plugin.api;
+    if (!api) {
+        return null;
     }
 
-    return [];
+    const navItem = api.selection.getNavItem();
+    const selectedProperty = navItem.property ?? null;
+    if (!selectedProperty) {
+        return null;
+    }
+
+    if (selectedProperty === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID) {
+        return selectedProperty;
+    }
+
+    if (!isPropertyTreeNodeId(selectedProperty)) {
+        return null;
+    }
+
+    return isPropertySelectionNodeIdConfigured(plugin.settings, selectedProperty) ? selectedProperty : null;
 }
 
-function resolveOpenAllFilesContext(plugin: NotebookNavigatorPlugin): { folder: TFolder | null; tag: string | null } {
+function resolveOpenAllFilesContext(plugin: NotebookNavigatorPlugin): CommandNavigationSelectionScope {
+    const selectedProperty = getSelectedPropertyForCommand(plugin);
+    if (selectedProperty) {
+        return {
+            selectionType: ItemType.PROPERTY,
+            selectedFolder: null,
+            selectedTag: null,
+            selectedProperty
+        };
+    }
+
     const selectedTag = getSelectedTagForCommand(plugin);
     if (selectedTag) {
-        return { folder: null, tag: selectedTag };
+        return {
+            selectionType: ItemType.TAG,
+            selectedFolder: null,
+            selectedTag,
+            selectedProperty: null
+        };
     }
 
     const selectedFolder = getSelectedFolderForCommand(plugin);
     if (selectedFolder) {
-        return { folder: selectedFolder, tag: null };
+        return {
+            selectionType: ItemType.FOLDER,
+            selectedFolder,
+            selectedTag: null,
+            selectedProperty: null
+        };
     }
 
     const activeFile = plugin.app.workspace.getActiveFile();
     const parent = activeFile?.parent;
     if (parent instanceof TFolder) {
-        return { folder: parent, tag: null };
+        return {
+            selectionType: ItemType.FOLDER,
+            selectedFolder: parent,
+            selectedTag: null,
+            selectedProperty: null
+        };
     }
 
-    return { folder: null, tag: null };
+    return {
+        selectionType: null,
+        selectedFolder: null,
+        selectedTag: null,
+        selectedProperty: null
+    };
 }
 
 function getOpenAllFilesConfirmTitle(fileCount: number): string {
@@ -289,12 +398,12 @@ function getOpenAllFilesConfirmTitle(fileCount: number): string {
 
 async function openAllFilesInCurrentFolderOrTag(plugin: NotebookNavigatorPlugin): Promise<void> {
     const context = resolveOpenAllFilesContext(plugin);
-    if (!context.folder && !context.tag) {
+    if (!context.selectionType) {
         showNotice(strings.common.noSelection, { variant: 'warning' });
         return;
     }
 
-    const files = getFilesForOpenAllFilesCommand(plugin, context);
+    const files = getFilesForCommandSelection(plugin, context);
     if (files.length === 0) {
         showNotice(strings.listPane.emptyStateNoNotes, { variant: 'warning' });
         return;
@@ -584,13 +693,13 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
         }
     });
 
-    // Command to open all files in the currently selected folder or tag
+    // Command to open all files in the currently selected folder, tag, or property scope
     plugin.addCommand({
         id: 'open-all-files',
         name: strings.commands.openAllFiles,
         checkCallback: (checking: boolean) => {
             const context = resolveOpenAllFilesContext(plugin);
-            if (!context.folder && !context.tag) {
+            if (!context.selectionType) {
                 return false;
             }
 

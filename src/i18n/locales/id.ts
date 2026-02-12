@@ -61,6 +61,7 @@ export const STRINGS_ID = {
         shortcutsHeader: 'Pintasan',
         recentNotesHeader: 'Catatan terbaru',
         recentFilesHeader: 'File terbaru',
+        properties: 'Properti',
         reorderRootFoldersTitle: 'Atur ulang navigasi',
         reorderRootFoldersHint: 'Gunakan panah atau seret untuk mengatur ulang',
         vaultRootLabel: 'Vault',
@@ -182,6 +183,16 @@ export const STRINGS_ID = {
                         'Cmd/Ctrl+Klik tag untuk menambahkan dengan AND. Cmd/Ctrl+Shift+Klik untuk menambahkan dengan OR.'
                     ]
                 },
+                properties: {
+                    title: 'Properti',
+                    items: [
+                        '`.key` Sertakan catatan dengan kunci properti kustom.',
+                        '`.key=value` Sertakan catatan dengan nilai properti kustom (juga mencocokkan nilai bersarang seperti `value/subvalue`).',
+                        '`."Reading Status"` Sertakan catatan dengan kunci properti yang mengandung spasi.',
+                        '`."Reading Status"="In Progress"` Kunci dan nilai yang mengandung spasi harus diapit tanda kutip ganda.',
+                        'Cmd/Ctrl+Klik properti untuk menambahkan dengan AND. Cmd/Ctrl+Shift+Klik untuk menambahkan dengan OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filter',
                     items: [
@@ -200,10 +211,10 @@ export const STRINGS_ID = {
                 connectors: {
                     title: 'Perilaku AND/OR',
                     items: [
-                        '`AND` dan `OR` adalah operator hanya dalam kueri khusus tag.',
-                        'Kueri khusus tag hanya berisi filter tag: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` dan `OR` adalah operator hanya dalam kueri yang khusus berisi tag dan properti.',
+                        'Kueri khusus tag dan properti hanya berisi filter tag dan properti: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Jika kueri menyertakan nama, tanggal (`@...`), filter tugas (`has:task`), filter folder (`folder:...`), atau filter ekstensi (`ext:...`), `AND` dan `OR` dicocokkan sebagai kata.',
-                        'Contoh kueri operator: `#work OR #home`.',
+                        'Contoh kueri operator: `#work OR .status=started`.',
                         'Contoh kueri campuran: `#work OR ext:md` (`OR` dicocokkan dalam nama file).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_ID = {
                 'nav-folder-closed': 'Folder tertutup',
                 'nav-folder-note': 'Catatan folder',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Properti',
                 'list-pinned': 'Item tersemat',
                 'file-unfinished-task': 'Tugas belum selesai',
                 'file-word-count': 'Jumlah kata',
@@ -594,6 +606,9 @@ export const STRINGS_ID = {
             noFilesSelected: 'Tidak ada file yang dipilih',
             tagOperationsNotAvailable: 'Operasi tag tidak tersedia',
             tagsRequireMarkdown: 'Tag hanya didukung pada catatan Markdown',
+            propertiesRequireMarkdown: 'Properti hanya didukung pada catatan Markdown',
+            propertySetOnNote: 'Properti diperbarui pada 1 catatan',
+            propertySetOnNotes: 'Properti diperbarui pada {count} catatan',
             iconPackDownloaded: '{provider} diunduh',
             iconPackUpdated: '{provider} diperbarui ({version})',
             iconPackRemoved: '{provider} dihapus',
@@ -616,6 +631,7 @@ export const STRINGS_ID = {
             itemAlreadyExists: 'Item bernama "{name}" sudah ada di lokasi ini.',
             failedToMove: 'Gagal memindahkan: {error}',
             failedToAddTag: 'Gagal menambahkan tag "{tag}"',
+            failedToSetProperty: 'Gagal memperbarui properti: {error}',
             failedToClearTags: 'Gagal menghapus tag',
             failedToMoveFolder: 'Gagal memindahkan folder "{name}"',
             failedToImportFiles: 'Gagal mengimpor: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_ID = {
         notifications: {
             filesAlreadyExist: '{count} file sudah ada di tujuan',
             filesAlreadyHaveTag: '{count} file sudah memiliki tag ini atau yang lebih spesifik',
+            filesAlreadyHaveProperty: '{count} file sudah memiliki properti ini',
             noTagsToClear: 'Tidak ada tag untuk dihapus',
             fileImported: 'Mengimpor 1 file',
             filesImported: 'Mengimpor {count} file'

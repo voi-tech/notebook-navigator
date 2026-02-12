@@ -61,6 +61,7 @@ export const STRINGS_TR = {
         shortcutsHeader: 'Kısayollar', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Son notlar', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Son dosyalar', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Özellikler',
         reorderRootFoldersTitle: 'Gezinmeyi yeniden sırala',
         reorderRootFoldersHint: 'Yeniden sıralamak için okları veya sürüklemeyi kullanın',
         vaultRootLabel: 'Kasa',
@@ -182,6 +183,16 @@ export const STRINGS_TR = {
                         'Cmd/Ctrl+Tıklama ile etiketi AND olarak ekleyin. Cmd/Ctrl+Shift+Tıklama ile OR olarak ekleyin.'
                     ]
                 },
+                properties: {
+                    title: 'Özellikler',
+                    items: [
+                        '`.key` Özel özellik anahtarına sahip notları dahil et.',
+                        '`.key=value` Özel özellik değerine sahip notları dahil et (`value/subvalue` gibi iç içe değerlerle de eşleşir).',
+                        '`."Reading Status"` Boşluk içeren özellik anahtarına sahip notları dahil et.',
+                        '`."Reading Status"="In Progress"` Boşluk içeren anahtarlar ve değerler çift tırnak içine alınmalıdır.',
+                        'Cmd/Ctrl+Tıklayarak özelliği AND ile ekleyin. Cmd/Ctrl+Shift+Tıklayarak OR ile ekleyin.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtreler',
                     items: [
@@ -200,10 +211,10 @@ export const STRINGS_TR = {
                 connectors: {
                     title: 'AND/OR davranışı',
                     items: [
-                        '`AND` ve `OR` yalnızca etiket sorgularında operatör olarak çalışır.',
-                        'Etiket sorguları yalnızca etiket filtreleri içerir: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` ve `OR` yalnızca etiket ve özellik sorgularında operatör olarak çalışır.',
+                        'Etiket ve özellik sorguları yalnızca etiket ve özellik filtrelerini içerir: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Bir sorgu adlar, tarihler (`@...`), görev filtreleri (`has:task`), klasör filtreleri (`folder:...`) veya uzantı filtreleri (`ext:...`) içeriyorsa, `AND` ve `OR` kelime olarak aranır.',
-                        'Operatör sorgusu örneği: `#work OR #home`.',
+                        'Örnek operatör sorgusu: `#work OR .status=started`.',
                         'Karma sorgu örneği: `#work OR ext:md` (`OR` dosya adlarında aranır).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_TR = {
                 'nav-folder-closed': 'Klasör kapalı',
                 'nav-folder-note': 'Klasör notu',
                 'nav-tag': 'Etiket',
+                'nav-properties': 'Özellikler',
                 'list-pinned': 'Sabitlenmiş öğeler',
                 'file-unfinished-task': 'Tamamlanmamış görevler',
                 'file-word-count': 'Kelime sayısı',
@@ -595,6 +607,9 @@ export const STRINGS_TR = {
             noFilesSelected: 'Dosya seçili değil',
             tagOperationsNotAvailable: 'Etiket işlemleri kullanılamıyor',
             tagsRequireMarkdown: 'Etiketler yalnızca Markdown notlarında desteklenir',
+            propertiesRequireMarkdown: 'Özellikler yalnızca Markdown notlarında desteklenir',
+            propertySetOnNote: '1 notta özellik güncellendi',
+            propertySetOnNotes: '{count} notta özellik güncellendi',
             iconPackDownloaded: '{provider} indirildi',
             iconPackUpdated: '{provider} güncellendi ({version})',
             iconPackRemoved: '{provider} kaldırıldı',
@@ -617,6 +632,7 @@ export const STRINGS_TR = {
             itemAlreadyExists: 'Bu konumda "{name}" adlı bir öğe zaten var.',
             failedToMove: 'Taşınamadı: {error}',
             failedToAddTag: '"{tag}" etiketi eklenemedi',
+            failedToSetProperty: 'Özellik güncellenemedi: {error}',
             failedToClearTags: 'Etiketler temizlenemedi',
             failedToMoveFolder: '"{name}" klasörü taşınamadı',
             failedToImportFiles: 'İçe aktarılamadı: {names}'
@@ -624,6 +640,7 @@ export const STRINGS_TR = {
         notifications: {
             filesAlreadyExist: '{count} dosya hedefte zaten var',
             filesAlreadyHaveTag: '{count} dosyada bu etiket veya daha özel bir etiket zaten var',
+            filesAlreadyHaveProperty: '{count} dosya zaten bu özelliğe sahip',
             noTagsToClear: 'Temizlenecek etiket yok',
             fileImported: '1 dosya içe aktarıldı',
             filesImported: '{count} dosya içe aktarıldı'

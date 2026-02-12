@@ -19,7 +19,7 @@
 import { TFile, TFolder } from 'obsidian';
 import { ListPaneItemType, NavigationPaneItemType, VirtualFolder } from '../types';
 import type { SearchResultMeta } from './search';
-import { TagTreeNode } from '../types/storage';
+import { PropertyTreeNode, TagTreeNode } from '../types/storage';
 import type { SearchShortcut, ShortcutEntry } from '../types/shortcuts';
 import type { NoteCountInfo } from '../types/noteCounts';
 
@@ -82,6 +82,20 @@ export interface UntaggedItem {
     icon?: string;
 }
 
+export interface PropertyKeyTreeItem {
+    type: typeof NavigationPaneItemType.PROPERTY_KEY;
+    data: PropertyTreeNode;
+    level: number;
+    key: string;
+}
+
+export interface PropertyValueTreeItem {
+    type: typeof NavigationPaneItemType.PROPERTY_VALUE;
+    data: PropertyTreeNode;
+    level: number;
+    key: string;
+}
+
 export interface VirtualFolderItem {
     type: typeof NavigationPaneItemType.VIRTUAL_FOLDER;
     data: VirtualFolder;
@@ -90,6 +104,7 @@ export interface VirtualFolderItem {
     isSelectable?: boolean;
     isSelected?: boolean;
     tagCollectionId?: string;
+    propertyCollectionId?: string;
     // Pre-computed child presence flag used for rendering the expander chevron and for keyboard expand/collapse decisions.
     // Some virtual folders are backed by dynamic data (e.g. recent notes, shortcuts), where the source list can contain
     // entries that do not render (deleted/missing items). This flag reflects whether expansion would render any children.
@@ -176,6 +191,8 @@ export type CombinedNavigationItem =
     | VirtualFolderItem
     | TagTreeItem
     | UntaggedItem
+    | PropertyKeyTreeItem
+    | PropertyValueTreeItem
     | ShortcutHeaderItem
     | ShortcutFolderNavItem
     | ShortcutNoteNavItem

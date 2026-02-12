@@ -123,7 +123,7 @@ export function useTagTreeSync(params: {
 
         clearNoteCountCache();
 
-        setFileData({ tagTree, tagged, untagged, hiddenRootTags });
+        setFileData(previous => ({ ...previous, tagTree, tagged, untagged, hiddenRootTags }));
 
         // Propagate updated tag trees to the global TagTreeService for cross-component access
         if (tagTreeService) {

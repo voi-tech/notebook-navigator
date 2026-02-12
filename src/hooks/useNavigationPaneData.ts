@@ -42,6 +42,7 @@ import { strings } from '../i18n';
 import {
     TAGGED_TAG_ID,
     UNTAGGED_TAG_ID,
+    PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
     NavigationPaneItemType,
     VirtualFolder,
     ItemType,
@@ -50,7 +51,7 @@ import {
     NavigationSectionId
 } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
-import { TagTreeNode } from '../types/storage';
+import { PropertyTreeNode, TagTreeNode } from '../types/storage';
 import type { CombinedNavigationItem } from '../types/virtualization';
 import type { NotebookNavigatorSettings, TagSortOrder } from '../settings/types';
 import {
@@ -79,6 +80,7 @@ import { calculateFolderNoteCounts } from '../utils/noteCountUtils';
 import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
 import { sanitizeNavigationSectionOrder } from '../utils/navigationSections';
 import { getVirtualTagCollection, isVirtualTagCollectionId, VIRTUAL_TAG_COLLECTION_IDS } from '../utils/virtualTagCollections';
+import { getTotalPropertyNoteCount } from '../utils/propertyTree';
 import {
     buildFolderSeparatorKey,
     buildSectionSeparatorKey,
@@ -88,6 +90,7 @@ import {
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { MetadataService } from '../services/MetadataService';
 import { useSettingsDerived, type ActiveProfileState } from '../context/SettingsContext';
+import { getCachedCommaSeparatedList } from '../utils/commaSeparatedListUtils';
 
 // Checks if a navigation item is a shortcut-related item (virtual folder, shortcut, or header)
 const isShortcutNavigationItem = (item: CombinedNavigationItem): boolean => {
@@ -393,6 +396,8 @@ interface UseNavigationPaneDataResult {
     shortcutItems: CombinedNavigationItem[];
     /** Whether the tags virtual folder has visible children */
     tagsVirtualFolderHasChildren: boolean;
+    /** Whether the properties section is available in navigation */
+    propertiesSectionActive: boolean;
     /** Recent notes items rendered in the pinned area when pinning is enabled */
     pinnedRecentNotesItems: CombinedNavigationItem[];
     /** Whether recent notes are pinned with shortcuts */
@@ -403,6 +408,8 @@ interface UseNavigationPaneDataResult {
     shortcutIndex: Map<string, number>;
     /** Map from tag path to current/descendant note counts */
     tagCounts: Map<string, NoteCountInfo>;
+    /** Map from property node id to current/descendant note counts */
+    propertyCounts: Map<string, NoteCountInfo>;
     /** Map from folder path to current/descendant note counts */
     folderCounts: Map<string, NoteCountInfo>;
     /** Ordered list of root-level folders */
@@ -544,10 +551,14 @@ export function useNavigationPaneData({
     /**
      * Build tag items with a single tag tree
      */
-    const { tagItems, resolvedRootTagKeys, tagsVirtualFolderHasChildren } = useMemo(() => {
+    const { tagItems, resolvedRootTagKeys, tagsVirtualFolderHasChildren } = useMemo((): {
+        tagItems: CombinedNavigationItem[];
+        resolvedRootTagKeys: string[];
+        tagsVirtualFolderHasChildren: boolean;
+    } => {
         if (!settings.showTags) {
             return {
-                tagItems: [] as CombinedNavigationItem[],
+                tagItems: [],
                 resolvedRootTagKeys: [],
                 tagsVirtualFolderHasChildren: false
             };
@@ -590,7 +601,13 @@ export function useNavigationPaneData({
             id: string,
             name: string,
             icon?: string,
-            options?: { tagCollectionId?: string; showFileCount?: boolean; noteCount?: NoteCountInfo; hasChildren?: boolean }
+            options?: {
+                tagCollectionId?: string;
+                propertyCollectionId?: string;
+                showFileCount?: boolean;
+                noteCount?: NoteCountInfo;
+                hasChildren?: boolean;
+            }
         ) => {
             const folder: VirtualFolder = { id, name, icon };
             items.push({
@@ -598,8 +615,9 @@ export function useNavigationPaneData({
                 data: folder,
                 level: 0,
                 key: id,
-                isSelectable: Boolean(options?.tagCollectionId),
+                isSelectable: Boolean(options?.tagCollectionId || options?.propertyCollectionId),
                 tagCollectionId: options?.tagCollectionId,
+                propertyCollectionId: options?.propertyCollectionId,
                 hasChildren: options?.hasChildren,
                 showFileCount: options?.showFileCount,
                 noteCount: options?.noteCount
@@ -769,15 +787,137 @@ export function useNavigationPaneData({
         hiddenRootTagNodes
     ]);
 
+    const propertySectionBase = useMemo((): {
+        propertiesSectionActive: boolean;
+        keyNodes: PropertyTreeNode[];
+        collectionCount: NoteCountInfo | undefined;
+    } => {
+        const isFrontmatterProperties = settings.customPropertyType === 'frontmatter';
+        const hasConfiguredFields = getCachedCommaSeparatedList(settings.customPropertyFields).length > 0;
+        if (!isFrontmatterProperties || !hasConfiguredFields) {
+            return {
+                propertiesSectionActive: false,
+                keyNodes: [],
+                collectionCount: undefined
+            };
+        }
+
+        const propertyTree = fileData.propertyTree ?? new Map<string, PropertyTreeNode>();
+        const keyNodes = Array.from(propertyTree.values()).sort((a, b) => {
+            const nameCompare = naturalCompare(a.name, b.name);
+            if (nameCompare !== 0) {
+                return nameCompare;
+            }
+            return a.key.localeCompare(b.key);
+        });
+
+        let collectionCount: NoteCountInfo | undefined;
+        if (settings.showNoteCount) {
+            const propertyCollectionFiles = new Set<string>();
+            keyNodes.forEach(node => {
+                node.notesWithValue.forEach(path => propertyCollectionFiles.add(path));
+            });
+            collectionCount = {
+                current: propertyCollectionFiles.size,
+                descendants: 0,
+                total: propertyCollectionFiles.size
+            };
+        }
+
+        return {
+            propertiesSectionActive: true,
+            keyNodes,
+            collectionCount
+        };
+    }, [settings.customPropertyType, settings.customPropertyFields, settings.showNoteCount, fileData.propertyTree]);
+
+    const { propertyItems, propertiesSectionActive } = useMemo((): {
+        propertyItems: CombinedNavigationItem[];
+        propertiesSectionActive: boolean;
+    } => {
+        if (!propertySectionBase.propertiesSectionActive) {
+            return {
+                propertyItems: [],
+                propertiesSectionActive: false
+            };
+        }
+
+        const rootId = PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
+        const keyNodes = propertySectionBase.keyNodes;
+        const collectionCount = propertySectionBase.collectionCount;
+
+        const items: CombinedNavigationItem[] = [
+            {
+                type: NavigationPaneItemType.VIRTUAL_FOLDER,
+                data: {
+                    id: rootId,
+                    name: strings.navigationPane.properties,
+                    icon: resolveUXIcon(settings.interfaceIcons, 'nav-properties')
+                },
+                level: 0,
+                key: rootId,
+                isSelectable: true,
+                propertyCollectionId: PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
+                hasChildren: keyNodes.length > 0,
+                showFileCount: settings.showNoteCount,
+                noteCount: collectionCount
+            }
+        ];
+
+        if (!expansionState.expandedVirtualFolders.has(rootId)) {
+            return { propertyItems: items, propertiesSectionActive: true };
+        }
+
+        const sortChildren = (children: Iterable<PropertyTreeNode>): PropertyTreeNode[] => {
+            return Array.from(children).sort((a, b) => {
+                const nameCompare = naturalCompare(a.name, b.name);
+                if (nameCompare !== 0) {
+                    return nameCompare;
+                }
+                return (a.valuePath ?? '').localeCompare(b.valuePath ?? '');
+            });
+        };
+
+        keyNodes.forEach(keyNode => {
+            items.push({
+                type: NavigationPaneItemType.PROPERTY_KEY,
+                data: keyNode,
+                level: 1,
+                key: keyNode.id
+            });
+
+            if (expansionState.expandedProperties.has(keyNode.id) && keyNode.children.size > 0) {
+                sortChildren(keyNode.children.values()).forEach(child => {
+                    items.push({
+                        type: NavigationPaneItemType.PROPERTY_VALUE,
+                        data: child,
+                        level: 2,
+                        key: child.id
+                    });
+                });
+            }
+        });
+
+        return { propertyItems: items, propertiesSectionActive: true };
+    }, [
+        propertySectionBase.collectionCount,
+        propertySectionBase.keyNodes,
+        propertySectionBase.propertiesSectionActive,
+        settings.interfaceIcons,
+        settings.showNoteCount,
+        expansionState.expandedVirtualFolders,
+        expansionState.expandedProperties
+    ]);
+
     /**
      * Pre-compute parsed excluded folders to avoid repeated parsing
      */
     const parsedExcludedFolders = hiddenFolders;
 
     // Build list of shortcut items with proper hierarchy
-    const shortcutItems = useMemo(() => {
+    const shortcutItems = useMemo((): CombinedNavigationItem[] => {
         if (!settings.showShortcuts) {
-            return [] as CombinedNavigationItem[];
+            return [];
         }
 
         const headerLevel = 0;
@@ -1049,9 +1189,9 @@ export function useNavigationPaneData({
     // - Collapsed: return only the header and compute `hasChildren` via a short scan over the configured limit, stopping at the
     //   first path that resolves to a `TFile`. This keeps the chevron accurate without building child items.
     // - Expanded: build the child item list, filtering out paths that do not resolve to a `TFile`.
-    const recentNotesItems = useMemo(() => {
+    const recentNotesItems = useMemo((): CombinedNavigationItem[] => {
         if (!settings.showRecentNotes) {
-            return [] as CombinedNavigationItem[];
+            return [];
         }
 
         const headerLevel = 0;
@@ -1165,6 +1305,7 @@ export function useNavigationPaneData({
         const shouldIncludeRecentSection = settings.showRecentNotes && recentNotesItems.length > 0 && !shouldPinRecentNotes;
         const shouldIncludeFoldersSection = folderItems.length > 0;
         const shouldIncludeTagsSection = settings.showTags && tagItems.length > 0;
+        const shouldIncludePropertiesSection = propertiesSectionActive && propertyItems.length > 0;
 
         // Builds sections in the user-specified order
         const orderedSections: { id: NavigationSectionId; items: CombinedNavigationItem[] }[] = [];
@@ -1190,6 +1331,11 @@ export function useNavigationPaneData({
                 case NavigationSectionId.TAGS:
                     if (shouldIncludeTagsSection) {
                         orderedSections.push({ id: NavigationSectionId.TAGS, items: tagItems });
+                    }
+                    break;
+                case NavigationSectionId.PROPERTIES:
+                    if (shouldIncludePropertiesSection) {
+                        orderedSections.push({ id: NavigationSectionId.PROPERTIES, items: propertyItems });
                     }
                     break;
                 default:
@@ -1231,6 +1377,8 @@ export function useNavigationPaneData({
         tagItems,
         shortcutItems,
         recentNotesItems,
+        propertyItems,
+        propertiesSectionActive,
         normalizedSectionOrder,
         settings.showShortcuts,
         shouldPinRecentNotes,
@@ -1439,16 +1587,16 @@ export function useNavigationPaneData({
     const decoratedRecentNotes = useMemo(() => itemsWithMetadata.filter(isRecentNavigationItem), [itemsWithMetadata]);
 
     // Extract shortcut items when pinning is enabled for display in pinned area
-    const shortcutItemsWithMetadata = useMemo(() => {
+    const shortcutItemsWithMetadata = useMemo((): CombinedNavigationItem[] => {
         if (!pinShortcuts) {
-            return [] as CombinedNavigationItem[];
+            return [];
         }
         return decorateItems(shortcutItems);
     }, [decorateItems, pinShortcuts, shortcutItems]);
 
-    const pinnedRecentNotesItems = useMemo(() => {
+    const pinnedRecentNotesItems = useMemo((): CombinedNavigationItem[] => {
         if (!shouldPinRecentNotes) {
-            return [] as CombinedNavigationItem[];
+            return [];
         }
         if (decoratedRecentNotes.length > 0) {
             return decoratedRecentNotes;
@@ -1581,6 +1729,10 @@ export function useNavigationPaneData({
                 setNavigationIndex(indexMap, ItemType.TAG, tagNode.path, index);
             } else if (item.type === NavigationPaneItemType.VIRTUAL_FOLDER && item.tagCollectionId) {
                 setNavigationIndex(indexMap, ItemType.TAG, item.tagCollectionId, index);
+            } else if (item.type === NavigationPaneItemType.VIRTUAL_FOLDER && item.propertyCollectionId) {
+                setNavigationIndex(indexMap, ItemType.PROPERTY, item.key, index);
+            } else if (item.type === NavigationPaneItemType.PROPERTY_KEY || item.type === NavigationPaneItemType.PROPERTY_VALUE) {
+                setNavigationIndex(indexMap, ItemType.PROPERTY, item.data.id, index);
             }
         });
 
@@ -1608,6 +1760,7 @@ export function useNavigationPaneData({
     }, [itemsWithRootSpacing, pinShortcuts, shortcutItemsWithMetadata]);
 
     const lastTagCountsRef = useRef<Map<string, NoteCountInfo>>(new Map());
+    const lastPropertyCountsRef = useRef<Map<string, NoteCountInfo>>(new Map());
     const lastFolderCountsRef = useRef<Map<string, NoteCountInfo>>(new Map());
 
     /**
@@ -1674,6 +1827,64 @@ export function useNavigationPaneData({
             lastTagCountsRef.current = computedTagCounts;
         }
     }, [computedTagCounts, settings.showTags]);
+
+    const computedPropertyCounts = useMemo((): Map<string, NoteCountInfo> | null => {
+        if (!isVisible || !propertiesSectionActive || !settings.showNoteCount) {
+            return null;
+        }
+
+        const counts = new Map<string, NoteCountInfo>();
+        const visiblePropertyNodes = new Map<string, PropertyTreeNode>();
+
+        itemsWithMetadata.forEach(item => {
+            if (item.type === NavigationPaneItemType.PROPERTY_KEY || item.type === NavigationPaneItemType.PROPERTY_VALUE) {
+                visiblePropertyNodes.set(item.data.id, item.data);
+            }
+        });
+
+        if (visiblePropertyNodes.size === 0) {
+            return counts;
+        }
+
+        const propertyTree = fileData.propertyTree ?? new Map<string, PropertyTreeNode>();
+
+        visiblePropertyNodes.forEach(node => {
+            const current = node.notesWithValue.size;
+            if (node.kind === 'key' || !includeDescendantNotes || !node.valuePath) {
+                counts.set(node.id, { current, descendants: 0, total: current });
+                return;
+            }
+
+            const keyNode = propertyTree.get(node.key);
+            if (!keyNode) {
+                counts.set(node.id, { current, descendants: 0, total: current });
+                return;
+            }
+
+            const total = getTotalPropertyNoteCount(keyNode, node.valuePath);
+            const descendants = Math.max(total - current, 0);
+            counts.set(node.id, { current, descendants, total });
+        });
+
+        return counts;
+    }, [isVisible, itemsWithMetadata, propertiesSectionActive, settings.showNoteCount, fileData.propertyTree, includeDescendantNotes]);
+
+    const propertyCounts = useMemo(() => {
+        if (!propertiesSectionActive || !settings.showNoteCount) {
+            return new Map<string, NoteCountInfo>();
+        }
+        return computedPropertyCounts ?? lastPropertyCountsRef.current;
+    }, [computedPropertyCounts, propertiesSectionActive, settings.showNoteCount]);
+
+    useEffect(() => {
+        if (!propertiesSectionActive || !settings.showNoteCount) {
+            lastPropertyCountsRef.current = new Map();
+            return;
+        }
+        if (computedPropertyCounts) {
+            lastPropertyCountsRef.current = computedPropertyCounts;
+        }
+    }, [computedPropertyCounts, propertiesSectionActive, settings.showNoteCount]);
 
     /**
      * Pre-compute folder file counts to avoid recursive counting during render
@@ -1785,9 +1996,11 @@ export function useNavigationPaneData({
         pinnedRecentNotesItems,
         shouldPinRecentNotes,
         tagsVirtualFolderHasChildren,
+        propertiesSectionActive,
         pathToIndex,
         shortcutIndex,
         tagCounts,
+        propertyCounts,
         folderCounts,
         rootLevelFolders,
         missingRootFolderPaths,

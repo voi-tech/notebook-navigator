@@ -60,6 +60,7 @@ export const STRINGS_ES = {
         shortcutsHeader: 'Accesos directos',
         recentNotesHeader: 'Notas recientes',
         recentFilesHeader: 'Archivos recientes',
+        properties: 'Propiedades',
         reorderRootFoldersTitle: 'Reordenar navegación',
         reorderRootFoldersHint: 'Usa flechas o arrastra para reordenar',
         vaultRootLabel: 'Bóveda',
@@ -181,6 +182,16 @@ export const STRINGS_ES = {
                         'Cmd/Ctrl+Clic en una etiqueta para añadir con AND. Cmd/Ctrl+Shift+Clic para añadir con OR.'
                     ]
                 },
+                properties: {
+                    title: 'Propiedades',
+                    items: [
+                        '`.key` Incluir notas con clave de propiedad personalizada.',
+                        '`.key=value` Incluir notas con valor de propiedad personalizada (también coincide con valores anidados como `value/subvalue`).',
+                        '`."Reading Status"` Incluir notas con una clave de propiedad que contiene espacios.',
+                        '`."Reading Status"="In Progress"` Las claves y valores con espacios deben estar entre comillas dobles.',
+                        'Cmd/Ctrl+Clic en una propiedad para añadir con AND. Cmd/Ctrl+Shift+Clic para añadir con OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtros',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_ES = {
                 connectors: {
                     title: 'Comportamiento de AND/OR',
                     items: [
-                        '`AND` y `OR` son operadores solo en consultas exclusivas de etiquetas.',
-                        'Las consultas exclusivas de etiquetas contienen solo filtros de etiquetas: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` y `OR` son operadores solo en consultas exclusivas de etiquetas/propiedades.',
+                        'Las consultas exclusivas de etiquetas/propiedades contienen solo filtros de etiquetas y propiedades: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Si una consulta incluye nombres, fechas (`@...`), filtros de tareas (`has:task`), filtros de carpetas (`folder:...`) o filtros de extensión (`ext:...`), `AND` y `OR` se buscan como palabras.',
-                        'Ejemplo de consulta con operadores: `#work OR #home`.',
+                        'Ejemplo de consulta con operadores: `#work OR .status=started`.',
                         'Ejemplo de consulta mixta: `#work OR ext:md` (`OR` se busca en los nombres de archivos).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_ES = {
                 'nav-folder-closed': 'Carpeta cerrada',
                 'nav-folder-note': 'Nota de carpeta',
                 'nav-tag': 'Etiqueta',
+                'nav-properties': 'Propiedades',
                 'list-pinned': 'Elementos fijados',
                 'file-unfinished-task': 'Tareas pendientes',
                 'file-word-count': 'Conteo de palabras',
@@ -596,6 +608,9 @@ export const STRINGS_ES = {
             noFilesSelected: 'No hay archivos seleccionados',
             tagOperationsNotAvailable: 'Operaciones de etiquetas no disponibles',
             tagsRequireMarkdown: 'Las etiquetas solo son compatibles con notas Markdown',
+            propertiesRequireMarkdown: 'Las propiedades solo son compatibles con notas Markdown',
+            propertySetOnNote: 'Propiedad actualizada en 1 nota',
+            propertySetOnNotes: 'Propiedad actualizada en {count} notas',
             iconPackDownloaded: '{provider} descargado',
             iconPackUpdated: '{provider} actualizado ({version})',
             iconPackRemoved: '{provider} eliminado',
@@ -618,6 +633,7 @@ export const STRINGS_ES = {
             itemAlreadyExists: 'Ya existe un elemento llamado "{name}" en esta ubicación.',
             failedToMove: 'Error al mover: {error}',
             failedToAddTag: 'Error al agregar la etiqueta "{tag}"',
+            failedToSetProperty: 'Error al actualizar la propiedad: {error}',
             failedToClearTags: 'Error al eliminar las etiquetas',
             failedToMoveFolder: 'Error al mover la carpeta "{name}"',
             failedToImportFiles: 'Error al importar: {names}'
@@ -625,6 +641,7 @@ export const STRINGS_ES = {
         notifications: {
             filesAlreadyExist: '{count} archivos ya existen en el destino',
             filesAlreadyHaveTag: '{count} archivos ya tienen esta etiqueta o una más específica',
+            filesAlreadyHaveProperty: '{count} archivos ya tienen esta propiedad',
             noTagsToClear: 'No hay etiquetas para eliminar',
             fileImported: '1 archivo importado',
             filesImported: '{count} archivos importados'

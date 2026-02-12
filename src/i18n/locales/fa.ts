@@ -61,6 +61,7 @@ export const STRINGS_FA = {
         shortcutsHeader: 'میانبرها',
         recentNotesHeader: 'یادداشت‌های اخیر',
         recentFilesHeader: 'فایل‌های اخیر',
+        properties: 'ویژگی‌ها',
         reorderRootFoldersTitle: 'مرتب‌سازی مجدد ناوبری',
         reorderRootFoldersHint: 'از فلش‌ها یا کشیدن برای مرتب‌سازی استفاده کنید',
         vaultRootLabel: 'خزانه',
@@ -181,6 +182,16 @@ export const STRINGS_FA = {
                         'Cmd/Ctrl+کلیک روی برچسب برای افزودن با AND. Cmd/Ctrl+Shift+کلیک برای افزودن با OR.'
                     ]
                 },
+                properties: {
+                    title: 'ویژگی‌ها',
+                    items: [
+                        '`.key` شامل کردن یادداشت‌هایی با کلید ویژگی سفارشی.',
+                        '`.key=value` شامل کردن یادداشت‌هایی با مقدار ویژگی سفارشی (مقادیر تودرتو مانند `value/subvalue` را نیز مطابقت می‌دهد).',
+                        '`."Reading Status"` شامل کردن یادداشت‌هایی با کلید ویژگی حاوی فاصله.',
+                        '`."Reading Status"="In Progress"` کلیدها و مقادیر حاوی فاصله باید در گیومه دوتایی قرار گیرند.',
+                        'Cmd/Ctrl+کلیک روی ویژگی برای افزودن با AND. Cmd/Ctrl+Shift+کلیک برای افزودن با OR.'
+                    ]
+                },
                 tasks: {
                     title: 'فیلترها',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_FA = {
                 connectors: {
                     title: 'رفتار AND/OR',
                     items: [
-                        '`AND` و `OR` فقط در جستجوهای برچسب‌محور عملگر هستند.',
-                        'جستجوهای برچسب‌محور فقط شامل فیلترهای برچسب هستند: `#tag`، `-#tag`، `#`، `-#`.',
+                        '`AND` و `OR` فقط در جستجوهای انحصاری برچسب/ویژگی عملگر هستند.',
+                        'جستجوهای انحصاری برچسب/ویژگی فقط شامل فیلترهای برچسب و ویژگی هستند: `#tag`، `-#tag`، `#`، `-#`، `.key`، `-.key`، `.key=value`، `-.key=value`.',
                         'اگر جستجو شامل نام‌ها، تاریخ‌ها (`@...`)، فیلترهای وظیفه (`has:task`)، فیلترهای پوشه (`folder:...`) یا فیلترهای پسوند (`ext:...`) باشد، `AND` و `OR` به عنوان کلمه جستجو می‌شوند.',
-                        'مثال جستجوی عملگری: `#work OR #home`.',
+                        'نمونه جستجو با عملگر: `#work OR .status=started`.',
                         'مثال جستجوی ترکیبی: `#work OR ext:md` (`OR` در نام فایل‌ها جستجو می‌شود).'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_FA = {
                 'nav-folder-closed': 'پوشه بسته',
                 'nav-folder-note': 'یادداشت پوشه',
                 'nav-tag': 'برچسب',
+                'nav-properties': 'ویژگی‌ها',
                 'list-pinned': 'آیتم‌های سنجاق شده',
                 'file-unfinished-task': 'وظایف ناتمام',
                 'file-word-count': 'تعداد کلمات',
@@ -594,6 +606,9 @@ export const STRINGS_FA = {
             noFilesSelected: 'فایلی انتخاب نشده است',
             tagOperationsNotAvailable: 'عملیات برچسب در دسترس نیست',
             tagsRequireMarkdown: 'برچسب‌ها فقط روی یادداشت‌های Markdown پشتیبانی می‌شوند',
+            propertiesRequireMarkdown: 'ویژگی‌ها فقط در یادداشت‌های Markdown پشتیبانی می‌شوند',
+            propertySetOnNote: 'ویژگی در ۱ یادداشت به‌روزرسانی شد',
+            propertySetOnNotes: 'ویژگی در {count} یادداشت به‌روزرسانی شد',
             iconPackDownloaded: '{provider} دانلود شد',
             iconPackUpdated: '{provider} به‌روزرسانی شد ({version})',
             iconPackRemoved: '{provider} حذف شد',
@@ -616,6 +631,7 @@ export const STRINGS_FA = {
             itemAlreadyExists: 'آیتمی با نام "{name}" در این مکان وجود دارد.',
             failedToMove: 'انتقال ناموفق بود: {error}',
             failedToAddTag: 'افزودن برچسب "{tag}" ناموفق بود',
+            failedToSetProperty: 'خطا در به‌روزرسانی ویژگی: {error}',
             failedToClearTags: 'پاک کردن برچسب‌ها ناموفق بود',
             failedToMoveFolder: 'انتقال پوشه "{name}" ناموفق بود',
             failedToImportFiles: 'وارد کردن ناموفق بود: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_FA = {
         notifications: {
             filesAlreadyExist: '{count} فایل در مقصد وجود دارد',
             filesAlreadyHaveTag: '{count} فایل این برچسب یا برچسب دقیق‌تر را دارد',
+            filesAlreadyHaveProperty: '{count} فایل از قبل این ویژگی را دارند',
             noTagsToClear: 'برچسبی برای پاک کردن نیست',
             fileImported: '۱ فایل وارد شد',
             filesImported: '{count} فایل وارد شد'

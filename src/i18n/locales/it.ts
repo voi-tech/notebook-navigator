@@ -61,6 +61,7 @@ export const STRINGS_IT = {
         shortcutsHeader: 'Scorciatoie', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Note recenti', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'File recenti', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Proprietà',
         reorderRootFoldersTitle: 'Riordina navigazione',
         reorderRootFoldersHint: 'Usa frecce o trascina per riordinare',
         vaultRootLabel: 'Vault',
@@ -181,6 +182,16 @@ export const STRINGS_IT = {
                         'Cmd/Ctrl+Clic su un tag per aggiungere con AND. Cmd/Ctrl+Shift+Clic per aggiungere con OR.'
                     ]
                 },
+                properties: {
+                    title: 'Proprietà',
+                    items: [
+                        '`.key` Includi note con chiave di proprietà personalizzata.',
+                        '`.key=value` Includi note con valore di proprietà personalizzata (corrisponde anche a valori annidati come `value/subvalue`).',
+                        '`."Reading Status"` Includi note con una chiave di proprietà che contiene spazi.',
+                        '`."Reading Status"="In Progress"` Chiavi e valori con spazi devono essere racchiusi tra virgolette doppie.',
+                        'Cmd/Ctrl+Clic su una proprietà per aggiungere con AND. Cmd/Ctrl+Shift+Clic per aggiungere con OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtri',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_IT = {
                 connectors: {
                     title: 'Comportamento AND/OR',
                     items: [
-                        '`AND` e `OR` sono operatori solo nelle query composte esclusivamente da tag.',
-                        'Le query di soli tag contengono solo filtri tag: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` e `OR` sono operatori solo nelle query composte esclusivamente da tag e proprietà.',
+                        'Le query esclusive di tag e proprietà contengono solo filtri di tag e proprietà: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Se una query include nomi, date (`@...`), filtri attività (`has:task`), filtri cartella (`folder:...`) o filtri estensione (`ext:...`), `AND` e `OR` vengono cercati come parole.',
-                        'Esempio di query con operatori: `#work OR #home`.',
+                        'Esempio di query con operatori: `#work OR .status=started`.',
                         'Esempio di query mista: `#work OR ext:md` (`OR` viene cercato nei nomi dei file).'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_IT = {
                 'nav-folder-closed': 'Cartella chiusa',
                 'nav-folder-note': 'Nota cartella',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Proprietà',
                 'list-pinned': 'Elementi fissati',
                 'file-unfinished-task': 'Attività incomplete',
                 'file-word-count': 'Conteggio parole',
@@ -593,6 +605,9 @@ export const STRINGS_IT = {
             noFilesSelected: 'Nessun file selezionato',
             tagOperationsNotAvailable: 'Operazioni tag non disponibili',
             tagsRequireMarkdown: 'I tag sono supportati solo nelle note Markdown',
+            propertiesRequireMarkdown: 'Le proprietà sono supportate solo nelle note Markdown',
+            propertySetOnNote: 'Proprietà aggiornata su 1 nota',
+            propertySetOnNotes: 'Proprietà aggiornata su {count} note',
             iconPackDownloaded: '{provider} scaricato',
             iconPackUpdated: '{provider} aggiornato ({version})',
             iconPackRemoved: '{provider} rimosso',
@@ -615,6 +630,7 @@ export const STRINGS_IT = {
             itemAlreadyExists: 'Un elemento chiamato "{name}" esiste già in questa posizione.',
             failedToMove: 'Impossibile spostare: {error}',
             failedToAddTag: 'Impossibile aggiungere tag "{tag}"',
+            failedToSetProperty: 'Aggiornamento proprietà non riuscito: {error}',
             failedToClearTags: 'Impossibile rimuovere i tag',
             failedToMoveFolder: 'Impossibile spostare cartella "{name}"',
             failedToImportFiles: 'Impossibile importare: {names}'
@@ -622,6 +638,7 @@ export const STRINGS_IT = {
         notifications: {
             filesAlreadyExist: '{count} file esistono già nella destinazione',
             filesAlreadyHaveTag: '{count} file hanno già questo tag o uno più specifico',
+            filesAlreadyHaveProperty: '{count} file hanno già questa proprietà',
             noTagsToClear: 'Nessun tag da rimuovere',
             fileImported: 'Importato 1 file',
             filesImported: 'Importati {count} file'

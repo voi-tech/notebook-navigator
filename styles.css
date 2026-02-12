@@ -1125,7 +1125,7 @@ body {
     top: 0;
     bottom: 0;
     width: 24px;
-    background: linear-gradient(to right, var(--background-primary) 0%, transparent 100%);
+    background: linear-gradient(to right, var(--nn-theme-list-bg) 0%, transparent 100%);
     pointer-events: none;
     z-index: 1;
 }
@@ -2485,6 +2485,16 @@ body {
     --nn-theme-navitem-count-color: var(--nn-theme-foreground);
     opacity: 0.5;
     pointer-events: none;
+}
+/* Source: src/styles/sections/navigation-properties.css */
+
+/* ========================================================================
+   Navigation Properties
+   ======================================================================== */
+
+/* Property tree rows reuse the shared navigation row layout from navigation-tree.css. */
+.nn-navitem.nn-property .nn-navitem-name {
+    unicode-bidi: plaintext;
 }
 /* Source: src/styles/sections/calendar.css */
 

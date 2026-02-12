@@ -1381,7 +1381,8 @@ export const FileItem = React.memo(function FileItem({
         e.stopPropagation();
         e.preventDefault();
         runAsyncAction(async () => {
-            const context = selectionType === ItemType.TAG ? ItemType.TAG : ItemType.FOLDER;
+            const context =
+                selectionType === ItemType.TAG ? ItemType.TAG : selectionType === ItemType.PROPERTY ? ItemType.PROPERTY : ItemType.FOLDER;
             await metadataService.togglePin(file.path, context);
         });
     };

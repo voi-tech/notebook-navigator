@@ -60,6 +60,7 @@ export const STRINGS_DE = {
         shortcutsHeader: 'Lesezeichen',
         recentNotesHeader: 'Neueste Notizen',
         recentFilesHeader: 'Neueste Dateien',
+        properties: 'Eigenschaften',
         reorderRootFoldersTitle: 'Navigation neu anordnen',
         reorderRootFoldersHint: 'Pfeile oder Ziehen zum Neuanordnen',
         vaultRootLabel: 'Tresor',
@@ -181,6 +182,16 @@ export const STRINGS_DE = {
                         'Cmd/Ctrl+Klick auf einen Tag zum Hinzufügen mit AND. Cmd/Ctrl+Shift+Klick zum Hinzufügen mit OR.'
                     ]
                 },
+                properties: {
+                    title: 'Eigenschaften',
+                    items: [
+                        '`.key` Notizen mit benutzerdefiniertem Eigenschaftsschlüssel einschließen.',
+                        '`.key=value` Notizen mit benutzerdefiniertem Eigenschaftswert einschließen (passt auch auf verschachtelte Werte wie `value/subvalue`).',
+                        '`."Reading Status"` Notizen mit einem Eigenschaftsschlüssel einschließen, der Leerzeichen enthält.',
+                        '`."Reading Status"="In Progress"` Schlüssel und Werte mit Leerzeichen müssen in Anführungszeichen stehen.',
+                        'Cmd/Ctrl+Klick auf eine Eigenschaft zum Hinzufügen mit AND. Cmd/Ctrl+Shift+Klick zum Hinzufügen mit OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filter',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_DE = {
                 connectors: {
                     title: 'AND/OR-Verhalten',
                     items: [
-                        '`AND` und `OR` sind nur in reinen Tag-Abfragen Operatoren.',
-                        'Reine Tag-Abfragen enthalten nur Tag-Filter: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` und `OR` sind nur in reinen Tag-/Eigenschafts-Abfragen Operatoren.',
+                        'Reine Tag-/Eigenschafts-Abfragen enthalten nur Tag- und Eigenschafts-Filter: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Wenn eine Abfrage Namen, Daten (`@...`), Aufgabenfilter (`has:task`), Ordnerfilter (`folder:...`) oder Erweiterungsfilter (`ext:...`) enthält, werden `AND` und `OR` als Wörter abgeglichen.',
-                        'Beispiel für Operator-Abfrage: `#work OR #home`.',
+                        'Beispiel für Operator-Abfrage: `#work OR .status=started`.',
                         'Beispiel für gemischte Abfrage: `#work OR ext:md` (`OR` wird in Dateinamen abgeglichen).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_DE = {
                 'nav-folder-closed': 'Ordner geschlossen',
                 'nav-folder-note': 'Ordnernotiz',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Eigenschaften',
                 'list-pinned': 'Angeheftete Elemente',
                 'file-unfinished-task': 'Unerledigte Aufgaben',
                 'file-word-count': 'Wortanzahl',
@@ -596,6 +608,9 @@ export const STRINGS_DE = {
             noFilesSelected: 'Keine Dateien ausgewählt',
             tagOperationsNotAvailable: 'Tag-Operationen nicht verfügbar',
             tagsRequireMarkdown: 'Tags werden nur in Markdown-Notizen unterstützt',
+            propertiesRequireMarkdown: 'Eigenschaften werden nur bei Markdown-Notizen unterstützt',
+            propertySetOnNote: 'Eigenschaft bei 1 Notiz aktualisiert',
+            propertySetOnNotes: 'Eigenschaft bei {count} Notizen aktualisiert',
             iconPackDownloaded: '{provider} heruntergeladen',
             iconPackUpdated: '{provider} aktualisiert ({version})',
             iconPackRemoved: '{provider} entfernt',
@@ -618,6 +633,7 @@ export const STRINGS_DE = {
             itemAlreadyExists: 'Ein Element mit dem Namen "{name}" existiert bereits an diesem Ort.',
             failedToMove: 'Verschieben fehlgeschlagen: {error}',
             failedToAddTag: 'Hinzufügen des Tags "{tag}" fehlgeschlagen',
+            failedToSetProperty: 'Eigenschaft konnte nicht aktualisiert werden: {error}',
             failedToClearTags: 'Entfernen der Tags fehlgeschlagen',
             failedToMoveFolder: 'Ordner "{name}" konnte nicht verschoben werden',
             failedToImportFiles: 'Import fehlgeschlagen: {names}'
@@ -625,6 +641,7 @@ export const STRINGS_DE = {
         notifications: {
             filesAlreadyExist: '{count} Dateien existieren bereits am Zielort',
             filesAlreadyHaveTag: '{count} Dateien haben dieses Tag oder ein spezifischeres bereits',
+            filesAlreadyHaveProperty: '{count} Dateien haben diese Eigenschaft bereits',
             noTagsToClear: 'Keine Tags zum Entfernen',
             fileImported: '1 Datei importiert',
             filesImported: '{count} Dateien importiert'

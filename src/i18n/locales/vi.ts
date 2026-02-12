@@ -61,6 +61,7 @@ export const STRINGS_VI = {
         shortcutsHeader: 'Lối tắt', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Ghi chú gần đây', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Tệp gần đây', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Thuộc tính',
         reorderRootFoldersTitle: 'Sắp xếp lại điều hướng',
         reorderRootFoldersHint: 'Dùng mũi tên hoặc kéo để sắp xếp lại',
         vaultRootLabel: 'Vault',
@@ -181,6 +182,16 @@ export const STRINGS_VI = {
                         'Cmd/Ctrl+Nhấp vào thẻ để thêm với AND. Cmd/Ctrl+Shift+Nhấp để thêm với OR.'
                     ]
                 },
+                properties: {
+                    title: 'Thuộc tính',
+                    items: [
+                        '`.key` Bao gồm ghi chú có khóa thuộc tính tùy chỉnh.',
+                        '`.key=value` Bao gồm ghi chú có giá trị thuộc tính tùy chỉnh (cũng khớp với giá trị lồng nhau như `value/subvalue`).',
+                        '`."Reading Status"` Bao gồm ghi chú có khóa thuộc tính chứa khoảng trắng.',
+                        '`."Reading Status"="In Progress"` Khóa và giá trị có khoảng trắng phải được đặt trong dấu ngoặc kép.',
+                        'Cmd/Ctrl+Nhấp vào thuộc tính để thêm với AND. Cmd/Ctrl+Shift+Nhấp để thêm với OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Bộ lọc',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_VI = {
                 connectors: {
                     title: 'Hành vi AND/OR',
                     items: [
-                        '`AND` và `OR` chỉ là toán tử trong các truy vấn chỉ chứa thẻ.',
-                        'Truy vấn chỉ chứa thẻ chỉ bao gồm bộ lọc thẻ: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` và `OR` là toán tử chỉ trong các truy vấn chỉ chứa thẻ và thuộc tính.',
+                        'Truy vấn chỉ chứa thẻ và thuộc tính chỉ bao gồm bộ lọc thẻ và thuộc tính: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Nếu truy vấn bao gồm tên, ngày (`@...`), bộ lọc nhiệm vụ (`has:task`), bộ lọc thư mục (`folder:...`) hoặc bộ lọc phần mở rộng (`ext:...`), `AND` và `OR` được tìm kiếm như từ.',
-                        'Ví dụ truy vấn toán tử: `#work OR #home`.',
+                        'Ví dụ truy vấn toán tử: `#work OR .status=started`.',
                         'Ví dụ truy vấn hỗn hợp: `#work OR ext:md` (`OR` được tìm kiếm trong tên tệp).'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_VI = {
                 'nav-folder-closed': 'Thư mục đóng',
                 'nav-folder-note': 'Ghi chú thư mục',
                 'nav-tag': 'Thẻ',
+                'nav-properties': 'Thuộc tính',
                 'list-pinned': 'Mục đã ghim',
                 'file-unfinished-task': 'Nhiệm vụ chưa hoàn thành',
                 'file-word-count': 'Số từ',
@@ -594,6 +606,9 @@ export const STRINGS_VI = {
             noFilesSelected: 'Chưa chọn tệp',
             tagOperationsNotAvailable: 'Thao tác thẻ không khả dụng',
             tagsRequireMarkdown: 'Thẻ chỉ được hỗ trợ trên ghi chú Markdown',
+            propertiesRequireMarkdown: 'Thuộc tính chỉ được hỗ trợ trên ghi chú Markdown',
+            propertySetOnNote: 'Đã cập nhật thuộc tính trên 1 ghi chú',
+            propertySetOnNotes: 'Đã cập nhật thuộc tính trên {count} ghi chú',
             iconPackDownloaded: 'Đã tải {provider}',
             iconPackUpdated: 'Đã cập nhật {provider} ({version})',
             iconPackRemoved: 'Đã gỡ {provider}',
@@ -616,6 +631,7 @@ export const STRINGS_VI = {
             itemAlreadyExists: 'Mục có tên "{name}" đã tồn tại ở vị trí này.',
             failedToMove: 'Không thể di chuyển: {error}',
             failedToAddTag: 'Không thể thêm thẻ "{tag}"',
+            failedToSetProperty: 'Không thể cập nhật thuộc tính: {error}',
             failedToClearTags: 'Không thể xóa thẻ',
             failedToMoveFolder: 'Không thể di chuyển thư mục "{name}"',
             failedToImportFiles: 'Không thể nhập: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_VI = {
         notifications: {
             filesAlreadyExist: '{count} tệp đã tồn tại ở đích',
             filesAlreadyHaveTag: '{count} tệp đã có thẻ này hoặc thẻ cụ thể hơn',
+            filesAlreadyHaveProperty: '{count} tệp đã có thuộc tính này',
             noTagsToClear: 'Không có thẻ để xóa',
             fileImported: 'Đã nhập 1 tệp',
             filesImported: 'Đã nhập {count} tệp'

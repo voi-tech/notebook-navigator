@@ -24,6 +24,7 @@ import { FileSystemOperations } from '../../services/FileSystemService';
 import { MetadataService } from '../../services/MetadataService';
 import { TagOperations } from '../../services/TagOperations';
 import { TagTreeService } from '../../services/TagTreeService';
+import type { PropertyTreeService } from '../../services/PropertyTreeService';
 import { CommandQueueService } from '../../services/CommandQueueService';
 import { SelectionState, SelectionAction } from '../../context/SelectionContext';
 import type NotebookNavigatorPlugin from '../../main';
@@ -67,6 +68,7 @@ export interface MenuServices {
     metadataService: MetadataService;
     tagOperations: TagOperations;
     tagTreeService: TagTreeService | null;
+    propertyTreeService: PropertyTreeService | null;
     commandQueue: CommandQueueService | null;
     shortcuts: ShortcutsContextValue | null;
     visibility: VisibilityPreferences;

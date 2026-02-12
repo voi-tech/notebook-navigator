@@ -84,9 +84,10 @@ export interface TagMetadata {
  * Context where a note can be pinned
  * - 'folder': Pin appears when viewing folders
  * - 'tag': Pin appears when viewing tags
- * - 'all': Pin appears in both folder and tag views
+ * - 'property': Pin appears when viewing properties
+ * - 'all': Pin appears in folder, tag, and property views
  */
-export type PinContext = 'folder' | 'tag' | 'all';
+export type PinContext = 'folder' | 'tag' | 'property' | 'all';
 
 /**
  * Pinned file with context information
@@ -95,14 +96,14 @@ export interface PinnedFile {
     /** The pinned file */
     file: TFile;
     /** Which context the file is pinned in */
-    context: { folder: boolean; tag: boolean };
+    context: { folder: boolean; tag: boolean; property: boolean };
 }
 
 /**
  * Type alias for the Map structure returned by the API for pinned notes
  * Maps file paths to their pinning context states
  */
-export type Pinned = Map<string, { folder: boolean; tag: boolean }>;
+export type Pinned = Map<string, { folder: boolean; tag: boolean; property: boolean }>;
 
 // ============================================================================
 // EVENTS
@@ -120,7 +121,7 @@ export interface NotebookNavigatorEvents {
     /** Fired when the storage system is ready for queries */
     'storage-ready': void;
 
-    /** Fired when the navigation selection changes (folder, tag, or nothing) */
+    /** Fired when the navigation selection changes (folder, tag, property, or nothing) */
     'nav-item-changed': {
         item: NavItem;
     };
@@ -154,10 +155,16 @@ export interface NotebookNavigatorEvents {
 // ============================================================================
 
 /**
- * Currently selected navigation item (folder or tag)
- * Discriminated union ensures only one can be selected at a time
+ * Currently selected navigation item (folder, tag, property, or none).
+ *
+ * `property` uses the property tree node id (`properties-root` for the section root,
+ * or `key:<normalizedKey>` / `key:<normalizedKey>=<normalizedValuePath>` for key/value nodes).
  */
-export type NavItem = { folder: TFolder; tag: null } | { folder: null; tag: string } | { folder: null; tag: null };
+export type NavItem =
+    | { folder: TFolder; tag: null; property: null }
+    | { folder: null; tag: string; property: null }
+    | { folder: null; tag: null; property: string }
+    | { folder: null; tag: null; property: null };
 
 /**
  * Current file selection state

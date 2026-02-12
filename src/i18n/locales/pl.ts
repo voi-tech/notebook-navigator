@@ -60,6 +60,7 @@ export const STRINGS_PL = {
         shortcutsHeader: 'Skróty',
         recentNotesHeader: 'Ostatnie notatki',
         recentFilesHeader: 'Ostatnie pliki',
+        properties: 'Właściwości',
         reorderRootFoldersTitle: 'Przestaw nawigację',
         reorderRootFoldersHint: 'Użyj strzałek lub przeciągnij, aby przestawić',
         vaultRootLabel: 'Magazyn',
@@ -181,6 +182,16 @@ export const STRINGS_PL = {
                         'Cmd/Ctrl+Kliknij tag, aby dodać z AND. Cmd/Ctrl+Shift+Kliknij, aby dodać z OR.'
                     ]
                 },
+                properties: {
+                    title: 'Właściwości',
+                    items: [
+                        '`.key` Uwzględnij notatki z niestandardowym kluczem właściwości.',
+                        '`.key=value` Uwzględnij notatki z niestandardową wartością właściwości (dopasowuje również zagnieżdżone wartości jak `value/subvalue`).',
+                        '`."Reading Status"` Uwzględnij notatki z kluczem właściwości zawierającym spacje.',
+                        '`."Reading Status"="In Progress"` Klucze i wartości ze spacjami muszą być ujęte w podwójne cudzysłowy.',
+                        'Cmd/Ctrl+Kliknij właściwość, aby dodać z AND. Cmd/Ctrl+Shift+Kliknij, aby dodać z OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtry',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_PL = {
                 connectors: {
                     title: 'Zachowanie AND/OR',
                     items: [
-                        '`AND` i `OR` są operatorami tylko w zapytaniach składających się wyłącznie z tagów.',
-                        'Zapytania wyłącznie z tagów zawierają tylko filtry tagów: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` i `OR` są operatorami tylko w zapytaniach zawierających wyłącznie tagi i właściwości.',
+                        'Zapytania wyłącznie tagowe i właściwościowe zawierają tylko filtry tagów i właściwości: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Jeśli zapytanie zawiera nazwy, daty (`@...`), filtry zadań (`has:task`), filtry folderów (`folder:...`) lub filtry rozszerzeń (`ext:...`), `AND` i `OR` są wyszukiwane jako słowa.',
-                        'Przykład zapytania z operatorami: `#work OR #home`.',
+                        'Przykład zapytania z operatorem: `#work OR .status=started`.',
                         'Przykład zapytania mieszanego: `#work OR ext:md` (`OR` jest wyszukiwane w nazwach plików).'
                     ]
                 },
@@ -396,6 +407,7 @@ export const STRINGS_PL = {
                 'nav-folder-closed': 'Folder zamknięty',
                 'nav-folder-note': 'Notatka folderu',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Właściwości',
                 'list-pinned': 'Przypięte elementy',
                 'file-unfinished-task': 'Nieukończone zadania',
                 'file-word-count': 'Liczba słów',
@@ -596,6 +608,9 @@ export const STRINGS_PL = {
             noFilesSelected: 'Nie wybrano plików',
             tagOperationsNotAvailable: 'Operacje na tagach niedostępne',
             tagsRequireMarkdown: 'Tagi są obsługiwane tylko w notatkach Markdown',
+            propertiesRequireMarkdown: 'Właściwości są obsługiwane tylko w notatkach Markdown',
+            propertySetOnNote: 'Zaktualizowano właściwość w 1 notatce',
+            propertySetOnNotes: 'Zaktualizowano właściwość w {count} notatkach',
             iconPackDownloaded: '{provider} pobrano',
             iconPackUpdated: '{provider} zaktualizowano ({version})',
             iconPackRemoved: '{provider} usunięto',
@@ -618,6 +633,7 @@ export const STRINGS_PL = {
             itemAlreadyExists: 'Element o nazwie "{name}" już istnieje w tej lokalizacji.',
             failedToMove: 'Nie udało się przenieść: {error}',
             failedToAddTag: 'Nie udało się dodać tagu "{tag}"',
+            failedToSetProperty: 'Nie udało się zaktualizować właściwości: {error}',
             failedToClearTags: 'Nie udało się wyczyścić tagów',
             failedToMoveFolder: 'Nie udało się przenieść folderu "{name}"',
             failedToImportFiles: 'Nie udało się zaimportować: {names}'
@@ -625,6 +641,7 @@ export const STRINGS_PL = {
         notifications: {
             filesAlreadyExist: '{count} plików już istnieje w miejscu docelowym',
             filesAlreadyHaveTag: '{count} plików już ma ten tag lub bardziej szczegółowy',
+            filesAlreadyHaveProperty: '{count} plików ma już tę właściwość',
             noTagsToClear: 'Brak tagów do wyczyszczenia',
             fileImported: 'Zaimportowano 1 plik',
             filesImported: 'Zaimportowano {count} plików'

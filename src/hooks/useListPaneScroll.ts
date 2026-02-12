@@ -57,6 +57,7 @@ import type { CustomPropertyType } from '../settings/types';
 import type { SelectionState } from '../context/SelectionContext';
 import { calculateCompactListMetrics } from '../utils/listPaneMetrics';
 import { getCustomPropertyRowCount, getListPaneMeasurements, shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
+import type { PropertySelectionNodeId } from '../utils/propertyTree';
 
 /**
  * Parameters for the useListPaneScroll hook
@@ -72,6 +73,8 @@ interface UseListPaneScrollParams {
     selectedFolder: TFolder | null;
     /** Currently selected tag */
     selectedTag: string | null;
+    /** Currently selected property */
+    selectedProperty: PropertySelectionNodeId | null;
     /** Plugin settings */
     settings: NotebookNavigatorSettings;
     /** Effective settings for the current folder */
@@ -135,6 +138,7 @@ export function useListPaneScroll({
     selectedFile,
     selectedFolder,
     selectedTag,
+    selectedProperty,
     settings,
     folderSettings,
     isVisible,
@@ -837,7 +841,8 @@ export function useListPaneScroll({
     useEffect(() => {
         if (!rowVirtualizer || !isScrollContainerReady) return;
 
-        const contextKey = `${selectedFolder?.path || ''}_${selectedTag || ''}`;
+        const propertySelectionKey = selectedProperty ?? '';
+        const contextKey = `${selectedFolder?.path || ''}_${selectedTag || ''}_${propertySelectionKey}`;
         const prev = contextIndexVersionRef.current;
 
         // Initialize on first run or when context changes
@@ -866,6 +871,7 @@ export function useListPaneScroll({
         isScrollContainerReady,
         selectedFolder?.path,
         selectedTag,
+        selectedProperty,
         filePathToIndex,
         filePathToIndex.size,
         selectedFile,
@@ -885,7 +891,8 @@ export function useListPaneScroll({
         }
 
         // Create a key representing the current list context
-        const currentListKey = `${selectedFolder?.path || ''}_${selectedTag || ''}`;
+        const propertySelectionKey = selectedProperty ?? '';
+        const currentListKey = `${selectedFolder?.path || ''}_${selectedTag || ''}_${propertySelectionKey}`;
         const listChanged = prevListKeyRef.current !== currentListKey;
 
         if (listChanged) {
@@ -986,6 +993,7 @@ export function useListPaneScroll({
         rowVirtualizer,
         selectedFolder?.path,
         selectedTag,
+        selectedProperty,
         selectedFile,
         selectionState.isFolderNavigation,
         selectionDispatch,

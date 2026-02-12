@@ -19,7 +19,7 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { App, TFile, TFolder } from 'obsidian';
 import { NavigationItemType, STORAGE_KEYS } from '../types';
-import { getFilesForFolder, getFilesForTag } from '../utils/fileFinder';
+import { getFilesForFolder, getFilesForProperty, getFilesForTag } from '../utils/fileFinder';
 import { useSettingsState } from './SettingsContext';
 import { useUXPreferences } from './UXPreferencesContext';
 import { localStorage } from '../utils/localStorage';
@@ -28,6 +28,12 @@ import type { TagTreeService } from '../services/TagTreeService';
 import type { TagDeleteEventPayload, TagRenameEventPayload } from '../services/TagOperations';
 import { useServices } from './ServicesContext';
 import { normalizeTagPath } from '../utils/tagUtils';
+import {
+    isPropertyFeatureEnabled,
+    isPropertySelectionNodeIdConfigured,
+    parseStoredPropertySelectionNodeId,
+    type PropertySelectionNodeId
+} from '../utils/propertyTree';
 
 export type SelectionRevealSource = 'auto' | 'manual' | 'shortcut' | 'startup';
 
@@ -36,6 +42,7 @@ export interface SelectionState {
     selectionType: NavigationItemType;
     selectedFolder: TFolder | null;
     selectedTag: string | null;
+    selectedProperty: PropertySelectionNodeId | null;
     selectedFiles: Set<string>; // Changed from single file to Set of file paths
     anchorIndex: number | null; // Anchor position for multi-selection
     lastMovementDirection: 'up' | 'down' | null; // Track direction for expand/contract
@@ -52,6 +59,7 @@ export interface SelectionState {
 export type SelectionAction =
     | { type: 'SET_SELECTED_FOLDER'; folder: TFolder | null; autoSelectedFile?: TFile | null; source?: SelectionRevealSource }
     | { type: 'SET_SELECTED_TAG'; tag: string | null; autoSelectedFile?: TFile | null; source?: SelectionRevealSource }
+    | { type: 'SET_SELECTED_PROPERTY'; nodeId: PropertySelectionNodeId; autoSelectedFile?: TFile | null; source?: SelectionRevealSource }
     | { type: 'SET_SELECTED_FILE'; file: TFile | null }
     | { type: 'SET_SELECTION_TYPE'; selectionType: NavigationItemType }
     | { type: 'CLEAR_SELECTION' }
@@ -145,6 +153,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 ...state,
                 selectedFolder: action.folder,
                 selectedTag: null,
+                selectedProperty: null,
                 selectionType: 'folder',
                 selectedFiles: newSelectedFiles,
                 selectedFile: action.autoSelectedFile || null,
@@ -168,6 +177,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 ...state,
                 selectedTag: normalizedTag,
                 selectedFolder: null,
+                selectedProperty: null,
                 selectionType: 'tag',
                 selectedFiles: newSelectedFiles,
                 selectedFile: action.autoSelectedFile || null,
@@ -177,6 +187,30 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 isFolderChangeWithAutoSelect: action.autoSelectedFile !== undefined && action.autoSelectedFile !== null,
                 isKeyboardNavigation: false,
                 isFolderNavigation: true, // Set flag when tag changes too
+                revealSource: action.source ?? null
+            };
+        }
+
+        case 'SET_SELECTED_PROPERTY': {
+            const newSelectedFiles = new Set<string>();
+            if (action.autoSelectedFile) {
+                newSelectedFiles.add(action.autoSelectedFile.path);
+            }
+
+            return {
+                ...state,
+                selectedProperty: action.nodeId,
+                selectedFolder: null,
+                selectedTag: null,
+                selectionType: 'property',
+                selectedFiles: newSelectedFiles,
+                selectedFile: action.autoSelectedFile || null,
+                anchorIndex: null,
+                lastMovementDirection: null,
+                isRevealOperation: false,
+                isFolderChangeWithAutoSelect: action.autoSelectedFile !== undefined && action.autoSelectedFile !== null,
+                isKeyboardNavigation: false,
+                isFolderNavigation: true,
                 revealSource: action.source ?? null
             };
         }
@@ -216,6 +250,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 ...state,
                 selectedFolder: null,
                 selectedTag: null,
+                selectedProperty: null,
                 selectedFiles: new Set<string>(),
                 selectedFile: null,
                 anchorIndex: null,
@@ -246,6 +281,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                     selectionType: 'folder',
                     selectedFolder: folderToSelect,
                     selectedTag: null,
+                    selectedProperty: null,
                     selectedFiles: newSelectedFiles,
                     selectedFile: action.file,
                     anchorIndex: null,
@@ -266,6 +302,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                         selectionType: 'tag',
                         selectedTag: normalizedTargetTag,
                         selectedFolder: null,
+                        selectedProperty: null,
                         selectedFiles: newSelectedFiles,
                         selectedFile: action.file,
                         anchorIndex: null,
@@ -284,6 +321,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                     selectionType: 'folder',
                     selectedFolder: newFolder,
                     selectedTag: null,
+                    selectedProperty: null,
                     selectedFiles: newSelectedFiles,
                     selectedFile: action.file,
                     anchorIndex: null,
@@ -303,6 +341,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                     selectionType: 'tag',
                     selectedTag: state.selectedTag,
                     selectedFolder: null,
+                    selectedProperty: null,
                     selectedFiles: newSelectedFiles,
                     selectedFile: action.file,
                     anchorIndex: null,
@@ -321,6 +360,7 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 selectionType: 'folder',
                 selectedFolder: newFolder,
                 selectedTag: null,
+                selectedProperty: null,
                 selectedFiles: newSelectedFiles,
                 selectedFile: action.file,
                 anchorIndex: null,
@@ -541,8 +581,9 @@ export function SelectionProvider({
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
+    const propertyFeatureEnabled = isPropertyFeatureEnabled(settings);
     // Get tag operations service for subscribing to tag rename and delete events
-    const { tagOperations } = useServices();
+    const { tagOperations, propertyTreeService } = useServices();
 
     // Load initial state from localStorage and vault
     const loadInitialState = useCallback((): SelectionState => {
@@ -570,6 +611,24 @@ export function SelectionProvider({
             savedTag = localStorage.get<string>(STORAGE_KEYS.selectedTagKey);
         } catch (error) {
             console.error('Failed to load selected tag from localStorage:', error);
+        }
+
+        let savedPropertySelection: PropertySelectionNodeId | null = null;
+        if (propertyFeatureEnabled) {
+            try {
+                const savedPropertyRaw = localStorage.get<unknown>(STORAGE_KEYS.selectedPropertyKey);
+                savedPropertySelection = parseStoredPropertySelectionNodeId(savedPropertyRaw);
+            } catch (error) {
+                console.error('Failed to load selected property from localStorage:', error);
+            }
+        }
+        if (savedPropertySelection && !isPropertySelectionNodeIdConfigured(settings, savedPropertySelection)) {
+            savedPropertySelection = null;
+            try {
+                localStorage.remove(STORAGE_KEYS.selectedPropertyKey);
+            } catch (error) {
+                console.error('Failed to clear invalid property selection from localStorage:', error);
+            }
         }
 
         // Load saved file path with error handling
@@ -618,7 +677,10 @@ export function SelectionProvider({
         let selectionType: NavigationItemType = 'folder';
         const normalizedTag = normalizeTagPath(savedTag);
 
-        if (normalizedTag) {
+        if (savedPropertySelection) {
+            selectionType = 'property';
+            selectedFolder = null;
+        } else if (normalizedTag) {
             selectionType = 'tag';
             selectedFolder = null; // Clear folder if tag is selected
         } else if (!selectedFolder) {
@@ -629,7 +691,8 @@ export function SelectionProvider({
         return {
             selectionType,
             selectedFolder,
-            selectedTag: normalizedTag,
+            selectedTag: savedPropertySelection ? null : normalizedTag,
+            selectedProperty: savedPropertySelection,
             selectedFiles,
             selectedFile,
             anchorIndex: null,
@@ -640,7 +703,7 @@ export function SelectionProvider({
             isFolderNavigation: false,
             revealSource: null
         };
-    }, [app.vault]);
+    }, [app.vault, propertyFeatureEnabled, settings]);
 
     const [state, dispatch] = useReducer(
         (state: SelectionState, action: SelectionAction) => selectionReducer(state, action, app),
@@ -654,32 +717,31 @@ export function SelectionProvider({
         stateRef.current = state;
     }, [state]);
 
+    const resolveAutoSelectedFile = useCallback(
+        (filesInScope: TFile[]): TFile | null => {
+            if (!isMobile && settings.autoSelectFirstFileOnFocusChange && filesInScope.length > 0) {
+                return filesInScope[0];
+            }
+
+            const activeFile = app.workspace.getActiveFile();
+            if (activeFile && filesInScope.some(file => file.path === activeFile.path)) {
+                return activeFile;
+            }
+
+            return null;
+        },
+        [app.workspace, isMobile, settings.autoSelectFirstFileOnFocusChange]
+    );
+
     // Create an enhanced dispatch that handles side effects
     const enhancedDispatch = useCallback(
         (action: SelectionAction) => {
+            const visibility = { includeDescendantNotes, showHiddenItems };
             // Handle auto-select logic for folder selection
             if (action.type === 'SET_SELECTED_FOLDER' && action.autoSelectedFile === undefined) {
                 if (action.folder) {
-                    const filesInFolder = getFilesForFolder(action.folder, settings, { includeDescendantNotes, showHiddenItems }, app);
-
-                    // Desktop with autoSelectFirstFile enabled: ALWAYS select first file
-                    if (!isMobile && settings.autoSelectFirstFileOnFocusChange && filesInFolder.length > 0) {
-                        dispatch({ ...action, autoSelectedFile: filesInFolder[0] });
-                    } else {
-                        // Otherwise, check for active file
-                        const activeFile = app.workspace.getActiveFile();
-                        const activeFileInFolder = activeFile && filesInFolder.some(f => f.path === activeFile.path);
-
-                        if (activeFileInFolder) {
-                            // Select the active file if it's in the folder (mobile always, desktop when autoSelect is off)
-                            dispatch({ ...action, autoSelectedFile: activeFile });
-                        } else {
-                            // No auto-selection
-                            dispatch({ ...action, autoSelectedFile: null });
-                        }
-                    }
-
-                    // Navigation event will be triggered by the useEffect watching selectedFolder
+                    const filesInFolder = getFilesForFolder(action.folder, settings, visibility, app);
+                    dispatch({ ...action, autoSelectedFile: resolveAutoSelectedFile(filesInFolder) });
                 } else {
                     dispatch({ ...action, autoSelectedFile: null });
                 }
@@ -687,35 +749,16 @@ export function SelectionProvider({
             // Handle auto-select logic for tag selection
             else if (action.type === 'SET_SELECTED_TAG' && action.autoSelectedFile === undefined) {
                 if (action.tag) {
-                    const filesForTag = getFilesForTag(
-                        action.tag,
-                        settings,
-                        { includeDescendantNotes, showHiddenItems },
-                        app,
-                        tagTreeService
-                    );
-
-                    // Desktop with autoSelectFirstFile enabled: ALWAYS select first file
-                    if (!isMobile && settings.autoSelectFirstFileOnFocusChange && filesForTag.length > 0) {
-                        dispatch({ ...action, autoSelectedFile: filesForTag[0] });
-                    } else {
-                        // Otherwise, check for active file
-                        const activeFile = app.workspace.getActiveFile();
-                        const activeFileInTag = activeFile && filesForTag.some(f => f.path === activeFile.path);
-
-                        if (activeFileInTag) {
-                            // Select the active file if it's in the tag view (mobile always, desktop when autoSelect is off)
-                            dispatch({ ...action, autoSelectedFile: activeFile });
-                        } else {
-                            // No auto-selection
-                            dispatch({ ...action, autoSelectedFile: null });
-                        }
-                    }
-
-                    // Navigation event will be triggered by the useEffect watching selectedTag
+                    const filesForTag = getFilesForTag(action.tag, settings, visibility, app, tagTreeService);
+                    dispatch({ ...action, autoSelectedFile: resolveAutoSelectedFile(filesForTag) });
                 } else {
                     dispatch({ ...action, autoSelectedFile: null });
                 }
+            }
+            // Handle auto-select logic for property selection
+            else if (action.type === 'SET_SELECTED_PROPERTY' && action.autoSelectedFile === undefined) {
+                const filesForProperty = getFilesForProperty(action.nodeId, settings, visibility, app, propertyTreeService);
+                dispatch({ ...action, autoSelectedFile: resolveAutoSelectedFile(filesForProperty) });
             }
             // Handle cleanup for deleted files on mobile
             else if (action.type === 'CLEANUP_DELETED_FILE' && isMobile) {
@@ -727,7 +770,17 @@ export function SelectionProvider({
                 dispatch(action);
             }
         },
-        [app, settings, includeDescendantNotes, showHiddenItems, isMobile, tagTreeService, dispatch]
+        [
+            app,
+            settings,
+            includeDescendantNotes,
+            showHiddenItems,
+            isMobile,
+            tagTreeService,
+            propertyTreeService,
+            dispatch,
+            resolveAutoSelectedFile
+        ]
     );
 
     // Subscribe to tag operations and update selection when tags are renamed or deleted
@@ -816,6 +869,41 @@ export function SelectionProvider({
         }
     }, [state.selectedTag]);
 
+    // Persist selected property to localStorage with error handling
+    useEffect(() => {
+        if (!propertyFeatureEnabled && state.selectionType === 'property') {
+            dispatch({ type: 'SET_SELECTED_FOLDER', folder: app.vault.getRoot() });
+        }
+    }, [app.vault, dispatch, propertyFeatureEnabled, state.selectionType]);
+
+    useEffect(() => {
+        if (!propertyFeatureEnabled) {
+            return;
+        }
+
+        if (state.selectionType !== 'property' || !state.selectedProperty) {
+            return;
+        }
+
+        if (isPropertySelectionNodeIdConfigured(settings, state.selectedProperty)) {
+            return;
+        }
+
+        dispatch({ type: 'SET_SELECTED_FOLDER', folder: app.vault.getRoot() });
+    }, [app.vault, dispatch, propertyFeatureEnabled, settings, state.selectedProperty, state.selectionType]);
+
+    useEffect(() => {
+        try {
+            if (state.selectedProperty) {
+                localStorage.set(STORAGE_KEYS.selectedPropertyKey, state.selectedProperty);
+            } else {
+                localStorage.remove(STORAGE_KEYS.selectedPropertyKey);
+            }
+        } catch (error) {
+            console.error('Failed to save selected property to localStorage:', error);
+        }
+    }, [state.selectedProperty]);
+
     // Persist selected file to localStorage with error handling
     useEffect(() => {
         try {
@@ -853,9 +941,9 @@ export function SelectionProvider({
     // Notify API about navigation selection changes
     useEffect(() => {
         if (api && api.selection) {
-            api.selection.updateNavigationState(state.selectedFolder, state.selectedTag);
+            api.selection.updateNavigationState(state.selectedFolder, state.selectedTag, state.selectedProperty);
         }
-    }, [state.selectedFolder, state.selectedTag, api]);
+    }, [state.selectedFolder, state.selectedTag, state.selectedProperty, api]);
 
     // Register file rename listener
     useEffect(() => {

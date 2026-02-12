@@ -23,12 +23,13 @@ import type { NotebookNavigatorAPI } from '../../api/NotebookNavigatorAPI';
 import type { NotebookNavigatorSettings } from '../../settings';
 import type { ContentProviderType, FileContentType } from '../../interfaces/IContentProvider';
 import type { ContentProviderRegistry } from '../../services/content/ContentProviderRegistry';
-import type { TagTreeNode } from '../../types/storage';
+import type { PropertyTreeNode, TagTreeNode } from '../../types/storage';
 import { calculateFileDiff } from '../../storage/diffCalculator';
 import { type FileData as DBFileData } from '../../storage/IndexedDBStorage';
 import { getDBInstance, markFilesForRegeneration, recordFileChanges, removeFilesFromCache } from '../../storage/fileOperations';
 import { runAsyncAction } from '../../utils/async';
 import { isMarkdownPath, isPdfFile } from '../../utils/fileTypeUtils';
+import { isPropertyFeatureEnabled } from '../../utils/propertyTree';
 import { filterFilesRequiringMetadataSources, filterPdfFilesRequiringThumbnails } from '../storageQueueFilters';
 import { getCacheRebuildProgressTypes, getContentWorkTotal, getMetadataDependentTypes } from './storageContentTypes';
 
@@ -70,6 +71,9 @@ export function useStorageVaultSync(params: {
     rebuildTagTree: () => Map<string, TagTreeNode>;
     scheduleTagTreeRebuild: (options?: { flush?: boolean }) => void;
     cancelTagTreeRebuildDebouncer: (options?: { reset?: boolean }) => void;
+    rebuildPropertyTree: () => Map<string, PropertyTreeNode>;
+    schedulePropertyTreeRebuild: (options?: { flush?: boolean }) => void;
+    cancelPropertyTreeRebuildDebouncer: (options?: { reset?: boolean }) => void;
     startCacheRebuildNotice: (total: number, enabledTypes: FileContentType[]) => void;
     getIndexableFiles: () => TFile[];
     queueMetadataContentWhenReady: (
@@ -102,6 +106,9 @@ export function useStorageVaultSync(params: {
         rebuildTagTree,
         scheduleTagTreeRebuild,
         cancelTagTreeRebuildDebouncer,
+        rebuildPropertyTree,
+        schedulePropertyTreeRebuild,
+        cancelPropertyTreeRebuildDebouncer,
         startCacheRebuildNotice,
         getIndexableFiles,
         queueMetadataContentWhenReady,
@@ -133,6 +140,7 @@ export function useStorageVaultSync(params: {
                     }
 
                     rebuildTagTree();
+                    rebuildPropertyTree();
 
                     isStorageReadyRef.current = true;
                     setIsStorageReady(true);
@@ -198,6 +206,9 @@ export function useStorageVaultSync(params: {
                                     await removeFilesFromCache(toRemove);
                                     if (settings.showTags) {
                                         scheduleTagTreeRebuild();
+                                    }
+                                    if (isPropertyFeatureEnabled(settings)) {
+                                        schedulePropertyTreeRebuild();
                                     }
                                 }
                             } catch (error: unknown) {
@@ -443,6 +454,7 @@ export function useStorageVaultSync(params: {
 
             // Clears debouncers and pending waits so no background work continues after teardown.
             cancelTagTreeRebuildDebouncer({ reset: true });
+            cancelPropertyTreeRebuildDebouncer({ reset: true });
             disposeMetadataWaitDisposers();
         };
     }, [
@@ -452,6 +464,7 @@ export function useStorageVaultSync(params: {
         activeVaultEventRefsRef,
         buildFileCacheFnRef,
         cancelTagTreeRebuildDebouncer,
+        cancelPropertyTreeRebuildDebouncer,
         contentRegistryRef,
         disposeMetadataWaitDisposers,
         getIndexableFiles,
@@ -467,7 +480,9 @@ export function useStorageVaultSync(params: {
         queueMetadataContentWhenReady,
         rebuildFileCacheRef,
         rebuildTagTree,
+        rebuildPropertyTree,
         scheduleTagTreeRebuild,
+        schedulePropertyTreeRebuild,
         setIsStorageReady,
         settings,
         stoppedRef,

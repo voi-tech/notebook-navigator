@@ -37,6 +37,7 @@ export type UXIconId =
     | 'nav-folder-closed'
     | 'nav-folder-note'
     | 'nav-tag'
+    | 'nav-properties'
     | 'list-search'
     | 'list-descendants'
     | 'list-sort-ascending'
@@ -74,6 +75,7 @@ export const UX_ICON_DEFINITIONS: UXIconDefinition[] = [
     { id: 'nav-folder-closed', category: 'navigationPane', defaultIconId: 'folder-closed' },
     { id: 'nav-folder-note', category: 'navigationPane', defaultIconId: 'file-text' },
     { id: 'nav-tag', category: 'navigationPane', defaultIconId: 'tags' },
+    { id: 'nav-properties', category: 'navigationPane', defaultIconId: 'align-left' },
     { id: 'list-search', category: 'listPane', defaultIconId: 'search' },
     { id: 'list-descendants', category: 'listPane', defaultIconId: 'layers' },
     { id: 'list-sort-ascending', category: 'listPane', defaultIconId: 'sort-asc' },

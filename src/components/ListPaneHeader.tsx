@@ -86,6 +86,8 @@ export function ListPaneHeader({
     const showSortButton = listToolbarVisibility.sort;
     const showAppearanceButton = listToolbarVisibility.appearance;
     const showNewNoteButton = listToolbarVisibility.newNote;
+    const hasNavigationSelection = Boolean(selectionState.selectedFolder || selectionState.selectedTag || selectionState.selectedProperty);
+    const hasAppearanceOrSortSelection = Boolean(selectionState.selectedFolder || selectionState.selectedTag);
 
     const shouldRenderBreadcrumbSegments = isMobile;
     const shouldShowHeaderTitle = !isMobile && listPaneTitlePreference === 'header';
@@ -302,7 +304,7 @@ export function ListPaneHeader({
         }, 0);
 
         return () => window.clearTimeout(timeoutId);
-    }, [selectionState.selectedFolder, selectionState.selectedTag, isMobile]);
+    }, [selectionState.selectedFolder, selectionState.selectedTag, selectionState.selectedProperty, isMobile]);
 
     // Updates fade gradient visibility based on scroll position
     const handleScroll = React.useCallback(() => {
@@ -371,7 +373,7 @@ export function ListPaneHeader({
                             className={`nn-icon-button ${isSearchActive ? 'nn-icon-button-active' : ''}`}
                             aria-label={strings.paneHeader.search}
                             onClick={onSearchToggle}
-                            disabled={!selectionState.selectedFolder && !selectionState.selectedTag}
+                            disabled={!hasNavigationSelection}
                             tabIndex={-1}
                         >
                             <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'list-search')} />
@@ -382,7 +384,7 @@ export function ListPaneHeader({
                             className={`nn-icon-button ${includeDescendantNotes ? 'nn-icon-button-active' : ''}`}
                             aria-label={descendantsTooltip}
                             onClick={handleToggleDescendants}
-                            disabled={!selectionState.selectedFolder && !selectionState.selectedTag}
+                            disabled={!hasNavigationSelection}
                             tabIndex={-1}
                         >
                             <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'list-descendants')} />
@@ -393,7 +395,7 @@ export function ListPaneHeader({
                             className={`nn-icon-button ${isCustomSort ? 'nn-icon-button-active' : ''}`}
                             aria-label={strings.paneHeader.changeSortOrder}
                             onClick={handleSortMenu}
-                            disabled={!selectionState.selectedFolder && !selectionState.selectedTag}
+                            disabled={!hasAppearanceOrSortSelection}
                             tabIndex={-1}
                         >
                             <ServiceIcon iconId={sortIconId} />
@@ -404,7 +406,7 @@ export function ListPaneHeader({
                             className={`nn-icon-button ${hasCustomAppearance ? 'nn-icon-button-active' : ''}`}
                             aria-label={strings.paneHeader.changeAppearance}
                             onClick={handleAppearanceMenu}
-                            disabled={!selectionState.selectedFolder && !selectionState.selectedTag}
+                            disabled={!hasAppearanceOrSortSelection}
                             tabIndex={-1}
                         >
                             <ServiceIcon iconId={resolveUXIcon(settings.interfaceIcons, 'list-appearance')} />

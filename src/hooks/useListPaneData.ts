@@ -38,7 +38,7 @@ import type { VisibilityPreferences } from '../types';
 import type { ListPaneItem } from '../types/virtualization';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { DateUtils } from '../utils/dateUtils';
-import { getFilesForFolder, getFilesForTag, collectPinnedPaths } from '../utils/fileFinder';
+import { collectPinnedPaths } from '../utils/fileFinder';
 import { shouldExcludeFile, createHiddenFileNameMatcher, isFolderInExcludedFolder } from '../utils/fileFilters';
 import {
     getDateField,
@@ -56,6 +56,7 @@ import {
     fileMatchesFilterTokens,
     filterSearchHasActiveCriteria,
     filterSearchNeedsTagLookup,
+    filterSearchNeedsPropertyLookup,
     filterSearchRequiresTagsForEveryMatch
 } from '../utils/filterSearch';
 import type { NotebookNavigatorSettings } from '../settings';
@@ -69,6 +70,9 @@ import type { SearchProvider } from '../types/search';
 import { PreviewTextUtils } from '../utils/previewTextUtils';
 import { getCachedFileTags } from '../utils/tagUtils';
 import { createOmnisearchHighlightQueryTokenContext, sanitizeOmnisearchHighlightTokens } from '../utils/omnisearchHighlight';
+import { casefold } from '../utils/recordUtils';
+import { normalizePropertyTreeValuePath, type PropertySelectionNodeId } from '../utils/propertyTree';
+import { getFilesForNavigationSelection } from '../utils/selectionUtils';
 
 const EMPTY_SEARCH_META = new Map<string, SearchResultMeta>();
 // Shared empty map used when no files are hidden to avoid allocations
@@ -80,12 +84,14 @@ const TAG_PRESENCE_SENTINEL = ['__nn_tag_present__'];
  * Parameters for the useListPaneData hook
  */
 interface UseListPaneDataParams {
-    /** The type of selection (folder or tag) */
+    /** The type of selection (folder, tag, or property) */
     selectionType: ItemType | null;
     /** The currently selected folder, if any */
     selectedFolder: TFolder | null;
     /** The currently selected tag, if any */
     selectedTag: string | null;
+    /** The currently selected property key/value, if any */
+    selectedProperty: PropertySelectionNodeId | null;
     /** Plugin settings */
     settings: NotebookNavigatorSettings;
     /** Active profile-derived values */
@@ -131,6 +137,7 @@ export function useListPaneData({
     selectionType,
     selectedFolder,
     selectedTag,
+    selectedProperty,
     settings,
     activeProfile,
     searchProvider,
@@ -138,7 +145,7 @@ export function useListPaneData({
     searchTokens,
     visibility
 }: UseListPaneDataParams): UseListPaneDataResult {
-    const { app, tagTreeService, commandQueue, omnisearchService } = useServices();
+    const { app, tagTreeService, propertyTreeService, commandQueue, omnisearchService } = useServices();
     const { getFileTimestamps, getDB, getFileDisplayName } = useFileCache();
     const { includeDescendantNotes, showHiddenItems } = visibility;
 
@@ -221,22 +228,27 @@ export function useListPaneData({
      * Re-runs when selection changes or vault is modified.
      */
     const baseFiles = useMemo(() => {
-        let allFiles: TFile[] = [];
-
-        if (selectionType === ItemType.FOLDER && selectedFolder) {
-            allFiles = getFilesForFolder(selectedFolder, settings, visibility, app);
-        } else if (selectionType === ItemType.TAG && selectedTag) {
-            allFiles = getFilesForTag(selectedTag, settings, visibility, app, tagTreeService);
-        }
-
-        return allFiles;
-        // NOTE: Excluding getFilesForFolder/getFilesForTag - static imports
+        return getFilesForNavigationSelection(
+            {
+                selectionType,
+                selectedFolder,
+                selectedTag,
+                selectedProperty
+            },
+            settings,
+            visibility,
+            app,
+            tagTreeService,
+            propertyTreeService
+        );
+        // NOTE: Excluding getFilesForNavigationSelection - static import
         // updateKey triggers re-computation on storage updates
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         selectionType,
         selectedFolder,
         selectedTag,
+        selectedProperty,
         activeProfile.profile.id,
         activeProfile.hiddenFolders,
         activeProfile.hiddenFileProperties,
@@ -259,6 +271,7 @@ export function useListPaneData({
         settings.propertySortKey,
         settings.folderSortOverrides,
         settings.tagSortOverrides,
+        propertyTreeService,
         includeDescendantNotes,
         showHiddenItems,
         app,
@@ -430,6 +443,7 @@ export function useListPaneData({
 
         // Check if we need to access tag metadata for any file
         const needsTagLookup = filterSearchNeedsTagLookup(tokens);
+        const needsPropertyLookup = filterSearchNeedsPropertyLookup(tokens);
         // Check if all inclusion clauses require files to have tags
         const requireTaggedMatches = filterSearchRequiresTagsForEveryMatch(tokens);
         const requiresNormalizedTagValues = tokens.mode === 'tag' || tokens.tagTokens.length > 0 || tokens.excludeTagTokens.length > 0;
@@ -439,6 +453,8 @@ export function useListPaneData({
         // Cache normalized tag arrays to avoid repeated string transformations
         const normalizedTagCache = new Map<string, string[]>();
         const emptyTags: string[] = [];
+        const normalizedPropertyCache = new Map<string, Map<string, string[]>>();
+        const emptyProperties = new Map<string, string[]>();
 
         // Get or compute normalized tags for a file path
         const resolveNormalizedTags = (path: string, rawTags: readonly string[]): string[] => {
@@ -451,9 +467,52 @@ export function useListPaneData({
             return normalized;
         };
 
+        const resolveNormalizedProperties = (
+            path: string,
+            customProperty: { fieldKey: string; value: string }[] | null
+        ): Map<string, string[]> => {
+            const cached = normalizedPropertyCache.get(path);
+            if (cached) {
+                return cached;
+            }
+
+            if (!customProperty || customProperty.length === 0) {
+                normalizedPropertyCache.set(path, emptyProperties);
+                return emptyProperties;
+            }
+
+            const normalizedValues = new Map<string, Set<string>>();
+            customProperty.forEach(entry => {
+                const normalizedKey = casefold(entry.fieldKey);
+                if (!normalizedKey) {
+                    return;
+                }
+
+                let values = normalizedValues.get(normalizedKey);
+                if (!values) {
+                    values = new Set<string>();
+                    normalizedValues.set(normalizedKey, values);
+                }
+
+                const normalizedValue = normalizePropertyTreeValuePath(entry.value);
+                if (!normalizedValue) {
+                    return;
+                }
+                values.add(normalizedValue);
+            });
+
+            const normalized = new Map<string, string[]>();
+            normalizedValues.forEach((values, key) => {
+                normalized.set(key, Array.from(values));
+            });
+
+            normalizedPropertyCache.set(path, normalized);
+            return normalized;
+        };
+
         const filteredByFilterSearch = baseFiles.filter(file => {
             const lowercaseName = searchableNames.get(file.path) || '';
-            const fileData = hasTaskFilters || needsTagLookup ? db.getFile(file.path) : null;
+            const fileData = hasTaskFilters || needsTagLookup || needsPropertyLookup ? db.getFile(file.path) : null;
             const hasUnfinishedTasks = hasTaskFilters && typeof fileData?.taskUnfinished === 'number' && fileData.taskUnfinished > 0;
             const needsMatchOptions = hasTaskFilters || hasFolderFilters || hasExtensionFilters;
             let matchOptions: FilterSearchMatchOptions | undefined;
@@ -466,6 +525,15 @@ export function useListPaneData({
 
                 if (hasExtensionFilters) {
                     matchOptions.lowercaseExtension = file.extension.toLowerCase();
+                }
+            }
+
+            if (needsPropertyLookup) {
+                const propertyValuesByKey = resolveNormalizedProperties(file.path, fileData?.customProperty ?? null);
+                if (matchOptions) {
+                    matchOptions = { ...matchOptions, propertyValuesByKey };
+                } else {
+                    matchOptions = { hasUnfinishedTasks, propertyValuesByKey };
                 }
             }
 
@@ -617,9 +685,15 @@ export function useListPaneData({
         });
 
         // Determine context filter based on selection type
-        // selectionType can be FOLDER, TAG, FILE, or null - we only use FOLDER and TAG for pinned context
+        // selectionType can be FOLDER, TAG, PROPERTY, FILE, or null - only context-backed types are used for pinned filtering
         const contextFilter =
-            selectionType === ItemType.TAG ? ItemType.TAG : selectionType === ItemType.FOLDER ? ItemType.FOLDER : undefined;
+            selectionType === ItemType.TAG
+                ? ItemType.TAG
+                : selectionType === ItemType.FOLDER
+                  ? ItemType.FOLDER
+                  : selectionType === ItemType.PROPERTY
+                    ? ItemType.PROPERTY
+                    : undefined;
         const restrictToFolderPath =
             listConfig.filterPinnedByFolder && selectionType === ItemType.FOLDER && selectedFolder ? selectedFolder.path : undefined;
         const pinnedPaths = collectPinnedPaths(
@@ -940,8 +1014,8 @@ export function useListPaneData({
         );
 
         // Track ongoing batch operations (move/delete) and defer UI refreshes
-        const operationActiveRef = { current: false } as { current: boolean };
-        const pendingRefreshRef = { current: false } as { current: boolean };
+        const operationActiveRef: { current: boolean } = { current: false };
+        const pendingRefreshRef: { current: boolean } = { current: false };
 
         // Helper to flush pending updates when operations have settled
         const flushPendingWhenIdle = () => {
@@ -1041,6 +1115,21 @@ export function useListPaneData({
                     scheduleRefresh();
                 }
                 return;
+            } else if (selectionType === ItemType.PROPERTY && selectedProperty) {
+                if (file.extension !== 'md') {
+                    return;
+                }
+
+                if (!basePathSet.has(file.path)) {
+                    return;
+                }
+
+                if (operationActiveRef.current) {
+                    pendingRefreshRef.current = true;
+                } else {
+                    scheduleRefresh();
+                }
+                return;
             } else {
                 // Ignore metadata changes when nothing is selected
                 return;
@@ -1083,19 +1172,22 @@ export function useListPaneData({
             return;
         });
 
-        // Listen for tag and metadata changes from database
+        // Listen for tag/property and metadata changes from database
         const db = getDB();
         const dbUnsubscribe = db.onContentChange(changes => {
             let shouldRefresh = false;
 
-            // React to tag changes that affect the current view
-            if (changes.some(change => change.changes.tags !== undefined)) {
+            // React to tag/property changes that affect the current view
+            const hasTagChanges = changes.some(change => change.changes.tags !== undefined);
+            const hasPropertyChanges = changes.some(change => change.changes.customProperty !== undefined);
+            if (hasTagChanges || hasPropertyChanges) {
                 const isTagView = selectionType === ItemType.TAG && selectedTag;
                 const isFolderView = selectionType === ItemType.FOLDER && selectedFolder;
+                const isPropertyView = selectionType === ItemType.PROPERTY && selectedProperty;
 
-                if (isTagView) {
+                if (isTagView && hasTagChanges) {
                     shouldRefresh = true;
-                } else if (isFolderView) {
+                } else if (isFolderView && hasTagChanges) {
                     const folderPath = selectedFolder.path;
                     const isRootSelection = folderPath === '/';
                     const shouldCheckFolderScope = hiddenFileTags.length > 0;
@@ -1113,6 +1205,12 @@ export function useListPaneData({
                         }
                         return change.path.startsWith(`${folderPath}/`);
                     });
+                } else if (isPropertyView) {
+                    if (hasPropertyChanges) {
+                        shouldRefresh = true;
+                    } else if (hasTagChanges && hiddenFileTags.length > 0 && !showHiddenItems) {
+                        shouldRefresh = true;
+                    }
                 }
             }
 
@@ -1155,6 +1253,7 @@ export function useListPaneData({
         selectionType,
         selectedTag,
         selectedFolder,
+        selectedProperty,
         includeDescendantNotes,
         hiddenFileProperties,
         hiddenFolders,

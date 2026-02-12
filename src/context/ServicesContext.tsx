@@ -24,6 +24,7 @@ import { FileSystemOperations } from '../services/FileSystemService';
 import { MetadataService } from '../services/MetadataService';
 import { TagOperations } from '../services/TagOperations';
 import { TagTreeService } from '../services/TagTreeService';
+import { PropertyTreeService } from '../services/PropertyTreeService';
 import { CommandQueueService } from '../services/CommandQueueService';
 import { OmnisearchService } from '../services/OmnisearchService';
 import ReleaseCheckService from '../services/ReleaseCheckService';
@@ -47,6 +48,8 @@ interface Services {
     tagOperations: TagOperations | null;
     /** Tag tree service for accessing the current tag tree */
     tagTreeService: TagTreeService | null;
+    /** Property tree service for accessing the current property tree */
+    propertyTreeService: PropertyTreeService | null;
     /** Command queue service for managing operations and their context */
     commandQueue: CommandQueueService | null;
     /** Omnisearch integration service */
@@ -93,6 +96,7 @@ export function ServicesProvider({ children, plugin }: { children: React.ReactNo
             metadataService: plugin.metadataService,
             tagOperations: plugin.tagOperations,
             tagTreeService: plugin.tagTreeService,
+            propertyTreeService: plugin.propertyTreeService,
             commandQueue: plugin.commandQueue,
             omnisearchService: plugin.omnisearchService,
             releaseCheckService: plugin.releaseCheckService

@@ -61,6 +61,7 @@ export const STRINGS_PT = {
         shortcutsHeader: 'Atalhos', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Notas recentes', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Ficheiros recentes', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Propriedades',
         reorderRootFoldersTitle: 'Reordenar navegação',
         reorderRootFoldersHint: 'Use setas ou arraste para reordenar',
         vaultRootLabel: 'Cofre',
@@ -182,6 +183,16 @@ export const STRINGS_PT = {
                         'Cmd/Ctrl+Clique numa etiqueta para adicionar com AND. Cmd/Ctrl+Shift+Clique para adicionar com OR.'
                     ]
                 },
+                properties: {
+                    title: 'Propriedades',
+                    items: [
+                        '`.key` Incluir notas com chave de propriedade personalizada.',
+                        '`.key=value` Incluir notas com valor de propriedade personalizada (também corresponde a valores aninhados como `value/subvalue`).',
+                        '`."Reading Status"` Incluir notas com uma chave de propriedade que contém espaços.',
+                        '`."Reading Status"="In Progress"` Chaves e valores com espaços devem estar entre aspas duplas.',
+                        'Cmd/Ctrl+Clique numa propriedade para adicionar com AND. Cmd/Ctrl+Shift+Clique para adicionar com OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtros',
                     items: [
@@ -200,10 +211,10 @@ export const STRINGS_PT = {
                 connectors: {
                     title: 'Comportamento AND/OR',
                     items: [
-                        '`AND` e `OR` são operadores apenas em consultas exclusivas de tags.',
-                        'Consultas exclusivas de tags contêm apenas filtros de tags: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` e `OR` são operadores apenas em consultas exclusivas de tags e propriedades.',
+                        'As consultas exclusivas de tags e propriedades contêm apenas filtros de tags e propriedades: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Se uma consulta incluir nomes, datas (`@...`), filtros de tarefas (`has:task`), filtros de pasta (`folder:...`) ou filtros de extensão (`ext:...`), `AND` e `OR` são pesquisados como palavras.',
-                        'Exemplo de consulta com operadores: `#work OR #home`.',
+                        'Exemplo de consulta com operadores: `#work OR .status=started`.',
                         'Exemplo de consulta mista: `#work OR ext:md` (`OR` é pesquisado nos nomes dos ficheiros).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_PT = {
                 'nav-folder-closed': 'Pasta fechada',
                 'nav-folder-note': 'Nota da pasta',
                 'nav-tag': 'Etiqueta',
+                'nav-properties': 'Propriedades',
                 'list-pinned': 'Itens fixados',
                 'file-unfinished-task': 'Tarefas inacabadas',
                 'file-word-count': 'Contagem de palavras',
@@ -595,6 +607,9 @@ export const STRINGS_PT = {
             noFilesSelected: 'Nenhum ficheiro selecionado',
             tagOperationsNotAvailable: 'Operações de etiqueta não disponíveis',
             tagsRequireMarkdown: 'As etiquetas são suportadas apenas em notas Markdown',
+            propertiesRequireMarkdown: 'As propriedades só são suportadas em notas Markdown',
+            propertySetOnNote: 'Propriedade atualizada em 1 nota',
+            propertySetOnNotes: 'Propriedade atualizada em {count} notas',
             iconPackDownloaded: '{provider} transferido',
             iconPackUpdated: '{provider} atualizado ({version})',
             iconPackRemoved: '{provider} removido',
@@ -617,6 +632,7 @@ export const STRINGS_PT = {
             itemAlreadyExists: 'Já existe um item com o nome "{name}" nesta localização.',
             failedToMove: 'Falha ao mover: {error}',
             failedToAddTag: 'Falha ao adicionar etiqueta "{tag}"',
+            failedToSetProperty: 'Falha ao atualizar propriedade: {error}',
             failedToClearTags: 'Falha ao limpar etiquetas',
             failedToMoveFolder: 'Falha ao mover pasta "{name}"',
             failedToImportFiles: 'Falha ao importar: {names}'
@@ -624,6 +640,7 @@ export const STRINGS_PT = {
         notifications: {
             filesAlreadyExist: '{count} ficheiros já existem no destino',
             filesAlreadyHaveTag: '{count} ficheiros já têm esta etiqueta ou uma mais específica',
+            filesAlreadyHaveProperty: '{count} ficheiros já têm esta propriedade',
             noTagsToClear: 'Sem etiquetas para limpar',
             fileImported: '1 ficheiro importado',
             filesImported: '{count} ficheiros importados'

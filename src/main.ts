@@ -47,6 +47,7 @@ import { ISettingsProvider } from './interfaces/ISettingsProvider';
 import { MetadataService, type MetadataCleanupSummary } from './services/MetadataService';
 import { TagOperations } from './services/TagOperations';
 import { TagTreeService } from './services/TagTreeService';
+import { PropertyTreeService } from './services/PropertyTreeService';
 import { CommandQueueService } from './services/CommandQueueService';
 import { OmnisearchService } from './services/OmnisearchService';
 import { FileSystemOperations } from './services/FileSystemService';
@@ -184,6 +185,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     metadataService: MetadataService | null = null;
     tagOperations: TagOperations | null = null;
     tagTreeService: TagTreeService | null = null;
+    propertyTreeService: PropertyTreeService | null = null;
     commandQueue: CommandQueueService | null = null;
     fileSystemOps: FileSystemOperations | null = null;
     omnisearchService: OmnisearchService | null = null;
@@ -920,6 +922,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         // Initialize services
         this.tagTreeService = new TagTreeService();
+        this.propertyTreeService = new PropertyTreeService();
         this.metadataService = new MetadataService(this.app, this, () => this.tagTreeService);
         this.tagOperations = new TagOperations(
             this.app,
@@ -931,6 +934,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.fileSystemOps = new FileSystemOperations(
             this.app,
             () => this.tagTreeService,
+            () => this.propertyTreeService,
             () => this.commandQueue,
             () => this.metadataService,
             (): VisibilityPreferences => ({
@@ -1766,6 +1770,10 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         // Clean up the tag operations service
         if (this.tagOperations) {
             this.tagOperations = null;
+        }
+
+        if (this.propertyTreeService) {
+            this.propertyTreeService = null;
         }
 
         // Clean up the command queue service

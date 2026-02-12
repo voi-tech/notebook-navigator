@@ -60,6 +60,7 @@ export const STRINGS_ZH_TW = {
         shortcutsHeader: '捷徑',
         recentNotesHeader: '最近筆記',
         recentFilesHeader: '最近檔案',
+        properties: '屬性',
         reorderRootFoldersTitle: '重新排列導覽',
         reorderRootFoldersHint: '使用方向鍵或拖曳來重新排列',
         vaultRootLabel: '保險庫',
@@ -180,6 +181,16 @@ export const STRINGS_ZH_TW = {
                         'Cmd/Ctrl+點擊標籤以 AND 方式新增。Cmd/Ctrl+Shift+點擊以 OR 方式新增。'
                     ]
                 },
+                properties: {
+                    title: '屬性',
+                    items: [
+                        '`.key` 包含具有自訂屬性鍵的筆記。',
+                        '`.key=value` 包含具有自訂屬性值的筆記（也匹配巢狀值如 `value/subvalue`）。',
+                        '`."Reading Status"` 包含屬性鍵包含空格的筆記。',
+                        '`."Reading Status"="In Progress"` 包含空格的鍵和值必須用雙引號括起來。',
+                        'Cmd/Ctrl+點擊屬性以 AND 方式新增。Cmd/Ctrl+Shift+點擊以 OR 方式新增。'
+                    ]
+                },
                 tasks: {
                     title: '篩選器',
                     items: [
@@ -198,10 +209,10 @@ export const STRINGS_ZH_TW = {
                 connectors: {
                     title: 'AND/OR 行為',
                     items: [
-                        '`AND` 和 `OR` 僅在純標籤查詢中作為運算子。',
-                        '純標籤查詢僅包含標籤篩選器：`#tag`、`-#tag`、`#`、`-#`。',
+                        '`AND` 和 `OR` 僅在純標籤/屬性查詢中作為運算子。',
+                        '純標籤/屬性查詢僅包含標籤和屬性篩選器: `#tag`、`-#tag`、`#`、`-#`、`.key`、`-.key`、`.key=value`、`-.key=value`。',
                         '如果查詢包含名稱、日期（`@...`）、任務篩選器（`has:task`）、資料夾篩選器（`folder:...`）或副檔名篩選器（`ext:...`），`AND` 和 `OR` 將作為詞語進行比對。',
-                        '運算子查詢範例：`#work OR #home`。',
+                        '運算子查詢範例: `#work OR .status=started`。',
                         '混合查詢範例：`#work OR ext:md`（`OR` 在檔案名稱中進行比對）。'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_ZH_TW = {
                 'nav-folder-closed': '資料夾關閉',
                 'nav-folder-note': '資料夾筆記',
                 'nav-tag': '標籤',
+                'nav-properties': '屬性',
                 'list-pinned': '釘選項目',
                 'file-unfinished-task': '未完成任務',
                 'file-word-count': '字數統計',
@@ -592,6 +604,9 @@ export const STRINGS_ZH_TW = {
             noFilesSelected: '未選擇檔案',
             tagOperationsNotAvailable: '標籤操作不可用',
             tagsRequireMarkdown: '標籤僅支援 Markdown 筆記',
+            propertiesRequireMarkdown: '屬性僅在 Markdown 筆記中受支援',
+            propertySetOnNote: '已在 1 篇筆記中更新屬性',
+            propertySetOnNotes: '已在 {count} 篇筆記中更新屬性',
             iconPackDownloaded: '{provider} 已下載',
             iconPackUpdated: '{provider} 已更新 ({version})',
             iconPackRemoved: '{provider} 已移除',
@@ -614,6 +629,7 @@ export const STRINGS_ZH_TW = {
             itemAlreadyExists: '此位置已存在名為「{name}」的項目。',
             failedToMove: '移動失敗：{error}',
             failedToAddTag: '新增標籤「{tag}」失敗',
+            failedToSetProperty: '更新屬性失敗: {error}',
             failedToClearTags: '清除標籤失敗',
             failedToMoveFolder: '移動資料夾「{name}」失敗',
             failedToImportFiles: '匯入失敗：{names}'
@@ -621,6 +637,7 @@ export const STRINGS_ZH_TW = {
         notifications: {
             filesAlreadyExist: '{count} 個檔案在目標位置已存在',
             filesAlreadyHaveTag: '{count} 個檔案已經有此標籤或更具體的標籤',
+            filesAlreadyHaveProperty: '{count} 個檔案已擁有此屬性',
             noTagsToClear: '沒有要清除的標籤',
             fileImported: '已匯入 1 個檔案',
             filesImported: '已匯入 {count} 個檔案'

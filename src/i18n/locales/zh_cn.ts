@@ -60,6 +60,7 @@ export const STRINGS_ZH_CN = {
         shortcutsHeader: '快捷方式',
         recentNotesHeader: '最近笔记',
         recentFilesHeader: '最近文件',
+        properties: '属性',
         reorderRootFoldersTitle: '重新排列导航',
         reorderRootFoldersHint: '使用箭头或拖动来重新排列',
         vaultRootLabel: '仓库',
@@ -180,6 +181,16 @@ export const STRINGS_ZH_CN = {
                         'Cmd/Ctrl+点击标签以 AND 方式添加。Cmd/Ctrl+Shift+点击以 OR 方式添加。'
                     ]
                 },
+                properties: {
+                    title: '属性',
+                    items: [
+                        '`.key` 包含具有自定义属性键的笔记。',
+                        '`.key=value` 包含具有自定义属性值的笔记（也匹配嵌套值如 `value/subvalue`）。',
+                        '`."Reading Status"` 包含属性键包含空格的笔记。',
+                        '`."Reading Status"="In Progress"` 包含空格的键和值必须用双引号括起来。',
+                        'Cmd/Ctrl+点击属性以 AND 方式添加。Cmd/Ctrl+Shift+点击以 OR 方式添加。'
+                    ]
+                },
                 tasks: {
                     title: '过滤器',
                     items: [
@@ -198,10 +209,10 @@ export const STRINGS_ZH_CN = {
                 connectors: {
                     title: 'AND/OR 行为',
                     items: [
-                        '`AND` 和 `OR` 仅在纯标签查询中作为运算符。',
-                        '纯标签查询仅包含标签过滤器：`#tag`、`-#tag`、`#`、`-#`。',
+                        '`AND` 和 `OR` 仅在纯标签/属性查询中作为运算符。',
+                        '纯标签/属性查询仅包含标签和属性过滤器: `#tag`、`-#tag`、`#`、`-#`、`.key`、`-.key`、`.key=value`、`-.key=value`。',
                         '如果查询包含名称、日期（`@...`）、任务过滤器（`has:task`）、文件夹过滤器（`folder:...`）或扩展名过滤器（`ext:...`），`AND` 和 `OR` 将作为词语进行匹配。',
-                        '运算符查询示例：`#work OR #home`。',
+                        '运算符查询示例: `#work OR .status=started`。',
                         '混合查询示例：`#work OR ext:md`（`OR` 在文件名中进行匹配）。'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_ZH_CN = {
                 'nav-folder-closed': '文件夹关闭',
                 'nav-folder-note': '文件夹笔记',
                 'nav-tag': '标签',
+                'nav-properties': '属性',
                 'list-pinned': '固定项目',
                 'file-unfinished-task': '未完成任务',
                 'file-word-count': '字数统计',
@@ -592,6 +604,9 @@ export const STRINGS_ZH_CN = {
             noFilesSelected: '未选择文件',
             tagOperationsNotAvailable: '标签操作不可用',
             tagsRequireMarkdown: '标签仅支持Markdown笔记',
+            propertiesRequireMarkdown: '属性仅在 Markdown 笔记中受支持',
+            propertySetOnNote: '已在 1 篇笔记中更新属性',
+            propertySetOnNotes: '已在 {count} 篇笔记中更新属性',
             iconPackDownloaded: '{provider} 已下载',
             iconPackUpdated: '{provider} 已更新 ({version})',
             iconPackRemoved: '{provider} 已移除',
@@ -614,6 +629,7 @@ export const STRINGS_ZH_CN = {
             itemAlreadyExists: '此位置已存在名为 "{name}" 的项目。',
             failedToMove: '移动失败：{error}',
             failedToAddTag: '添加标签 "{tag}" 失败',
+            failedToSetProperty: '更新属性失败: {error}',
             failedToClearTags: '清除标签失败',
             failedToMoveFolder: '移动文件夹"{name}"失败',
             failedToImportFiles: '导入失败: {names}'
@@ -621,6 +637,7 @@ export const STRINGS_ZH_CN = {
         notifications: {
             filesAlreadyExist: '{count} 个文件在目标位置已存在',
             filesAlreadyHaveTag: '{count} 个文件已经有此标签或更具体的标签',
+            filesAlreadyHaveProperty: '{count} 个文件已拥有此属性',
             noTagsToClear: '没有要清除的标签',
             fileImported: '已导入 1 个文件',
             filesImported: '已导入 {count} 个文件'

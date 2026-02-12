@@ -60,6 +60,7 @@ export const STRINGS_KO = {
         shortcutsHeader: '바로가기',
         recentNotesHeader: '최근 노트',
         recentFilesHeader: '최근 파일',
+        properties: '속성',
         reorderRootFoldersTitle: '내비게이션 재정렬',
         reorderRootFoldersHint: '화살표 또는 드래그로 재정렬',
         vaultRootLabel: '보관함',
@@ -180,6 +181,16 @@ export const STRINGS_KO = {
                         'Cmd/Ctrl+클릭으로 AND로 태그 추가. Cmd/Ctrl+Shift+클릭으로 OR로 추가.'
                     ]
                 },
+                properties: {
+                    title: '속성',
+                    items: [
+                        '`.key` 사용자 정의 속성 키가 있는 노트를 포함합니다.',
+                        '`.key=value` 사용자 정의 속성 값이 있는 노트를 포함합니다 (`value/subvalue`와 같은 중첩 값도 일치).',
+                        '`."Reading Status"` 공백이 포함된 속성 키가 있는 노트를 포함합니다.',
+                        '`."Reading Status"="In Progress"` 공백이 포함된 키와 값은 큰따옴표로 묶어야 합니다.',
+                        'Cmd/Ctrl+클릭으로 속성을 AND로 추가. Cmd/Ctrl+Shift+클릭으로 OR로 추가.'
+                    ]
+                },
                 tasks: {
                     title: '필터',
                     items: [
@@ -198,10 +209,10 @@ export const STRINGS_KO = {
                 connectors: {
                     title: 'AND/OR 동작',
                     items: [
-                        '`AND`와 `OR`는 태그 전용 쿼리에서만 연산자로 작동합니다.',
-                        '태그 전용 쿼리는 태그 필터만 포함합니다: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND`와 `OR`는 태그/속성 전용 쿼리에서만 연산자로 작동합니다.',
+                        '태그/속성 전용 쿼리에는 태그 및 속성 필터만 포함됩니다: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         '쿼리에 이름, 날짜(`@...`), 작업 필터(`has:task`), 폴더 필터(`folder:...`), 또는 확장자 필터(`ext:...`)가 포함되면 `AND`와 `OR`는 단어로 검색됩니다.',
-                        '연산자 쿼리 예시: `#work OR #home`.',
+                        '연산자 쿼리 예시: `#work OR .status=started`.',
                         '혼합 쿼리 예시: `#work OR ext:md` (`OR`가 파일 이름에서 검색됩니다).'
                     ]
                 },
@@ -393,6 +404,7 @@ export const STRINGS_KO = {
                 'nav-folder-closed': '닫힌 폴더',
                 'nav-folder-note': '폴더 노트',
                 'nav-tag': '태그',
+                'nav-properties': '속성',
                 'list-pinned': '고정 항목',
                 'file-unfinished-task': '미완료 작업',
                 'file-word-count': '단어 수',
@@ -594,6 +606,9 @@ export const STRINGS_KO = {
             noFilesSelected: '선택된 파일 없음',
             tagOperationsNotAvailable: '태그 작업을 사용할 수 없음',
             tagsRequireMarkdown: '태그는 마크다운 노트에서만 지원됩니다',
+            propertiesRequireMarkdown: '속성은 Markdown 노트에서만 지원됩니다',
+            propertySetOnNote: '1개 노트의 속성을 업데이트했습니다',
+            propertySetOnNotes: '{count}개 노트의 속성을 업데이트했습니다',
             iconPackDownloaded: '{provider} 다운로드됨',
             iconPackUpdated: '{provider} 업데이트됨 ({version})',
             iconPackRemoved: '{provider} 제거됨',
@@ -616,6 +631,7 @@ export const STRINGS_KO = {
             itemAlreadyExists: '이 위치에 "{name}"이(가) 이미 존재합니다.',
             failedToMove: '이동 실패: {error}',
             failedToAddTag: '태그 "{tag}" 추가 실패',
+            failedToSetProperty: '속성 업데이트 실패: {error}',
             failedToClearTags: '태그 지우기 실패',
             failedToMoveFolder: '폴더 "{name}" 이동 실패',
             failedToImportFiles: '가져오기 실패: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_KO = {
         notifications: {
             filesAlreadyExist: '대상에 {count}개의 파일이 이미 존재합니다',
             filesAlreadyHaveTag: '{count}개의 파일이 이미 이 태그나 더 구체적인 태그를 가지고 있습니다',
+            filesAlreadyHaveProperty: '{count}개 파일에 이미 이 속성이 있습니다',
             noTagsToClear: '지울 태그 없음',
             fileImported: '1개의 파일 가져옴',
             filesImported: '{count}개의 파일 가져옴'

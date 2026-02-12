@@ -23,7 +23,7 @@ import { ConfirmModal } from '../modals/ConfirmModal';
 import { FolderSuggestModal } from '../modals/FolderSuggestModal';
 import { InputModal } from '../modals/InputModal';
 import { NotebookNavigatorSettings } from '../settings';
-import { NavigationItemType, ItemType } from '../types';
+import { NavigationItemType } from '../types';
 import type { VisibilityPreferences } from '../types';
 import { ExtendedApp, TIMEOUTS, OBSIDIAN_COMMANDS } from '../types/obsidian-extended';
 import { createFileWithOptions, createDatabaseContent } from '../utils/fileCreationUtils';
@@ -41,13 +41,15 @@ import {
 } from '../utils/fileNameUtils';
 import { resolveFolderNoteName, shouldRenameFolderNoteWithFolderName } from '../utils/folderNoteName';
 import { getFolderNote, getFolderNoteDetectionSettings, isFolderNote, isSupportedFolderNoteExtension } from '../utils/folderNotes';
-import { updateSelectionAfterFileOperation, findNextFileAfterRemoval } from '../utils/selectionUtils';
+import { findNextFileAfterRemoval, getFilesForNavigationSelection, updateSelectionAfterFileOperation } from '../utils/selectionUtils';
 import { executeCommand, isPluginInstalled } from '../utils/typeGuards';
 import { getErrorMessage } from '../utils/errorUtils';
 import { TagTreeService } from './TagTreeService';
+import type { PropertyTreeService } from './PropertyTreeService';
 import { CommandQueueService } from './CommandQueueService';
 import type { MaybePromise } from '../utils/async';
 import { showNotice } from '../utils/noticeUtils';
+import type { PropertySelectionNodeId } from '../utils/propertyTree';
 import type { ISettingsProvider } from '../interfaces/ISettingsProvider';
 import { ensureRecord, isStringRecordValue } from '../utils/recordUtils';
 import type { MetadataService } from './MetadataService';
@@ -69,6 +71,7 @@ interface SelectionContext {
     selectionType: NavigationItemType;
     selectedFolder?: TFolder;
     selectedTag?: string;
+    selectedProperty?: PropertySelectionNodeId;
 }
 
 /**
@@ -163,12 +166,14 @@ export class FileSystemOperations {
      * Creates a new FileSystemOperations instance
      * @param app - The Obsidian app instance for vault operations
      * @param getTagTreeService - Function to get the TagTreeService instance
+     * @param getPropertyTreeService - Function to get the PropertyTreeService instance
      * @param getCommandQueue - Function to get the CommandQueueService instance
      * @param getMetadataService - Function to get the MetadataService instance
      */
     constructor(
         private app: App,
         private getTagTreeService: () => TagTreeService | null,
+        private getPropertyTreeService: () => PropertyTreeService | null,
         private getCommandQueue: () => CommandQueueService | null,
         private getMetadataService: () => MetadataService | null,
         private getVisibilityPreferences: () => VisibilityPreferences, // Function to get current visibility preferences for descendant/hidden items state
@@ -804,16 +809,21 @@ export class FileSystemOperations {
         confirmBeforeDelete: boolean
     ): Promise<void> {
         // Get the file list based on selection type
-        let currentFiles: TFile[] = [];
         // Get current UX preferences for descendant/hidden items when determining next file to select
         const visibility = this.getVisibilityPreferences();
-        if (selectionContext.selectionType === ItemType.FOLDER && selectionContext.selectedFolder) {
-            const { getFilesForFolder } = await import('../utils/fileFinder');
-            currentFiles = getFilesForFolder(selectionContext.selectedFolder, settings, visibility, this.app);
-        } else if (selectionContext.selectionType === ItemType.TAG && selectionContext.selectedTag) {
-            const { getFilesForTag } = await import('../utils/fileFinder');
-            currentFiles = getFilesForTag(selectionContext.selectedTag, settings, visibility, this.app, this.getTagTreeService());
-        }
+        const currentFiles = getFilesForNavigationSelection(
+            {
+                selectionType: selectionContext.selectionType,
+                selectedFolder: selectionContext.selectedFolder ?? null,
+                selectedTag: selectionContext.selectedTag ?? null,
+                selectedProperty: selectionContext.selectedProperty ?? null
+            },
+            settings,
+            visibility,
+            this.app,
+            this.getTagTreeService(),
+            this.getPropertyTreeService()
+        );
 
         // Find next file to select
         let nextFileToSelect: TFile | null = null;

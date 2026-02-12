@@ -94,7 +94,7 @@ export function useListPaneKeyboard({
     onScheduleKeyboardOpenForFile,
     onCommitKeyboardOpen
 }: UseListPaneKeyboardProps) {
-    const { app, commandQueue, isMobile, tagTreeService } = useServices();
+    const { app, commandQueue, isMobile, tagTreeService, propertyTreeService } = useServices();
     const openFileInWorkspace = useFileOpener();
     const fileSystemOps = useFileSystemOps();
     const settings = useSettingsState();
@@ -423,7 +423,8 @@ export function useListPaneKeyboard({
                             visibility: { includeDescendantNotes, showHiddenItems },
                             selectionState,
                             selectionDispatch,
-                            tagTreeService
+                            tagTreeService,
+                            propertyTreeService
                         })
                     );
                 }
@@ -502,6 +503,7 @@ export function useListPaneKeyboard({
             uiDispatch,
             fileSystemOps,
             tagTreeService,
+            propertyTreeService,
             selectionDispatch,
             selectItemAtIndex,
             handleRangeSelection,

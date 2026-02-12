@@ -48,6 +48,8 @@ Keep this list ordered: later files override earlier ones.
 @import './sections/navigation-scroller.css';
 /* navigation-tree.css: navigation rows (`.nn-navitem`), chevrons/icons/counts, shortcut rows, root reorder panel. */
 @import './sections/navigation-tree.css';
+/* navigation-properties.css: property-tree row refinements (`.nn-navitem.nn-property`). */
+@import './sections/navigation-properties.css';
 /* calendar.css: bottom overlay calendar in navigation pane (`.nn-navigation-calendar*`). */
 @import './sections/calendar.css';
 /* list-files.css: list scroller (`.nn-list-pane-scroller`), overlay stack, list title area, file rows (`.nn-file`), separators, quick actions panel. */

@@ -60,6 +60,7 @@ export const STRINGS_FR = {
         shortcutsHeader: 'Raccourcis',
         recentNotesHeader: 'Notes récentes',
         recentFilesHeader: 'Fichiers récents',
+        properties: 'Propriétés',
         reorderRootFoldersTitle: 'Réorganiser la navigation',
         reorderRootFoldersHint: 'Utilisez les flèches ou glissez pour réorganiser',
         vaultRootLabel: 'Coffre',
@@ -181,6 +182,16 @@ export const STRINGS_FR = {
                         'Cmd/Ctrl+Clic sur une étiquette pour ajouter avec AND. Cmd/Ctrl+Shift+Clic pour ajouter avec OR.'
                     ]
                 },
+                properties: {
+                    title: 'Propriétés',
+                    items: [
+                        '`.key` Inclure les notes avec une clé de propriété personnalisée.',
+                        '`.key=value` Inclure les notes avec une valeur de propriété personnalisée (correspond aussi aux valeurs imbriquées comme `value/subvalue`).',
+                        '`."Reading Status"` Inclure les notes avec une clé de propriété contenant des espaces.',
+                        '`."Reading Status"="In Progress"` Les clés et valeurs contenant des espaces doivent être entre guillemets doubles.',
+                        'Cmd/Ctrl+Clic sur une propriété pour ajouter avec AND. Cmd/Ctrl+Shift+Clic pour ajouter avec OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filtres',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_FR = {
                 connectors: {
                     title: 'Comportement AND/OR',
                     items: [
-                        '`AND` et `OR` sont des opérateurs uniquement dans les requêtes composées exclusivement de tags.',
-                        'Les requêtes de tags exclusives ne contiennent que des filtres de tags : `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` et `OR` sont des opérateurs uniquement dans les requêtes composées exclusivement de tags et propriétés.',
+                        'Les requêtes exclusives de tags et propriétés ne contiennent que des filtres de tags et propriétés : `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         "Si une requête inclut des noms, des dates (`@...`), des filtres de tâches (`has:task`), des filtres de dossiers (`folder:...`) ou des filtres d'extension (`ext:...`), `AND` et `OR` sont recherchés comme des mots.",
-                        'Exemple de requête avec opérateurs : `#work OR #home`.',
+                        'Exemple de requête avec opérateurs : `#work OR .status=started`.',
                         'Exemple de requête mixte : `#work OR ext:md` (`OR` est recherché dans les noms de fichiers).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_FR = {
                 'nav-folder-closed': 'Dossier fermé',
                 'nav-folder-note': 'Note de dossier',
                 'nav-tag': 'Étiquette',
+                'nav-properties': 'Propriétés',
                 'list-pinned': 'Éléments épinglés',
                 'file-unfinished-task': 'Tâches inachevées',
                 'file-word-count': 'Nombre de mots',
@@ -596,6 +608,9 @@ export const STRINGS_FR = {
             noFilesSelected: 'Aucun fichier sélectionné',
             tagOperationsNotAvailable: "Opérations d'étiquettes non disponibles",
             tagsRequireMarkdown: 'Les étiquettes ne sont prises en charge que sur les notes Markdown',
+            propertiesRequireMarkdown: 'Les propriétés ne sont prises en charge que sur les notes Markdown',
+            propertySetOnNote: 'Propriété mise à jour sur 1 note',
+            propertySetOnNotes: 'Propriété mise à jour sur {count} notes',
             iconPackDownloaded: '{provider} téléchargé',
             iconPackUpdated: '{provider} mis à jour ({version})',
             iconPackRemoved: '{provider} supprimé',
@@ -618,6 +633,7 @@ export const STRINGS_FR = {
             itemAlreadyExists: 'Un élément nommé "{name}" existe déjà à cet emplacement.',
             failedToMove: 'Échec du déplacement : {error}',
             failedToAddTag: 'Échec de l\'ajout de l\'étiquette "{tag}"',
+            failedToSetProperty: 'Échec de la mise à jour de la propriété : {error}',
             failedToClearTags: 'Échec de la suppression des étiquettes',
             failedToMoveFolder: 'Échec du déplacement du dossier "{name}"',
             failedToImportFiles: "Échec de l'importation : {names}"
@@ -625,6 +641,7 @@ export const STRINGS_FR = {
         notifications: {
             filesAlreadyExist: '{count} fichiers existent déjà dans la destination',
             filesAlreadyHaveTag: '{count} fichiers ont déjà cette étiquette ou une plus spécifique',
+            filesAlreadyHaveProperty: '{count} fichiers possèdent déjà cette propriété',
             noTagsToClear: 'Aucune étiquette à supprimer',
             fileImported: '1 fichier importé',
             filesImported: '{count} fichiers importés'

@@ -61,6 +61,7 @@ export const STRINGS_AR = {
         shortcutsHeader: 'اختصارات', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'ملاحظات حديثة', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'ملفات حديثة', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'الخصائص',
         reorderRootFoldersTitle: 'إعادة ترتيب التنقل',
         reorderRootFoldersHint: 'استخدم الأسهم أو اسحب لإعادة الترتيب',
         vaultRootLabel: 'الخزنة',
@@ -181,6 +182,16 @@ export const STRINGS_AR = {
                         'Cmd/Ctrl+النقر على وسم لإضافته مع AND. Cmd/Ctrl+Shift+النقر لإضافته مع OR.'
                     ]
                 },
+                properties: {
+                    title: 'الخصائص',
+                    items: [
+                        '`.key` تضمين الملاحظات التي تحتوي على مفتاح خاصية مخصص.',
+                        '`.key=value` تضمين الملاحظات التي تحتوي على قيمة خاصية مخصصة (يطابق أيضًا القيم المتداخلة مثل `value/subvalue`).',
+                        '`."Reading Status"` تضمين الملاحظات التي تحتوي على مفتاح خاصية يتضمن مسافات.',
+                        '`."Reading Status"="In Progress"` المفاتيح والقيم التي تحتوي على مسافات يجب وضعها بين علامات اقتباس مزدوجة.',
+                        'Cmd/Ctrl+انقر على خاصية للإضافة بـ AND. Cmd/Ctrl+Shift+انقر للإضافة بـ OR.'
+                    ]
+                },
                 tasks: {
                     title: 'المرشحات',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_AR = {
                 connectors: {
                     title: 'سلوك AND/OR',
                     items: [
-                        '`AND` و `OR` هما عاملان فقط في الاستعلامات التي تحتوي على وسوم فقط.',
-                        'استعلامات الوسوم فقط تحتوي على مرشحات وسوم فقط: `#tag`، `-#tag`، `#`، `-#`.',
+                        '`AND` و `OR` هما عوامل تشغيل فقط في استعلامات الوسوم/الخصائص الحصرية.',
+                        'استعلامات الوسوم/الخصائص الحصرية تحتوي فقط على مرشحات الوسوم والخصائص: `#tag`، `-#tag`، `#`، `-#`، `.key`، `-.key`، `.key=value`، `-.key=value`.',
                         'إذا تضمن الاستعلام أسماء أو تواريخ (`@...`) أو مرشحات مهام (`has:task`) أو مرشحات مجلدات (`folder:...`) أو مرشحات امتدادات (`ext:...`)، يتم مطابقة `AND` و `OR` ككلمات.',
-                        'مثال على استعلام بعوامل: `#work OR #home`.',
+                        'مثال على استعلام بعوامل تشغيل: `#work OR .status=started`.',
                         'مثال على استعلام مختلط: `#work OR ext:md` (يتم مطابقة `OR` في أسماء الملفات).'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_AR = {
                 'nav-folder-closed': 'مجلد مغلق',
                 'nav-folder-note': 'ملاحظة المجلد',
                 'nav-tag': 'وسم',
+                'nav-properties': 'الخصائص',
                 'list-pinned': 'العناصر المثبتة',
                 'file-unfinished-task': 'مهام غير مكتملة',
                 'file-word-count': 'عدد الكلمات',
@@ -593,6 +605,9 @@ export const STRINGS_AR = {
             noFilesSelected: 'لم يتم تحديد ملفات',
             tagOperationsNotAvailable: 'عمليات الوسوم غير متاحة',
             tagsRequireMarkdown: 'الوسوم مدعومة فقط على ملاحظات Markdown',
+            propertiesRequireMarkdown: 'الخصائص مدعومة فقط في ملاحظات Markdown',
+            propertySetOnNote: 'تم تحديث الخاصية في ملاحظة واحدة',
+            propertySetOnNotes: 'تم تحديث الخاصية في {count} ملاحظات',
             iconPackDownloaded: 'تم تنزيل {provider}',
             iconPackUpdated: 'تم تحديث {provider} ({version})',
             iconPackRemoved: 'تمت إزالة {provider}',
@@ -615,6 +630,7 @@ export const STRINGS_AR = {
             itemAlreadyExists: 'عنصر باسم "{name}" موجود بالفعل في هذا الموقع.',
             failedToMove: 'فشل النقل: {error}',
             failedToAddTag: 'فشل إضافة الوسم "{tag}"',
+            failedToSetProperty: 'فشل في تحديث الخاصية: {error}',
             failedToClearTags: 'فشل مسح الوسوم',
             failedToMoveFolder: 'فشل نقل المجلد "{name}"',
             failedToImportFiles: 'فشل الاستيراد: {names}'
@@ -622,6 +638,7 @@ export const STRINGS_AR = {
         notifications: {
             filesAlreadyExist: '{count} ملفات موجودة بالفعل في الوجهة',
             filesAlreadyHaveTag: '{count} ملفات تحتوي بالفعل على هذا الوسم أو وسم أكثر تحديدًا',
+            filesAlreadyHaveProperty: '{count} ملفات تحتوي بالفعل على هذه الخاصية',
             noTagsToClear: 'لا توجد وسوم لمسحها',
             fileImported: 'تم استيراد ملف واحد',
             filesImported: 'تم استيراد {count} ملفات'

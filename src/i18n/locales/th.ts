@@ -61,6 +61,7 @@ export const STRINGS_TH = {
         shortcutsHeader: 'ทางลัด',
         recentNotesHeader: 'โน้ตล่าสุด',
         recentFilesHeader: 'ไฟล์ล่าสุด',
+        properties: 'คุณสมบัติ',
         reorderRootFoldersTitle: 'จัดเรียงการนำทางใหม่',
         reorderRootFoldersHint: 'ใช้ลูกศรหรือลากเพื่อจัดเรียงใหม่',
         vaultRootLabel: 'ห้องนิรภัย',
@@ -181,6 +182,16 @@ export const STRINGS_TH = {
                         'Cmd/Ctrl+คลิกแท็กเพื่อเพิ่มด้วย AND Cmd/Ctrl+Shift+คลิกเพื่อเพิ่มด้วย OR'
                     ]
                 },
+                properties: {
+                    title: 'คุณสมบัติ',
+                    items: [
+                        '`.key` รวมโน้ตที่มีคีย์คุณสมบัติกำหนดเอง',
+                        '`.key=value` รวมโน้ตที่มีค่าคุณสมบัติกำหนดเอง (จับคู่ค่าซ้อนเช่น `value/subvalue` ด้วย)',
+                        '`."Reading Status"` รวมโน้ตที่มีคีย์คุณสมบัติที่มีช่องว่าง',
+                        '`."Reading Status"="In Progress"` คีย์และค่าที่มีช่องว่างต้องอยู่ในเครื่องหมายคำพูดคู่',
+                        'Cmd/Ctrl+คลิกคุณสมบัติเพื่อเพิ่มด้วย AND Cmd/Ctrl+Shift+คลิกเพื่อเพิ่มด้วย OR'
+                    ]
+                },
                 tasks: {
                     title: 'ตัวกรอง',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_TH = {
                 connectors: {
                     title: 'พฤติกรรม AND/OR',
                     items: [
-                        '`AND` และ `OR` เป็นตัวดำเนินการเฉพาะในคิวรีที่มีแท็กเท่านั้น',
-                        'คิวรีแท็กเท่านั้นประกอบด้วยตัวกรองแท็กเท่านั้น: `#tag`, `-#tag`, `#`, `-#`',
+                        '`AND` และ `OR` เป็นตัวดำเนินการเฉพาะในการค้นหาที่มีแท็กและคุณสมบัติเท่านั้น',
+                        'การค้นหาเฉพาะแท็กและคุณสมบัติประกอบด้วยตัวกรองแท็กและคุณสมบัติเท่านั้น: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`',
                         'หากคิวรีรวมชื่อ วันที่ (`@...`) ตัวกรองงาน (`has:task`) ตัวกรองโฟลเดอร์ (`folder:...`) หรือตัวกรองนามสกุล (`ext:...`) `AND` และ `OR` จะถูกค้นหาเป็นคำ',
-                        'ตัวอย่างคิวรีตัวดำเนินการ: `#work OR #home`',
+                        'ตัวอย่างการค้นหาด้วยตัวดำเนินการ: `#work OR .status=started`',
                         'ตัวอย่างคิวรีผสม: `#work OR ext:md` (`OR` ถูกค้นหาในชื่อไฟล์)'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_TH = {
                 'nav-folder-closed': 'โฟลเดอร์ปิด',
                 'nav-folder-note': 'โน้ตโฟลเดอร์',
                 'nav-tag': 'แท็ก',
+                'nav-properties': 'คุณสมบัติ',
                 'list-pinned': 'รายการที่ปักหมุด',
                 'file-unfinished-task': 'งานที่ยังไม่เสร็จ',
                 'file-word-count': 'จำนวนคำ',
@@ -593,6 +605,9 @@ export const STRINGS_TH = {
             noFilesSelected: 'ไม่ได้เลือกไฟล์',
             tagOperationsNotAvailable: 'การดำเนินการแท็กไม่พร้อมใช้งาน',
             tagsRequireMarkdown: 'แท็กรองรับเฉพาะโน้ต Markdown',
+            propertiesRequireMarkdown: 'คุณสมบัติรองรับเฉพาะโน้ต Markdown เท่านั้น',
+            propertySetOnNote: 'อัปเดตคุณสมบัติใน 1 โน้ต',
+            propertySetOnNotes: 'อัปเดตคุณสมบัติใน {count} โน้ต',
             iconPackDownloaded: 'ดาวน์โหลด {provider} แล้ว',
             iconPackUpdated: 'อัปเดต {provider} แล้ว ({version})',
             iconPackRemoved: 'นำ {provider} ออกแล้ว',
@@ -615,6 +630,7 @@ export const STRINGS_TH = {
             itemAlreadyExists: 'รายการชื่อ "{name}" มีอยู่ในตำแหน่งนี้แล้ว',
             failedToMove: 'ย้ายล้มเหลว: {error}',
             failedToAddTag: 'เพิ่มแท็ก "{tag}" ล้มเหลว',
+            failedToSetProperty: 'ไม่สามารถอัปเดตคุณสมบัติ: {error}',
             failedToClearTags: 'ล้างแท็กล้มเหลว',
             failedToMoveFolder: 'ย้ายโฟลเดอร์ "{name}" ล้มเหลว',
             failedToImportFiles: 'นำเข้าล้มเหลว: {names}'
@@ -622,6 +638,7 @@ export const STRINGS_TH = {
         notifications: {
             filesAlreadyExist: '{count} ไฟล์มีอยู่ในปลายทางแล้ว',
             filesAlreadyHaveTag: '{count} ไฟล์มีแท็กนี้หรือแท็กที่เฉพาะเจาะจงกว่าอยู่แล้ว',
+            filesAlreadyHaveProperty: '{count} ไฟล์มีคุณสมบัตินี้อยู่แล้ว',
             noTagsToClear: 'ไม่มีแท็กให้ล้าง',
             fileImported: 'นำเข้า 1 ไฟล์แล้ว',
             filesImported: 'นำเข้า {count} ไฟล์แล้ว'

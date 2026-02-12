@@ -16,6 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { casefold } from './recordUtils';
+import { normalizePropertyTreeValuePath } from './propertyTree';
+
 // Determines evaluation mode for search tokens (filter uses AND for all, tag uses expression tree)
 export type FilterMode = 'filter' | 'tag';
 
@@ -41,7 +44,12 @@ export interface FolderFilterToken {
     value: string;
 }
 
-// Operands in a tag filter expression tree
+export interface PropertySearchToken {
+    key: string;
+    value: string | null;
+}
+
+// Operands in a tag/property filter expression tree
 type TagExpressionOperand =
     | {
           kind: 'tag';
@@ -56,6 +64,14 @@ type TagExpressionOperand =
       }
     | {
           kind: 'untagged';
+      }
+    | {
+          kind: 'property';
+          value: PropertySearchToken;
+      }
+    | {
+          kind: 'notProperty';
+          value: PropertySearchToken;
       };
 
 // Tokens in a tag filter expression (operands and operators)
@@ -78,6 +94,9 @@ export interface FilterSearchTokens {
     requireUnfinishedTasks: boolean;
     excludeUnfinishedTasks: boolean;
     includedTagTokens: string[];
+    propertyTokens: PropertySearchToken[];
+    excludePropertyTokens: PropertySearchToken[];
+    requiresProperties: boolean;
     nameTokens: string[];
     tagTokens: string[];
     dateRanges: DateFilterRange[];
@@ -108,6 +127,9 @@ const EMPTY_TOKENS: FilterSearchTokens = {
     dateRanges: [],
     requireTagged: false,
     includeUntagged: false,
+    propertyTokens: [],
+    excludePropertyTokens: [],
+    requiresProperties: false,
     excludeNameTokens: [],
     excludeTagTokens: [],
     folderTokens: [],
@@ -117,6 +139,7 @@ const EMPTY_TOKENS: FilterSearchTokens = {
     excludeDateRanges: [],
     excludeTagged: false
 };
+const EMPTY_PROPERTY_VALUE_MAP = new Map<string, string[]>();
 
 // Precedence values for expression evaluation (higher number binds tighter)
 const OPERATOR_PRECEDENCE: Record<InclusionOperator, number> = {
@@ -136,6 +159,170 @@ const tagMatchesToken = (tagPath: string, token: string): boolean => {
     return tagPath === token || tagPath.startsWith(`${token}/`);
 };
 
+const PROPERTY_FILTER_PREFIX = '.';
+
+const normalizePropertyFilterKey = (value: string): string => {
+    return casefold(value.trim());
+};
+
+const isPropertyFilterCandidate = (token: string): boolean => {
+    return token.startsWith(PROPERTY_FILTER_PREFIX);
+};
+
+const findPropertyFilterValueSeparator = (content: string): number => {
+    let escaped = false;
+    let inQuotes = false;
+
+    for (let index = 0; index < content.length; index += 1) {
+        const char = content[index];
+        if (escaped) {
+            escaped = false;
+            continue;
+        }
+
+        if (char === '\\') {
+            escaped = true;
+            continue;
+        }
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+            continue;
+        }
+
+        if (char === '=' && !inQuotes) {
+            return index;
+        }
+    }
+
+    return -1;
+};
+
+const tryUnquotePropertyFilterPart = (value: string): string => {
+    const trimmed = value.trim();
+    if (trimmed.length < 2 || !trimmed.startsWith('"') || !trimmed.endsWith('"')) {
+        return value;
+    }
+
+    let result = '';
+    for (let index = 1; index < trimmed.length - 1; index += 1) {
+        const char = trimmed[index];
+        if (char === '\\' && index + 1 < trimmed.length - 1) {
+            const nextChar = trimmed[index + 1];
+            if (nextChar === '"' || nextChar === '\\') {
+                result += nextChar;
+                index += 1;
+                continue;
+            }
+        }
+        result += char;
+    }
+
+    return result;
+};
+
+const unescapePropertyFilterPart = (value: string): string => {
+    let result = '';
+
+    for (let index = 0; index < value.length; index += 1) {
+        const char = value[index];
+        if (char !== '\\' || index + 1 >= value.length) {
+            result += char;
+            continue;
+        }
+
+        const nextChar = value[index + 1];
+        if (nextChar === '=' || nextChar === '\\' || nextChar === '"') {
+            result += nextChar;
+            index += 1;
+            continue;
+        }
+
+        result += char;
+    }
+
+    return result;
+};
+
+const parsePropertyFilterToken = (token: string): PropertySearchToken | null => {
+    if (!isPropertyFilterCandidate(token)) {
+        return null;
+    }
+
+    const content = token.slice(PROPERTY_FILTER_PREFIX.length);
+    if (!content) {
+        return null;
+    }
+
+    const separatorIndex = findPropertyFilterValueSeparator(content);
+    if (separatorIndex === -1) {
+        const normalizedKey = normalizePropertyFilterKey(unescapePropertyFilterPart(tryUnquotePropertyFilterPart(content)));
+        return normalizedKey ? { key: normalizedKey, value: null } : null;
+    }
+
+    const rawKey = unescapePropertyFilterPart(tryUnquotePropertyFilterPart(content.slice(0, separatorIndex)));
+    const rawValue = unescapePropertyFilterPart(tryUnquotePropertyFilterPart(content.slice(separatorIndex + 1)));
+    const normalizedKey = normalizePropertyFilterKey(rawKey);
+    const normalizedValue = normalizePropertyTreeValuePath(rawValue);
+    if (!normalizedKey || !normalizedValue) {
+        return null;
+    }
+
+    return {
+        key: normalizedKey,
+        value: normalizedValue
+    };
+};
+
+function tokenizeFilterSearchQuery(query: string): string[] {
+    const tokens: string[] = [];
+    const input = query.trim();
+    if (!input) {
+        return tokens;
+    }
+
+    let current = '';
+    let inQuotes = false;
+    let index = 0;
+
+    while (index < input.length) {
+        const char = input[index];
+
+        if (inQuotes && char === '\\') {
+            const nextChar = input[index + 1];
+            if (nextChar === '"' || nextChar === '\\') {
+                current += nextChar;
+                index += 2;
+                continue;
+            }
+        }
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+            index += 1;
+            continue;
+        }
+
+        if (!inQuotes && /\s/.test(char)) {
+            if (current.length > 0) {
+                tokens.push(current);
+                current = '';
+            }
+            index += 1;
+            continue;
+        }
+
+        current += char;
+        index += 1;
+    }
+
+    if (current.length > 0) {
+        tokens.push(current);
+    }
+
+    return tokens;
+}
+
 // Intermediate token representation during classification
 type ClassifiedToken =
     | {
@@ -149,6 +336,14 @@ type ClassifiedToken =
     | {
           kind: 'tagNegation';
           value: string | null;
+      }
+    | {
+          kind: 'property';
+          value: PropertySearchToken;
+      }
+    | {
+          kind: 'propertyNegation';
+          value: PropertySearchToken;
       }
     | {
           kind: 'date';
@@ -345,6 +540,19 @@ const extensionMatchesToken = (fileExtension: string, token: string): boolean =>
     }
 
     return fileExtension === token;
+};
+
+const propertyTokenMatches = (propertiesByKey: Map<string, string[]>, token: PropertySearchToken): boolean => {
+    const values = propertiesByKey.get(token.key);
+    if (!values) {
+        return false;
+    }
+
+    if (token.value === null) {
+        return true;
+    }
+
+    return values.some(value => value === token.value || value.startsWith(`${token.value}/`));
 };
 
 // Recognized relative date keywords for @today, @yesterday, etc.
@@ -843,7 +1051,7 @@ const classifyRawTokens = (rawTokens: string[]): TokenClassificationResult => {
 
         // Classify connector words first. Whether they behave as operators
         // or literal words is decided later by mode selection:
-        // - tag mode (pure tag queries): operators
+        // - expression mode (pure tag/property queries): operators
         // - filter mode (mixed queries): literal name tokens
         if (token === 'and') {
             tokens.push({ kind: 'operator', operator: 'AND' });
@@ -913,6 +1121,15 @@ const classifyRawTokens = (rawTokens: string[]): TokenClassificationResult => {
                 continue;
             }
 
+            if (isPropertyFilterCandidate(negatedToken)) {
+                const propertyValue = parsePropertyFilterToken(negatedToken);
+                if (propertyValue) {
+                    tokens.push({ kind: 'propertyNegation', value: propertyValue });
+                    hasTagOperand = true;
+                }
+                continue;
+            }
+
             if (negatedToken.startsWith('#')) {
                 const tagValue = negatedToken.slice(1);
                 tokens.push({ kind: 'tagNegation', value: tagValue.length > 0 ? tagValue : null });
@@ -972,6 +1189,15 @@ const classifyRawTokens = (rawTokens: string[]): TokenClassificationResult => {
             continue;
         }
 
+        if (isPropertyFilterCandidate(token)) {
+            const propertyValue = parsePropertyFilterToken(token);
+            if (propertyValue) {
+                tokens.push({ kind: 'property', value: propertyValue });
+                hasTagOperand = true;
+            }
+            continue;
+        }
+
         if (token.startsWith('#')) {
             const tagValue = token.slice(1);
             tokens.push({ kind: 'tag', value: tagValue.length > 0 ? tagValue : null });
@@ -997,6 +1223,7 @@ interface TagExpressionBuildResult {
     includeUntagged: boolean;
     requireTagged: boolean;
     includedTagTokens: string[];
+    includedPropertyTokens: PropertySearchToken[];
 }
 
 // Builds a postfix expression tree from classified tokens using operator precedence
@@ -1004,6 +1231,7 @@ const buildTagExpression = (classifiedTokens: ClassifiedToken[]): TagExpressionB
     const expression: TagExpressionToken[] = [];
     const operatorStack: InclusionOperator[] = [];
     const positiveTags = new Set<string>();
+    const positiveProperties = new Map<string, PropertySearchToken>();
 
     let expectOperand = true;
     let includeUntagged = false;
@@ -1020,7 +1248,11 @@ const buildTagExpression = (classifiedTokens: ClassifiedToken[]): TagExpressionB
         while (operatorStack.length > 0) {
             const top = operatorStack[operatorStack.length - 1];
             if (OPERATOR_PRECEDENCE[top] >= OPERATOR_PRECEDENCE[operator]) {
-                expression.push({ kind: 'operator', operator: operatorStack.pop() as InclusionOperator });
+                const popped = operatorStack.pop();
+                if (!popped) {
+                    return false;
+                }
+                expression.push({ kind: 'operator', operator: popped });
             } else {
                 break;
             }
@@ -1083,6 +1315,24 @@ const buildTagExpression = (classifiedTokens: ClassifiedToken[]): TagExpressionB
             continue;
         }
 
+        if (token.kind === 'property') {
+            if (!pushOperand({ kind: 'property', value: token.value })) {
+                return null;
+            }
+            const propertyKey = token.value.value ? `${token.value.key}=${token.value.value}` : token.value.key;
+            if (!positiveProperties.has(propertyKey)) {
+                positiveProperties.set(propertyKey, token.value);
+            }
+            continue;
+        }
+
+        if (token.kind === 'propertyNegation') {
+            if (!pushOperand({ kind: 'notProperty', value: token.value })) {
+                return null;
+            }
+            continue;
+        }
+
         return null;
     }
 
@@ -1127,12 +1377,17 @@ const buildTagExpression = (classifiedTokens: ClassifiedToken[]): TagExpressionB
         expression,
         includeUntagged,
         requireTagged,
-        includedTagTokens: Array.from(positiveTags)
+        includedTagTokens: Array.from(positiveTags),
+        includedPropertyTokens: Array.from(positiveProperties.values())
     };
 };
 
 // Evaluates a postfix tag expression against a file's tags
-const evaluateTagExpression = (expression: TagExpressionToken[], lowercaseTags: string[]): boolean => {
+const evaluateTagExpression = (
+    expression: TagExpressionToken[],
+    lowercaseTags: string[],
+    propertyValuesByKey: Map<string, string[]>
+): boolean => {
     if (expression.length === 0) {
         return true;
     }
@@ -1168,6 +1423,55 @@ const evaluateTagExpression = (expression: TagExpressionToken[], lowercaseTags: 
             value = lowercaseTags.length > 0;
         } else if (token.kind === 'untagged') {
             value = lowercaseTags.length === 0;
+        } else if (token.kind === 'property') {
+            value = propertyTokenMatches(propertyValuesByKey, token.value);
+        } else if (token.kind === 'notProperty') {
+            value = !propertyTokenMatches(propertyValuesByKey, token.value);
+        }
+        stack.push(value);
+    }
+
+    return stack.length === 0 ? true : Boolean(stack[stack.length - 1]);
+};
+
+const evaluateTagRequirementExpression = (expression: TagExpressionToken[], lowercaseTags: string[]): boolean => {
+    if (expression.length === 0) {
+        return true;
+    }
+
+    const stack: boolean[] = [];
+
+    const hasTagMatch = (token: string): boolean => {
+        for (const tag of lowercaseTags) {
+            if (tagMatchesToken(tag, token)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    for (const token of expression) {
+        if (token.kind === 'operator') {
+            const right = stack.pop();
+            const left = stack.pop();
+            if (left === undefined || right === undefined) {
+                return false;
+            }
+            stack.push(token.operator === 'AND' ? left && right : left || right);
+            continue;
+        }
+
+        let value = false;
+        if (token.kind === 'tag') {
+            value = hasTagMatch(token.value);
+        } else if (token.kind === 'notTag') {
+            value = !hasTagMatch(token.value);
+        } else if (token.kind === 'requireTagged') {
+            value = lowercaseTags.length > 0;
+        } else if (token.kind === 'untagged') {
+            value = lowercaseTags.length === 0;
+        } else if (token.kind === 'property' || token.kind === 'notProperty') {
+            value = true;
         }
         stack.push(value);
     }
@@ -1176,15 +1480,25 @@ const evaluateTagExpression = (expression: TagExpressionToken[], lowercaseTags: 
 };
 
 // Parses tokens into tag expression mode with OR/AND precedence
-const parseTagModeTokens = (classifiedTokens: ClassifiedToken[], excludeTagTokens: string[]): FilterSearchTokens | null => {
+const parseTagModeTokens = (
+    classifiedTokens: ClassifiedToken[],
+    excludeTagTokens: string[],
+    excludePropertyTokens: PropertySearchToken[]
+): FilterSearchTokens | null => {
     const tagExpressionTokens: ClassifiedToken[] = [];
     for (const token of classifiedTokens) {
-        if (token.kind === 'tag' || token.kind === 'tagNegation' || token.kind === 'operator') {
+        if (
+            token.kind === 'tag' ||
+            token.kind === 'tagNegation' ||
+            token.kind === 'property' ||
+            token.kind === 'propertyNegation' ||
+            token.kind === 'operator'
+        ) {
             tagExpressionTokens.push(token);
             continue;
         }
 
-        // Tag mode accepts only tag operands and connectors.
+        // Tag mode accepts only tag/property operands and connectors.
         // Non-tag operands are handled in filter mode.
         return null;
     }
@@ -1194,11 +1508,19 @@ const parseTagModeTokens = (classifiedTokens: ClassifiedToken[], excludeTagToken
         return null;
     }
 
-    const { expression, includeUntagged, requireTagged, includedTagTokens } = buildResult;
+    const { expression, includeUntagged, requireTagged, includedTagTokens, includedPropertyTokens } = buildResult;
     const hasInclusions = expression.length > 0;
-    const requiresTags = hasInclusions;
+    const requiresTags = expression.some(token => {
+        return (
+            token.kind !== 'operator' &&
+            (token.kind === 'tag' || token.kind === 'notTag' || token.kind === 'requireTagged' || token.kind === 'untagged')
+        );
+    });
+    const requiresProperties = expression.some(token => {
+        return token.kind !== 'operator' && (token.kind === 'property' || token.kind === 'notProperty');
+    });
     // Check if empty tag array would fail (meaning all clauses require tags)
-    const allRequireTags = hasInclusions ? !evaluateTagExpression(expression, []) : false;
+    const allRequireTags = hasInclusions ? !evaluateTagRequirementExpression(expression, []) : false;
 
     return {
         mode: 'tag',
@@ -1209,6 +1531,9 @@ const parseTagModeTokens = (classifiedTokens: ClassifiedToken[], excludeTagToken
         requireUnfinishedTasks: false,
         excludeUnfinishedTasks: false,
         includedTagTokens,
+        propertyTokens: includedPropertyTokens,
+        excludePropertyTokens,
+        requiresProperties,
         nameTokens: [],
         tagTokens: includedTagTokens.slice(),
         dateRanges: [],
@@ -1229,10 +1554,12 @@ const parseTagModeTokens = (classifiedTokens: ClassifiedToken[], excludeTagToken
 const parseFilterModeTokens = (
     classifiedTokens: ClassifiedToken[],
     excludeTagTokens: string[],
+    excludePropertyTokens: PropertySearchToken[],
     hasUntaggedOperand: boolean
 ): FilterSearchTokens => {
     const nameTokens: string[] = [];
     const tagTokens: string[] = [];
+    const propertyTokens: PropertySearchToken[] = [];
     const folderTokens: FolderFilterToken[] = [];
     const extensionTokens: string[] = [];
     const dateRanges: DateFilterRange[] = [];
@@ -1260,6 +1587,9 @@ const parseFilterModeTokens = (
                 }
                 requireTagged = true;
                 break;
+            case 'property':
+                propertyTokens.push(token.value);
+                break;
             case 'folder':
                 folderTokens.push(token.value);
                 break;
@@ -1279,6 +1609,8 @@ const parseFilterModeTokens = (
                 connectorCandidates.push(token.operator.toLowerCase());
                 break;
             case 'tagNegation':
+                break;
+            case 'propertyNegation':
                 break;
             case 'folderNegation':
                 excludeFolderTokens.push(token.value);
@@ -1302,12 +1634,14 @@ const parseFilterModeTokens = (
     const hasInclusions =
         nameTokens.length > 0 ||
         tagTokens.length > 0 ||
+        propertyTokens.length > 0 ||
         folderTokens.length > 0 ||
         extensionTokens.length > 0 ||
         dateRanges.length > 0 ||
         requireTagged ||
         requireUnfinishedTasks;
     const requiresTags = requireTagged || tagTokens.length > 0;
+    const requiresProperties = propertyTokens.length > 0;
     const allRequireTags = hasInclusions ? requiresTags : false;
     const includedTagTokens = tagTokens.slice();
 
@@ -1320,6 +1654,9 @@ const parseFilterModeTokens = (
         requireUnfinishedTasks,
         excludeUnfinishedTasks,
         includedTagTokens,
+        propertyTokens,
+        excludePropertyTokens,
+        requiresProperties,
         nameTokens,
         tagTokens,
         dateRanges,
@@ -1379,12 +1716,14 @@ const parseFilterModeTokens = (
  * @returns Parsed tokens with include/exclude criteria for filtering
  */
 export function parseFilterSearchTokens(query: string): FilterSearchTokens {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
         return EMPTY_TOKENS;
     }
 
-    const rawTokens = normalized.split(/\s+/).filter(Boolean);
+    const rawTokens = tokenizeFilterSearchQuery(trimmedQuery)
+        .map(token => token.toLowerCase())
+        .filter(Boolean);
     if (rawTokens.length === 0) {
         return EMPTY_TOKENS;
     }
@@ -1393,16 +1732,20 @@ export function parseFilterSearchTokens(query: string): FilterSearchTokens {
     const { tokens: classifiedTokens } = classification;
 
     const excludeTagTokens: string[] = [];
+    const excludePropertyTokens: PropertySearchToken[] = [];
     let hasUntaggedOperand = false;
     for (const token of classifiedTokens) {
-        if (token.kind !== 'tagNegation') {
+        if (token.kind === 'tagNegation') {
+            if (token.value === null) {
+                hasUntaggedOperand = true;
+            } else {
+                excludeTagTokens.push(token.value);
+            }
             continue;
         }
 
-        if (token.value === null) {
-            hasUntaggedOperand = true;
-        } else {
-            excludeTagTokens.push(token.value);
+        if (token.kind === 'propertyNegation') {
+            excludePropertyTokens.push(token.value);
         }
     }
 
@@ -1411,13 +1754,13 @@ export function parseFilterSearchTokens(query: string): FilterSearchTokens {
         // Once a query includes any non-tag operand (name/date/task),
         // we intentionally stay in filter mode so connector words are
         // evaluated as literal name tokens.
-        const tagTokens = parseTagModeTokens(classifiedTokens, excludeTagTokens);
+        const tagTokens = parseTagModeTokens(classifiedTokens, excludeTagTokens, excludePropertyTokens);
         if (tagTokens) {
             return tagTokens;
         }
     }
 
-    return parseFilterModeTokens(classifiedTokens, excludeTagTokens, hasUntaggedOperand);
+    return parseFilterModeTokens(classifiedTokens, excludeTagTokens, excludePropertyTokens, hasUntaggedOperand);
 }
 
 // Checks if a token is a recognized connector word
@@ -1428,22 +1771,23 @@ const isConnectorToken = (value: string | undefined): boolean => {
     return CONNECTOR_TOKEN_SET.has(value.toLowerCase());
 };
 
-// Checks whether a query contains only tag operands and connector words.
+// Checks whether a query contains only tag/property operands and connector words.
 const isTagOnlyMutationQuery = (query: string): boolean => {
-    const trimmed = query.trim().toLowerCase();
+    const trimmed = query.trim();
     if (!trimmed) {
         return true;
     }
 
-    const tokens = trimmed.split(/\s+/).filter(Boolean);
+    const tokens = tokenizeFilterSearchQuery(trimmed);
     let hasTagOperand = false;
 
     for (const token of tokens) {
-        if (isConnectorToken(token)) {
+        const lowercaseToken = token.toLowerCase();
+        if (isConnectorToken(lowercaseToken)) {
             continue;
         }
 
-        const candidate = token.startsWith('-') ? token.slice(1) : token;
+        const candidate = lowercaseToken.startsWith('-') ? lowercaseToken.slice(1) : lowercaseToken;
         if (!candidate) {
             return false;
         }
@@ -1453,10 +1797,73 @@ const isTagOnlyMutationQuery = (query: string): boolean => {
             continue;
         }
 
+        if (parsePropertyFilterToken(candidate)) {
+            hasTagOperand = true;
+            continue;
+        }
+
         return false;
     }
 
     return hasTagOperand;
+};
+
+const escapeQuotedTokenValue = (value: string): string => {
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+};
+
+const shouldQuoteQueryTokenPart = (value: string): boolean => {
+    return /\s/.test(value) || value.includes('"') || value.includes('\\') || value.includes('=');
+};
+
+const escapePropertyFilterPartForQuery = (value: string): string => {
+    return value.replace(/\\/g, '\\\\').replace(/=/g, '\\=');
+};
+
+const formatPropertyFilterPartForQuery = (value: string): string => {
+    const escaped = escapePropertyFilterPartForQuery(value);
+    if (!shouldQuoteQueryTokenPart(value)) {
+        return escaped;
+    }
+
+    const escapedQuotes = escaped.replace(/"/g, '\\"');
+    return `"${escapedQuotes}"`;
+};
+
+const formatPropertyTokenForQuery = (propertyToken: PropertySearchToken, negated = false): string => {
+    const prefix = negated ? '-.' : '.';
+    const serializedKey = formatPropertyFilterPartForQuery(propertyToken.key);
+    if (propertyToken.value === null) {
+        return `${prefix}${serializedKey}`;
+    }
+
+    const serializedValue = formatPropertyFilterPartForQuery(propertyToken.value);
+    return `${prefix}${serializedKey}=${serializedValue}`;
+};
+
+const serializeMutationToken = (token: string): string => {
+    const normalized = token.toLowerCase();
+    if (normalized.startsWith('-.') || normalized.startsWith('.')) {
+        const negated = normalized.startsWith('-.');
+        const candidate = negated ? normalized.slice(1) : normalized;
+        const parsedProperty = parsePropertyFilterToken(candidate);
+        if (parsedProperty) {
+            return formatPropertyTokenForQuery(parsedProperty, negated);
+        }
+    }
+
+    if (/\s/.test(token) || token.includes('"') || token.includes('\\')) {
+        return `"${escapeQuotedTokenValue(token)}"`;
+    }
+
+    return token;
+};
+
+const serializeMutationTokens = (tokens: string[]): string => {
+    return tokens
+        .map(token => serializeMutationToken(token))
+        .join(' ')
+        .trim();
 };
 
 export interface UpdateFilterQueryWithTagResult {
@@ -1469,6 +1876,63 @@ export interface UpdateFilterQueryWithDateTokenResult {
     query: string;
     changed: boolean;
 }
+
+export interface UpdateFilterQueryWithPropertyResult {
+    query: string;
+    action: 'added' | 'removed';
+    changed: boolean;
+}
+
+const removeMutationToken = (tokens: string[], removalIndex: number, expressionMode: boolean): string[] => {
+    const updatedTokens = tokens.slice();
+    updatedTokens.splice(removalIndex, 1);
+
+    if (!expressionMode) {
+        return updatedTokens;
+    }
+
+    const precedingIndex = removalIndex - 1;
+    if (precedingIndex >= 0 && isConnectorToken(updatedTokens[precedingIndex])) {
+        updatedTokens.splice(precedingIndex, 1);
+    }
+
+    while (updatedTokens.length > 0 && isConnectorToken(updatedTokens[0])) {
+        updatedTokens.shift();
+    }
+
+    for (let index = 0; index < updatedTokens.length - 1; index += 1) {
+        if (isConnectorToken(updatedTokens[index]) && isConnectorToken(updatedTokens[index + 1])) {
+            updatedTokens.splice(index + 1, 1);
+            index -= 1;
+        }
+    }
+
+    while (updatedTokens.length > 0 && isConnectorToken(updatedTokens[updatedTokens.length - 1])) {
+        updatedTokens.pop();
+    }
+
+    return updatedTokens;
+};
+
+const appendMutationToken = (tokens: string[], token: string, operator: InclusionOperator, expressionMode: boolean): string[] => {
+    const nextTokens = tokens.slice();
+    if (!expressionMode) {
+        nextTokens.push(token);
+        return nextTokens;
+    }
+
+    const connector = operator === 'OR' ? 'OR' : 'AND';
+    if (nextTokens.length === 0) {
+        nextTokens.push(token);
+    } else if (isConnectorToken(nextTokens[nextTokens.length - 1])) {
+        nextTokens[nextTokens.length - 1] = connector;
+        nextTokens.push(token);
+    } else {
+        nextTokens.push(connector, token);
+    }
+
+    return nextTokens;
+};
 
 /**
  * Toggle a normalized tag inside a raw query string.
@@ -1491,38 +1955,15 @@ export function updateFilterQueryWithTag(
     }
 
     const formattedTag = `#${normalizedTag}`;
-    const tokens = trimmed.length > 0 ? trimmed.split(/\s+/) : [];
+    const tokens = trimmed.length > 0 ? tokenizeFilterSearchQuery(trimmed) : [];
     const tagOnlyQuery = isTagOnlyMutationQuery(trimmed);
     const lowerTarget = formattedTag.toLowerCase();
     const removalIndex = tokens.findIndex(token => token.toLowerCase() === lowerTarget);
 
     if (removalIndex !== -1) {
-        const updatedTokens = tokens.slice();
-        updatedTokens.splice(removalIndex, 1);
+        const updatedTokens = removeMutationToken(tokens, removalIndex, tagOnlyQuery);
 
-        if (tagOnlyQuery) {
-            const precedingIndex = removalIndex - 1;
-            if (precedingIndex >= 0 && isConnectorToken(updatedTokens[precedingIndex])) {
-                updatedTokens.splice(precedingIndex, 1);
-            }
-
-            while (updatedTokens.length > 0 && isConnectorToken(updatedTokens[0])) {
-                updatedTokens.shift();
-            }
-
-            for (let index = 0; index < updatedTokens.length - 1; index += 1) {
-                if (isConnectorToken(updatedTokens[index]) && isConnectorToken(updatedTokens[index + 1])) {
-                    updatedTokens.splice(index + 1, 1);
-                    index -= 1;
-                }
-            }
-
-            while (updatedTokens.length > 0 && isConnectorToken(updatedTokens[updatedTokens.length - 1])) {
-                updatedTokens.pop();
-            }
-        }
-
-        const nextQuery = updatedTokens.join(' ').trim();
+        const nextQuery = serializeMutationTokens(updatedTokens);
         return {
             query: nextQuery,
             action: 'removed',
@@ -1530,22 +1971,80 @@ export function updateFilterQueryWithTag(
         };
     }
 
-    const nextTokens = tokens.slice();
-    if (!tagOnlyQuery) {
-        nextTokens.push(formattedTag);
-    } else {
-        const connector = operator === 'OR' ? 'OR' : 'AND';
-        if (nextTokens.length === 0) {
-            nextTokens.push(formattedTag);
-        } else if (isConnectorToken(nextTokens[nextTokens.length - 1])) {
-            nextTokens[nextTokens.length - 1] = connector;
-            nextTokens.push(formattedTag);
-        } else {
-            nextTokens.push(connector, formattedTag);
-        }
+    const nextTokens = appendMutationToken(tokens, formattedTag, operator, tagOnlyQuery);
+
+    const nextQuery = serializeMutationTokens(nextTokens);
+    return {
+        query: nextQuery,
+        action: 'added',
+        changed: nextQuery !== trimmed
+    };
+}
+
+export function updateFilterQueryWithProperty(
+    query: string,
+    key: string,
+    value: string | null,
+    operator: InclusionOperator
+): UpdateFilterQueryWithPropertyResult {
+    const trimmed = query.trim();
+    const normalizedKey = normalizePropertyFilterKey(key);
+    if (!normalizedKey) {
+        return {
+            query: trimmed,
+            action: 'removed',
+            changed: false
+        };
     }
 
-    const nextQuery = nextTokens.join(' ').trim();
+    let normalizedValue: string | null = null;
+    if (typeof value === 'string') {
+        const compactSegments = value
+            .split('/')
+            .map(segment => segment.trim())
+            .filter(Boolean)
+            .join('/');
+        if (!compactSegments) {
+            return {
+                query: trimmed,
+                action: 'removed',
+                changed: false
+            };
+        }
+        normalizedValue = normalizePropertyTreeValuePath(compactSegments);
+    }
+
+    const propertyToken: PropertySearchToken = { key: normalizedKey, value: normalizedValue };
+    const formattedToken = formatPropertyTokenForQuery(propertyToken);
+    const tokens = trimmed.length > 0 ? tokenizeFilterSearchQuery(trimmed) : [];
+    const tagOnlyQuery = isTagOnlyMutationQuery(trimmed);
+
+    const removalIndex = tokens.findIndex(token => {
+        const normalizedToken = token.toLowerCase();
+        if (normalizedToken.startsWith('-')) {
+            return false;
+        }
+        const parsed = parsePropertyFilterToken(normalizedToken);
+        if (!parsed) {
+            return false;
+        }
+        return parsed.key === propertyToken.key && parsed.value === propertyToken.value;
+    });
+
+    if (removalIndex !== -1) {
+        const updatedTokens = removeMutationToken(tokens, removalIndex, tagOnlyQuery);
+
+        const nextQuery = serializeMutationTokens(updatedTokens);
+        return {
+            query: nextQuery,
+            action: 'removed',
+            changed: nextQuery !== trimmed
+        };
+    }
+
+    const nextTokens = appendMutationToken(tokens, formattedToken, operator, tagOnlyQuery);
+
+    const nextQuery = serializeMutationTokens(nextTokens);
     return {
         query: nextQuery,
         action: 'added',
@@ -1580,6 +2079,7 @@ export function filterSearchHasActiveCriteria(tokens: FilterSearchTokens): boole
         tokens.hasInclusions ||
         tokens.excludeNameTokens.length > 0 ||
         tokens.excludeTagTokens.length > 0 ||
+        tokens.excludePropertyTokens.length > 0 ||
         tokens.excludeFolderTokens.length > 0 ||
         tokens.excludeExtensionTokens.length > 0 ||
         tokens.excludeDateRanges.length > 0 ||
@@ -1596,6 +2096,13 @@ export function filterSearchNeedsTagLookup(tokens: FilterSearchTokens): boolean 
 }
 
 /**
+ * Check if evaluating the parsed tokens requires file property metadata.
+ */
+export function filterSearchNeedsPropertyLookup(tokens: FilterSearchTokens): boolean {
+    return tokens.requiresProperties || tokens.excludePropertyTokens.length > 0;
+}
+
+/**
  * Check if every matching clause requires tagged files.
  */
 export function filterSearchRequiresTagsForEveryMatch(tokens: FilterSearchTokens): boolean {
@@ -1606,6 +2113,7 @@ export interface FilterSearchMatchOptions {
     hasUnfinishedTasks: boolean;
     lowercaseFolderPath?: string;
     lowercaseExtension?: string;
+    propertyValuesByKey?: Map<string, string[]>;
 }
 
 /**
@@ -1632,6 +2140,7 @@ export function fileMatchesFilterTokens(
     const hasUnfinishedTasks = options?.hasUnfinishedTasks ?? false;
     const lowercaseFolderPath = options?.lowercaseFolderPath ?? '';
     const lowercaseExtension = options?.lowercaseExtension ?? '';
+    const propertyValuesByKey = options?.propertyValuesByKey ?? EMPTY_PROPERTY_VALUE_MAP;
 
     if (tokens.excludeUnfinishedTasks && hasUnfinishedTasks) {
         return false;
@@ -1684,6 +2193,13 @@ export function fileMatchesFilterTokens(
             }
         }
 
+        if (tokens.excludePropertyTokens.length > 0) {
+            const hasExcludedProperty = tokens.excludePropertyTokens.some(token => propertyTokenMatches(propertyValuesByKey, token));
+            if (hasExcludedProperty) {
+                return false;
+            }
+        }
+
         if (tokens.nameTokens.length > 0) {
             const matchesName = tokens.nameTokens.every(token => lowercaseName.includes(token));
             if (!matchesName) {
@@ -1703,6 +2219,13 @@ export function fileMatchesFilterTokens(
         if (tokens.extensionTokens.length > 0) {
             const matchesExtensions = tokens.extensionTokens.every(token => extensionMatchesToken(lowercaseExtension, token));
             if (!matchesExtensions) {
+                return false;
+            }
+        }
+
+        if (tokens.propertyTokens.length > 0) {
+            const matchesProperties = tokens.propertyTokens.every(token => propertyTokenMatches(propertyValuesByKey, token));
+            if (!matchesProperties) {
                 return false;
             }
         }
@@ -1732,7 +2255,7 @@ export function fileMatchesFilterTokens(
         return true;
     }
 
-    return evaluateTagExpression(tokens.expression, lowercaseTags);
+    return evaluateTagExpression(tokens.expression, lowercaseTags, propertyValuesByKey);
 }
 
 // File date context passed to date filter matching functions

@@ -84,6 +84,43 @@ export function isPlainObjectRecordValue(value: unknown): value is Record<string
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+export interface PinnedNoteContextValue {
+    folder: boolean;
+    tag: boolean;
+    property: boolean;
+}
+
+/**
+ * Normalizes a pinned note context value into strict boolean fields.
+ */
+export function normalizePinnedNoteContext(value: unknown): PinnedNoteContextValue {
+    if (!isPlainObjectRecordValue(value)) {
+        return { folder: false, tag: false, property: false };
+    }
+
+    return {
+        folder: value.folder === true,
+        tag: value.tag === true,
+        property: value.property === true
+    };
+}
+
+/**
+ * Rebuilds pinned notes into a null-prototype record with normalized context values.
+ */
+export function clonePinnedNotesRecord(value: unknown): Record<string, PinnedNoteContextValue> {
+    const cloned = sanitizeRecord<PinnedNoteContextValue>(undefined);
+    if (!isPlainObjectRecordValue(value)) {
+        return cloned;
+    }
+
+    Object.entries(value).forEach(([path, context]) => {
+        cloned[path] = normalizePinnedNoteContext(context);
+    });
+
+    return cloned;
+}
+
 export function casefold(value: string): string {
     const trimmed = value.trim();
     if (trimmed.length === 0) {

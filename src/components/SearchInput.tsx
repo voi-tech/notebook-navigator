@@ -28,7 +28,7 @@ import { SearchDateInputSuggest } from '../suggest/SearchDateInputSuggest';
 import { SearchTagInputSuggest } from '../suggest/SearchTagInputSuggest';
 import type { SearchProvider } from '../types/search';
 import { resolveUXIcon } from '../utils/uxIcons';
-import { InfoModal } from '../modals/InfoModal';
+import { InfoModal, type InfoModalSection } from '../modals/InfoModal';
 import { focusElementPreventScroll } from '../utils/domUtils';
 
 interface SearchInputProps {
@@ -284,8 +284,13 @@ export function SearchInput({
     const openSearchHelp = useCallback(() => {
         tagSuggestRef.current?.close();
         dateSuggestRef.current?.close();
-        const { fileNames, tags, tasks, connectors, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
-        const sections = [fileNames, dates, tags, tasks, connectors, omnisearch];
+        const { fileNames, tags, properties, tasks, connectors, dates, omnisearch } = strings.searchInput.searchHelpModal.sections;
+        const propertiesSection = Object.prototype.hasOwnProperty.call(strings.searchInput.searchHelpModal.sections, 'properties')
+            ? properties
+            : undefined;
+        const sections = [fileNames, dates, tags, propertiesSection, tasks, connectors, omnisearch].filter(
+            (section): section is InfoModalSection => Boolean(section)
+        );
         new InfoModal(app, {
             title: strings.searchInput.searchHelpTitle,
             intro: strings.searchInput.searchHelpModal.intro,

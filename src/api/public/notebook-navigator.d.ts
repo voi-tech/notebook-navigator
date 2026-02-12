@@ -84,10 +84,16 @@ export interface TagMetadata {
 }
 
 /**
- * Currently selected navigation item (folder or tag)
- * Discriminated union ensures only one can be selected at a time
+ * Currently selected navigation item (folder, tag, property, or none).
+ *
+ * `property` uses the property tree node id (`properties-root` for the section root,
+ * or `key:<normalizedKey>` / `key:<normalizedKey>=<normalizedValuePath>` for key/value nodes).
  */
-export type NavItem = { folder: TFolder; tag: null } | { folder: null; tag: string } | { folder: null; tag: null };
+export type NavItem =
+    | { folder: TFolder; tag: null; property: null }
+    | { folder: null; tag: string; property: null }
+    | { folder: null; tag: null; property: string }
+    | { folder: null; tag: null; property: null };
 
 /**
  * Current file selection state in the navigator
@@ -134,9 +140,10 @@ export type MenuExtensionDispose = () => void;
  * Context where a note can be pinned
  * - 'folder': Pin appears when viewing folders
  * - 'tag': Pin appears when viewing tags
- * - 'all': Pin appears in both folder and tag views
+ * - 'property': Pin appears when viewing properties
+ * - 'all': Pin appears in folder, tag, and property views
  */
-export type PinContext = 'folder' | 'tag' | 'all';
+export type PinContext = 'folder' | 'tag' | 'property' | 'all';
 
 /**
  * Pinned file with context information
@@ -145,14 +152,14 @@ export interface PinnedFile {
     /** The pinned file */
     file: TFile;
     /** Which context the file is pinned in */
-    context: { folder: boolean; tag: boolean };
+    context: { folder: boolean; tag: boolean; property: boolean };
 }
 
 /**
  * Type alias for the Map structure returned by the API for pinned notes
  * Maps file paths to their pinning context states
  */
-export type Pinned = Map<string, { folder: boolean; tag: boolean }>;
+export type Pinned = Map<string, { folder: boolean; tag: boolean; property: boolean }>;
 
 /**
  * All available event types that can be subscribed to
@@ -166,7 +173,7 @@ export interface NotebookNavigatorEvents {
     /** Fired when the storage system is ready for queries */
     'storage-ready': void;
 
-    /** Fired when the navigation selection changes (folder, tag, or nothing) */
+    /** Fired when the navigation selection changes (folder, tag, property, or nothing) */
     'nav-item-changed': {
         item: NavItem;
     };
@@ -223,11 +230,11 @@ export interface NotebookNavigatorAPI {
         // Pinned files
         /** Get all pinned files with their context information as a Map */
         getPinned(): Readonly<Pinned>;
-        /** Check if a file is pinned (no context = any, 'all' = both) */
+        /** Check if a file is pinned (no context = any, 'all' = all contexts) */
         isPinned(file: TFile, context?: PinContext): boolean;
-        /** Pin a file (defaults to 'all' - both contexts) */
+        /** Pin a file (defaults to 'all' - all contexts) */
         pin(file: TFile, context?: PinContext): Promise<void>;
-        /** Unpin a file (defaults to 'all' - both contexts) */
+        /** Unpin a file (defaults to 'all' - all contexts) */
         unpin(file: TFile, context?: PinContext): Promise<void>;
     };
 
@@ -243,7 +250,7 @@ export interface NotebookNavigatorAPI {
 
     /** Query current selection state */
     selection: {
-        /** Get the currently selected folder or tag in navigation pane */
+        /** Get the currently selected folder, tag, property, or none in navigation pane */
         getNavItem(): NavItem;
         /** Get current file selection state */
         getCurrent(): SelectionState;

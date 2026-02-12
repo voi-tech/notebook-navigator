@@ -26,7 +26,7 @@ import { useFileCache } from '../context/StorageContext';
 import { useExpansionState } from '../context/ExpansionContext';
 import { strings } from '../i18n';
 import { getDBInstance } from '../storage/fileOperations';
-import { ItemType, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
+import { ItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import { FOLDER_NOTE_TYPE_EXTENSIONS } from '../types/folderNote';
 import { hasSubfolders } from '../utils/fileFilters';
 import { resolveFolderNoteName } from '../utils/folderNoteName';
@@ -34,6 +34,7 @@ import { EXCALIDRAW_BASENAME_SUFFIX } from '../utils/fileNameUtils';
 import { getVirtualTagCollection, VIRTUAL_TAG_COLLECTION_IDS } from '../utils/virtualTagCollections';
 import { getActiveHiddenFolders } from '../utils/vaultProfiles';
 import { resolveUXIcon } from '../utils/uxIcons';
+import { parsePropertyNodeId } from '../utils/propertyTree';
 
 const FOLDER_NOTE_EXTENSIONS = Object.values(FOLDER_NOTE_TYPE_EXTENSIONS);
 
@@ -76,6 +77,11 @@ interface UseListPaneTitleResult {
     selectionType: ItemType | null;
 }
 
+interface ListPaneTitleMemoResult {
+    desktopTitle: string;
+    breadcrumbSegments: BreadcrumbSegment[];
+}
+
 export function useListPaneTitle(): UseListPaneTitleResult {
     const { app } = useServices();
     const settings = useSettingsState();
@@ -86,7 +92,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
     const selectionState = useSelectionState();
     const selectedFolderPath = selectionState.selectedFolder?.path ?? null;
     const selectedFolderName = selectionState.selectedFolder?.name ?? null;
-    const { getTagDisplayPath } = useFileCache();
+    const { getTagDisplayPath, getPropertyTree } = useFileCache();
     const expansionState = useExpansionState();
     const metadataService = useMetadataService();
     const [folderNoteVersion, setFolderNoteVersion] = useState(0);
@@ -230,12 +236,20 @@ export function useListPaneTitle(): UseListPaneTitleResult {
             return metadataService.getTagIcon(selectionState.selectedTag) || resolveUXIcon(settings.interfaceIcons, 'nav-tag');
         }
 
+        if (selectionState.selectionType === ItemType.PROPERTY && selectionState.selectedProperty) {
+            if (!settings.showTagIcons) {
+                return '';
+            }
+            return resolveUXIcon(settings.interfaceIcons, 'nav-properties');
+        }
+
         return '';
     }, [
         expansionState.expandedFolders,
         metadataService,
         selectionState.selectedFolder,
         selectionState.selectedTag,
+        selectionState.selectedProperty,
         selectionState.selectionType,
         hiddenFolders,
         showHiddenItems,
@@ -245,7 +259,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         metadataVersion
     ]);
 
-    const { desktopTitle, breadcrumbSegments } = useMemo(() => {
+    const { desktopTitle, breadcrumbSegments } = useMemo<ListPaneTitleMemoResult>(() => {
         // Forces recompute when folder note metadata changes in IndexedDB.
         void metadataVersion;
         if (selectionState.selectionType === ItemType.FOLDER && selectionState.selectedFolder) {
@@ -353,6 +367,53 @@ export function useListPaneTitle(): UseListPaneTitleResult {
             };
         }
 
+        if (selectionState.selectionType === ItemType.PROPERTY && selectionState.selectedProperty) {
+            const propertyNodeId = selectionState.selectedProperty;
+            if (propertyNodeId === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID) {
+                const propertiesBreadcrumb: BreadcrumbSegment[] = [
+                    {
+                        label: strings.navigationPane.properties,
+                        targetType: 'none',
+                        isLast: true
+                    }
+                ];
+
+                return {
+                    desktopTitle: strings.navigationPane.properties,
+                    breadcrumbSegments: propertiesBreadcrumb
+                };
+            }
+
+            const parsed = parsePropertyNodeId(propertyNodeId);
+            if (!parsed) {
+                return {
+                    desktopTitle: strings.navigationPane.properties,
+                    breadcrumbSegments: [
+                        {
+                            label: strings.navigationPane.properties,
+                            targetType: 'none',
+                            isLast: true
+                        }
+                    ]
+                };
+            }
+
+            const propertyTree = getPropertyTree();
+            const keyNode = propertyTree.get(parsed.key) ?? null;
+            const displayKey = keyNode?.name ?? parsed.key;
+            const valueNode = parsed.valuePath ? (keyNode?.children.get(propertyNodeId) ?? null) : null;
+
+            return {
+                desktopTitle: parsed.valuePath ? (valueNode?.displayPath ?? parsed.valuePath) : displayKey,
+                breadcrumbSegments: parsed.valuePath
+                    ? [
+                          { label: displayKey, targetType: 'none', isLast: false },
+                          { label: valueNode?.displayPath ?? parsed.valuePath, targetType: 'none', isLast: true }
+                      ]
+                    : [{ label: displayKey, targetType: 'none', isLast: true }]
+            };
+        }
+
         const noSelectionBreadcrumb: BreadcrumbSegment[] = [
             {
                 label: strings.common.noSelection,
@@ -368,9 +429,11 @@ export function useListPaneTitle(): UseListPaneTitleResult {
     }, [
         app.vault,
         getTagDisplayPath,
+        getPropertyTree,
         metadataService,
         selectionState.selectedFolder,
         selectionState.selectedTag,
+        selectionState.selectedProperty,
         selectionState.selectionType,
         settings.customVaultName,
         metadataVersion
@@ -382,7 +445,8 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         iconName,
         showIcon:
             (selectionState.selectionType === ItemType.FOLDER && settings.showFolderIcons && iconName.length > 0) ||
-            (selectionState.selectionType === ItemType.TAG && settings.showTagIcons && iconName.length > 0),
+            (selectionState.selectionType === ItemType.TAG && settings.showTagIcons && iconName.length > 0) ||
+            (selectionState.selectionType === ItemType.PROPERTY && settings.showTagIcons && iconName.length > 0),
         selectionType: selectionState.selectionType
     };
 }

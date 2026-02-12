@@ -81,6 +81,7 @@ export interface UseNavigationRootReorderOptions {
     metadataService: MetadataService;
     foldersSectionExpanded: boolean;
     tagsSectionExpanded: boolean;
+    propertiesSectionActive: boolean;
     handleToggleFoldersSection: (event: React.MouseEvent<HTMLDivElement>) => void;
     handleToggleTagsSection: (event: React.MouseEvent<HTMLDivElement>) => void;
     activeProfile: ActiveProfileState;
@@ -124,6 +125,7 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
         metadataService,
         foldersSectionExpanded,
         tagsSectionExpanded,
+        propertiesSectionActive,
         handleToggleFoldersSection,
         handleToggleTagsSection,
         activeProfile
@@ -304,11 +306,15 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
             if (identifier === NavigationSectionId.TAGS) {
                 return showTags && reorderableRootTags.length > 0;
             }
+            if (identifier === NavigationSectionId.PROPERTIES) {
+                return propertiesSectionActive;
+            }
             return true;
         });
     }, [
         reorderableRootFolders.length,
         reorderableRootTags.length,
+        propertiesSectionActive,
         sectionOrderWithDefaults,
         showHiddenItems,
         showRecentNotes,
@@ -594,7 +600,8 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
                 (identifier === NavigationSectionId.SHORTCUTS && !showShortcuts) ||
                 (identifier === NavigationSectionId.RECENT && !showRecentNotes) ||
                 (identifier === NavigationSectionId.FOLDERS && rootFolderDescriptors.length === 0) ||
-                (identifier === NavigationSectionId.TAGS && !showTags);
+                (identifier === NavigationSectionId.TAGS && !showTags) ||
+                (identifier === NavigationSectionId.PROPERTIES && !propertiesSectionActive);
             let icon = 'lucide-circle';
             let label = '';
             let chevronIcon: string | undefined;
@@ -631,6 +638,9 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
                 label = strings.settings.sections.tags;
                 chevronIcon = tagsSectionExpanded ? 'lucide-chevron-down' : 'lucide-chevron-right';
                 onClick = handleToggleTagsSection;
+            } else if (identifier === NavigationSectionId.PROPERTIES) {
+                icon = resolveUXIcon(settings.interfaceIcons, 'nav-properties');
+                label = strings.navigationPane.properties;
             }
 
             return {
@@ -655,6 +665,7 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
         showShortcuts,
         showRecentNotes,
         showTags,
+        propertiesSectionActive,
         rootFolderDescriptors.length,
         fileVisibility,
         vaultRootDescriptor,

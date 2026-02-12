@@ -61,6 +61,7 @@ export const STRINGS_RU = {
         shortcutsHeader: 'Ярлыки', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Недавние заметки', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Недавние файлы', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Свойства',
         reorderRootFoldersTitle: 'Изменить порядок навигации',
         reorderRootFoldersHint: 'Используйте стрелки или перетаскивание',
         vaultRootLabel: 'Хранилище',
@@ -182,6 +183,16 @@ export const STRINGS_RU = {
                         'Cmd/Ctrl+Клик по тегу для добавления с AND. Cmd/Ctrl+Shift+Клик для добавления с OR.'
                     ]
                 },
+                properties: {
+                    title: 'Свойства',
+                    items: [
+                        '`.key` Включить заметки с пользовательским ключом свойства.',
+                        '`.key=value` Включить заметки с пользовательским значением свойства (также совпадает с вложенными значениями, например `value/subvalue`).',
+                        '`."Reading Status"` Включить заметки с ключом свойства, содержащим пробелы.',
+                        '`."Reading Status"="In Progress"` Ключи и значения с пробелами должны быть заключены в двойные кавычки.',
+                        'Cmd/Ctrl+Клик по свойству для добавления с AND. Cmd/Ctrl+Shift+Клик для добавления с OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Фильтры',
                     items: [
@@ -200,10 +211,10 @@ export const STRINGS_RU = {
                 connectors: {
                     title: 'Поведение AND/OR',
                     items: [
-                        '`AND` и `OR` являются операторами только в запросах, состоящих исключительно из тегов.',
-                        'Запросы из тегов содержат только фильтры тегов: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` и `OR` являются операторами только в запросах, состоящих исключительно из тегов и свойств.',
+                        'Запросы только с тегами и свойствами содержат только фильтры тегов и свойств: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'Если запрос включает имена, даты (`@...`), фильтры задач (`has:task`), фильтры папок (`folder:...`) или фильтры расширений (`ext:...`), `AND` и `OR` ищутся как слова.',
-                        'Пример запроса с операторами: `#work OR #home`.',
+                        'Пример запроса с операторами: `#work OR .status=started`.',
                         'Пример смешанного запроса: `#work OR ext:md` (`OR` ищется в именах файлов).'
                     ]
                 },
@@ -395,6 +406,7 @@ export const STRINGS_RU = {
                 'nav-folder-closed': 'Папка закрыта',
                 'nav-folder-note': 'Заметка папки',
                 'nav-tag': 'Тег',
+                'nav-properties': 'Свойства',
                 'list-pinned': 'Закреплённые элементы',
                 'file-unfinished-task': 'Незавершённые задачи',
                 'file-word-count': 'Количество слов',
@@ -594,6 +606,9 @@ export const STRINGS_RU = {
             noFilesSelected: 'Файлы не выбраны',
             tagOperationsNotAvailable: 'Операции с тегами недоступны',
             tagsRequireMarkdown: 'Теги поддерживаются только для Markdown-заметок',
+            propertiesRequireMarkdown: 'Свойства поддерживаются только в заметках Markdown',
+            propertySetOnNote: 'Свойство обновлено в 1 заметке',
+            propertySetOnNotes: 'Свойство обновлено в {count} заметках',
             iconPackDownloaded: '{provider} загружен',
             iconPackUpdated: '{provider} обновлён ({version})',
             iconPackRemoved: '{provider} удалён',
@@ -616,6 +631,7 @@ export const STRINGS_RU = {
             itemAlreadyExists: 'Элемент с именем "{name}" уже существует в этом месте.',
             failedToMove: 'Не удалось переместить: {error}',
             failedToAddTag: 'Не удалось добавить тег "{tag}"',
+            failedToSetProperty: 'Не удалось обновить свойство: {error}',
             failedToClearTags: 'Не удалось очистить теги',
             failedToMoveFolder: 'Не удалось переместить папку "{name}"',
             failedToImportFiles: 'Не удалось импортировать: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_RU = {
         notifications: {
             filesAlreadyExist: '{count} файлов уже существуют в месте назначения',
             filesAlreadyHaveTag: '{count} файлов уже имеют этот тег или более специфичный',
+            filesAlreadyHaveProperty: '{count} файлов уже имеют это свойство',
             noTagsToClear: 'Нет тегов для очистки',
             fileImported: 'Импортирован 1 файл',
             filesImported: 'Импортировано файлов: {count}'

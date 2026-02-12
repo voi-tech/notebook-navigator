@@ -37,16 +37,22 @@ export const NOTEBOOK_NAVIGATOR_VIEW = 'notebook-navigator';
 export const NOTEBOOK_NAVIGATOR_CALENDAR_VIEW = 'notebook-navigator-calendar';
 
 /**
- * Special tag identifier for untagged notes
- * Using double underscore to avoid conflicts with real tags
+ * Virtual tag collection id for notes without tags.
+ * Stored in tag selection state and used as a tag filter token.
  */
 export const UNTAGGED_TAG_ID = '__untagged__';
 
 /**
- * Special tag identifier representing all tagged notes
- * Mirrors untagged constant to keep virtual collections consistent
+ * Virtual tag collection id for notes that have at least one tag.
+ * Stored in tag selection state and used as a tag filter token.
  */
 export const TAGGED_TAG_ID = '__tagged__';
+
+/**
+ * Virtual folder id for the root Properties row in navigation.
+ * Stored in property selection state for the "all configured properties" view.
+ */
+export const PROPERTIES_ROOT_VIRTUAL_FOLDER_ID = 'properties-root';
 
 /**
  * Identifies which pane currently has keyboard focus
@@ -63,7 +69,8 @@ export type CSSPropertiesWithVars = CSSProperties & Record<`--${string}`, string
 export const ItemType = {
     FILE: 'file',
     FOLDER: 'folder',
-    TAG: 'tag'
+    TAG: 'tag',
+    PROPERTY: 'property'
 } as const;
 
 /**
@@ -91,7 +98,7 @@ export const PINNED_SECTION_HEADER_KEY = 'header-pinned';
  * Navigator context type for context-aware features like pinning
  * Represents different browsing contexts in the navigator
  */
-export type NavigatorContext = 'folder' | 'tag';
+export type NavigatorContext = 'folder' | 'tag' | 'property';
 
 /**
  * Type alias for pinned notes storage structure
@@ -108,6 +115,8 @@ export const NavigationPaneItemType = {
     VIRTUAL_FOLDER: 'virtual-folder',
     TAG: 'tag',
     UNTAGGED: 'untagged',
+    PROPERTY_KEY: 'property-key',
+    PROPERTY_VALUE: 'property-value',
     SHORTCUT_HEADER: 'shortcut-header',
     SHORTCUT_FOLDER: 'shortcut-folder',
     SHORTCUT_NOTE: 'shortcut-note',
@@ -132,7 +141,8 @@ export const NavigationSectionId = {
     SHORTCUTS: 'shortcuts',
     RECENT: 'recent',
     FOLDERS: 'folders',
-    TAGS: 'tags'
+    TAGS: 'tags',
+    PROPERTIES: 'properties'
 } as const;
 
 /**
@@ -147,7 +157,8 @@ export const DEFAULT_NAVIGATION_SECTION_ORDER: NavigationSectionId[] = [
     NavigationSectionId.SHORTCUTS,
     NavigationSectionId.RECENT,
     NavigationSectionId.FOLDERS,
-    NavigationSectionId.TAGS
+    NavigationSectionId.TAGS,
+    NavigationSectionId.PROPERTIES
 ];
 
 /**
@@ -214,7 +225,7 @@ export type ItemType = (typeof ItemType)[keyof typeof ItemType];
  * Either a folder from the file tree or a tag from the tag tree
  * This is a subset of ItemType that excludes 'file'
  */
-export type NavigationItemType = typeof ItemType.FOLDER | typeof ItemType.TAG;
+export type NavigationItemType = typeof ItemType.FOLDER | typeof ItemType.TAG | typeof ItemType.PROPERTY;
 
 /**
  * Keys used for persisting state in browser localStorage
@@ -223,8 +234,10 @@ export type NavigationItemType = typeof ItemType.FOLDER | typeof ItemType.TAG;
 export interface LocalStorageKeys {
     expandedFoldersKey: string;
     expandedTagsKey: string;
+    expandedPropertiesKey: string;
     expandedVirtualFoldersKey: string;
     selectedFolderKey: string;
+    selectedPropertyKey: string;
     selectedFileKey: string;
     selectedFilesKey: string;
     selectedTagKey: string;
@@ -273,8 +286,10 @@ export interface LocalStorageKeys {
 export const STORAGE_KEYS: LocalStorageKeys = {
     expandedFoldersKey: 'notebook-navigator-expanded-folders',
     expandedTagsKey: 'notebook-navigator-expanded-tags',
+    expandedPropertiesKey: 'notebook-navigator-expanded-properties',
     expandedVirtualFoldersKey: 'notebook-navigator-expanded-virtual-folders',
     selectedFolderKey: 'notebook-navigator-selected-folder',
+    selectedPropertyKey: 'notebook-navigator-selected-property',
     selectedFileKey: 'notebook-navigator-selected-file',
     selectedFilesKey: 'notebook-navigator-selected-files',
     selectedTagKey: 'notebook-navigator-selected-tag',

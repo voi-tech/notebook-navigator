@@ -91,12 +91,13 @@ import {
     IOS_OBSIDIAN_1_11_PLUS_GLASS_TOOLBAR_HEIGHT_PX,
     NavigationPaneItemType,
     ItemType,
+    PROPERTIES_ROOT_VIRTUAL_FOLDER_ID,
     TAGGED_TAG_ID,
     UNTAGGED_TAG_ID,
     type CSSPropertiesWithVars
 } from '../types';
 import { getSelectedPath } from '../utils/selectionUtils';
-import { TagTreeNode } from '../types/storage';
+import { PropertyTreeNode, TagTreeNode } from '../types/storage';
 import { getFolderNote, getFolderNoteDetectionSettings, openFolderNoteFile } from '../utils/folderNotes';
 import { findTagNode, getTotalNoteCount } from '../utils/tagTree';
 import { FILE_VISIBILITY, getExtensionSuffix, shouldShowExtensionSuffix } from '../utils/fileTypeUtils';
@@ -106,6 +107,7 @@ import { NavigationPaneHeader } from './NavigationPaneHeader';
 import { NavigationToolbar } from './NavigationToolbar';
 import { Calendar } from './calendar';
 import { TagTreeItem } from './TagTreeItem';
+import { PropertyTreeItem } from './PropertyTreeItem';
 import { VaultTitleArea } from './VaultTitleArea';
 import { VirtualFolderComponent } from './VirtualFolderItem';
 import { buildIndentGuideLevelsMap, getNavigationIndex, normalizeNavigationPath } from '../utils/navigationIndex';
@@ -147,7 +149,7 @@ import {
     type MenuDispatchers
 } from '../utils/contextMenu';
 import type { NoteCountInfo } from '../types/noteCounts';
-import type { SearchTagFilterState } from '../types/search';
+import type { SearchNavFilterState } from '../types/search';
 import type { InclusionOperator } from '../utils/filterSearch';
 import { calculateFolderNoteCounts } from '../utils/noteCountUtils';
 import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
@@ -164,6 +166,7 @@ import { SHORTCUT_POINTER_CONSTRAINT, verticalAxisOnly } from '../utils/dndConfi
 import { createHiddenFileNameMatcherForVisibility } from '../utils/fileFilters';
 import { createHiddenTagVisibility } from '../utils/tagPrefixMatcher';
 import { getDBInstanceOrNull } from '../storage/fileOperations';
+import { resolvePropertyColorMapColor } from '../utils/propertyColorMapFormat';
 
 export interface NavigationPaneHandle {
     getIndexOfPath: (itemType: ItemType, path: string) => number;
@@ -184,13 +187,14 @@ interface NavigationPaneProps {
      * other Obsidian views.
      */
     rootContainerRef: React.RefObject<HTMLDivElement | null>;
-    searchTagFilters?: SearchTagFilterState;
+    searchNavFilters?: SearchNavFilterState;
     onExecuteSearchShortcut?: (shortcutKey: string, searchShortcut: SearchShortcut) => Promise<void> | void;
     onNavigateToFolder: (folderPath: string, options?: NavigateToFolderOptions) => void;
     onRevealTag: (tagPath: string, options?: RevealTagOptions) => void;
     onRevealFile: (file: TFile) => void;
     onRevealShortcutFile?: (file: TFile) => void;
     onModifySearchWithTag: (tag: string, operator: InclusionOperator) => void;
+    onModifySearchWithProperty: (key: string, value: string | null, operator: InclusionOperator) => void;
     onModifySearchWithDateFilter: (dateToken: string) => void;
 }
 
@@ -228,16 +232,17 @@ function SortableShortcutItem({ sortableId, canReorder, dragHandlers, ...rest }:
 
 export const NavigationPane = React.memo(
     forwardRef<NavigationPaneHandle, NavigationPaneProps>(function NavigationPane(props, ref) {
-        const { app, isMobile, plugin, tagTreeService } = useServices();
+        const { app, isMobile, plugin, tagTreeService, propertyTreeService } = useServices();
         const {
             onExecuteSearchShortcut,
             rootContainerRef,
-            searchTagFilters,
+            searchNavFilters,
             onNavigateToFolder,
             onRevealTag,
             onRevealFile,
             onRevealShortcutFile,
             onModifySearchWithTag,
+            onModifySearchWithProperty,
             onModifySearchWithDateFilter,
             uiScale
         } = props;
@@ -490,24 +495,26 @@ export const NavigationPane = React.memo(
 
         // Extract included tag tokens from search filters for highlighting
         const searchIncludeTokens = useMemo(() => {
-            if (!searchTagFilters || searchTagFilters.include.length === 0) {
+            const includeTokens = searchNavFilters?.tags.include;
+            if (!includeTokens || includeTokens.length === 0) {
                 return EMPTY_TAG_TOKENS;
             }
-            return searchTagFilters.include;
-        }, [searchTagFilters]);
+            return includeTokens;
+        }, [searchNavFilters]);
 
         // Extract excluded tag tokens from search filters for highlighting
         const searchExcludeTokens = useMemo(() => {
-            if (!searchTagFilters || searchTagFilters.exclude.length === 0) {
+            const excludeTokens = searchNavFilters?.tags.exclude;
+            if (!excludeTokens || excludeTokens.length === 0) {
                 return EMPTY_TAG_TOKENS;
             }
-            return searchTagFilters.exclude;
-        }, [searchTagFilters]);
+            return excludeTokens;
+        }, [searchNavFilters]);
 
         // Flags indicating if untagged or tagged filters are active in search
-        const highlightRequireTagged = searchTagFilters?.requireTagged ?? false;
-        const highlightExcludeTagged = searchTagFilters?.excludeTagged ?? false;
-        const highlightIncludeUntagged = searchTagFilters?.includeUntagged ?? false;
+        const highlightRequireTagged = searchNavFilters?.tags.requireTagged ?? false;
+        const highlightExcludeTagged = searchNavFilters?.tags.excludeTagged ?? false;
+        const highlightIncludeUntagged = searchNavFilters?.tags.includeUntagged ?? false;
 
         // Convert tag filter arrays to sets for faster membership checks while rendering
         const searchIncludeTokenSet = useMemo(() => {
@@ -524,6 +531,22 @@ export const NavigationPane = React.memo(
             return new Set(searchExcludeTokens);
         }, [searchExcludeTokens]);
 
+        const propertyIncludeTokenSet = useMemo(() => {
+            const includeTokens = searchNavFilters?.properties.include;
+            if (!includeTokens || includeTokens.length === 0) {
+                return null;
+            }
+            return new Set(includeTokens);
+        }, [searchNavFilters]);
+
+        const propertyExcludeTokenSet = useMemo(() => {
+            const excludeTokens = searchNavFilters?.properties.exclude;
+            if (!excludeTokens || excludeTokens.length === 0) {
+                return null;
+            }
+            return new Set(excludeTokens);
+        }, [searchNavFilters]);
+
         const menuServices = useMemo<MenuServices>(
             () => ({
                 app,
@@ -533,6 +556,7 @@ export const NavigationPane = React.memo(
                 metadataService,
                 tagOperations,
                 tagTreeService,
+                propertyTreeService,
                 commandQueue,
                 shortcuts,
                 visibility: { includeDescendantNotes, showHiddenItems }
@@ -545,6 +569,7 @@ export const NavigationPane = React.memo(
                 metadataService,
                 tagOperations,
                 tagTreeService,
+                propertyTreeService,
                 commandQueue,
                 shortcuts,
                 includeDescendantNotes,
@@ -910,6 +935,27 @@ export const NavigationPane = React.memo(
 
         // Get tag tree from file data cache
         const tagTree = fileData.tagTree;
+        const propertyTree = fileData.propertyTree;
+
+        useEffect(() => {
+            if (expansionState.expandedProperties.size === 0) {
+                return;
+            }
+
+            const existingPropertyNodeIds = new Set<string>();
+            const collectPropertyNodeIds = (node: PropertyTreeNode) => {
+                existingPropertyNodeIds.add(node.id);
+                node.children.forEach(childNode => {
+                    collectPropertyNodeIds(childNode);
+                });
+            };
+
+            propertyTree.forEach(node => {
+                collectPropertyNodeIds(node);
+            });
+
+            expansionDispatch({ type: 'CLEANUP_DELETED_PROPERTIES', existingPropertyNodeIds });
+        }, [expansionDispatch, expansionState.expandedProperties.size, propertyTree]);
 
         // Use the new data hook - now returns filtered items and pathToIndex
         // Determine if shortcuts should be pinned based on UI state and settings
@@ -923,8 +969,10 @@ export const NavigationPane = React.memo(
             pinnedRecentNotesItems,
             shouldPinRecentNotes,
             tagsVirtualFolderHasChildren,
+            propertiesSectionActive,
             pathToIndex,
             tagCounts,
+            propertyCounts,
             folderCounts,
             rootLevelFolders,
             missingRootFolderPaths,
@@ -1036,6 +1084,7 @@ export const NavigationPane = React.memo(
             metadataService,
             foldersSectionExpanded,
             tagsSectionExpanded,
+            propertiesSectionActive,
             handleToggleFoldersSection,
             handleToggleTagsSection,
             activeProfile
@@ -1123,7 +1172,12 @@ export const NavigationPane = React.memo(
         const handleTreeUpdateComplete = useCallback(() => {
             const selectedPath = getSelectedPath(selectionState);
             if (selectedPath) {
-                const itemType = selectionState.selectionType === ItemType.TAG ? ItemType.TAG : ItemType.FOLDER;
+                const itemType =
+                    selectionState.selectionType === ItemType.TAG
+                        ? ItemType.TAG
+                        : selectionState.selectionType === ItemType.PROPERTY
+                          ? ItemType.PROPERTY
+                          : ItemType.FOLDER;
                 const normalizedPath = normalizeNavigationPath(itemType, selectedPath);
                 requestScroll(normalizedPath, { align: 'auto', itemType });
             }
@@ -1285,6 +1339,13 @@ export const NavigationPane = React.memo(
             [expansionDispatch]
         );
 
+        const handlePropertyToggle = useCallback(
+            (nodeId: string) => {
+                expansionDispatch({ type: 'TOGGLE_PROPERTY_EXPANDED', propertyNodeId: nodeId });
+            },
+            [expansionDispatch]
+        );
+
         // Handle virtual folder toggle
         const handleVirtualFolderToggle = useCallback(
             (folderId: string) => {
@@ -1349,6 +1410,77 @@ export const NavigationPane = React.memo(
             [tagTree]
         );
 
+        const getAllDescendantPropertyNodeIds = useCallback(
+            (propertyNode: PropertyTreeNode): string[] => {
+                if (propertyTreeService) {
+                    return Array.from(propertyTreeService.collectDescendantNodeIds(propertyNode.id));
+                }
+
+                const descendants: string[] = [];
+                const collectDescendants = (node: PropertyTreeNode) => {
+                    node.children.forEach(child => {
+                        descendants.push(child.id);
+                        collectDescendants(child);
+                    });
+                };
+                collectDescendants(propertyNode);
+                return descendants;
+            },
+            [propertyTreeService]
+        );
+
+        const focusAfterTreeSelection = useCallback(
+            (keepNavigationFocus: boolean) => {
+                if (uiState.singlePane) {
+                    if (keepNavigationFocus) {
+                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+                    } else {
+                        uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
+                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
+                    }
+                    return;
+                }
+
+                uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+            },
+            [uiDispatch, uiState.singlePane]
+        );
+
+        const applyTreeSelection = useCallback(
+            (params: {
+                hasChildren: boolean;
+                isExpanded: boolean;
+                isSelected: boolean;
+                fromShortcut?: boolean;
+                onSelect: () => void;
+                onToggleExpand: () => void;
+            }) => {
+                const { hasChildren, isExpanded, isSelected, fromShortcut, onSelect, onToggleExpand } = params;
+
+                if (!fromShortcut) {
+                    setActiveShortcut(null);
+                }
+
+                onSelect();
+
+                const shouldCollapseOnSelect =
+                    settings.autoExpandFoldersTags && !uiState.singlePane && hasChildren && isExpanded && isSelected;
+                if (shouldCollapseOnSelect) {
+                    onToggleExpand();
+                    uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
+                    return;
+                }
+
+                const shouldExpandOnly = uiState.singlePane && settings.autoExpandFoldersTags && hasChildren && !isExpanded;
+                if (settings.autoExpandFoldersTags && hasChildren && !isExpanded) {
+                    onToggleExpand();
+                }
+
+                focusAfterTreeSelection(shouldExpandOnly);
+            },
+            [focusAfterTreeSelection, setActiveShortcut, settings.autoExpandFoldersTags, uiDispatch, uiState.singlePane]
+        );
+
         // Handle tag click
         const handleTagClick = useCallback(
             (tagPath: string, event?: React.MouseEvent, options?: { fromShortcut?: boolean }) => {
@@ -1375,61 +1507,31 @@ export const NavigationPane = React.memo(
                     : Boolean(tagNode && expansionState.expandedTags.has(tagNode.path));
                 const isSelectedTag = selectionState.selectionType === ItemType.TAG && selectionState.selectedTag === canonicalPath;
                 const hasChildren = isVirtualTagRoot ? tagsVirtualFolderHasChildren : Boolean(tagNode && tagNode.children.size > 0);
-                const shouldCollapseOnSelect =
-                    settings.autoExpandFoldersTags && !uiState.singlePane && hasChildren && isExpanded && isSelectedTag;
-                const shouldExpandOnly = uiState.singlePane && settings.autoExpandFoldersTags && hasChildren && !isExpanded;
-
-                if (!options?.fromShortcut) {
-                    setActiveShortcut(null);
-                }
-
-                selectionDispatch({ type: 'SET_SELECTED_TAG', tag: canonicalPath });
-
-                if (shouldCollapseOnSelect) {
-                    if (isVirtualTagRoot) {
-                        expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: 'tags-root' });
-                    } else if (tagNode) {
-                        expansionDispatch({ type: 'TOGGLE_TAG_EXPANDED', tagPath: tagNode.path });
+                applyTreeSelection({
+                    hasChildren,
+                    isExpanded,
+                    isSelected: isSelectedTag,
+                    fromShortcut: options?.fromShortcut,
+                    onSelect: () => {
+                        selectionDispatch({ type: 'SET_SELECTED_TAG', tag: canonicalPath });
+                    },
+                    onToggleExpand: () => {
+                        if (isVirtualTagRoot) {
+                            expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: 'tags-root' });
+                        } else if (tagNode) {
+                            expansionDispatch({ type: 'TOGGLE_TAG_EXPANDED', tagPath: tagNode.path });
+                        }
                     }
-                    uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
-                    return;
-                }
-
-                // Expand collapsed tag when auto-expand is enabled
-                if (settings.autoExpandFoldersTags && hasChildren && !isExpanded) {
-                    if (isVirtualTagRoot) {
-                        expansionDispatch({ type: 'TOGGLE_VIRTUAL_FOLDER_EXPANDED', folderId: 'tags-root' });
-                    } else if (tagNode) {
-                        expansionDispatch({ type: 'TOGGLE_TAG_EXPANDED', tagPath: tagNode.path });
-                    }
-                }
-
-                // In single-pane mode: either expand-only or show files
-                if (uiState.singlePane) {
-                    if (shouldExpandOnly) {
-                        // First click on collapsed tag: expand and stay in navigation pane
-                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
-                    } else {
-                        // Second click or tag without children: show files pane
-                        uiDispatch({ type: 'SET_SINGLE_PANE_VIEW', view: 'files' });
-                        uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'files' });
-                    }
-                } else {
-                    // In dual-pane mode: stay focused on navigation
-                    uiDispatch({ type: 'SET_FOCUSED_PANE', pane: 'navigation' });
-                }
+                });
             },
             [
+                applyTreeSelection,
                 selectionDispatch,
-                uiDispatch,
-                uiState.singlePane,
-                settings.autoExpandFoldersTags,
                 tagTree,
                 expansionDispatch,
                 expansionState.expandedTags,
                 selectionState.selectedTag,
                 selectionState.selectionType,
-                setActiveShortcut,
                 onModifySearchWithTag,
                 isMobile,
                 settings.multiSelectModifier,
@@ -1445,6 +1547,87 @@ export const NavigationPane = React.memo(
                 handleTagClick(tagCollectionId, event);
             },
             [handleTagClick]
+        );
+
+        const handlePropertyCollectionClick = useCallback(
+            (event: React.MouseEvent<HTMLDivElement>) => {
+                void event;
+
+                const rootId = PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
+                const selectedPropertyNodeId = selectionState.selectionType === ItemType.PROPERTY ? selectionState.selectedProperty : null;
+
+                applyTreeSelection({
+                    hasChildren: propertyTree.size > 0,
+                    isExpanded: expansionState.expandedVirtualFolders.has(rootId),
+                    isSelected: selectedPropertyNodeId === rootId,
+                    onSelect: () => {
+                        selectionDispatch({
+                            type: 'SET_SELECTED_PROPERTY',
+                            nodeId: rootId
+                        });
+                    },
+                    onToggleExpand: () => {
+                        handleVirtualFolderToggle(rootId);
+                    }
+                });
+            },
+            [
+                applyTreeSelection,
+                expansionState.expandedVirtualFolders,
+                handleVirtualFolderToggle,
+                propertyTree,
+                selectionDispatch,
+                selectionState.selectedProperty,
+                selectionState.selectionType
+            ]
+        );
+
+        const handlePropertyClick = useCallback(
+            (propertyNode: PropertyTreeNode, event?: React.MouseEvent, options?: { fromShortcut?: boolean }) => {
+                const operator = getTagSearchModifierOperator(event ?? null, settings.multiSelectModifier, isMobile);
+                if (operator) {
+                    if (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    onModifySearchWithProperty(
+                        propertyNode.kind === 'key' ? propertyNode.name : propertyNode.key,
+                        propertyNode.kind === 'value' ? propertyNode.displayPath : null,
+                        operator
+                    );
+                    return;
+                }
+
+                const hasChildren = propertyNode.children.size > 0;
+                const isExpanded = expansionState.expandedProperties.has(propertyNode.id);
+                const selectedPropertyNodeId = selectionState.selectionType === ItemType.PROPERTY ? selectionState.selectedProperty : null;
+                applyTreeSelection({
+                    hasChildren,
+                    isExpanded,
+                    isSelected: selectedPropertyNodeId === propertyNode.id,
+                    fromShortcut: options?.fromShortcut,
+                    onSelect: () => {
+                        selectionDispatch({
+                            type: 'SET_SELECTED_PROPERTY',
+                            nodeId: propertyNode.id
+                        });
+                    },
+                    onToggleExpand: () => {
+                        expansionDispatch({ type: 'TOGGLE_PROPERTY_EXPANDED', propertyNodeId: propertyNode.id });
+                    }
+                });
+            },
+            [
+                applyTreeSelection,
+                expansionDispatch,
+                expansionState.expandedProperties,
+                isMobile,
+                onModifySearchWithProperty,
+                selectionDispatch,
+                selectionState.selectedProperty,
+                selectionState.selectionType,
+                settings.multiSelectModifier
+            ]
         );
 
         // Toggles shortcuts between pinned (always visible) and inline (in main list) display
@@ -2426,11 +2609,18 @@ export const NavigationPane = React.memo(
                               : expansionState.expandedVirtualFolders.has(virtualFolder.id);
 
                         const tagCollectionId = item.tagCollectionId ?? null;
+                        const propertyCollectionId = item.propertyCollectionId ?? null;
                         const isTagCollection = Boolean(tagCollectionId);
+                        const isPropertyCollection = Boolean(propertyCollectionId);
+                        const isPropertyCollectionSelected =
+                            isPropertyCollection &&
+                            selectionState.selectionType === ItemType.PROPERTY &&
+                            selectionState.selectedProperty === propertyCollectionId;
                         const isSelected =
-                            isTagCollection &&
-                            selectionState.selectionType === ItemType.TAG &&
-                            selectionState.selectedTag === tagCollectionId;
+                            (isTagCollection &&
+                                selectionState.selectionType === ItemType.TAG &&
+                                selectionState.selectedTag === tagCollectionId) ||
+                            isPropertyCollectionSelected;
                         const collectionCountInfo = item.noteCount ?? (tagCollectionId ? tagCounts.get(tagCollectionId) : undefined);
                         const showFileCount = item.showFileCount ?? false;
                         let collectionSearchMatch: 'include' | 'exclude' | undefined;
@@ -2497,7 +2687,9 @@ export const NavigationPane = React.memo(
                                 onSelect={
                                     isTagCollection && tagCollectionId
                                         ? event => handleTagCollectionClick(tagCollectionId, event)
-                                        : undefined
+                                        : isPropertyCollection
+                                          ? handlePropertyCollectionClick
+                                          : undefined
                                 }
                                 onToggle={() => handleVirtualFolderToggle(virtualFolder.id)}
                                 onDragOver={isShortcutsGroup && allowEmptyShortcutDrop ? handleShortcutRootDragOver : undefined}
@@ -2583,6 +2775,68 @@ export const NavigationPane = React.memo(
                         );
                     }
 
+                    case NavigationPaneItemType.PROPERTY_KEY:
+                    case NavigationPaneItemType.PROPERTY_VALUE: {
+                        const propertyNode = item.data;
+                        const indentGuideLevels = indentGuideLevelsByKey.get(item.key);
+                        const selectedPropertyNodeId =
+                            selectionState.selectionType === ItemType.PROPERTY ? selectionState.selectedProperty : null;
+                        let searchMatch: 'include' | 'exclude' | undefined;
+                        if (propertyExcludeTokenSet?.has(propertyNode.id)) {
+                            searchMatch = 'exclude';
+                        } else if (propertyIncludeTokenSet?.has(propertyNode.id)) {
+                            searchMatch = 'include';
+                        }
+
+                        const propertyColor = resolvePropertyColorMapColor(
+                            settings.customPropertyColorMap,
+                            propertyNode.key,
+                            propertyNode.valuePath ?? ''
+                        );
+
+                        return (
+                            <PropertyTreeItem
+                                propertyNode={propertyNode}
+                                level={item.level ?? 0}
+                                indentGuideLevels={indentGuideLevels}
+                                isExpanded={expansionState.expandedProperties.has(propertyNode.id)}
+                                isSelected={selectedPropertyNodeId === propertyNode.id}
+                                onToggle={() => handlePropertyToggle(propertyNode.id)}
+                                onClick={event => handlePropertyClick(propertyNode, event)}
+                                onToggleAllSiblings={() => {
+                                    const isCurrentlyExpanded = expansionState.expandedProperties.has(propertyNode.id);
+
+                                    if (isCurrentlyExpanded) {
+                                        handlePropertyToggle(propertyNode.id);
+                                        const descendantNodeIds = getAllDescendantPropertyNodeIds(propertyNode);
+                                        if (descendantNodeIds.length > 0) {
+                                            expansionDispatch({
+                                                type: 'TOGGLE_DESCENDANT_PROPERTIES',
+                                                descendantNodeIds,
+                                                expand: false
+                                            });
+                                        }
+                                    } else {
+                                        handlePropertyToggle(propertyNode.id);
+                                        const descendantNodeIds = getAllDescendantPropertyNodeIds(propertyNode);
+                                        if (descendantNodeIds.length > 0) {
+                                            expansionDispatch({
+                                                type: 'TOGGLE_DESCENDANT_PROPERTIES',
+                                                descendantNodeIds,
+                                                expand: true
+                                            });
+                                        }
+                                    }
+                                }}
+                                color={propertyColor}
+                                backgroundColor={undefined}
+                                searchMatch={searchMatch}
+                                countInfo={propertyCounts.get(propertyNode.id)}
+                                showFileCount={settings.showNoteCount}
+                            />
+                        );
+                    }
+
                     case NavigationPaneItemType.TOP_SPACER: {
                         const spacerClass = item.hasSeparator ? 'nn-nav-top-spacer nn-nav-spacer--with-separator' : 'nn-nav-top-spacer';
                         return <div className={spacerClass} />;
@@ -2608,17 +2862,22 @@ export const NavigationPane = React.memo(
             [
                 expansionState.expandedFolders,
                 expansionState.expandedTags,
+                expansionState.expandedProperties,
                 expansionState.expandedVirtualFolders,
                 selectionState.selectionType,
                 selectionState.selectedFolder?.path,
                 selectionState.selectedTag,
+                selectionState.selectedProperty,
                 handleFolderToggle,
                 handleFolderClick,
                 handleFolderNameClick,
                 handleFolderNameMouseDown,
                 handleTagToggle,
+                handlePropertyToggle,
                 handleTagClick,
+                handlePropertyClick,
                 handleTagCollectionClick,
+                handlePropertyCollectionClick,
                 handleSectionContextMenu,
                 firstSectionId,
                 firstInlineFolderPath,
@@ -2626,11 +2885,13 @@ export const NavigationPane = React.memo(
                 shortcutsList.length,
                 getAllDescendantFolders,
                 getAllDescendantTags,
+                getAllDescendantPropertyNodeIds,
                 expansionDispatch,
                 app.vault,
                 settings,
                 folderCounts,
                 tagCounts,
+                propertyCounts,
                 getFolderShortcutCount,
                 getTagShortcutCount,
                 handleShortcutFolderActivate,
@@ -2665,6 +2926,8 @@ export const NavigationPane = React.memo(
                 isMobile,
                 searchIncludeTokenSet,
                 searchExcludeTokenSet,
+                propertyIncludeTokenSet,
+                propertyExcludeTokenSet,
                 highlightRequireTagged,
                 highlightExcludeTagged,
                 highlightIncludeUntagged,

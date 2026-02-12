@@ -61,6 +61,7 @@ export const STRINGS_EN = {
         shortcutsHeader: 'Shortcuts', // Header label for shortcuts section in navigation pane (English: Shortcuts)
         recentNotesHeader: 'Recent notes', // Header label for recent notes section in navigation pane (English: Recent notes)
         recentFilesHeader: 'Recent files', // Header label when showing recent non-note files in navigation pane (English: Recent files)
+        properties: 'Properties', // Header label for properties section in navigation pane (English: Properties)
         reorderRootFoldersTitle: 'Reorder navigation',
         reorderRootFoldersHint: 'Use arrows or drag to reorder',
         vaultRootLabel: 'Vault',
@@ -181,6 +182,16 @@ export const STRINGS_EN = {
                         'Cmd/Ctrl+Click a tag to add with AND. Cmd/Ctrl+Shift+Click to add with OR.'
                     ]
                 },
+                properties: {
+                    title: 'Properties',
+                    items: [
+                        '`.key` Include notes with custom property key.',
+                        '`.key=value` Include notes with custom property value (also matches nested values like `value/subvalue`).',
+                        '`."Reading Status"` Include notes with a property key that contains whitespace.',
+                        '`."Reading Status"="In Progress"` Keys and values with whitespace must be double-quoted.',
+                        'Cmd/Ctrl+Click a property to add with AND. Cmd/Ctrl+Shift+Click to add with OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filters',
                     items: [
@@ -199,10 +210,10 @@ export const STRINGS_EN = {
                 connectors: {
                     title: 'AND/OR behavior',
                     items: [
-                        '`AND` and `OR` are operators only in tag-only queries.',
-                        'Tag-only queries contain only tag filters: `#tag`, `-#tag`, `#`, `-#`.',
+                        '`AND` and `OR` are operators only in tag/property-only queries.',
+                        'Tag/property-only queries contain only tag and property filters: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.',
                         'If a query includes names, dates (`@...`), task filters (`has:task`), folder filters (`folder:...`), or extension filters (`ext:...`), `AND` and `OR` are matched as words.',
-                        'Example operator query: `#work OR #home`.',
+                        'Example operator query: `#work OR .status=started`.',
                         'Example mixed query: `#work OR ext:md` (`OR` is matched in file names).'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_EN = {
                 'nav-folder-closed': 'Folder closed',
                 'nav-folder-note': 'Folder note',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Properties',
                 'list-pinned': 'Pinned items',
                 'file-unfinished-task': 'Unfinished tasks',
                 'file-word-count': 'Word count',
@@ -593,6 +605,9 @@ export const STRINGS_EN = {
             noFilesSelected: 'No files selected',
             tagOperationsNotAvailable: 'Tag operations not available',
             tagsRequireMarkdown: 'Tags are only supported on Markdown notes',
+            propertiesRequireMarkdown: 'Properties are only supported on Markdown notes',
+            propertySetOnNote: 'Updated property on 1 note',
+            propertySetOnNotes: 'Updated property on {count} notes',
             iconPackDownloaded: '{provider} downloaded',
             iconPackUpdated: '{provider} updated ({version})',
             iconPackRemoved: '{provider} removed',
@@ -615,6 +630,7 @@ export const STRINGS_EN = {
             itemAlreadyExists: 'An item named "{name}" already exists in this location.',
             failedToMove: 'Failed to move: {error}',
             failedToAddTag: 'Failed to add tag "{tag}"',
+            failedToSetProperty: 'Failed to update property: {error}',
             failedToClearTags: 'Failed to clear tags',
             failedToMoveFolder: 'Failed to move folder "{name}"',
             failedToImportFiles: 'Failed to import: {names}'
@@ -622,6 +638,7 @@ export const STRINGS_EN = {
         notifications: {
             filesAlreadyExist: '{count} files already exist in destination',
             filesAlreadyHaveTag: '{count} files already have this tag or a more specific one',
+            filesAlreadyHaveProperty: '{count} files already have this property',
             noTagsToClear: 'No tags to clear',
             fileImported: 'Imported 1 file',
             filesImported: 'Imported {count} files'

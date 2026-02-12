@@ -19,13 +19,13 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect, useRef } from 'react';
 import NotebookNavigatorPlugin from '../main';
 import { NotebookNavigatorSettings } from '../settings';
-import type { DualPaneOrientation, PinnedNotes } from '../types';
+import type { DualPaneOrientation } from '../types';
 import type { VaultProfile } from '../settings/types';
 import type { FileVisibility } from '../utils/fileTypeUtils';
 import type { ShortcutEntry } from '../types/shortcuts';
 import { isFolderShortcut, isNoteShortcut, isSearchShortcut, isTagShortcut } from '../types/shortcuts';
 import { cloneShortcuts, getActiveVaultProfile } from '../utils/vaultProfiles';
-import { isStringRecordValue, sanitizeRecord } from '../utils/recordUtils';
+import { clonePinnedNotesRecord, isStringRecordValue, sanitizeRecord } from '../utils/recordUtils';
 import { areStringArraysEqual } from '../utils/arrayUtils';
 import type { FolderAppearance } from '../hooks/useListPaneAppearance';
 import { buildFileNameIconNeedles, type FileNameIconNeedle } from '../utils/fileIconUtils';
@@ -117,17 +117,6 @@ const cloneAppearanceMap = <T extends FolderAppearance>(map?: Record<string, T>)
     return cloned;
 };
 
-const clonePinnedNotes = (pinnedNotes?: PinnedNotes): PinnedNotes => {
-    if (!pinnedNotes) {
-        return {} as PinnedNotes;
-    }
-    const cloned = Object.create(null) as PinnedNotes;
-    Object.entries(pinnedNotes).forEach(([path, contexts]) => {
-        cloned[path] = { ...contexts };
-    });
-    return cloned;
-};
-
 interface SettingsProviderProps {
     children: ReactNode;
     plugin: NotebookNavigatorPlugin;
@@ -180,7 +169,7 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
             interfaceIcons,
             folderAppearances: cloneAppearanceMap(plugin.settings.folderAppearances),
             tagAppearances: cloneAppearanceMap(plugin.settings.tagAppearances),
-            pinnedNotes: clonePinnedNotes(plugin.settings.pinnedNotes)
+            pinnedNotes: clonePinnedNotesRecord(plugin.settings.pinnedNotes)
         };
         // Deep copy vault profiles to prevent mutations from affecting the original settings
         if (Array.isArray(plugin.settings.vaultProfiles)) {

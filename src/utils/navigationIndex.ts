@@ -70,6 +70,8 @@ function isIndentGuideTreeItem(item: IndentGuideItem): item is IndentGuideItem &
         item.type === NavigationPaneItemType.FOLDER ||
         item.type === NavigationPaneItemType.TAG ||
         item.type === NavigationPaneItemType.UNTAGGED ||
+        item.type === NavigationPaneItemType.PROPERTY_KEY ||
+        item.type === NavigationPaneItemType.PROPERTY_VALUE ||
         item.type === NavigationPaneItemType.VIRTUAL_FOLDER
     );
 }

@@ -23,7 +23,8 @@ const SECTION_KEY_BY_ID: Record<NavigationSectionId, string> = {
     [NavigationSectionId.SHORTCUTS]: 'shortcuts',
     [NavigationSectionId.RECENT]: 'recent',
     [NavigationSectionId.FOLDERS]: 'folders',
-    [NavigationSectionId.TAGS]: 'tags'
+    [NavigationSectionId.TAGS]: 'tags',
+    [NavigationSectionId.PROPERTIES]: 'properties'
 };
 
 /** Accepts canonical keys and documented aliases when parsing section entries */
@@ -32,7 +33,8 @@ const SECTION_ID_BY_KEY: Record<string, NavigationSectionId> = {
     recent: NavigationSectionId.RECENT,
     recents: NavigationSectionId.RECENT,
     folders: NavigationSectionId.FOLDERS,
-    tags: NavigationSectionId.TAGS
+    tags: NavigationSectionId.TAGS,
+    properties: NavigationSectionId.PROPERTIES
 };
 
 export type SectionSeparatorTarget = {

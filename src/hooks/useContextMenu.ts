@@ -69,7 +69,7 @@ export function hideNavigatorContextMenu() {
  * ```
  */
 export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, config: MenuConfig | null) {
-    const { app, plugin, isMobile, tagTreeService } = useServices();
+    const { app, plugin, isMobile, tagTreeService, propertyTreeService } = useServices();
     const settings = useSettingsState();
     const fileSystemOps = useFileSystemOps();
     const metadataService = useMetadataService();
@@ -224,6 +224,7 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
                 metadataService,
                 tagOperations,
                 tagTreeService,
+                propertyTreeService,
                 commandQueue,
                 shortcuts,
                 visibility: { includeDescendantNotes, showHiddenItems }
@@ -292,6 +293,7 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
             uiDispatch,
             isMobile,
             tagTreeService,
+            propertyTreeService,
             commandQueue,
             shortcuts,
             includeDescendantNotes,

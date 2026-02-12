@@ -122,7 +122,16 @@ describe('FileMetadataService frontmatter integration', () => {
 
         expect(pinnedCount).toBe(2);
         expect(settingsProvider.saveSettingsAndUpdate).toHaveBeenCalledTimes(1);
-        expect(settingsProvider.settings.pinnedNotes?.['Vault/One.md']).toEqual({ folder: true, tag: false });
-        expect(settingsProvider.settings.pinnedNotes?.['Vault/Two.md']).toEqual({ folder: true, tag: false });
+        expect(settingsProvider.settings.pinnedNotes?.['Vault/One.md']).toEqual({ folder: true, tag: false, property: false });
+        expect(settingsProvider.settings.pinnedNotes?.['Vault/Two.md']).toEqual({ folder: true, tag: false, property: false });
+    });
+
+    it('pins notes in property context', async () => {
+        settingsProvider.settings.pinnedNotes = {};
+
+        const pinnedCount = await service.pinNotes(['Vault/One.md'], 'property');
+
+        expect(pinnedCount).toBe(1);
+        expect(settingsProvider.settings.pinnedNotes?.['Vault/One.md']).toEqual({ folder: false, tag: false, property: true });
     });
 });

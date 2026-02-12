@@ -22,6 +22,7 @@ import type { FolderMetadata, TagMetadata, IconString, PinContext, Pinned } from
 import type { NotebookNavigatorSettings } from '../../settings';
 import { PinnedNotes } from '../../types';
 import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
+import { clonePinnedNotesRecord, normalizePinnedNoteContext } from '../../utils/recordUtils';
 
 /**
  * Metadata API - Manage folder and tag appearance, icons, colors, and pinned files
@@ -141,7 +142,11 @@ export class MetadataAPI {
             if (!oldContext) return true; // New note added
 
             const newContext = newNotes[path];
-            if (oldContext.folder !== newContext.folder || oldContext.tag !== newContext.tag) {
+            if (
+                oldContext.folder !== newContext.folder ||
+                oldContext.tag !== newContext.tag ||
+                oldContext.property !== newContext.property
+            ) {
                 return true;
             }
         }
@@ -164,7 +169,7 @@ export class MetadataAPI {
             tagIcons: settings.tagIcons || {},
             fileIcons: settings.fileIcons || {},
             fileColors: settings.fileColors || {},
-            pinnedNotes: settings.pinnedNotes || {}
+            pinnedNotes: clonePinnedNotesRecord(settings.pinnedNotes)
         };
 
         // Update the cache first
@@ -177,7 +182,7 @@ export class MetadataAPI {
             tagIcons: { ...current.tagIcons },
             fileIcons: { ...current.fileIcons },
             fileColors: { ...current.fileColors },
-            pinnedNotes: { ...current.pinnedNotes }
+            pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes)
         };
 
         // Skip comparison on first run (just initialize state)
@@ -191,7 +196,7 @@ export class MetadataAPI {
                 tagIcons: { ...current.tagIcons },
                 fileIcons: { ...current.fileIcons },
                 fileColors: { ...current.fileColors },
-                pinnedNotes: { ...current.pinnedNotes },
+                pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes),
                 initialized: true
             };
             return;
@@ -246,7 +251,7 @@ export class MetadataAPI {
             tagIcons: { ...current.tagIcons },
             fileIcons: { ...current.fileIcons },
             fileColors: { ...current.fileColors },
-            pinnedNotes: { ...current.pinnedNotes },
+            pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes),
             initialized: true
         };
     }
@@ -417,12 +422,14 @@ export class MetadataAPI {
 
         if (!context) {
             // No context - check if pinned in any context
-            return contexts.folder || contexts.tag;
+            return contexts.folder || contexts.tag || contexts.property;
         } else if (context === 'all') {
-            // Check if pinned in both contexts
-            return contexts.folder && contexts.tag;
+            // Check if pinned in all contexts
+            return contexts.folder && contexts.tag && contexts.property;
         } else if (context === 'folder') {
             return contexts.folder;
+        } else if (context === 'property') {
+            return contexts.property;
         }
         return contexts.tag;
     }
@@ -441,22 +448,29 @@ export class MetadataAPI {
         }
 
         if (!plugin.settings.pinnedNotes[file.path]) {
-            plugin.settings.pinnedNotes[file.path] = { folder: false, tag: false };
+            plugin.settings.pinnedNotes[file.path] = { folder: false, tag: false, property: false };
         }
 
         let changed = false;
-        const contexts = plugin.settings.pinnedNotes[file.path];
+        const contexts = normalizePinnedNoteContext(plugin.settings.pinnedNotes[file.path]);
+        plugin.settings.pinnedNotes[file.path] = contexts;
 
         if (context === 'all') {
-            // Pin in both contexts
-            if (!contexts.folder || !contexts.tag) {
+            // Pin in all contexts
+            if (!contexts.folder || !contexts.tag || !contexts.property) {
                 contexts.folder = true;
                 contexts.tag = true;
+                contexts.property = true;
                 changed = true;
             }
         } else if (context === 'folder') {
             if (!contexts.folder) {
                 contexts.folder = true;
+                changed = true;
+            }
+        } else if (context === 'property') {
+            if (!contexts.property) {
+                contexts.property = true;
                 changed = true;
             }
         } else if (context === 'tag') {
@@ -481,8 +495,11 @@ export class MetadataAPI {
         const plugin = this.api.getPlugin();
         if (!plugin?.metadataService) return;
 
-        const contexts = plugin.settings.pinnedNotes?.[file.path];
-        if (!contexts) return;
+        const currentValue = plugin.settings.pinnedNotes?.[file.path];
+        if (!currentValue) return;
+
+        const contexts = normalizePinnedNoteContext(currentValue);
+        plugin.settings.pinnedNotes[file.path] = contexts;
 
         let changed = false;
 
@@ -495,6 +512,11 @@ export class MetadataAPI {
                 contexts.folder = false;
                 changed = true;
             }
+        } else if (context === 'property') {
+            if (contexts.property) {
+                contexts.property = false;
+                changed = true;
+            }
         } else if (context === 'tag') {
             if (contexts.tag) {
                 contexts.tag = false;
@@ -503,7 +525,7 @@ export class MetadataAPI {
         }
 
         // Remove if unpinned from all contexts
-        if (changed && contexts && !contexts.folder && !contexts.tag) {
+        if (changed && contexts && !contexts.folder && !contexts.tag && !contexts.property) {
             delete plugin.settings.pinnedNotes[file.path];
         }
 

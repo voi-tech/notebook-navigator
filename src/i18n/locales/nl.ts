@@ -61,6 +61,7 @@ export const STRINGS_NL = {
         shortcutsHeader: 'Snelkoppelingen',
         recentNotesHeader: 'Recente notities',
         recentFilesHeader: 'Recente bestanden',
+        properties: 'Eigenschappen',
         reorderRootFoldersTitle: 'Navigatie herschikken',
         reorderRootFoldersHint: 'Gebruik pijlen of sleep om te herschikken',
         vaultRootLabel: 'Kluis',
@@ -183,6 +184,16 @@ export const STRINGS_NL = {
                         'Cmd/Ctrl+Klik op een tag om toe te voegen met AND. Cmd/Ctrl+Shift+Klik om toe te voegen met OR.'
                     ]
                 },
+                properties: {
+                    title: 'Eigenschappen',
+                    items: [
+                        '`.key` Notities met aangepaste eigenschapssleutel opnemen.',
+                        '`.key=value` Notities met aangepaste eigenschapswaarde opnemen (komt ook overeen met geneste waarden zoals `value/subvalue`).',
+                        '`."Reading Status"` Notities opnemen met een eigenschapssleutel die spaties bevat.',
+                        '`."Reading Status"="In Progress"` Sleutels en waarden met spaties moeten tussen dubbele aanhalingstekens staan.',
+                        'Cmd/Ctrl+Klik op een eigenschap om toe te voegen met AND. Cmd/Ctrl+Shift+Klik om toe te voegen met OR.'
+                    ]
+                },
                 tasks: {
                     title: 'Filters',
                     items: [
@@ -201,10 +212,10 @@ export const STRINGS_NL = {
                 connectors: {
                     title: 'AND/OR-gedrag',
                     items: [
-                        '`AND` en `OR` zijn alleen operatoren in zoekopdrachten met uitsluitend tags.',
-                        'Zoekopdrachten met uitsluitend tags bevatten alleen tagfilters: `#tag`, `-#tag`, `#`, `-#`.',
+                        "`AND` en `OR` zijn alleen operatoren in query's met uitsluitend tags en eigenschappen.",
+                        "Query's met uitsluitend tags en eigenschappen bevatten alleen tag- en eigenschapsfilters: `#tag`, `-#tag`, `#`, `-#`, `.key`, `-.key`, `.key=value`, `-.key=value`.",
                         'Als een zoekopdracht namen, datums (`@...`), taakfilters (`has:task`), mapfilters (`folder:...`) of extensiefilters (`ext:...`) bevat, worden `AND` en `OR` als woorden gezocht.',
-                        'Voorbeeld operatorzoekopdracht: `#work OR #home`.',
+                        'Voorbeeld operatorquery: `#work OR .status=started`.',
                         'Voorbeeld gemengde zoekopdracht: `#work OR ext:md` (`OR` wordt gezocht in bestandsnamen).'
                     ]
                 },
@@ -396,6 +407,7 @@ export const STRINGS_NL = {
                 'nav-folder-closed': 'Map gesloten',
                 'nav-folder-note': 'Mapnotitie',
                 'nav-tag': 'Tag',
+                'nav-properties': 'Eigenschappen',
                 'list-pinned': 'Vastgezette items',
                 'file-unfinished-task': 'Onvoltooide taken',
                 'file-word-count': 'Aantal woorden',
@@ -596,6 +608,9 @@ export const STRINGS_NL = {
             noFilesSelected: 'Geen bestanden geselecteerd',
             tagOperationsNotAvailable: 'Tagbewerkingen niet beschikbaar',
             tagsRequireMarkdown: 'Tags worden alleen ondersteund op Markdown-notities',
+            propertiesRequireMarkdown: 'Eigenschappen worden alleen ondersteund in Markdown-notities',
+            propertySetOnNote: 'Eigenschap bijgewerkt op 1 notitie',
+            propertySetOnNotes: 'Eigenschap bijgewerkt op {count} notities',
             iconPackDownloaded: '{provider} gedownload',
             iconPackUpdated: '{provider} bijgewerkt ({version})',
             iconPackRemoved: '{provider} verwijderd',
@@ -618,6 +633,7 @@ export const STRINGS_NL = {
             itemAlreadyExists: 'Een item met de naam "{name}" bestaat al op deze locatie.',
             failedToMove: 'Verplaatsen mislukt: {error}',
             failedToAddTag: 'Kan tag "{tag}" niet toevoegen',
+            failedToSetProperty: 'Kan eigenschap niet bijwerken: {error}',
             failedToClearTags: 'Kan tags niet wissen',
             failedToMoveFolder: 'Kan map "{name}" niet verplaatsen',
             failedToImportFiles: 'Importeren mislukt: {names}'
@@ -625,6 +641,7 @@ export const STRINGS_NL = {
         notifications: {
             filesAlreadyExist: '{count} bestanden bestaan al op de bestemming',
             filesAlreadyHaveTag: '{count} bestanden hebben deze tag of een specifiekere al',
+            filesAlreadyHaveProperty: '{count} bestanden hebben deze eigenschap al',
             noTagsToClear: 'Geen tags om te wissen',
             fileImported: '1 bestand geïmporteerd',
             filesImported: '{count} bestanden geïmporteerd'

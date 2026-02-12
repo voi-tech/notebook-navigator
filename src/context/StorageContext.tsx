@@ -51,12 +51,13 @@ import { useStorageCacheRebuild } from './storage/useStorageCacheRebuild';
 import { useStorageContentQueue } from './storage/useStorageContentQueue';
 import { useStorageFileQueries } from './storage/useStorageFileQueries';
 import { useTagTreeSync } from './storage/useTagTreeSync';
+import { usePropertyTreeSync } from './storage/usePropertyTreeSync';
 import { useStorageVaultSync } from './storage/useStorageVaultSync';
 import { useStorageSettingsSync } from './storage/useStorageSettingsSync';
 import { IndexedDBStorage, FileData as DBFileData, METADATA_SENTINEL } from '../storage/IndexedDBStorage';
 import { getDBInstance } from '../storage/fileOperations';
 import type { StorageFileData } from './storage/storageFileData';
-import type { TagTreeNode } from '../types/storage';
+import type { PropertyTreeNode, TagTreeNode } from '../types/storage';
 import { getFileDisplayName as getDisplayName } from '../utils/fileNameUtils';
 import { findTagNode, collectAllTagPaths } from '../utils/tagTree';
 import { isPdfFile } from '../utils/fileTypeUtils';
@@ -84,6 +85,7 @@ interface StorageContextValue {
     getFile: (path: string) => DBFileData | null;
     // Tag tree access methods
     getTagTree: () => Map<string, TagTreeNode>;
+    getPropertyTree: () => Map<string, PropertyTreeNode>;
     findTagInTree: (tagPath: string) => TagTreeNode | null;
     getAllTagPaths: () => string[];
     getTagDisplayPath: (path: string) => string;
@@ -128,9 +130,10 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         useActiveProfile();
     const uxPreferences = useUXPreferences();
     const showHiddenItems = uxPreferences.showHiddenItems;
-    const { tagTreeService } = useServices();
+    const { tagTreeService, propertyTreeService } = useServices();
     const [fileData, setFileData] = useState<StorageFileData>({
         tagTree: new Map(),
+        propertyTree: new Map(),
         tagged: 0,
         untagged: 0,
         hiddenRootTags: new Map()
@@ -192,6 +195,24 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         tagTreeService: tagTreeService ?? null
     });
 
+    const { rebuildPropertyTree, schedulePropertyTreeRebuild, cancelPropertyTreeRebuildDebouncer } = usePropertyTreeSync({
+        app,
+        settings,
+        showHiddenItems,
+        hiddenFolders,
+        hiddenFileProperties,
+        hiddenFileTags,
+        fileVisibility,
+        profileId: profile.id,
+        isStorageReady,
+        isStorageReadyRef,
+        latestSettingsRef,
+        stoppedRef,
+        setFileData,
+        getVisibleMarkdownFiles,
+        propertyTreeService: propertyTreeService ?? null
+    });
+
     const { queueMetadataContentWhenReady, disposeMetadataWaitDisposers } = useMetadataCacheQueue({
         app,
         settings,
@@ -213,10 +234,12 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         pendingSyncTimeoutIdRef: pendingSyncTimeoutId,
         rebuildFileCacheRef,
         cancelTagTreeRebuildDebouncer,
+        cancelPropertyTreeRebuildDebouncer,
         disposeMetadataWaitDisposers,
         pendingMetadataWaitPathsRef,
         setFileData,
         tagTreeService: tagTreeService ?? null,
+        propertyTreeService: propertyTreeService ?? null,
         setIsStorageReady,
         isStorageReadyRef,
         hasBuiltInitialCacheRef: hasBuiltInitialCache,
@@ -355,6 +378,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
     const contextValue = useMemo(() => {
         // Direct accessors for tag tree data structures
         const getTagTree = () => fileData.tagTree;
+        const getPropertyTree = () => fileData.propertyTree;
 
         // Finds a tag node by path in the main tag tree
         const findTagInTree = (tagPath: string) => {
@@ -390,6 +414,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
             hasPreview: (path: string) => getDBInstance().hasPreview(path),
             isStorageReady,
             getTagTree,
+            getPropertyTree,
             findTagInTree,
             getAllTagPaths,
             getTagDisplayPath,
@@ -454,8 +479,11 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         activeVaultEventRefsRef: activeVaultEventRefs,
         activeMetadataEventRefRef: activeMetadataEventRef,
         rebuildTagTree,
+        rebuildPropertyTree,
         scheduleTagTreeRebuild,
+        schedulePropertyTreeRebuild,
         cancelTagTreeRebuildDebouncer,
+        cancelPropertyTreeRebuildDebouncer,
         startCacheRebuildNotice,
         getIndexableFiles,
         queueMetadataContentWhenReady,
@@ -518,6 +546,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
                 rebuildFileCacheRef.current = null;
                 // Clears any pending rebuild scheduled by UI or database events.
                 cancelTagTreeRebuildDebouncer({ reset: true });
+                cancelPropertyTreeRebuildDebouncer({ reset: true });
                 // Clean up all tracked metadata wait disposers on shutdown
                 disposeMetadataWaitDisposers();
                 pendingMetadataWaitPathsRef.current.clear();
@@ -525,6 +554,7 @@ export function StorageProvider({ app, api, children }: StorageProviderProps) {
         };
     }, [
         cancelTagTreeRebuildDebouncer,
+        cancelPropertyTreeRebuildDebouncer,
         resetPendingSettingsChanges,
         contextValue,
         disposeMetadataWaitDisposers,

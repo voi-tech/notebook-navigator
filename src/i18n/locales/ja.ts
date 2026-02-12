@@ -60,6 +60,7 @@ export const STRINGS_JA = {
         shortcutsHeader: 'ショートカット',
         recentNotesHeader: '最近のノート',
         recentFilesHeader: '最近のファイル',
+        properties: 'プロパティ',
         reorderRootFoldersTitle: 'ナビゲーションを並び替え',
         reorderRootFoldersHint: '矢印またはドラッグで並び替え',
         vaultRootLabel: 'ボールト',
@@ -180,6 +181,16 @@ export const STRINGS_JA = {
                         'Cmd/Ctrl+クリックでタグを AND として追加。Cmd/Ctrl+Shift+クリックで OR として追加。'
                     ]
                 },
+                properties: {
+                    title: 'プロパティ',
+                    items: [
+                        '`.key` カスタムプロパティキーを持つノートを含める。',
+                        '`.key=value` カスタムプロパティ値を持つノートを含める（`value/subvalue` のようなネストされた値にもマッチ）。',
+                        '`."Reading Status"` 空白を含むプロパティキーを持つノートを含める。',
+                        '`."Reading Status"="In Progress"` 空白を含むキーと値はダブルクォートで囲む必要があります。',
+                        'Cmd/Ctrl+クリックでプロパティをANDで追加。Cmd/Ctrl+Shift+クリックでORで追加。'
+                    ]
+                },
                 tasks: {
                     title: 'フィルター',
                     items: [
@@ -198,10 +209,10 @@ export const STRINGS_JA = {
                 connectors: {
                     title: 'AND/ORの動作',
                     items: [
-                        '`AND`と`OR`はタグのみのクエリでのみ演算子として機能します。',
-                        'タグのみのクエリにはタグフィルターのみが含まれます: `#tag`、`-#tag`、`#`、`-#`。',
+                        '`AND`と`OR`はタグ/プロパティのみのクエリでのみ演算子として機能します。',
+                        'タグ/プロパティのみのクエリにはタグとプロパティのフィルターのみが含まれます: `#tag`、`-#tag`、`#`、`-#`、`.key`、`-.key`、`.key=value`、`-.key=value`。',
                         'クエリに名前、日付（`@...`）、タスクフィルター（`has:task`）、フォルダフィルター（`folder:...`）、または拡張子フィルター（`ext:...`）が含まれる場合、`AND`と`OR`は単語として検索されます。',
-                        '演算子クエリの例: `#work OR #home`。',
+                        '演算子クエリの例: `#work OR .status=started`。',
                         '混合クエリの例: `#work OR ext:md`（`OR`はファイル名で検索されます）。'
                     ]
                 },
@@ -394,6 +405,7 @@ export const STRINGS_JA = {
                 'nav-folder-closed': 'フォルダ（閉）',
                 'nav-folder-note': 'フォルダノート',
                 'nav-tag': 'タグ',
+                'nav-properties': 'プロパティ',
                 'list-pinned': 'ピン留め項目',
                 'file-unfinished-task': '未完了タスク',
                 'file-word-count': '単語数',
@@ -594,6 +606,9 @@ export const STRINGS_JA = {
             noFilesSelected: 'ファイルが選択されていません',
             tagOperationsNotAvailable: 'タグ操作は利用できません',
             tagsRequireMarkdown: 'タグはMarkdownノートでのみサポートされています',
+            propertiesRequireMarkdown: 'プロパティはMarkdownノートでのみサポートされています',
+            propertySetOnNote: '1件のノートでプロパティを更新しました',
+            propertySetOnNotes: '{count}件のノートでプロパティを更新しました',
             iconPackDownloaded: '「{provider}」をダウンロードしました',
             iconPackUpdated: '「{provider}」を更新しました ({version})',
             iconPackRemoved: '「{provider}」を削除しました',
@@ -616,6 +631,7 @@ export const STRINGS_JA = {
             itemAlreadyExists: 'この場所に "{name}" という名前のアイテムがすでに存在します。',
             failedToMove: '移動に失敗しました：{error}',
             failedToAddTag: 'タグ "{tag}" の追加に失敗しました',
+            failedToSetProperty: 'プロパティの更新に失敗しました: {error}',
             failedToClearTags: 'タグのクリアに失敗しました',
             failedToMoveFolder: 'フォルダ「{name}」の移動に失敗しました',
             failedToImportFiles: 'インポートに失敗しました: {names}'
@@ -623,6 +639,7 @@ export const STRINGS_JA = {
         notifications: {
             filesAlreadyExist: '{count}個のファイルが移動先に既に存在します',
             filesAlreadyHaveTag: '{count}個のファイルには既にこのタグまたはより具体的なタグがあります',
+            filesAlreadyHaveProperty: '{count}個のファイルにはすでにこのプロパティがあります',
             noTagsToClear: 'クリアするタグがありません',
             fileImported: '1個のファイルをインポートしました',
             filesImported: '{count}個のファイルをインポートしました'
