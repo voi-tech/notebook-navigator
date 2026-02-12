@@ -288,7 +288,7 @@ export function SearchInput({
         const propertiesSection = Object.prototype.hasOwnProperty.call(strings.searchInput.searchHelpModal.sections, 'properties')
             ? properties
             : undefined;
-        const sections = [fileNames, dates, tags, propertiesSection, tasks, connectors, omnisearch].filter(
+        const sections = [fileNames, propertiesSection, tags, dates, tasks, connectors, omnisearch].filter(
             (section): section is InfoModalSection => Boolean(section)
         );
         new InfoModal(app, {

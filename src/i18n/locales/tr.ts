@@ -157,7 +157,7 @@ export const STRINGS_TR = {
         searchHelp: 'Arama sözdizimi',
         searchHelpTitle: 'Arama sözdizimi',
         searchHelpModal: {
-            intro: 'Dosya adlarını, etiketleri, tarihleri ve filtreleri tek bir sorguda birleştirin (örn. `meeting #work @thisweek has:task`). Tam metin araması kullanmak için Omnisearch eklentisini yükleyin.',
+            intro: 'Dosya adlarını, özellikleri, etiketleri, tarihleri ve filtreleri tek bir sorguda birleştirin (örn. `meeting .status=active #work @thisweek`). Tam metin araması kullanmak için Omnisearch eklentisini yükleyin.',
             introSwitching:
                 'Yukarı/aşağı ok tuşlarını kullanarak veya arama simgesine tıklayarak filtre araması ve Omnisearch arasında geçiş yapın.',
             sections: {
@@ -190,6 +190,8 @@ export const STRINGS_TR = {
                         '`.key=value` Özel özellik değerine sahip notları dahil et (`value/subvalue` gibi iç içe değerlerle de eşleşir).',
                         '`."Reading Status"` Boşluk içeren özellik anahtarına sahip notları dahil et.',
                         '`."Reading Status"="In Progress"` Boşluk içeren anahtarlar ve değerler çift tırnak içine alınmalıdır.',
+                        '`-.key` Özel özellik anahtarına sahip notları hariç tut.',
+                        '`-.key=value` Özel özellik değerine sahip notları hariç tut.',
                         'Cmd/Ctrl+Tıklayarak özelliği AND ile ekleyin. Cmd/Ctrl+Shift+Tıklayarak OR ile ekleyin.'
                     ]
                 },

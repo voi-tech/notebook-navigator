@@ -156,7 +156,7 @@ export const STRINGS_ZH_CN = {
         searchHelp: '搜索语法',
         searchHelpTitle: '搜索语法',
         searchHelpModal: {
-            intro: '在一个查询中组合文件名、标签、日期和过滤器（例如：`meeting #work @thisweek has:task`）。安装 Omnisearch 插件以使用全文搜索。',
+            intro: '在一个查询中组合文件名、属性、标签、日期和过滤器（例如：`meeting .status=active #work @thisweek`）。安装 Omnisearch 插件以使用全文搜索。',
             introSwitching: '使用上/下箭头键或点击搜索图标在过滤搜索和 Omnisearch 之间切换。',
             sections: {
                 fileNames: {
@@ -188,6 +188,8 @@ export const STRINGS_ZH_CN = {
                         '`.key=value` 包含具有自定义属性值的笔记（也匹配嵌套值如 `value/subvalue`）。',
                         '`."Reading Status"` 包含属性键包含空格的笔记。',
                         '`."Reading Status"="In Progress"` 包含空格的键和值必须用双引号括起来。',
+                        '`-.key` 排除具有自定义属性键的笔记。',
+                        '`-.key=value` 排除具有自定义属性值的笔记。',
                         'Cmd/Ctrl+点击属性以 AND 方式添加。Cmd/Ctrl+Shift+点击以 OR 方式添加。'
                     ]
                 },

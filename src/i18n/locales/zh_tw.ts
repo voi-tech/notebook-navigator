@@ -156,7 +156,7 @@ export const STRINGS_ZH_TW = {
         searchHelp: '搜尋語法',
         searchHelpTitle: '搜尋語法',
         searchHelpModal: {
-            intro: '在一個查詢中組合檔案名稱、標籤、日期和篩選器（例如：`meeting #work @thisweek has:task`）。安裝 Omnisearch 外掛程式以使用全文搜尋。',
+            intro: '在一個查詢中組合檔案名稱、屬性、標籤、日期和篩選器（例如：`meeting .status=active #work @thisweek`）。安裝 Omnisearch 外掛程式以使用全文搜尋。',
             introSwitching: '使用上/下箭頭鍵或點擊搜尋圖示在篩選搜尋和 Omnisearch 之間切換。',
             sections: {
                 fileNames: {
@@ -188,6 +188,8 @@ export const STRINGS_ZH_TW = {
                         '`.key=value` 包含具有自訂屬性值的筆記（也匹配巢狀值如 `value/subvalue`）。',
                         '`."Reading Status"` 包含屬性鍵包含空格的筆記。',
                         '`."Reading Status"="In Progress"` 包含空格的鍵和值必須用雙引號括起來。',
+                        '`-.key` 排除具有自訂屬性鍵的筆記。',
+                        '`-.key=value` 排除具有自訂屬性值的筆記。',
                         'Cmd/Ctrl+點擊屬性以 AND 方式新增。Cmd/Ctrl+Shift+點擊以 OR 方式新增。'
                     ]
                 },

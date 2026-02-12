@@ -156,7 +156,7 @@ export const STRINGS_PL = {
         searchHelp: 'Składnia wyszukiwania',
         searchHelpTitle: 'Składnia wyszukiwania',
         searchHelpModal: {
-            intro: 'Łącz nazwy plików, tagi, daty i filtry w jednym zapytaniu (np. `meeting #work @thisweek has:task`). Zainstaluj wtyczkę Omnisearch, aby użyć wyszukiwania pełnotekstowego.',
+            intro: 'Łącz nazwy plików, właściwości, tagi, daty i filtry w jednym zapytaniu (np. `meeting .status=active #work @thisweek`). Zainstaluj wtyczkę Omnisearch, aby użyć wyszukiwania pełnotekstowego.',
             introSwitching:
                 'Przełączaj między wyszukiwaniem filtrowym a Omnisearch za pomocą klawiszy strzałek góra/dół lub klikając ikonę wyszukiwania.',
             sections: {
@@ -189,6 +189,8 @@ export const STRINGS_PL = {
                         '`.key=value` Uwzględnij notatki z niestandardową wartością właściwości (dopasowuje również zagnieżdżone wartości jak `value/subvalue`).',
                         '`."Reading Status"` Uwzględnij notatki z kluczem właściwości zawierającym spacje.',
                         '`."Reading Status"="In Progress"` Klucze i wartości ze spacjami muszą być ujęte w podwójne cudzysłowy.',
+                        '`-.key` Wyklucz notatki z niestandardowym kluczem właściwości.',
+                        '`-.key=value` Wyklucz notatki z niestandardową wartością właściwości.',
                         'Cmd/Ctrl+Kliknij właściwość, aby dodać z AND. Cmd/Ctrl+Shift+Kliknij, aby dodać z OR.'
                     ]
                 },

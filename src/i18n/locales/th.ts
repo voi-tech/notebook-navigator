@@ -157,7 +157,7 @@ export const STRINGS_TH = {
         searchHelp: 'ไวยากรณ์การค้นหา',
         searchHelpTitle: 'ไวยากรณ์การค้นหา',
         searchHelpModal: {
-            intro: 'รวมชื่อไฟล์ แท็ก วันที่ และตัวกรองในคำค้นหาเดียว (เช่น `meeting #work @thisweek has:task`) ติดตั้งปลั๊กอิน Omnisearch เพื่อใช้การค้นหาข้อความเต็ม',
+            intro: 'รวมชื่อไฟล์ คุณสมบัติ แท็ก วันที่ และตัวกรองในคำค้นหาเดียว (เช่น `meeting .status=active #work @thisweek`) ติดตั้งปลั๊กอิน Omnisearch เพื่อใช้การค้นหาข้อความเต็ม',
             introSwitching: 'สลับระหว่างการค้นหาแบบกรองและ Omnisearch โดยใช้ปุ่มลูกศรขึ้น/ลงหรือคลิกไอคอนค้นหา',
             sections: {
                 fileNames: {
@@ -189,6 +189,8 @@ export const STRINGS_TH = {
                         '`.key=value` รวมโน้ตที่มีค่าคุณสมบัติกำหนดเอง (จับคู่ค่าซ้อนเช่น `value/subvalue` ด้วย)',
                         '`."Reading Status"` รวมโน้ตที่มีคีย์คุณสมบัติที่มีช่องว่าง',
                         '`."Reading Status"="In Progress"` คีย์และค่าที่มีช่องว่างต้องอยู่ในเครื่องหมายคำพูดคู่',
+                        '`-.key` ไม่รวมโน้ตที่มีคีย์คุณสมบัติกำหนดเอง',
+                        '`-.key=value` ไม่รวมโน้ตที่มีค่าคุณสมบัติกำหนดเอง',
                         'Cmd/Ctrl+คลิกคุณสมบัติเพื่อเพิ่มด้วย AND Cmd/Ctrl+Shift+คลิกเพื่อเพิ่มด้วย OR'
                     ]
                 },

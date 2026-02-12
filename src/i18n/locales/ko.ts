@@ -156,7 +156,7 @@ export const STRINGS_KO = {
         searchHelp: '검색 구문',
         searchHelpTitle: '검색 구문',
         searchHelpModal: {
-            intro: '파일 이름, 태그, 날짜, 필터를 하나의 쿼리에서 결합 (예: `meeting #work @thisweek has:task`). Omnisearch 플러그인을 설치하면 전체 텍스트 검색을 사용할 수 있습니다.',
+            intro: '파일 이름, 속성, 태그, 날짜, 필터를 하나의 쿼리에서 결합 (예: `meeting .status=active #work @thisweek`). Omnisearch 플러그인을 설치하면 전체 텍스트 검색을 사용할 수 있습니다.',
             introSwitching: '위/아래 화살표 키 또는 검색 아이콘 클릭으로 필터 검색과 Omnisearch 간에 전환할 수 있습니다.',
             sections: {
                 fileNames: {
@@ -188,6 +188,8 @@ export const STRINGS_KO = {
                         '`.key=value` 사용자 정의 속성 값이 있는 노트를 포함합니다 (`value/subvalue`와 같은 중첩 값도 일치).',
                         '`."Reading Status"` 공백이 포함된 속성 키가 있는 노트를 포함합니다.',
                         '`."Reading Status"="In Progress"` 공백이 포함된 키와 값은 큰따옴표로 묶어야 합니다.',
+                        '`-.key` 사용자 정의 속성 키가 있는 노트를 제외합니다.',
+                        '`-.key=value` 사용자 정의 속성 값이 있는 노트를 제외합니다.',
                         'Cmd/Ctrl+클릭으로 속성을 AND로 추가. Cmd/Ctrl+Shift+클릭으로 OR로 추가.'
                     ]
                 },

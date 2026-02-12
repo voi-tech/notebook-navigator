@@ -157,7 +157,7 @@ export const STRINGS_VI = {
         searchHelp: 'Cú pháp tìm kiếm',
         searchHelpTitle: 'Cú pháp tìm kiếm',
         searchHelpModal: {
-            intro: 'Kết hợp tên tệp, thẻ, ngày và bộ lọc trong một truy vấn (ví dụ: `meeting #work @thisweek has:task`). Cài đặt plugin Omnisearch để sử dụng tìm kiếm toàn văn.',
+            intro: 'Kết hợp tên tệp, thuộc tính, thẻ, ngày và bộ lọc trong một truy vấn (ví dụ: `meeting .status=active #work @thisweek`). Cài đặt plugin Omnisearch để sử dụng tìm kiếm toàn văn.',
             introSwitching: 'Chuyển đổi giữa tìm kiếm bộ lọc và Omnisearch bằng phím mũi tên lên/xuống hoặc nhấp vào biểu tượng tìm kiếm.',
             sections: {
                 fileNames: {
@@ -189,6 +189,8 @@ export const STRINGS_VI = {
                         '`.key=value` Bao gồm ghi chú có giá trị thuộc tính tùy chỉnh (cũng khớp với giá trị lồng nhau như `value/subvalue`).',
                         '`."Reading Status"` Bao gồm ghi chú có khóa thuộc tính chứa khoảng trắng.',
                         '`."Reading Status"="In Progress"` Khóa và giá trị có khoảng trắng phải được đặt trong dấu ngoặc kép.',
+                        '`-.key` Loại trừ ghi chú có khóa thuộc tính tùy chỉnh.',
+                        '`-.key=value` Loại trừ ghi chú có giá trị thuộc tính tùy chỉnh.',
                         'Cmd/Ctrl+Nhấp vào thuộc tính để thêm với AND. Cmd/Ctrl+Shift+Nhấp để thêm với OR.'
                     ]
                 },

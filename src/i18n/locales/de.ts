@@ -156,7 +156,7 @@ export const STRINGS_DE = {
         searchHelp: 'Suchsyntax',
         searchHelpTitle: 'Suchsyntax',
         searchHelpModal: {
-            intro: 'Kombinieren Sie Dateinamen, Tags, Daten und Filter in einer Abfrage (z.B. `meeting #work @thisweek has:task`). Installieren Sie das Omnisearch-Plugin für Volltextsuche.',
+            intro: 'Kombinieren Sie Dateinamen, Eigenschaften, Tags, Daten und Filter in einer Abfrage (z.B. `meeting .status=active #work @thisweek`). Installieren Sie das Omnisearch-Plugin für Volltextsuche.',
             introSwitching:
                 'Wechseln Sie zwischen Filtersuche und Omnisearch mit den Auf-/Ab-Pfeiltasten oder durch Klicken auf das Suchsymbol.',
             sections: {
@@ -189,6 +189,8 @@ export const STRINGS_DE = {
                         '`.key=value` Notizen mit benutzerdefiniertem Eigenschaftswert einschließen (passt auch auf verschachtelte Werte wie `value/subvalue`).',
                         '`."Reading Status"` Notizen mit einem Eigenschaftsschlüssel einschließen, der Leerzeichen enthält.',
                         '`."Reading Status"="In Progress"` Schlüssel und Werte mit Leerzeichen müssen in Anführungszeichen stehen.',
+                        '`-.key` Notizen mit benutzerdefiniertem Eigenschaftsschlüssel ausschließen.',
+                        '`-.key=value` Notizen mit benutzerdefiniertem Eigenschaftswert ausschließen.',
                         'Cmd/Ctrl+Klick auf eine Eigenschaft zum Hinzufügen mit AND. Cmd/Ctrl+Shift+Klick zum Hinzufügen mit OR.'
                     ]
                 },

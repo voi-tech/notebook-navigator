@@ -157,7 +157,7 @@ export const STRINGS_ID = {
         searchHelp: 'Sintaks pencarian',
         searchHelpTitle: 'Sintaks pencarian',
         searchHelpModal: {
-            intro: 'Gabungkan nama file, tag, tanggal, dan filter dalam satu kueri (contoh: `meeting #work @thisweek has:task`). Instal plugin Omnisearch untuk menggunakan pencarian teks lengkap.',
+            intro: 'Gabungkan nama file, properti, tag, tanggal, dan filter dalam satu kueri (contoh: `meeting .status=active #work @thisweek`). Instal plugin Omnisearch untuk menggunakan pencarian teks lengkap.',
             introSwitching:
                 'Beralih antara pencarian filter dan Omnisearch menggunakan tombol panah atas/bawah atau dengan mengklik ikon pencarian.',
             sections: {
@@ -190,6 +190,8 @@ export const STRINGS_ID = {
                         '`.key=value` Sertakan catatan dengan nilai properti kustom (juga mencocokkan nilai bersarang seperti `value/subvalue`).',
                         '`."Reading Status"` Sertakan catatan dengan kunci properti yang mengandung spasi.',
                         '`."Reading Status"="In Progress"` Kunci dan nilai yang mengandung spasi harus diapit tanda kutip ganda.',
+                        '`-.key` Kecualikan catatan dengan kunci properti kustom.',
+                        '`-.key=value` Kecualikan catatan dengan nilai properti kustom.',
                         'Cmd/Ctrl+Klik properti untuk menambahkan dengan AND. Cmd/Ctrl+Shift+Klik untuk menambahkan dengan OR.'
                     ]
                 },

@@ -158,7 +158,7 @@ export const STRINGS_NL = {
         searchHelp: 'Zoeksyntax',
         searchHelpTitle: 'Zoeksyntax',
         searchHelpModal: {
-            intro: 'Combineer bestandsnamen, tags, datums en filters in één zoekopdracht (bijv. `meeting #work @thisweek has:task`). Installeer de Omnisearch-plugin om zoeken in volledige tekst te gebruiken.',
+            intro: 'Combineer bestandsnamen, eigenschappen, tags, datums en filters in één zoekopdracht (bijv. `meeting .status=active #work @thisweek`). Installeer de Omnisearch-plugin om zoeken in volledige tekst te gebruiken.',
             introSwitching:
                 'Schakel tussen filterzoeken en Omnisearch met de pijltoetsen omhoog/omlaag of door op het zoekpictogram te klikken.',
             sections: {
@@ -191,6 +191,8 @@ export const STRINGS_NL = {
                         '`.key=value` Notities met aangepaste eigenschapswaarde opnemen (komt ook overeen met geneste waarden zoals `value/subvalue`).',
                         '`."Reading Status"` Notities opnemen met een eigenschapssleutel die spaties bevat.',
                         '`."Reading Status"="In Progress"` Sleutels en waarden met spaties moeten tussen dubbele aanhalingstekens staan.',
+                        '`-.key` Notities met aangepaste eigenschapssleutel uitsluiten.',
+                        '`-.key=value` Notities met aangepaste eigenschapswaarde uitsluiten.',
                         'Cmd/Ctrl+Klik op een eigenschap om toe te voegen met AND. Cmd/Ctrl+Shift+Klik om toe te voegen met OR.'
                     ]
                 },

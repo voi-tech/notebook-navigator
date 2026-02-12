@@ -156,7 +156,7 @@ export const STRINGS_JA = {
         searchHelp: '検索構文',
         searchHelpTitle: '検索構文',
         searchHelpModal: {
-            intro: 'ファイル名、タグ、日付、フィルターを1つのクエリで組み合わせ可能（例：`meeting #work @thisweek has:task`）。Omnisearch プラグインをインストールすると全文検索が使用できます。',
+            intro: 'ファイル名、プロパティ、タグ、日付、フィルターを1つのクエリで組み合わせ可能（例：`meeting .status=active #work @thisweek`）。Omnisearch プラグインをインストールすると全文検索が使用できます。',
             introSwitching: '上下矢印キーまたは検索アイコンのクリックで、フィルター検索と Omnisearch を切り替えられます。',
             sections: {
                 fileNames: {
@@ -188,6 +188,8 @@ export const STRINGS_JA = {
                         '`.key=value` カスタムプロパティ値を持つノートを含める（`value/subvalue` のようなネストされた値にもマッチ）。',
                         '`."Reading Status"` 空白を含むプロパティキーを持つノートを含める。',
                         '`."Reading Status"="In Progress"` 空白を含むキーと値はダブルクォートで囲む必要があります。',
+                        '`-.key` カスタムプロパティキーを持つノートを除外する。',
+                        '`-.key=value` カスタムプロパティ値を持つノートを除外する。',
                         'Cmd/Ctrl+クリックでプロパティをANDで追加。Cmd/Ctrl+Shift+クリックでORで追加。'
                     ]
                 },

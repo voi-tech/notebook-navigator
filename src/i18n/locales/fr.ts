@@ -156,7 +156,7 @@ export const STRINGS_FR = {
         searchHelp: 'Syntaxe de recherche',
         searchHelpTitle: 'Syntaxe de recherche',
         searchHelpModal: {
-            intro: 'Combinez noms de fichiers, étiquettes, dates et filtres dans une requête (ex. `meeting #work @thisweek has:task`). Installez le plugin Omnisearch pour utiliser la recherche plein texte.',
+            intro: 'Combinez noms de fichiers, propriétés, étiquettes, dates et filtres dans une requête (ex. `meeting .status=active #work @thisweek`). Installez le plugin Omnisearch pour utiliser la recherche plein texte.',
             introSwitching:
                 "Basculez entre la recherche par filtre et Omnisearch avec les touches fléchées haut/bas ou en cliquant sur l'icône de recherche.",
             sections: {
@@ -189,6 +189,8 @@ export const STRINGS_FR = {
                         '`.key=value` Inclure les notes avec une valeur de propriété personnalisée (correspond aussi aux valeurs imbriquées comme `value/subvalue`).',
                         '`."Reading Status"` Inclure les notes avec une clé de propriété contenant des espaces.',
                         '`."Reading Status"="In Progress"` Les clés et valeurs contenant des espaces doivent être entre guillemets doubles.',
+                        '`-.key` Exclure les notes avec une clé de propriété personnalisée.',
+                        '`-.key=value` Exclure les notes avec une valeur de propriété personnalisée.',
                         'Cmd/Ctrl+Clic sur une propriété pour ajouter avec AND. Cmd/Ctrl+Shift+Clic pour ajouter avec OR.'
                     ]
                 },

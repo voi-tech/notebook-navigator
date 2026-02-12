@@ -157,7 +157,7 @@ export const STRINGS_EN = {
         searchHelp: 'Search syntax',
         searchHelpTitle: 'Search syntax',
         searchHelpModal: {
-            intro: 'Combine file names, tags, dates, and filters in one query (e.g., `meeting #work @thisweek has:task`). Install the Omnisearch plugin to use full-text search.',
+            intro: 'Combine file names, properties, tags, dates, and filters in one query (e.g., `meeting .status=active #work @thisweek`). Install the Omnisearch plugin to use full-text search.',
             introSwitching: 'Switch between filter search and Omnisearch using the up/down arrow keys or by clicking the search icon.',
             sections: {
                 fileNames: {
@@ -189,6 +189,8 @@ export const STRINGS_EN = {
                         '`.key=value` Include notes with custom property value (also matches nested values like `value/subvalue`).',
                         '`."Reading Status"` Include notes with a property key that contains whitespace.',
                         '`."Reading Status"="In Progress"` Keys and values with whitespace must be double-quoted.',
+                        '`-.key` Exclude notes with custom property key.',
+                        '`-.key=value` Exclude notes with custom property value.',
                         'Cmd/Ctrl+Click a property to add with AND. Cmd/Ctrl+Shift+Click to add with OR.'
                     ]
                 },
