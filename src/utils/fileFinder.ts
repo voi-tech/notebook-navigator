@@ -53,6 +53,7 @@ import {
     buildPropertyValueNodeId,
     getConfiguredPropertyKeySet,
     isPropertyKeyOnlyValuePath,
+    matchesPropertyValuePath,
     type PropertySelectionNodeId,
     normalizePropertyTreeValuePath,
     parsePropertyNodeId
@@ -726,7 +727,7 @@ export function getFilesForProperty(
                     continue;
                 }
 
-                if (matchesPathSelection(normalizedEntryValue, normalizedValue, visibility.includeDescendantNotes)) {
+                if (matchesPropertyValuePath(normalizedEntryValue, normalizedValue)) {
                     return true;
                 }
             }

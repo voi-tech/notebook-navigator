@@ -96,7 +96,7 @@ describe('PropertyTreeService', () => {
         expect(service.collectFilePaths(statusKey.id, false)).toEqual(new Set(['a.md']));
         expect(service.collectFilePaths(statusKey.id, true)).toEqual(new Set(['a.md', 'b.md', 'c.md']));
         expect(service.collectFilePaths(work.id, false)).toEqual(new Set(['b.md']));
-        expect(service.collectFilePaths(work.id, true)).toEqual(new Set(['b.md', 'c.md']));
+        expect(service.collectFilePaths(work.id, true)).toEqual(new Set(['b.md']));
         expect(service.collectFilePaths('key:missing', true)).toEqual(new Set());
     });
 

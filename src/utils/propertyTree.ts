@@ -47,24 +47,9 @@ export interface PropertyTreeDatabaseLike {
 
 type PropertyTreeFilePropertyEntry = NonNullable<FileData['customProperty']>[number];
 
-let propertyDescendantNoteCountCache: WeakMap<PropertyTreeNode, Map<string, number>> | null = null;
 let propertyKeyDirectPathCache: WeakMap<PropertyTreeNode, Set<string>> | null = null;
 const configuredPropertyKeyCache = new Map<string, ReadonlySet<string>>();
 const PROPERTY_BOOLEAN_VALUE_PATHS = new Set(['true', 'false']);
-
-/**
- * Clears cached descendant note totals for property value nodes.
- */
-export function clearPropertyNoteCountCache(): void {
-    propertyDescendantNoteCountCache = null;
-}
-
-function getPropertyDescendantNoteCountCache(): WeakMap<PropertyTreeNode, Map<string, number>> {
-    if (!propertyDescendantNoteCountCache) {
-        propertyDescendantNoteCountCache = new WeakMap();
-    }
-    return propertyDescendantNoteCountCache;
-}
 
 function getPropertyKeyDirectPathCache(): WeakMap<PropertyTreeNode, Set<string>> {
     if (!propertyKeyDirectPathCache) {
@@ -73,58 +58,12 @@ function getPropertyKeyDirectPathCache(): WeakMap<PropertyTreeNode, Set<string>>
     return propertyKeyDirectPathCache;
 }
 
-function buildPropertyDescendantNoteCounts(keyNode: PropertyTreeNode): Map<string, number> {
-    const descendantPathsByValuePath = new Map<string, Set<string>>();
-
-    keyNode.children.forEach(valueNode => {
-        const valuePath = valueNode.valuePath;
-        if (!valuePath) {
-            return;
-        }
-
-        const segments = valuePath.split('/').filter(Boolean);
-        if (segments.length === 0) {
-            return;
-        }
-
-        let prefix = '';
-        for (const segment of segments) {
-            prefix = prefix ? `${prefix}/${segment}` : segment;
-            let descendantPaths = descendantPathsByValuePath.get(prefix);
-            if (!descendantPaths) {
-                descendantPaths = new Set<string>();
-                descendantPathsByValuePath.set(prefix, descendantPaths);
-            }
-
-            valueNode.notesWithValue.forEach(path => descendantPaths.add(path));
-        }
-    });
-
-    const descendantCounts = new Map<string, number>();
-    descendantPathsByValuePath.forEach((paths, valuePath) => {
-        descendantCounts.set(valuePath, paths.size);
-    });
-    return descendantCounts;
-}
-
 /**
- * Returns the number of notes for a property value path including descendants.
+ * Returns the number of notes for a property value.
  */
 export function getTotalPropertyNoteCount(keyNode: PropertyTreeNode, valuePath: string): number {
     if (!valuePath) {
         return 0;
-    }
-
-    const cache = getPropertyDescendantNoteCountCache();
-    let descendantCounts = cache.get(keyNode);
-    if (!descendantCounts) {
-        descendantCounts = buildPropertyDescendantNoteCounts(keyNode);
-        cache.set(keyNode, descendantCounts);
-    }
-
-    const cachedCount = descendantCounts.get(valuePath);
-    if (cachedCount !== undefined) {
-        return cachedCount;
     }
 
     const nodeId = buildPropertyValueNodeId(keyNode.key, valuePath);
@@ -133,28 +72,23 @@ export function getTotalPropertyNoteCount(keyNode: PropertyTreeNode, valuePath: 
 }
 
 /**
- * Collects note paths for the selected property value.
- * Includes descendant values when requested.
+ * Returns true when two normalized property value paths represent the same value.
  */
-export function collectPropertyValueFilePaths(keyNode: PropertyTreeNode, valuePath: string, includeDescendants: boolean): Set<string> {
+export function matchesPropertyValuePath(candidateValuePath: string, selectedValuePath: string): boolean {
+    return candidateValuePath === selectedValuePath;
+}
+
+/**
+ * Collects note paths for the selected property value.
+ */
+export function collectPropertyValueFilePaths(keyNode: PropertyTreeNode, valuePath: string): Set<string> {
     const nodeId = buildPropertyValueNodeId(keyNode.key, valuePath);
     const valueNode = keyNode.children.get(nodeId);
     if (!valueNode) {
         return new Set<string>();
     }
 
-    const valuePaths = new Set<string>(valueNode.notesWithValue);
-    if (!includeDescendants) {
-        return valuePaths;
-    }
-
-    keyNode.children.forEach(childNode => {
-        if (!childNode.valuePath || !childNode.valuePath.startsWith(`${valuePath}/`)) {
-            return;
-        }
-        childNode.notesWithValue.forEach(path => valuePaths.add(path));
-    });
-    return valuePaths;
+    return new Set<string>(valueNode.notesWithValue);
 }
 
 /**
@@ -439,40 +373,11 @@ export function isPropertyTreeNodeId(value: string): value is PropertyTreeNodeId
 }
 
 export function normalizePropertyTreeValuePath(rawValue: string): string {
-    const normalizedSegments: string[] = [];
-    const parts = rawValue.split('/');
-
-    for (const rawPart of parts) {
-        const displaySegment = rawPart.trim();
-        if (!displaySegment) {
-            continue;
-        }
-
-        const normalizedSegment = casefold(displaySegment);
-        if (!normalizedSegment) {
-            continue;
-        }
-
-        normalizedSegments.push(normalizedSegment);
-    }
-
-    return normalizedSegments.join('/');
+    return casefold(rawValue);
 }
 
 function normalizePropertyTreeDisplayValuePath(rawValue: string): string {
-    const displaySegments: string[] = [];
-    const parts = rawValue.split('/');
-
-    for (const rawPart of parts) {
-        const displaySegment = rawPart.trim();
-        if (!displaySegment) {
-            continue;
-        }
-
-        displaySegments.push(displaySegment);
-    }
-
-    return displaySegments.join('/');
+    return rawValue.trim();
 }
 
 function getSelectedPropertyNodeId(selection: PropertySelectionValue | null): PropertySelectionNodeId | null {
@@ -551,7 +456,6 @@ export function buildPropertyTreeFromDatabase(
     db: PropertyTreeDatabaseLike,
     options: BuildPropertyTreeOptions = {}
 ): Map<string, PropertyTreeNode> {
-    clearPropertyNoteCountCache();
     propertyKeyDirectPathCache = new WeakMap<PropertyTreeNode, Set<string>>();
 
     const tree = new Map<string, PropertyTreeNode>();

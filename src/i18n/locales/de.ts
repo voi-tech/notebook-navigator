@@ -186,7 +186,7 @@ export const STRINGS_DE = {
                     title: 'Eigenschaften',
                     items: [
                         '`.key` Notizen mit benutzerdefiniertem Eigenschaftsschlüssel einschließen.',
-                        '`.key=value` Notizen mit benutzerdefiniertem Eigenschaftswert einschließen (passt auch auf verschachtelte Werte wie `value/subvalue`).',
+                        '`.key=value` Notizen mit benutzerdefiniertem Eigenschaftswert einschließen.',
                         '`."Reading Status"` Notizen mit einem Eigenschaftsschlüssel einschließen, der Leerzeichen enthält.',
                         '`."Reading Status"="In Progress"` Schlüssel und Werte mit Leerzeichen müssen in Anführungszeichen stehen.',
                         '`-.key` Notizen mit benutzerdefiniertem Eigenschaftsschlüssel ausschließen.',

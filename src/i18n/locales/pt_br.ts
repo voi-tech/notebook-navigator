@@ -188,7 +188,7 @@ export const STRINGS_PT_BR = {
                     title: 'Propriedades',
                     items: [
                         '`.key` Incluir notas com chave de propriedade personalizada.',
-                        '`.key=value` Incluir notas com valor de propriedade personalizada (também corresponde a valores aninhados como `value/subvalue`).',
+                        '`.key=value` Incluir notas com valor de propriedade personalizada.',
                         '`."Reading Status"` Incluir notas com uma chave de propriedade que contém espaços.',
                         '`."Reading Status"="In Progress"` Chaves e valores com espaços devem estar entre aspas duplas.',
                         '`-.key` Excluir notas com chave de propriedade personalizada.',

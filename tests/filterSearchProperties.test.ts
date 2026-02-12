@@ -79,6 +79,7 @@ describe('filterSearch property evaluation', () => {
         const valueTokens = parseFilterSearchTokens('.status=work');
 
         const statusProperties = new Map<string, string[]>([['status', ['work/finished']]]);
+        const exactStatusProperties = new Map<string, string[]>([['status', ['work']]]);
         const noProperties = new Map<string, string[]>();
 
         expect(
@@ -89,8 +90,11 @@ describe('filterSearch property evaluation', () => {
         );
 
         expect(fileMatchesFilterTokens('note', [], valueTokens, { hasUnfinishedTasks: false, propertyValuesByKey: statusProperties })).toBe(
-            true
+            false
         );
+        expect(
+            fileMatchesFilterTokens('note', [], valueTokens, { hasUnfinishedTasks: false, propertyValuesByKey: exactStatusProperties })
+        ).toBe(true);
         expect(
             fileMatchesFilterTokens('note', [], valueTokens, {
                 hasUnfinishedTasks: false,

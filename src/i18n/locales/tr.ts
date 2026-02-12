@@ -187,7 +187,7 @@ export const STRINGS_TR = {
                     title: 'Özellikler',
                     items: [
                         '`.key` Özel özellik anahtarına sahip notları dahil et.',
-                        '`.key=value` Özel özellik değerine sahip notları dahil et (`value/subvalue` gibi iç içe değerlerle de eşleşir).',
+                        '`.key=value` Özel özellik değerine sahip notları dahil et.',
                         '`."Reading Status"` Boşluk içeren özellik anahtarına sahip notları dahil et.',
                         '`."Reading Status"="In Progress"` Boşluk içeren anahtarlar ve değerler çift tırnak içine alınmalıdır.',
                         '`-.key` Özel özellik anahtarına sahip notları hariç tut.',

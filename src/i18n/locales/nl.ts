@@ -188,7 +188,7 @@ export const STRINGS_NL = {
                     title: 'Eigenschappen',
                     items: [
                         '`.key` Notities met aangepaste eigenschapssleutel opnemen.',
-                        '`.key=value` Notities met aangepaste eigenschapswaarde opnemen (komt ook overeen met geneste waarden zoals `value/subvalue`).',
+                        '`.key=value` Notities met aangepaste eigenschapswaarde opnemen.',
                         '`."Reading Status"` Notities opnemen met een eigenschapssleutel die spaties bevat.',
                         '`."Reading Status"="In Progress"` Sleutels en waarden met spaties moeten tussen dubbele aanhalingstekens staan.',
                         '`-.key` Notities met aangepaste eigenschapssleutel uitsluiten.',

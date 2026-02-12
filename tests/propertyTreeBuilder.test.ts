@@ -24,7 +24,6 @@ import {
     buildPropertyKeyNodeId,
     buildPropertyTreeFromDatabase,
     buildPropertyValueNodeId,
-    clearPropertyNoteCountCache,
     collectPropertyKeyFilePaths,
     collectPropertyValueFilePaths,
     getDirectPropertyKeyNoteCount,
@@ -133,16 +132,16 @@ describe('buildPropertyTreeFromDatabase', () => {
         const keyNode = tree.get('status');
         expect(keyNode?.notesWithValue).toEqual(new Set(['notes/keep.md']));
 
-        const normalizedValuePath = normalizePropertyTreeValuePath('Work/Done');
+        const normalizedValuePath = normalizePropertyTreeValuePath('  Work // Done / ');
         const valueNodeId = buildPropertyValueNodeId('status', normalizedValuePath);
         const valueNode = keyNode?.children.get(valueNodeId);
 
         expect(valueNode?.notesWithValue).toEqual(new Set(['notes/keep.md']));
-        expect(valueNode?.displayPath).toBe('Work/Done');
+        expect(valueNode?.displayPath).toBe('Work // Done /');
         expect(tree.has('priority')).toBe(false);
     });
 
-    it('normalizes value display paths and keeps first-seen segment casing', () => {
+    it('normalizes full value strings and keeps first-seen display casing', () => {
         const db = createMockDb([
             {
                 path: 'notes/first.md',
@@ -150,7 +149,7 @@ describe('buildPropertyTreeFromDatabase', () => {
             },
             {
                 path: 'notes/second.md',
-                customProperty: [{ fieldKey: 'status', value: 'work/done' }]
+                customProperty: [{ fieldKey: 'status', value: 'work // done /' }]
             }
         ]);
 
@@ -158,10 +157,10 @@ describe('buildPropertyTreeFromDatabase', () => {
             includedPropertyKeys: new Set(['status'])
         });
         const keyNode = tree.get('status');
-        const valueNode = keyNode?.children.get(buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('work/done')));
+        const valueNode = keyNode?.children.get(buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('work // done /')));
 
-        expect(valueNode?.name).toBe('Work/Done');
-        expect(valueNode?.displayPath).toBe('Work/Done');
+        expect(valueNode?.name).toBe('Work // Done /');
+        expect(valueNode?.displayPath).toBe('Work // Done /');
         expect(valueNode?.notesWithValue).toEqual(new Set(['notes/first.md', 'notes/second.md']));
     });
 
@@ -334,8 +333,8 @@ describe('buildPropertyTreeFromDatabase', () => {
     });
 });
 
-describe('property value descendants', () => {
-    it('counts descendant values with cached totals and collects matching file paths', () => {
+describe('property value matching', () => {
+    it('counts exact value totals and collects matching file paths', () => {
         const db = createMockDb([
             {
                 path: 'notes/a.md',
@@ -375,14 +374,14 @@ describe('property value descendants', () => {
             return;
         }
 
-        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work'))).toBe(4);
+        expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work'))).toBe(1);
         expect(getTotalPropertyNoteCount(keyNode, normalizePropertyTreeValuePath('Work/Done'))).toBe(2);
 
-        const directPaths = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'), false);
+        const directPaths = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'));
         expect(directPaths).toEqual(new Set(['notes/c.md']));
 
-        const descendantPaths = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'), true);
-        expect(descendantPaths).toEqual(new Set(['notes/a.md', 'notes/b.md', 'notes/c.md', 'notes/f.md']));
+        const withDescendants = collectPropertyValueFilePaths(keyNode, normalizePropertyTreeValuePath('Work'));
+        expect(withDescendants).toEqual(new Set(['notes/c.md']));
 
         const directKeyPaths = collectPropertyKeyFilePaths(keyNode, false);
         expect(directKeyPaths).toEqual(new Set(['notes/e.md', 'notes/f.md']));
@@ -392,7 +391,7 @@ describe('property value descendants', () => {
         expect(allKeyPaths).toEqual(new Set(['notes/a.md', 'notes/b.md', 'notes/c.md', 'notes/d.md', 'notes/e.md', 'notes/f.md']));
     });
 
-    it('clears cached descendant totals when requested', () => {
+    it('keeps value totals exact after value-node mutations', () => {
         const db = createMockDb([
             {
                 path: 'notes/a.md',
@@ -414,7 +413,7 @@ describe('property value descendants', () => {
         }
 
         const workPath = normalizePropertyTreeValuePath('Work');
-        expect(getTotalPropertyNoteCount(keyNode, workPath)).toBe(2);
+        expect(getTotalPropertyNoteCount(keyNode, workPath)).toBe(0);
 
         const startedNodeId = buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('Work/Started'));
         keyNode.children.set(startedNodeId, {
@@ -428,10 +427,7 @@ describe('property value descendants', () => {
             notesWithValue: new Set(['notes/c.md'])
         });
 
-        expect(getTotalPropertyNoteCount(keyNode, workPath)).toBe(2);
-
-        clearPropertyNoteCountCache();
-        expect(getTotalPropertyNoteCount(keyNode, workPath)).toBe(3);
+        expect(getTotalPropertyNoteCount(keyNode, workPath)).toBe(0);
     });
 });
 

@@ -139,6 +139,19 @@ export class PropertyTreeService implements IPropertyTreeProvider {
             return new Set();
         }
 
+        if (node.kind === 'value') {
+            const cachedValuePaths = this.filePathsByNodeAndMode.get(node);
+            const cached = cachedValuePaths?.direct ?? cachedValuePaths?.withDescendants;
+            if (cached) {
+                return new Set(cached);
+            }
+
+            const filePaths = this.collectNodeFilePaths(node, includeDescendants);
+            const normalizedPaths = Array.from(filePaths);
+            this.filePathsByNodeAndMode.set(node, { direct: normalizedPaths, withDescendants: normalizedPaths });
+            return new Set(normalizedPaths);
+        }
+
         const modeKey = includeDescendants ? 'withDescendants' : 'direct';
         const cacheEntry = this.filePathsByNodeAndMode.get(node);
         const cachedPaths = cacheEntry?.[modeKey];
@@ -217,6 +230,6 @@ export class PropertyTreeService implements IPropertyTreeProvider {
             return new Set<string>();
         }
 
-        return collectPropertyValueFilePaths(keyNode, node.valuePath, includeDescendants);
+        return collectPropertyValueFilePaths(keyNode, node.valuePath);
     }
 }

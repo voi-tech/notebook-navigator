@@ -186,7 +186,7 @@ export const STRINGS_VI = {
                     title: 'Thuộc tính',
                     items: [
                         '`.key` Bao gồm ghi chú có khóa thuộc tính tùy chỉnh.',
-                        '`.key=value` Bao gồm ghi chú có giá trị thuộc tính tùy chỉnh (cũng khớp với giá trị lồng nhau như `value/subvalue`).',
+                        '`.key=value` Bao gồm ghi chú có giá trị thuộc tính tùy chỉnh.',
                         '`."Reading Status"` Bao gồm ghi chú có khóa thuộc tính chứa khoảng trắng.',
                         '`."Reading Status"="In Progress"` Khóa và giá trị có khoảng trắng phải được đặt trong dấu ngoặc kép.',
                         '`-.key` Loại trừ ghi chú có khóa thuộc tính tùy chỉnh.',

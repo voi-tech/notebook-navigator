@@ -186,7 +186,7 @@ export const STRINGS_EN = {
                     title: 'Properties',
                     items: [
                         '`.key` Include notes with custom property key.',
-                        '`.key=value` Include notes with custom property value (also matches nested values like `value/subvalue`).',
+                        '`.key=value` Include notes with custom property value.',
                         '`."Reading Status"` Include notes with a property key that contains whitespace.',
                         '`."Reading Status"="In Progress"` Keys and values with whitespace must be double-quoted.',
                         '`-.key` Exclude notes with custom property key.',

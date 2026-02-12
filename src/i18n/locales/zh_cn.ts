@@ -185,7 +185,7 @@ export const STRINGS_ZH_CN = {
                     title: '属性',
                     items: [
                         '`.key` 包含具有自定义属性键的笔记。',
-                        '`.key=value` 包含具有自定义属性值的笔记（也匹配嵌套值如 `value/subvalue`）。',
+                        '`.key=value` 包含具有自定义属性值的笔记。',
                         '`."Reading Status"` 包含属性键包含空格的笔记。',
                         '`."Reading Status"="In Progress"` 包含空格的键和值必须用双引号括起来。',
                         '`-.key` 排除具有自定义属性键的笔记。',

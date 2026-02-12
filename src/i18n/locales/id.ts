@@ -187,7 +187,7 @@ export const STRINGS_ID = {
                     title: 'Properti',
                     items: [
                         '`.key` Sertakan catatan dengan kunci properti kustom.',
-                        '`.key=value` Sertakan catatan dengan nilai properti kustom (juga mencocokkan nilai bersarang seperti `value/subvalue`).',
+                        '`.key=value` Sertakan catatan dengan nilai properti kustom.',
                         '`."Reading Status"` Sertakan catatan dengan kunci properti yang mengandung spasi.',
                         '`."Reading Status"="In Progress"` Kunci dan nilai yang mengandung spasi harus diapit tanda kutip ganda.',
                         '`-.key` Kecualikan catatan dengan kunci properti kustom.',

@@ -186,7 +186,7 @@ export const STRINGS_PL = {
                     title: 'Właściwości',
                     items: [
                         '`.key` Uwzględnij notatki z niestandardowym kluczem właściwości.',
-                        '`.key=value` Uwzględnij notatki z niestandardową wartością właściwości (dopasowuje również zagnieżdżone wartości jak `value/subvalue`).',
+                        '`.key=value` Uwzględnij notatki z niestandardową wartością właściwości.',
                         '`."Reading Status"` Uwzględnij notatki z kluczem właściwości zawierającym spacje.',
                         '`."Reading Status"="In Progress"` Klucze i wartości ze spacjami muszą być ujęte w podwójne cudzysłowy.',
                         '`-.key` Wyklucz notatki z niestandardowym kluczem właściwości.',

@@ -186,7 +186,7 @@ export const STRINGS_FR = {
                     title: 'Propriétés',
                     items: [
                         '`.key` Inclure les notes avec une clé de propriété personnalisée.',
-                        '`.key=value` Inclure les notes avec une valeur de propriété personnalisée (correspond aussi aux valeurs imbriquées comme `value/subvalue`).',
+                        '`.key=value` Inclure les notes avec une valeur de propriété personnalisée.',
                         '`."Reading Status"` Inclure les notes avec une clé de propriété contenant des espaces.',
                         '`."Reading Status"="In Progress"` Les clés et valeurs contenant des espaces doivent être entre guillemets doubles.',
                         '`-.key` Exclure les notes avec une clé de propriété personnalisée.',

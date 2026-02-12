@@ -186,7 +186,7 @@ export const STRINGS_IT = {
                     title: 'Proprietà',
                     items: [
                         '`.key` Includi note con chiave di proprietà personalizzata.',
-                        '`.key=value` Includi note con valore di proprietà personalizzata (corrisponde anche a valori annidati come `value/subvalue`).',
+                        '`.key=value` Includi note con valore di proprietà personalizzata.',
                         '`."Reading Status"` Includi note con una chiave di proprietà che contiene spazi.',
                         '`."Reading Status"="In Progress"` Chiavi e valori con spazi devono essere racchiusi tra virgolette doppie.',
                         '`-.key` Escludi note con chiave di proprietà personalizzata.',

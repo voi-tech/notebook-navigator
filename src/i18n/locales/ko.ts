@@ -185,7 +185,7 @@ export const STRINGS_KO = {
                     title: '속성',
                     items: [
                         '`.key` 사용자 정의 속성 키가 있는 노트를 포함합니다.',
-                        '`.key=value` 사용자 정의 속성 값이 있는 노트를 포함합니다 (`value/subvalue`와 같은 중첩 값도 일치).',
+                        '`.key=value` 사용자 정의 속성 값이 있는 노트를 포함합니다.',
                         '`."Reading Status"` 공백이 포함된 속성 키가 있는 노트를 포함합니다.',
                         '`."Reading Status"="In Progress"` 공백이 포함된 키와 값은 큰따옴표로 묶어야 합니다.',
                         '`-.key` 사용자 정의 속성 키가 있는 노트를 제외합니다.',

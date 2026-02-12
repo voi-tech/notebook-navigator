@@ -17,7 +17,7 @@
  */
 
 import { casefold } from './recordUtils';
-import { normalizePropertyTreeValuePath } from './propertyTree';
+import { matchesPropertyValuePath, normalizePropertyTreeValuePath } from './propertyTree';
 
 // Determines evaluation mode for search tokens (filter uses AND for all, tag uses expression tree)
 export type FilterMode = 'filter' | 'tag';
@@ -552,7 +552,8 @@ const propertyTokenMatches = (propertiesByKey: Map<string, string[]>, token: Pro
         return true;
     }
 
-    return values.some(value => value === token.value || value.startsWith(`${token.value}/`));
+    const propertyValue = token.value;
+    return values.some(value => matchesPropertyValuePath(value, propertyValue));
 };
 
 // Recognized relative date keywords for @today, @yesterday, etc.
@@ -1999,19 +2000,15 @@ export function updateFilterQueryWithProperty(
 
     let normalizedValue: string | null = null;
     if (typeof value === 'string') {
-        const compactSegments = value
-            .split('/')
-            .map(segment => segment.trim())
-            .filter(Boolean)
-            .join('/');
-        if (!compactSegments) {
+        const normalizedCandidate = normalizePropertyTreeValuePath(value);
+        if (!normalizedCandidate) {
             return {
                 query: trimmed,
                 action: 'removed',
                 changed: false
             };
         }
-        normalizedValue = normalizePropertyTreeValuePath(compactSegments);
+        normalizedValue = normalizedCandidate;
     }
 
     const propertyToken: PropertySearchToken = { key: normalizedKey, value: normalizedValue };

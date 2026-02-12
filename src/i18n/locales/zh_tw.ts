@@ -185,7 +185,7 @@ export const STRINGS_ZH_TW = {
                     title: '屬性',
                     items: [
                         '`.key` 包含具有自訂屬性鍵的筆記。',
-                        '`.key=value` 包含具有自訂屬性值的筆記（也匹配巢狀值如 `value/subvalue`）。',
+                        '`.key=value` 包含具有自訂屬性值的筆記。',
                         '`."Reading Status"` 包含屬性鍵包含空格的筆記。',
                         '`."Reading Status"="In Progress"` 包含空格的鍵和值必須用雙引號括起來。',
                         '`-.key` 排除具有自訂屬性鍵的筆記。',
