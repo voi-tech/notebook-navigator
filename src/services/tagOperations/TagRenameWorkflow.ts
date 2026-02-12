@@ -18,7 +18,7 @@
 
 import type { App } from 'obsidian';
 import { strings } from '../../i18n';
-import type { TagTreeService } from '../TagTreeService';
+import type { ITagTreeProvider } from '../../interfaces/ITagTreeProvider';
 import type { MetadataService } from '../MetadataService';
 import { collectRenameFiles, RenameFile, TagDescriptor, TagReplacement, isDescendantRename } from '../tagRename/TagRenameEngine';
 import { TagRenameModal } from '../../modals/TagRenameModal';
@@ -63,7 +63,7 @@ export class TagRenameWorkflow {
     constructor(
         private readonly app: App,
         private readonly fileMutations: TagFileMutations,
-        private readonly getTagTreeService: () => TagTreeService | null,
+        private readonly getTagTreeService: () => ITagTreeProvider | null,
         private readonly getMetadataService: () => MetadataService | null,
         private readonly resolveDisplayTagPathInternal: (tagPath: string) => string,
         private readonly getHooks: () => TagRenameHooks

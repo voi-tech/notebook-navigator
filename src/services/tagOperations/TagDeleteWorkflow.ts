@@ -19,7 +19,7 @@
 import { TFile } from 'obsidian';
 import type { App } from 'obsidian';
 import { strings } from '../../i18n';
-import type { TagTreeService } from '../TagTreeService';
+import type { ITagTreeProvider } from '../../interfaces/ITagTreeProvider';
 import type { MetadataService } from '../MetadataService';
 import { ConfirmModal } from '../../modals/ConfirmModal';
 import { TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../../types';
@@ -48,7 +48,7 @@ export class TagDeleteWorkflow {
     constructor(
         private readonly app: App,
         private readonly fileMutations: TagFileMutations,
-        private readonly getTagTreeService: () => TagTreeService | null,
+        private readonly getTagTreeService: () => ITagTreeProvider | null,
         private readonly getMetadataService: () => MetadataService | null,
         private readonly getHooks: () => TagDeleteHooks
     ) {}

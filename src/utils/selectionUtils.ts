@@ -20,8 +20,8 @@ import { TFile, App } from 'obsidian';
 import { SelectionDispatch, SelectionState } from '../context/SelectionContext';
 import { ItemType, type NavigationItemType, type VisibilityPreferences } from '../types';
 import { NotebookNavigatorSettings } from '../settings';
-import { TagTreeService } from '../services/TagTreeService';
-import type { PropertyTreeService } from '../services/PropertyTreeService';
+import type { IPropertyTreeProvider } from '../interfaces/IPropertyTreeProvider';
+import type { ITagTreeProvider } from '../interfaces/ITagTreeProvider';
 import { getFilesForFolder, getFilesForProperty, getFilesForTag } from './fileFinder';
 
 /**
@@ -60,8 +60,8 @@ export function getFilesForSelection(
     settings: NotebookNavigatorSettings,
     visibility: VisibilityPreferences,
     app: App,
-    tagTreeService: TagTreeService | null,
-    propertyTreeService: PropertyTreeService | null
+    tagTreeService: ITagTreeProvider | null,
+    propertyTreeService: IPropertyTreeProvider | null
 ): TFile[] {
     return getFilesForNavigationSelection(
         {
@@ -90,8 +90,8 @@ export function getFilesForNavigationSelection(
     settings: NotebookNavigatorSettings,
     visibility: VisibilityPreferences,
     app: App,
-    tagTreeService: TagTreeService | null,
-    propertyTreeService: PropertyTreeService | null
+    tagTreeService: ITagTreeProvider | null,
+    propertyTreeService: IPropertyTreeProvider | null
 ): TFile[] {
     if (selectionScope.selectionType === ItemType.FOLDER && selectionScope.selectedFolder) {
         return getFilesForFolder(selectionScope.selectedFolder, settings, visibility, app);

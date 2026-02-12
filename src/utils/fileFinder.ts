@@ -31,7 +31,6 @@ import {
 } from './fileFilters';
 import { shouldDisplayFile, FILE_VISIBILITY } from './fileTypeUtils';
 import { getEffectiveSortOption, isPropertySortOption, sortFiles } from './sortUtils';
-import { TagTreeService } from '../services/TagTreeService';
 import { getDBInstanceOrNull } from '../storage/fileOperations';
 import { extractMetadata } from '../utils/metadataExtractor';
 import { METADATA_SENTINEL } from '../storage/IndexedDBStorage';
@@ -50,16 +49,16 @@ import {
 import { getCachedFileTags } from './tagUtils';
 import { casefold, normalizePinnedNoteContext } from './recordUtils';
 import {
+    buildPropertyKeyNodeId,
     buildPropertyValueNodeId,
-    collectPropertyKeyFilePaths,
-    collectPropertyValueFilePaths,
     isPropertyKeyOnlyValuePath,
     type PropertySelectionNodeId,
     normalizePropertyTreeValuePath,
     parsePropertyNodeId
 } from './propertyTree';
 import { getCachedCommaSeparatedList } from './commaSeparatedListUtils';
-import type { PropertyTreeService } from '../services/PropertyTreeService';
+import type { IPropertyTreeProvider } from '../interfaces/IPropertyTreeProvider';
+import type { ITagTreeProvider } from '../interfaces/ITagTreeProvider';
 
 interface CollectPinnedPathsOptions {
     restrictToFolderPath?: string;
@@ -407,7 +406,7 @@ export function getFilesForTag(
     settings: NotebookNavigatorSettings,
     visibility: VisibilityPreferences,
     app: App,
-    tagTreeService: TagTreeService | null
+    tagTreeService: ITagTreeProvider | null
 ): TFile[] {
     // Get all files based on visibility setting, with proper filtering
     let allFiles: TFile[] = [];
@@ -478,7 +477,7 @@ export function getFilesForTag(
         // For regular tags, only consider markdown files since only they can have tags
         const markdownFiles = baseFiles.filter(file => file.extension === 'md');
 
-        // Find the selected tag node using TagTreeService
+        // Find the selected tag node using the tag tree provider
         const selectedNode = tagTreeService?.findTagNode(tag) || null;
 
         if (selectedNode) {
@@ -530,7 +529,7 @@ export function getFilesForProperty(
     settings: NotebookNavigatorSettings,
     visibility: VisibilityPreferences,
     app: App,
-    propertyTreeService: PropertyTreeService | null = null
+    propertyTreeService: IPropertyTreeProvider | null = null
 ): TFile[] {
     const includesAnyProperty = propertyNodeId === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
     const configuredPropertyKeys = getConfiguredPropertyKeySet(settings.customPropertyFields);
@@ -570,46 +569,26 @@ export function getFilesForProperty(
             return new Set<string>();
         }
 
-        if (!propertyTreeService) {
-            return null;
-        }
-
-        const propertyTree = propertyTreeService.getPropertyTree();
-        if (propertyTree.size === 0) {
+        if (!propertyTreeService || !propertyTreeService.hasNodes()) {
             return null;
         }
 
         if (includesAnyProperty) {
-            const allPropertyPaths = new Set<string>();
-            configuredPropertyKeys.forEach(configuredKey => {
-                const keyNode = propertyTree.get(configuredKey);
-                if (!keyNode) {
-                    return;
-                }
-                keyNode.notesWithValue.forEach(path => allPropertyPaths.add(path));
-            });
-            return allPropertyPaths;
+            // Root properties selection aggregates across configured keys through the provider contract.
+            return propertyTreeService.collectFilesForKeys(configuredPropertyKeys);
         }
 
         if (normalizedValue === null) {
-            const keyNode = propertyTree.get(selectedPropertyKey);
-            if (!keyNode) {
-                return new Set<string>();
-            }
-            return collectPropertyKeyFilePaths(keyNode, visibility.includeDescendantNotes);
+            return propertyTreeService.collectFilePaths(buildPropertyKeyNodeId(selectedPropertyKey), visibility.includeDescendantNotes);
         }
 
-        const keyNode = propertyTree.get(selectedPropertyKey);
-        if (!keyNode) {
-            return new Set<string>();
-        }
-
-        const valueNode = propertyTreeService.findNode(buildPropertyValueNodeId(selectedPropertyKey, normalizedValue));
+        const valueNodeId = buildPropertyValueNodeId(selectedPropertyKey, normalizedValue);
+        const valueNode = propertyTreeService.findNode(valueNodeId);
         if (!valueNode || valueNode.kind !== 'value') {
             return new Set<string>();
         }
 
-        return collectPropertyValueFilePaths(keyNode, normalizedValue, visibility.includeDescendantNotes);
+        return propertyTreeService.collectFilePaths(valueNodeId, visibility.includeDescendantNotes);
     })();
 
     const matchesCurrentVisibility = (file: TFile): boolean => {

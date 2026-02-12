@@ -18,7 +18,7 @@
 
 import { App, TFile, parseFrontMatterAliases, parseFrontMatterTags, TagCache } from 'obsidian';
 import { normalizeTagPathValue } from '../../utils/tagPrefixMatcher';
-import type { TagTreeService } from '../TagTreeService';
+import type { ITagTreeProvider } from '../../interfaces/ITagTreeProvider';
 import { mutateFrontmatterTagFields } from './frontmatterTagMutator';
 import { showNotice } from '../../utils/noticeUtils';
 
@@ -328,7 +328,7 @@ export class RenameFile {
  * Produces a list of RenameFile instances that capture inline tag positions
  * and whether matching values exist in frontmatter.
  */
-export function collectRenameFiles(app: App, tag: TagDescriptor, tagTreeProvider?: TagTreeService | null): RenameFile[] {
+export function collectRenameFiles(app: App, tag: TagDescriptor, tagTreeProvider?: ITagTreeProvider | null): RenameFile[] {
     const targets: RenameFile[] = [];
     const metadataCache = app.metadataCache;
     const candidates = new Set<string>();

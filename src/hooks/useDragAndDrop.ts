@@ -749,7 +749,7 @@ export function useDragAndDrop(containerRef: React.RefObject<HTMLElement | null>
                 return;
             }
 
-            const keyNode = propertyTreeService.getPropertyTree().get(resolvedNodeKey);
+            const keyNode = propertyTreeService.getKeyNode(resolvedNodeKey);
             const propertyKey = (keyNode?.name ?? configuredDisplayName ?? resolvedNodeKey).trim();
             if (propertyKey.length === 0) {
                 return;

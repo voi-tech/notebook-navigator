@@ -20,7 +20,7 @@ import type { App } from 'obsidian';
 import { TFile } from 'obsidian';
 import { strings } from '../../i18n';
 import { ConfirmModal } from '../../modals/ConfirmModal';
-import type { TagTreeService } from '../TagTreeService';
+import type { ITagTreeProvider } from '../../interfaces/ITagTreeProvider';
 import type { RenameFile, TagDescriptor } from '../tagRename/TagRenameEngine';
 import type { TagUsageSummary } from './types';
 import { normalizeTagPathValue } from '../../utils/tagPrefixMatcher';
@@ -44,7 +44,7 @@ export async function yieldToEventLoop(): Promise<void> {
  * Collects all file paths that contain the specified tag
  * Returns null if tag tree service is unavailable
  */
-export function collectPreviewPaths(tag: TagDescriptor, tagTreeService: TagTreeService | null): string[] | null {
+export function collectPreviewPaths(tag: TagDescriptor, tagTreeService: ITagTreeProvider | null): string[] | null {
     if (tag.canonicalName.length === 0) {
         return [];
     }
@@ -93,7 +93,7 @@ export function buildUsageSummary(app: App, targets: RenameFile[]): TagUsageSumm
  * Resolves canonical tag path to its display path using the tag tree
  * Returns original path if tag tree is unavailable or tag not found
  */
-export function resolveDisplayTagPath(tagPath: string, tagTreeService: TagTreeService | null): string {
+export function resolveDisplayTagPath(tagPath: string, tagTreeService: ITagTreeProvider | null): string {
     const canonical = normalizeTagPathValue(tagPath);
     if (canonical.length === 0) {
         return tagPath;

@@ -25,7 +25,7 @@ import { TAGGED_TAG_ID } from '../../src/types';
 import type { NotebookNavigatorSettings } from '../../src/settings';
 import { DEFAULT_SETTINGS } from '../../src/settings/defaultSettings';
 import type { ISettingsProvider } from '../../src/interfaces/ISettingsProvider';
-import type { TagTreeService } from '../../src/services/TagTreeService';
+import type { ITagTreeProvider } from '../../src/interfaces/ITagTreeProvider';
 import type { MetadataService } from '../../src/services/MetadataService';
 import { createVaultProfile, getActiveVaultProfile } from '../../src/utils/vaultProfiles';
 import type { VaultProfile } from '../../src/settings/types';
@@ -617,7 +617,7 @@ describe('TagOperations tag rename workflow', () => {
     function createTagOperationsInstance(
         overrides: {
             settings?: NotebookNavigatorSettings;
-            tagTree?: Partial<TagTreeService> | null;
+            tagTree?: Partial<ITagTreeProvider> | null;
             metadataService?: Partial<MetadataService> | null;
         } = {}
     ) {
@@ -629,7 +629,7 @@ describe('TagOperations tag rename workflow', () => {
         return new TestTagOperations(
             app,
             () => settings,
-            () => tagTree as TagTreeService | null,
+            () => tagTree as ITagTreeProvider | null,
             () => metadataService as MetadataService | null
         );
     }

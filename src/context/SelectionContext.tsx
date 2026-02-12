@@ -18,13 +18,14 @@
 
 import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { App, TFile, TFolder } from 'obsidian';
-import { NavigationItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, STORAGE_KEYS } from '../types';
+import { NavigationItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, STORAGE_KEYS, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import { getFilesForFolder, getFilesForProperty, getFilesForTag } from '../utils/fileFinder';
 import { useSettingsState } from './SettingsContext';
 import { useUXPreferences } from './UXPreferencesContext';
 import { localStorage } from '../utils/localStorage';
 import type { NotebookNavigatorAPI } from '../api/NotebookNavigatorAPI';
-import type { TagTreeService } from '../services/TagTreeService';
+import type { IPropertyTreeProvider } from '../interfaces/IPropertyTreeProvider';
+import type { ITagTreeProvider } from '../interfaces/ITagTreeProvider';
 import type { TagDeleteEventPayload, TagRenameEventPayload } from '../services/TagOperations';
 import { useServices } from './ServicesContext';
 import { normalizeTagPath } from '../utils/tagUtils';
@@ -32,7 +33,6 @@ import {
     isPropertyFeatureEnabled,
     isPropertySelectionNodeIdConfigured,
     parseStoredPropertySelectionNodeId,
-    resolvePropertySelectionNodeId,
     type PropertySelectionNodeId
 } from '../utils/propertyTree';
 
@@ -562,7 +562,8 @@ interface SelectionProviderProps {
     children: ReactNode;
     app: App; // Obsidian App instance
     api: NotebookNavigatorAPI | null; // API for triggering events
-    tagTreeService: TagTreeService | null; // Tag tree service for tag operations
+    tagTreeService: ITagTreeProvider | null; // Tag tree service for tag operations
+    propertyTreeService: IPropertyTreeProvider | null; // Property tree service for property operations
     onFileRename?: (listenerId: string, callback: (oldPath: string, newPath: string) => void) => void;
     onFileRenameUnsubscribe?: (listenerId: string) => void;
     isMobile: boolean;
@@ -573,6 +574,7 @@ export function SelectionProvider({
     app,
     api,
     tagTreeService,
+    propertyTreeService,
     onFileRename,
     onFileRenameUnsubscribe,
     isMobile
@@ -584,7 +586,7 @@ export function SelectionProvider({
     const showHiddenItems = uxPreferences.showHiddenItems;
     const propertyFeatureEnabled = isPropertyFeatureEnabled(settings);
     // Get tag operations service for subscribing to tag rename and delete events
-    const { tagOperations, propertyTreeService } = useServices();
+    const { tagOperations } = useServices();
 
     // Load initial state from localStorage and vault
     const loadInitialState = useCallback((): SelectionState => {
@@ -813,12 +815,11 @@ export function SelectionProvider({
                 return;
             }
 
-            const propertyTree = propertyTreeService.getPropertyTree();
-            if (propertyTree.size === 0) {
+            if (!propertyTreeService.hasNodes()) {
                 return;
             }
 
-            const resolvedSelectionNodeId = resolvePropertySelectionNodeId(propertyTree, selectedProperty);
+            const resolvedSelectionNodeId = propertyTreeService.resolveSelectionNodeId(selectedProperty);
             if (resolvedSelectionNodeId !== selectedProperty) {
                 dispatch({ type: 'SET_SELECTED_PROPERTY', nodeId: resolvedSelectionNodeId });
             }
@@ -826,6 +827,40 @@ export function SelectionProvider({
 
         return removeListener;
     }, [app.vault, dispatch, propertyTreeService]);
+
+    useEffect(() => {
+        if (!tagTreeService) {
+            return;
+        }
+
+        const removeListener = tagTreeService.addTreeUpdateListener(() => {
+            const currentState = stateRef.current;
+            const selectedTag = currentState.selectedTag;
+            if (currentState.selectionType !== 'tag' || !selectedTag) {
+                return;
+            }
+
+            if (selectedTag === TAGGED_TAG_ID || selectedTag === UNTAGGED_TAG_ID) {
+                return;
+            }
+
+            if (!tagTreeService.hasNodes()) {
+                return;
+            }
+
+            const resolvedTagPath = tagTreeService.resolveSelectionTagPath(selectedTag);
+            if (!resolvedTagPath) {
+                enhancedDispatch({ type: 'SET_SELECTED_FOLDER', folder: app.vault.getRoot() });
+                return;
+            }
+
+            if (resolvedTagPath !== selectedTag) {
+                enhancedDispatch({ type: 'SET_SELECTED_TAG', tag: resolvedTagPath });
+            }
+        });
+
+        return removeListener;
+    }, [app.vault, enhancedDispatch, tagTreeService]);
 
     // Subscribe to tag operations and update selection when tags are renamed or deleted
     useEffect(() => {
@@ -934,12 +969,11 @@ export function SelectionProvider({
                 return;
             }
 
-            const propertyTree = propertyTreeService.getPropertyTree();
-            if (propertyTree.size === 0) {
+            if (!propertyTreeService.hasNodes()) {
                 return;
             }
 
-            const resolvedSelectionNodeId = resolvePropertySelectionNodeId(propertyTree, state.selectedProperty);
+            const resolvedSelectionNodeId = propertyTreeService.resolveSelectionNodeId(state.selectedProperty);
             if (resolvedSelectionNodeId === state.selectedProperty) {
                 return;
             }

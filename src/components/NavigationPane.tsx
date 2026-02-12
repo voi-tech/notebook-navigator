@@ -1391,6 +1391,10 @@ export const NavigationPane = React.memo(
         // Recursively collects all descendant tag paths from a given tag
         const getAllDescendantTags = useCallback(
             (tagPath: string): string[] => {
+                if (tagTreeService) {
+                    return Array.from(tagTreeService.collectDescendantTagPaths(tagPath));
+                }
+
                 const descendants: string[] = [];
                 const tagNode = findTagNode(tagTree, tagPath);
 
@@ -1408,7 +1412,7 @@ export const NavigationPane = React.memo(
                 collectDescendants(tagNode);
                 return descendants;
             },
-            [tagTree]
+            [tagTree, tagTreeService]
         );
 
         const getAllDescendantPropertyNodeIds = useCallback(
