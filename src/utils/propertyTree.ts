@@ -460,6 +460,22 @@ export function normalizePropertyTreeValuePath(rawValue: string): string {
     return normalizedSegments.join('/');
 }
 
+function normalizePropertyTreeDisplayValuePath(rawValue: string): string {
+    const displaySegments: string[] = [];
+    const parts = rawValue.split('/');
+
+    for (const rawPart of parts) {
+        const displaySegment = rawPart.trim();
+        if (!displaySegment) {
+            continue;
+        }
+
+        displaySegments.push(displaySegment);
+    }
+
+    return displaySegments.join('/');
+}
+
 function getSelectedPropertyNodeId(selection: PropertySelectionValue | null): PropertySelectionNodeId | null {
     if (!selection) {
         return null;
@@ -600,7 +616,7 @@ export function buildPropertyTreeFromDatabase(
                 continue;
             }
 
-            const displayValuePath = propertyEntry.value.trim();
+            const displayValuePath = normalizePropertyTreeDisplayValuePath(propertyEntry.value);
             if (!displayValuePath) {
                 continue;
             }

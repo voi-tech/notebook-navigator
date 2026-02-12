@@ -230,6 +230,23 @@ describe('tagged count visibility', () => {
     });
 });
 
+describe('tag tree ordering', () => {
+    it('uses lexical tie-breakers when natural sorting considers paths equal', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/a.md',
+                tags: ['#group/tag1', '#group/tag01']
+            }
+        ]);
+
+        const { tagTree } = buildTagTreeFromDatabase(db);
+        const groupNode = findTagNode(tagTree, 'group');
+        const childKeys = Array.from(groupNode?.children.keys() ?? []);
+
+        expect(childKeys).toEqual(['group/tag01', 'group/tag1']);
+    });
+});
+
 describe('excludeFromTagTree', () => {
     it('filters trailing wildcard tag patterns', () => {
         const child: TagTreeNode = {

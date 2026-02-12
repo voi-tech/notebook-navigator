@@ -138,7 +138,31 @@ describe('buildPropertyTreeFromDatabase', () => {
         const valueNode = keyNode?.children.get(valueNodeId);
 
         expect(valueNode?.notesWithValue).toEqual(new Set(['notes/keep.md']));
+        expect(valueNode?.displayPath).toBe('Work/Done');
         expect(tree.has('priority')).toBe(false);
+    });
+
+    it('normalizes value display paths and keeps first-seen segment casing', () => {
+        const db = createMockDb([
+            {
+                path: 'notes/first.md',
+                customProperty: [{ fieldKey: 'Status', value: '  Work // Done / ' }]
+            },
+            {
+                path: 'notes/second.md',
+                customProperty: [{ fieldKey: 'status', value: 'work/done' }]
+            }
+        ]);
+
+        const tree = buildPropertyTreeFromDatabase(db, {
+            includedPropertyKeys: new Set(['status'])
+        });
+        const keyNode = tree.get('status');
+        const valueNode = keyNode?.children.get(buildPropertyValueNodeId('status', normalizePropertyTreeValuePath('work/done')));
+
+        expect(valueNode?.name).toBe('Work/Done');
+        expect(valueNode?.displayPath).toBe('Work/Done');
+        expect(valueNode?.notesWithValue).toEqual(new Set(['notes/first.md', 'notes/second.md']));
     });
 
     it('normalizes included property keys before filtering', () => {
