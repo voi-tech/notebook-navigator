@@ -109,11 +109,11 @@ export class SelectionAPI {
      * @returns Object with one selected navigation target (folder, tag, property, or none)
      */
     getNavItem(): NavItem {
-        if (this.selectionState.navigationFolder) {
+        if (this.selectionState.navigationProperty) {
             return {
-                folder: this.selectionState.navigationFolder,
+                folder: null,
                 tag: null,
-                property: null
+                property: this.selectionState.navigationProperty
             };
         } else if (this.selectionState.navigationTag) {
             return {
@@ -121,11 +121,11 @@ export class SelectionAPI {
                 tag: this.selectionState.navigationTag,
                 property: null
             };
-        } else if (this.selectionState.navigationProperty) {
+        } else if (this.selectionState.navigationFolder) {
             return {
-                folder: null,
+                folder: this.selectionState.navigationFolder,
                 tag: null,
-                property: this.selectionState.navigationProperty
+                property: null
             };
         }
         return {
@@ -159,20 +159,8 @@ export class SelectionAPI {
             this.selectionState.navigationProperty = null;
         }
 
-        // Build the NavItem with proper discriminated union
-        let item: NavItem;
-        if (property) {
-            item = { folder: null, tag: null, property };
-        } else if (folder) {
-            item = { folder, tag: null, property: null };
-        } else if (tag) {
-            item = { folder: null, tag, property: null };
-        } else {
-            item = { folder: null, tag: null, property: null };
-        }
-
         // Trigger the consolidated navigation event
-        this.api.trigger('nav-item-changed', { item });
+        this.api.trigger('nav-item-changed', { item: this.getNavItem() });
     }
 
     /**

@@ -251,7 +251,7 @@ view is active, and navigation selection is restored from localStorage on startu
 
 | Method         | Description                  | Returns          |
 | -------------- | ---------------------------- | ---------------- |
-| `getNavItem()` | Get selected folder or tag   | `NavItem`        |
+| `getNavItem()` | Get selected folder, tag, or property | `NavItem`        |
 | `getCurrent()` | Get complete selection state | `SelectionState` |
 
 ```typescript
@@ -261,6 +261,8 @@ if (navItem.folder) {
   console.log('Folder selected:', navItem.folder.path);
 } else if (navItem.tag) {
   console.log('Tag selected:', navItem.tag);
+} else if (navItem.property) {
+  console.log('Property selected:', navItem.property);
 } else {
   console.log('Nothing selected in navigation pane');
 }
@@ -387,6 +389,8 @@ const navRef = nn.on('nav-item-changed', ({ item }) => {
     console.log('Folder selected:', item.folder.path);
   } else if (item.tag) {
     console.log('Tag selected:', item.tag);
+  } else if (item.property) {
+    console.log('Property selected:', item.property);
   } else {
     console.log('Navigation selection cleared');
   }

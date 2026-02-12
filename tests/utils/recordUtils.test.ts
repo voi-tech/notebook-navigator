@@ -93,18 +93,25 @@ describe('pinned note record helpers', () => {
             tag: false,
             property: false
         });
+        expect(normalizePinnedNoteContext({ folder: true, tag: true })).toEqual({
+            folder: true,
+            tag: true,
+            property: true
+        });
     });
 
     it('clones pinned note records into null-prototype objects with normalized contexts', () => {
         const cloned = clonePinnedNotesRecord({
             'a.md': { folder: true, tag: false, property: false },
             'b.md': { folder: 'true' },
-            'c.md': null
+            'c.md': null,
+            'd.md': { folder: true, tag: true }
         });
 
         expect(Object.getPrototypeOf(cloned)).toBeNull();
         expect(cloned['a.md']).toEqual({ folder: true, tag: false, property: false });
         expect(cloned['b.md']).toEqual({ folder: false, tag: false, property: false });
         expect(cloned['c.md']).toEqual({ folder: false, tag: false, property: false });
+        expect(cloned['d.md']).toEqual({ folder: true, tag: true, property: true });
     });
 });

@@ -365,7 +365,8 @@ export class FileMetadataService extends BaseMetadataService {
                 settings.pinnedNotes = {};
             }
 
-            if (!settings.pinnedNotes[filePath]) {
+            const existing = settings.pinnedNotes[filePath];
+            if (!existing) {
                 // Create new pin with only specified context
                 settings.pinnedNotes[filePath] = {
                     folder: context === 'folder',
@@ -373,15 +374,14 @@ export class FileMetadataService extends BaseMetadataService {
                     property: context === 'property'
                 };
             } else {
+                const normalized = normalizePinnedNoteContext(existing);
+                settings.pinnedNotes[filePath] = normalized;
+
                 // Toggle the specific context
-                settings.pinnedNotes[filePath][context] = !settings.pinnedNotes[filePath][context];
+                normalized[context] = !normalized[context];
 
                 // Remove if unpinned from all contexts
-                if (
-                    !settings.pinnedNotes[filePath].folder &&
-                    !settings.pinnedNotes[filePath].tag &&
-                    !settings.pinnedNotes[filePath].property
-                ) {
+                if (!normalized.folder && !normalized.tag && !normalized.property) {
                     delete settings.pinnedNotes[filePath];
                 }
             }
@@ -420,8 +420,10 @@ export class FileMetadataService extends BaseMetadataService {
                     continue;
                 }
 
-                if (!existing[context]) {
-                    existing[context] = true;
+                const normalized = normalizePinnedNoteContext(existing);
+                if (!normalized[context]) {
+                    normalized[context] = true;
+                    settings.pinnedNotes[filePath] = normalized;
                     changed = true;
                     pinnedCount += 1;
                 }

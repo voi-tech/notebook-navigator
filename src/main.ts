@@ -76,7 +76,13 @@ import {
 } from './utils/iconizeFormat';
 import { normalizePropertyColorMapKey, normalizePropertyColorMapRecord } from './utils/propertyColorMapFormat';
 import { normalizeUXIconMapRecord } from './utils/uxIcons';
-import { isBooleanRecordValue, isPlainObjectRecordValue, isStringRecordValue, sanitizeRecord } from './utils/recordUtils';
+import {
+    clonePinnedNotesRecord,
+    isBooleanRecordValue,
+    isPlainObjectRecordValue,
+    isStringRecordValue,
+    sanitizeRecord
+} from './utils/recordUtils';
 import { isRecord } from './utils/typeGuards';
 import { runAsyncAction } from './utils/async';
 import { resetHiddenToggleIfNoSources } from './utils/exclusionUtils';
@@ -1838,6 +1844,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.settings.navigationSeparators = sanitizeBooleanMap(this.settings.navigationSeparators);
         this.settings.externalIconProviders = sanitizeBooleanMap(this.settings.externalIconProviders);
         this.settings.syncModes = sanitizeSettingsSyncMap(this.settings.syncModes);
+        this.settings.pinnedNotes = clonePinnedNotesRecord(this.settings.pinnedNotes);
     }
 
     private normalizeIconSettings(settings: NotebookNavigatorSettings): void {

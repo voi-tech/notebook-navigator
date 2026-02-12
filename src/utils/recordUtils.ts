@@ -98,10 +98,15 @@ export function normalizePinnedNoteContext(value: unknown): PinnedNoteContextVal
         return { folder: false, tag: false, property: false };
     }
 
+    const folder = value.folder === true;
+    const tag = value.tag === true;
+
     return {
-        folder: value.folder === true,
-        tag: value.tag === true,
-        property: value.property === true
+        folder,
+        tag,
+        // Legacy pinned context values only stored folder+tag.
+        // Treating both as true implies the file was pinned everywhere before property context existed.
+        property: value.property === true || (!Object.prototype.hasOwnProperty.call(value, 'property') && folder && tag)
     };
 }
 
