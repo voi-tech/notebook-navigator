@@ -226,7 +226,7 @@ export function isPropertyFeatureEnabled(settings: NotebookNavigatorSettings): b
         return false;
     }
 
-    return getConfiguredPropertyKeySet(settings).size > 0;
+    return getConfiguredPropertyKeySet(settings.customPropertyFields).size > 0;
 }
 
 function normalizePropertyTreeKey(value: string): string {
@@ -298,15 +298,14 @@ function sortPropertyTreeNodes(tree: Map<string, PropertyTreeNode>): Map<string,
     return sortedTree;
 }
 
-function getConfiguredPropertyKeySet(settings: NotebookNavigatorSettings): ReadonlySet<string> {
-    const cacheKey = settings.customPropertyFields;
-    const cached = configuredPropertyKeyCache.get(cacheKey);
+export function getConfiguredPropertyKeySet(customPropertyFields: string): ReadonlySet<string> {
+    const cached = configuredPropertyKeyCache.get(customPropertyFields);
     if (cached) {
         return cached;
     }
 
     const keys = new Set<string>();
-    for (const fieldName of getCachedCommaSeparatedList(cacheKey)) {
+    for (const fieldName of getCachedCommaSeparatedList(customPropertyFields)) {
         const normalized = casefold(fieldName);
         if (!normalized) {
             continue;
@@ -314,7 +313,7 @@ function getConfiguredPropertyKeySet(settings: NotebookNavigatorSettings): Reado
         keys.add(normalized);
     }
 
-    configuredPropertyKeyCache.set(cacheKey, keys);
+    configuredPropertyKeyCache.set(customPropertyFields, keys);
     return keys;
 }
 
@@ -331,7 +330,7 @@ export function isPropertySelectionNodeIdConfigured(
         return false;
     }
 
-    return getConfiguredPropertyKeySet(settings).has(parsed.key);
+    return getConfiguredPropertyKeySet(settings.customPropertyFields).has(parsed.key);
 }
 
 /**

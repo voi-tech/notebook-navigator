@@ -51,38 +51,17 @@ import { casefold, normalizePinnedNoteContext } from './recordUtils';
 import {
     buildPropertyKeyNodeId,
     buildPropertyValueNodeId,
+    getConfiguredPropertyKeySet,
     isPropertyKeyOnlyValuePath,
     type PropertySelectionNodeId,
     normalizePropertyTreeValuePath,
     parsePropertyNodeId
 } from './propertyTree';
-import { getCachedCommaSeparatedList } from './commaSeparatedListUtils';
 import type { IPropertyTreeProvider } from '../interfaces/IPropertyTreeProvider';
 import type { ITagTreeProvider } from '../interfaces/ITagTreeProvider';
 
 interface CollectPinnedPathsOptions {
     restrictToFolderPath?: string;
-}
-
-const configuredPropertyKeySetCache = new Map<string, ReadonlySet<string>>();
-
-function getConfiguredPropertyKeySet(customPropertyFields: string): ReadonlySet<string> {
-    const cached = configuredPropertyKeySetCache.get(customPropertyFields);
-    if (cached) {
-        return cached;
-    }
-
-    const keys = new Set<string>();
-    getCachedCommaSeparatedList(customPropertyFields).forEach(fieldName => {
-        const normalizedField = casefold(fieldName);
-        if (!normalizedField) {
-            return;
-        }
-        keys.add(normalizedField);
-    });
-
-    configuredPropertyKeySetCache.set(customPropertyFields, keys);
-    return keys;
 }
 
 function getParentFolderPath(path: string): string {
@@ -103,6 +82,87 @@ function matchesPathSelection(candidatePath: string, selectedPath: string, inclu
     }
 
     return candidatePath.startsWith(`${selectedPath}/`);
+}
+
+function getFilteredMarkdownFilesForSelection(
+    app: App,
+    settings: NotebookNavigatorSettings,
+    showHiddenItems: boolean,
+    excludedFolderPatterns: string[]
+): TFile[] {
+    const fileVisibility = getActiveFileVisibility(settings);
+    const allFiles =
+        fileVisibility === FILE_VISIBILITY.DOCUMENTS
+            ? getFilteredDocumentFiles(app, settings, { showHiddenItems })
+            : getFilteredFiles(app, settings, { showHiddenItems });
+
+    const baseFiles = showHiddenItems
+        ? allFiles
+        : allFiles.filter(file => excludedFolderPatterns.length === 0 || !isPathInExcludedFolder(file.path, excludedFolderPatterns));
+
+    return baseFiles.filter(file => file.extension === 'md');
+}
+
+function isFileVisibleForScopedSelection(
+    file: TFile,
+    options: {
+        showHiddenItems: boolean;
+        excludedFolderPatterns: string[];
+        excludedFileProperties: string[];
+        fileNameMatcher: ReturnType<typeof createHiddenFileNameMatcherForVisibility>;
+        shouldFilterHiddenFileTags: boolean;
+        hiddenFileTagVisibility: ReturnType<typeof createHiddenTagVisibility>;
+        app: App;
+        db: ReturnType<typeof getDBInstanceOrNull>;
+    }
+): boolean {
+    const {
+        showHiddenItems,
+        excludedFolderPatterns,
+        excludedFileProperties,
+        fileNameMatcher,
+        shouldFilterHiddenFileTags,
+        hiddenFileTagVisibility,
+        app,
+        db
+    } = options;
+
+    if (!showHiddenItems && excludedFolderPatterns.length > 0 && isPathInExcludedFolder(file.path, excludedFolderPatterns)) {
+        return false;
+    }
+
+    if (!showHiddenItems && excludedFileProperties.length > 0 && shouldExcludeFile(file, excludedFileProperties, app)) {
+        return false;
+    }
+
+    if (fileNameMatcher && fileNameMatcher.matches(file)) {
+        return false;
+    }
+
+    if (shouldFilterHiddenFileTags) {
+        const fileData = db?.getFile(file.path) ?? null;
+        const tags = getCachedFileTags({ app, file, db, fileData });
+        if (tags.some(tagValue => !hiddenFileTagVisibility.isTagVisible(tagValue))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function collectVisibleMarkdownFilesFromPaths(paths: Iterable<string>, app: App, isVisible: (file: TFile) => boolean): TFile[] {
+    const files: TFile[] = [];
+    for (const path of paths) {
+        const file = app.vault.getFileByPath(path);
+        if (!file || file.extension !== 'md') {
+            continue;
+        }
+        if (!isVisible(file)) {
+            continue;
+        }
+        files.push(file);
+    }
+    return files;
 }
 
 function extractPropertySortParts(value: unknown): string[] {
@@ -413,61 +473,34 @@ export function getFilesForTag(
     const excludedFolderPatterns = getActiveHiddenFolders(settings);
     const excludedFileProperties = getActiveHiddenFileProperties(settings);
     const excludedFileNamePatterns = getActiveHiddenFileNames(settings);
-    const fileVisibility = getActiveFileVisibility(settings);
     const fileNameMatcher = createHiddenFileNameMatcherForVisibility(excludedFileNamePatterns, visibility.showHiddenItems);
     const hiddenTagVisibility = createHiddenTagVisibility(hiddenTags, visibility.showHiddenItems);
     const shouldFilterHiddenTags = hiddenTagVisibility.shouldFilterHiddenTags;
     const hiddenFileTagVisibility = createHiddenTagVisibility(hiddenFileTags, visibility.showHiddenItems);
     const shouldFilterHiddenFileTags = hiddenFileTagVisibility.hasHiddenRules && !visibility.showHiddenItems;
     const db = getDBInstanceOrNull();
-    let baseFilesCache: TFile[] | null = null;
-
-    const getBaseFiles = (): TFile[] => {
-        if (baseFilesCache) {
-            return baseFilesCache;
-        }
-
-        const allFiles =
-            fileVisibility === FILE_VISIBILITY.DOCUMENTS
-                ? getFilteredDocumentFiles(app, settings, { showHiddenItems: visibility.showHiddenItems })
-                : getFilteredFiles(app, settings, { showHiddenItems: visibility.showHiddenItems });
-
-        // For tag views, exclude files in excluded folders only when hidden items are not shown.
-        // When showing hidden items, include files from excluded folders to match the tag tree.
-        baseFilesCache = visibility.showHiddenItems
-            ? allFiles
-            : allFiles.filter(
-                  (file: TFile) => excludedFolderPatterns.length === 0 || !isPathInExcludedFolder(file.path, excludedFolderPatterns)
-              );
-        return baseFilesCache;
-    };
+    let markdownFilesCache: TFile[] | null = null;
 
     const getMarkdownFiles = (): TFile[] => {
-        return getBaseFiles().filter(file => file.extension === 'md');
+        if (markdownFilesCache) {
+            return markdownFilesCache;
+        }
+
+        markdownFilesCache = getFilteredMarkdownFilesForSelection(app, settings, visibility.showHiddenItems, excludedFolderPatterns);
+        return markdownFilesCache;
     };
 
     const matchesCurrentVisibility = (file: TFile): boolean => {
-        if (!visibility.showHiddenItems && excludedFolderPatterns.length > 0 && isPathInExcludedFolder(file.path, excludedFolderPatterns)) {
-            return false;
-        }
-
-        if (!visibility.showHiddenItems && excludedFileProperties.length > 0 && shouldExcludeFile(file, excludedFileProperties, app)) {
-            return false;
-        }
-
-        if (fileNameMatcher && fileNameMatcher.matches(file)) {
-            return false;
-        }
-
-        if (shouldFilterHiddenFileTags) {
-            const fileData = db?.getFile(file.path) ?? null;
-            const tags = getCachedFileTags({ app, file, db, fileData });
-            if (tags.some(tagValue => !hiddenFileTagVisibility.isTagVisible(tagValue))) {
-                return false;
-            }
-        }
-
-        return true;
+        return isFileVisibleForScopedSelection(file, {
+            showHiddenItems: visibility.showHiddenItems,
+            excludedFolderPatterns,
+            excludedFileProperties,
+            fileNameMatcher,
+            shouldFilterHiddenFileTags,
+            hiddenFileTagVisibility,
+            app,
+            db
+        });
     };
 
     let filteredFiles: TFile[] = [];
@@ -543,18 +576,7 @@ export function getFilesForTag(
                     return null;
                 }
 
-                const files: TFile[] = [];
-                candidatePaths.forEach(path => {
-                    const file = app.vault.getFileByPath(path);
-                    if (!file || file.extension !== 'md') {
-                        return;
-                    }
-                    if (!matchesCurrentVisibility(file)) {
-                        return;
-                    }
-                    files.push(file);
-                });
-                return files;
+                return collectVisibleMarkdownFilesFromPaths(candidatePaths, app, matchesCurrentVisibility);
             })();
 
             const markdownFiles = candidateMarkdownFiles ?? getMarkdownFiles();
@@ -643,60 +665,24 @@ export function getFilesForProperty(
     })();
 
     const matchesCurrentVisibility = (file: TFile): boolean => {
-        if (!visibility.showHiddenItems && excludedFolderPatterns.length > 0 && isPathInExcludedFolder(file.path, excludedFolderPatterns)) {
-            return false;
-        }
-
-        if (!visibility.showHiddenItems && excludedFileProperties.length > 0 && shouldExcludeFile(file, excludedFileProperties, app)) {
-            return false;
-        }
-
-        if (fileNameMatcher && fileNameMatcher.matches(file)) {
-            return false;
-        }
-
-        if (shouldFilterHiddenFileTags) {
-            const fileData = db?.getFile(file.path) ?? null;
-            const tags = getCachedFileTags({ app, file, db, fileData });
-            if (tags.some(tagValue => !hiddenFileTagVisibility.isTagVisible(tagValue))) {
-                return false;
-            }
-        }
-
-        return true;
+        return isFileVisibleForScopedSelection(file, {
+            showHiddenItems: visibility.showHiddenItems,
+            excludedFolderPatterns,
+            excludedFileProperties,
+            fileNameMatcher,
+            shouldFilterHiddenFileTags,
+            hiddenFileTagVisibility,
+            app,
+            db
+        });
     };
 
     const matchedFiles = (() => {
         if (candidatePaths) {
-            const candidateFiles: TFile[] = [];
-            candidatePaths.forEach(path => {
-                const file = app.vault.getFileByPath(path);
-                if (!file || file.extension !== 'md') {
-                    return;
-                }
-                if (!matchesCurrentVisibility(file)) {
-                    return;
-                }
-                candidateFiles.push(file);
-            });
-            return candidateFiles;
+            return collectVisibleMarkdownFilesFromPaths(candidatePaths, app, matchesCurrentVisibility);
         }
 
-        const fileVisibility = getActiveFileVisibility(settings);
-        let allFiles: TFile[] = [];
-
-        if (fileVisibility === FILE_VISIBILITY.DOCUMENTS) {
-            allFiles = getFilteredDocumentFiles(app, settings, { showHiddenItems: visibility.showHiddenItems });
-        } else {
-            allFiles = getFilteredFiles(app, settings, { showHiddenItems: visibility.showHiddenItems });
-        }
-
-        const baseFiles = visibility.showHiddenItems
-            ? allFiles
-            : allFiles.filter(
-                  (file: TFile) => excludedFolderPatterns.length === 0 || !isPathInExcludedFolder(file.path, excludedFolderPatterns)
-              );
-        const markdownFiles = baseFiles.filter(file => file.extension === 'md');
+        const markdownFiles = getFilteredMarkdownFilesForSelection(app, settings, visibility.showHiddenItems, excludedFolderPatterns);
 
         return markdownFiles.filter(file => {
             const fileData = db?.getFile(file.path) ?? null;
