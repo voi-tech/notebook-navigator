@@ -216,7 +216,6 @@ export interface NotebookNavigatorSettings {
     // General tab - View
     startView: 'navigation' | 'files';
     showInfoButtons: boolean;
-    interfaceIcons: Record<string, string>;
 
     // General tab - Homepage
     homepage: string | null;
@@ -235,14 +234,26 @@ export interface NotebookNavigatorSettings {
     // General tab - Mobile appearance
     useFloatingToolbars: boolean;
 
+    // General tab - Toolbar buttons
+    toolbarVisibility: ToolbarVisibilitySettings;
+
+    // General tab - Icons
+    interfaceIcons: Record<string, string>;
+    colorIconOnly: boolean;
+
     // General tab - Formatting
     dateFormat: string;
     timeFormat: string;
     calendarTemplateFolder: string;
 
+    // Icon packs tab
+    externalIconProviders: Record<string, boolean>;
+
+    // Advanced tab
+    checkForUpdatesOnStart: boolean;
+    confirmBeforeDelete: boolean;
+
     // Navigation pane tab - Appearance
-    colorIconOnly: boolean;
-    toolbarVisibility: ToolbarVisibilitySettings;
     pinNavigationBanner: boolean;
     showNoteCount: boolean;
     separateNoteCounts: boolean;
@@ -269,32 +280,6 @@ export interface NotebookNavigatorSettings {
     showRecentNotes: boolean;
     pinRecentNotesWithShortcuts: boolean;
     recentNotesCount: number;
-
-    // Calendar tab - Calendar
-    calendarPlacement: CalendarPlacement;
-    calendarConfirmBeforeCreate: boolean;
-    calendarLocale: string;
-    calendarWeekendDays: CalendarWeekendDays;
-    calendarHighlightToday: boolean;
-    calendarShowFeatureImage: boolean;
-    calendarShowWeekNumber: boolean;
-    calendarShowQuarter: boolean;
-    calendarShowYearCalendar: boolean;
-    calendarLeftPlacement: CalendarLeftPlacement;
-    calendarWeeksToShow: CalendarWeeksToShow;
-
-    // Calendar tab - Calendar integration
-    calendarIntegrationMode: CalendarIntegrationMode;
-    calendarCustomFilePattern: string;
-    calendarCustomWeekPattern: string;
-    calendarCustomMonthPattern: string;
-    calendarCustomQuarterPattern: string;
-    calendarCustomYearPattern: string;
-    calendarCustomFileTemplate: string | null;
-    calendarCustomWeekTemplate: string | null;
-    calendarCustomMonthTemplate: string | null;
-    calendarCustomQuarterTemplate: string | null;
-    calendarCustomYearTemplate: string | null;
 
     // Folders tab
     showFolderIcons: boolean;
@@ -395,16 +380,35 @@ export interface NotebookNavigatorSettings {
     showParentFolderColor: boolean;
     showParentFolderIcon: boolean;
 
-    // Icon packs tab
-    externalIconProviders: Record<string, boolean>;
+    // Calendar tab - Calendar
+    calendarPlacement: CalendarPlacement;
+    calendarConfirmBeforeCreate: boolean;
+    calendarLocale: string;
+    calendarWeekendDays: CalendarWeekendDays;
+    calendarHighlightToday: boolean;
+    calendarShowFeatureImage: boolean;
+    calendarShowWeekNumber: boolean;
+    calendarShowQuarter: boolean;
+    calendarShowYearCalendar: boolean;
+    calendarLeftPlacement: CalendarLeftPlacement;
+    calendarWeeksToShow: CalendarWeeksToShow;
+
+    // Calendar tab - Calendar integration
+    calendarIntegrationMode: CalendarIntegrationMode;
+    calendarCustomFilePattern: string;
+    calendarCustomWeekPattern: string;
+    calendarCustomMonthPattern: string;
+    calendarCustomQuarterPattern: string;
+    calendarCustomYearPattern: string;
+    calendarCustomFileTemplate: string | null;
+    calendarCustomWeekTemplate: string | null;
+    calendarCustomMonthTemplate: string | null;
+    calendarCustomQuarterTemplate: string | null;
+    calendarCustomYearTemplate: string | null;
 
     // Search settings and hotkeys
     searchProvider: SearchProvider | null;
     keyboardShortcuts: KeyboardShortcutConfig;
-
-    // Advanced tab
-    checkForUpdatesOnStart: boolean;
-    confirmBeforeDelete: boolean;
 
     // Runtime state and cached data
     customVaultName: string;

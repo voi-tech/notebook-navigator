@@ -77,7 +77,6 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     // General tab - View
     startView: 'files',
     showInfoButtons: true,
-    interfaceIcons: sanitizeRecord<string>(undefined),
 
     // General tab - Homepage
     homepage: null,
@@ -97,13 +96,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     // General tab - Mobile appearance
     useFloatingToolbars: true,
 
-    // General tab - Formatting
-    dateFormat: 'MMM D, YYYY',
-    timeFormat: 'h:mm a',
-    calendarTemplateFolder: '',
-
-    // Navigation pane tab - Appearance
-    colorIconOnly: false,
+    // General tab - Toolbar buttons
     toolbarVisibility: {
         navigation: {
             toggleDualPane: true,
@@ -122,6 +115,24 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
             newNote: true
         }
     },
+
+    // General tab - Icons
+    interfaceIcons: sanitizeRecord<string>(undefined),
+    colorIconOnly: false,
+
+    // General tab - Formatting
+    dateFormat: 'MMM D, YYYY',
+    timeFormat: 'h:mm a',
+    calendarTemplateFolder: '',
+
+    // Icon packs tab
+    externalIconProviders: {},
+
+    // Advanced tab
+    checkForUpdatesOnStart: true,
+    confirmBeforeDelete: true,
+
+    // Navigation pane tab - Appearance
     pinNavigationBanner: true,
     showNoteCount: true,
     separateNoteCounts: true,
@@ -148,32 +159,6 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     showRecentNotes: true,
     pinRecentNotesWithShortcuts: false,
     recentNotesCount: 5,
-
-    // Calendar tab - Calendar
-    calendarPlacement: 'left-sidebar',
-    calendarConfirmBeforeCreate: true,
-    calendarLocale: 'system-default',
-    calendarWeekendDays: 'sat-sun',
-    calendarHighlightToday: true,
-    calendarShowFeatureImage: true,
-    calendarShowWeekNumber: false,
-    calendarShowQuarter: false,
-    calendarShowYearCalendar: true,
-    calendarLeftPlacement: 'navigation',
-    calendarWeeksToShow: 1,
-
-    // Calendar tab - Calendar integration
-    calendarIntegrationMode: 'notebook-navigator',
-    calendarCustomFilePattern: DEFAULT_CALENDAR_CUSTOM_FILE_PATTERN,
-    calendarCustomWeekPattern: DEFAULT_CALENDAR_CUSTOM_WEEK_PATTERN,
-    calendarCustomMonthPattern: DEFAULT_CALENDAR_CUSTOM_MONTH_PATTERN,
-    calendarCustomQuarterPattern: DEFAULT_CALENDAR_CUSTOM_QUARTER_PATTERN,
-    calendarCustomYearPattern: DEFAULT_CALENDAR_CUSTOM_YEAR_PATTERN,
-    calendarCustomFileTemplate: null,
-    calendarCustomWeekTemplate: null,
-    calendarCustomMonthTemplate: null,
-    calendarCustomQuarterTemplate: null,
-    calendarCustomYearTemplate: null,
 
     // Folders tab
     showFolderIcons: true,
@@ -275,16 +260,35 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     showParentFolderColor: false,
     showParentFolderIcon: false,
 
-    // Icon packs tab
-    externalIconProviders: {},
+    // Calendar tab - Calendar
+    calendarPlacement: 'left-sidebar',
+    calendarConfirmBeforeCreate: true,
+    calendarLocale: 'system-default',
+    calendarWeekendDays: 'sat-sun',
+    calendarHighlightToday: true,
+    calendarShowFeatureImage: true,
+    calendarShowWeekNumber: false,
+    calendarShowQuarter: false,
+    calendarShowYearCalendar: true,
+    calendarLeftPlacement: 'navigation',
+    calendarWeeksToShow: 1,
+
+    // Calendar tab - Calendar integration
+    calendarIntegrationMode: 'notebook-navigator',
+    calendarCustomFilePattern: DEFAULT_CALENDAR_CUSTOM_FILE_PATTERN,
+    calendarCustomWeekPattern: DEFAULT_CALENDAR_CUSTOM_WEEK_PATTERN,
+    calendarCustomMonthPattern: DEFAULT_CALENDAR_CUSTOM_MONTH_PATTERN,
+    calendarCustomQuarterPattern: DEFAULT_CALENDAR_CUSTOM_QUARTER_PATTERN,
+    calendarCustomYearPattern: DEFAULT_CALENDAR_CUSTOM_YEAR_PATTERN,
+    calendarCustomFileTemplate: null,
+    calendarCustomWeekTemplate: null,
+    calendarCustomMonthTemplate: null,
+    calendarCustomQuarterTemplate: null,
+    calendarCustomYearTemplate: null,
 
     // Search settings and hotkeys
     searchProvider: 'internal',
     keyboardShortcuts: getDefaultKeyboardShortcuts(),
-
-    // Advanced tab
-    checkForUpdatesOnStart: true,
-    confirmBeforeDelete: true,
 
     // Runtime state and cached data
     customVaultName: '',
