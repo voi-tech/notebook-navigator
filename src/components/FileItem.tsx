@@ -85,7 +85,13 @@ import { openAddTagToFilesModal } from '../utils/tagModalHelpers';
 import { getTagSearchModifierOperator } from '../utils/tagUtils';
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { InclusionOperator } from '../utils/filterSearch';
-import { buildPropertyValueNodeId, getPropertyKeyNodeIdFromNodeId, normalizePropertyNodeId } from '../utils/propertyTree';
+import {
+    buildPropertyValueNodeId,
+    getPropertyKeyNodeIdFromNodeId,
+    isPropertyKeyOnlyValuePath,
+    normalizePropertyNodeId,
+    normalizePropertyTreeValuePath
+} from '../utils/propertyTree';
 import { ServiceIcon } from './ServiceIcon';
 
 const FEATURE_IMAGE_MAX_ASPECT_RATIO = 16 / 9;
@@ -764,8 +770,10 @@ export const FileItem = React.memo(function FileItem({
                 continue;
             }
 
-            const wikiLink = parseStrictWikiLink(rawValue);
-            const label = wikiLink ? wikiLink.displayText : rawValue;
+            const normalizedValuePath = normalizePropertyTreeValuePath(rawValue);
+            const isKeyOnlyValue = isPropertyKeyOnlyValuePath(normalizedValuePath, entry.valueKind);
+            const wikiLink = isKeyOnlyValue ? null : parseStrictWikiLink(rawValue);
+            const label = isKeyOnlyValue ? entry.fieldKey : wikiLink ? wikiLink.displayText : rawValue;
 
             // Resolve property colors at render time from field key and raw value.
             // This keeps persisted property items stable across style rule changes.

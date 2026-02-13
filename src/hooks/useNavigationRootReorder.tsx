@@ -634,7 +634,7 @@ export function useNavigationRootReorder(options: UseNavigationRootReorderOption
                 chevronIcon = foldersSectionExpanded ? 'lucide-chevron-down' : 'lucide-chevron-right';
                 onClick = handleToggleFoldersSection;
             } else if (identifier === NavigationSectionId.TAGS) {
-                icon = resolveUXIcon(settings.interfaceIcons, 'nav-tag');
+                icon = resolveUXIcon(settings.interfaceIcons, 'nav-tags');
                 label = strings.settings.sections.tags;
                 chevronIcon = tagsSectionExpanded ? 'lucide-chevron-down' : 'lucide-chevron-right';
                 onClick = handleToggleTagsSection;

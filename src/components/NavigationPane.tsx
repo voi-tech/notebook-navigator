@@ -2727,7 +2727,7 @@ export const NavigationPane = React.memo(
                         const shortcutProps = {
                             icon: isMissing
                                 ? 'lucide-alert-triangle'
-                                : (item.icon ?? resolveUXIcon(settings.interfaceIcons, 'nav-properties')),
+                                : (item.icon ?? resolveUXIcon(settings.interfaceIcons, 'nav-property')),
                             color: isMissing ? undefined : item.color,
                             backgroundColor: shortcutBackground,
                             label: propertyLabel,

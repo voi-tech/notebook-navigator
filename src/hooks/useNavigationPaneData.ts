@@ -201,7 +201,9 @@ function decorateNavigationItems(
             const propertyNode = item.data;
             const propertyNodeId = propertyNode.id;
             const propertyColorData = metadataService.getPropertyColorData(propertyNodeId);
-            const icon = metadataService.getPropertyIcon(propertyNodeId) || (propertyNode.kind === 'value' ? 'equal' : undefined);
+            const icon =
+                metadataService.getPropertyIcon(propertyNodeId) ||
+                (propertyNode.kind === 'value' ? resolveUXIcon(settings.interfaceIcons, 'nav-property-value') : undefined);
 
             return {
                 ...item,
@@ -238,7 +240,9 @@ function decorateNavigationItems(
             const parsed = parsePropertyNodeId(propertyNodeId);
             const icon =
                 metadataService.getPropertyIcon(propertyNodeId) ||
-                (parsed?.valuePath ? 'equal' : resolveUXIcon(settings.interfaceIcons, 'nav-properties'));
+                (parsed?.valuePath
+                    ? resolveUXIcon(settings.interfaceIcons, 'nav-property-value')
+                    : resolveUXIcon(settings.interfaceIcons, 'nav-property'));
 
             return {
                 ...item,
@@ -716,7 +720,7 @@ export function useNavigationPaneData({
         if (visibleTagTree.size === 0) {
             if (settings.showAllTagsFolder) {
                 const folderId = TAGS_ROOT_VIRTUAL_FOLDER_ID;
-                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
+                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tags'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: shouldIncludeUntagged,
                     showFileCount: settings.showNoteCount,
@@ -813,7 +817,7 @@ export function useNavigationPaneData({
         if (settings.showAllTagsFolder) {
             if (hasContent) {
                 const folderId = TAGS_ROOT_VIRTUAL_FOLDER_ID;
-                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tag'), {
+                addVirtualFolder(folderId, strings.tagList.tags, resolveUXIcon(settings.interfaceIcons, 'nav-tags'), {
                     tagCollectionId: TAGGED_TAG_ID,
                     hasChildren: tagsVirtualFolderHasChildren,
                     showFileCount: settings.showNoteCount,

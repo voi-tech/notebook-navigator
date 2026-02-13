@@ -178,7 +178,11 @@ export const PropertyTreeItem = React.memo(
             }
 
             iconRef.current.empty();
-            const iconId = icon ?? (propertyNode.kind === 'value' ? 'equal' : resolveUXIcon(settings.interfaceIcons, 'nav-properties'));
+            const iconId =
+                icon ??
+                (propertyNode.kind === 'value'
+                    ? resolveUXIcon(settings.interfaceIcons, 'nav-property-value')
+                    : resolveUXIcon(settings.interfaceIcons, 'nav-property'));
             getIconService().renderIcon(iconRef.current, iconId);
         }, [icon, iconVersion, propertyNode.kind, settings.interfaceIcons, settings.showPropertyIcons]);
 

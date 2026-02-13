@@ -240,7 +240,17 @@ export function useListPaneTitle(): UseListPaneTitleResult {
             if (!settings.showPropertyIcons) {
                 return '';
             }
-            return resolveUXIcon(settings.interfaceIcons, 'nav-properties');
+
+            if (selectionState.selectedProperty === PROPERTIES_ROOT_VIRTUAL_FOLDER_ID) {
+                return resolveUXIcon(settings.interfaceIcons, 'nav-properties');
+            }
+
+            const parsedPropertyNode = parsePropertyNodeId(selectionState.selectedProperty);
+            if (parsedPropertyNode?.valuePath) {
+                return resolveUXIcon(settings.interfaceIcons, 'nav-property-value');
+            }
+
+            return resolveUXIcon(settings.interfaceIcons, 'nav-property');
         }
 
         return '';
