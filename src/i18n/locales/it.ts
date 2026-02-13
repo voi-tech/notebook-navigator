@@ -105,6 +105,8 @@ export const STRINGS_IT = {
         folderExists: 'Cartella già presente nelle scorciatoie',
         noteExists: 'Nota già presente nelle scorciatoie',
         tagExists: 'Tag già presente nelle scorciatoie',
+        propertyExists: 'Proprietà già presente nei preferiti',
+        invalidProperty: 'Scorciatoia proprietà non valida',
         searchExists: 'Scorciatoia di ricerca già esistente',
         emptySearchQuery: 'Inserisci una query di ricerca prima di salvare',
         emptySearchName: 'Inserisci un nome prima di salvare la ricerca',
@@ -375,10 +377,6 @@ export const STRINGS_IT = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Aggiungi regola'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: "Icone dell'interfaccia",
@@ -731,7 +729,8 @@ export const STRINGS_IT = {
             icons: 'Pacchetti icone',
             folders: 'Cartelle',
             folderNotes: 'Note cartella',
-            foldersAndTags: 'Cartelle e tag',
+            foldersAndTags: 'Cartelle',
+            tagsAndProperties: 'Tag e proprietà',
             tags: 'Tag',
             listPane: 'Pannello lista',
             notes: 'Note',
@@ -767,7 +766,7 @@ export const STRINGS_IT = {
                 previewText: 'Testo anteprima',
                 featureImage: 'Immagine in evidenza',
                 tags: 'Tag',
-                customProperty: 'Proprietà personalizzata (frontmatter o conteggio parole)',
+                customProperty: 'Proprietà',
                 date: 'Data',
                 parentFolder: 'Cartella superiore'
             }
@@ -1301,8 +1300,8 @@ export const STRINGS_IT = {
                 desc: 'Visualizza tag quando data, anteprima e immagine sono nascosti.'
             },
             customPropertyType: {
-                name: 'Tipo di proprietà',
-                desc: 'Seleziona la proprietà personalizzata da visualizzare negli elementi file.',
+                name: 'Proprietà della nota',
+                desc: 'Seleziona la proprietà della nota da visualizzare negli elementi file.',
                 options: {
                     frontmatter: 'Proprietà frontmatter',
                     wordCount: 'Conteggio parole',
@@ -1311,22 +1310,16 @@ export const STRINGS_IT = {
             },
             customPropertyFields: {
                 name: 'Proprietà da visualizzare',
-                desc: 'Elenco di proprietà frontmatter separate da virgola da visualizzare come badge. Le proprietà con valori lista mostrano un badge per valore. I valori [[wikilink]] vengono visualizzati come link cliccabili.',
+                desc: 'Elenco di proprietà dei metadati separati da virgola da visualizzare nel pannello di navigazione e come badge negli elementi file. Le proprietà con valori multipli mostrano un badge per valore.',
                 placeholder: 'stato, tipo, categoria'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Mostra proprietà su righe separate',
                 desc: 'Mostra ogni proprietà sulla propria riga.'
             },
-            customPropertyColorMap: {
-                name: 'Colori proprietà',
-                desc: 'Associa proprietà e valori frontmatter a colori dei badge. Una associazione per riga: proprietà=colore o proprietà:valore=colore',
-                placeholder: '# Proprietà o proprietà:valore colore\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Modifica associazioni'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Mostra proprietà personalizzata in modalità compatta',
-                desc: 'Visualizza la proprietà personalizzata quando data, anteprima e immagine sono nascosti.'
+                name: 'Mostra proprietà in modalità compatta',
+                desc: 'Visualizza le proprietà quando la modalità compatta è attiva.'
             },
             dateFormat: {
                 name: 'Formato data',
@@ -1512,6 +1505,29 @@ export const STRINGS_IT = {
             keepEmptyTagsProperty: {
                 name: 'Mantieni proprietà tags dopo rimozione ultimo tag',
                 desc: 'Mantieni la proprietà tags frontmatter quando tutti i tag sono rimossi. Quando disabilitato, la proprietà tags è eliminata dal frontmatter.'
+            },
+            showProperties: {
+                name: 'Mostra proprietà',
+                desc: 'Visualizza la sezione proprietà nel navigatore.'
+            },
+            showPropertyIcons: {
+                name: 'Mostra icone proprietà',
+                desc: 'Visualizza le icone accanto alle proprietà nel pannello di navigazione.'
+            },
+            propertySortOrder: {
+                name: 'Ordine di ordinamento proprietà',
+                desc: 'Fai clic destro su una proprietà per impostare un ordine di ordinamento diverso per i suoi valori.',
+                options: {
+                    alphaAsc: 'A a Z',
+                    alphaDesc: 'Z a A',
+                    frequency: 'Frequenza',
+                    lowToHigh: "dal basso all'alto",
+                    highToLow: "dall'alto al basso"
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Mostra cartella proprietà',
+                desc: 'Visualizza "Proprietà" come cartella comprimibile.'
             },
             hiddenTags: {
                 name: 'Nascondi tag (profilo vault)',

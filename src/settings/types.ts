@@ -35,6 +35,7 @@ export const SYNC_MODE_SETTING_IDS = [
     'vaultProfile',
     'folderSortOrder',
     'tagSortOrder',
+    'propertySortOrder',
     'includeDescendantNotes',
     'useFloatingToolbars',
     'dualPane',
@@ -157,11 +158,11 @@ export type ListNoteGroupingOption = 'none' | 'date' | 'folder';
 export type AlphabeticalDateMode = 'created' | 'modified';
 
 /** Available custom property types displayed in file items */
-export type CustomPropertyType = 'none' | 'frontmatter' | 'wordCount';
+export type CustomPropertyType = 'none' | 'wordCount';
 
 /** Type guard for validating custom property type values */
 export function isCustomPropertyType(value: string): value is CustomPropertyType {
-    return value === 'none' || value === 'frontmatter' || value === 'wordCount';
+    return value === 'none' || value === 'wordCount';
 }
 
 /** Buttons available in the navigation toolbar */
@@ -290,7 +291,7 @@ export interface NotebookNavigatorSettings {
     navItemHeight: number;
     navItemHeightScaleText: boolean;
 
-    // Folders & tags tab
+    // Folders tab
     autoSelectFirstFileOnFocusChange: boolean;
     autoExpandNavItems: boolean;
     springLoadedFolders: boolean;
@@ -300,7 +301,6 @@ export interface NotebookNavigatorSettings {
     showRootFolder: boolean;
     inheritFolderColors: boolean;
     folderSortOrder: AlphaSortOrder;
-    inheritTagColors: boolean;
     enableFolderNotes: boolean;
     folderNoteType: FolderNoteCreationPreference;
     folderNoteName: string;
@@ -309,12 +309,22 @@ export interface NotebookNavigatorSettings {
     openFolderNotesInNewTab: boolean;
     hideFolderNoteInList: boolean;
     pinCreatedFolderNote: boolean;
+
+    // Tags tab
     showTags: boolean;
     showTagIcons: boolean;
     showAllTagsFolder: boolean;
     showUntagged: boolean;
     tagSortOrder: TagSortOrder;
+    inheritTagColors: boolean;
     keepEmptyTagsProperty: boolean;
+
+    // Properties tab
+    showProperties: boolean;
+    showPropertyIcons: boolean;
+    propertySortOrder: TagSortOrder;
+    showAllPropertiesFolder: boolean;
+    customPropertyFields: string;
 
     // List pane tab
     defaultListMode: ListDisplayMode;
@@ -370,10 +380,8 @@ export interface NotebookNavigatorSettings {
     showFileTagAncestors: boolean;
     showFileTagsInCompactMode: boolean;
     customPropertyType: CustomPropertyType;
-    customPropertyFields: string;
-    showCustomPropertiesOnSeparateRows: boolean;
-    customPropertyColorMap: Record<string, string>;
     showCustomPropertyInCompactMode: boolean;
+    showCustomPropertiesOnSeparateRows: boolean;
     showFileDate: boolean;
     alphabeticalDateMode: AlphabeticalDateMode;
     showParentFolder: boolean;
@@ -409,6 +417,10 @@ export interface NotebookNavigatorSettings {
     tagSortOverrides: Record<string, SortOption>;
     tagTreeSortOverrides: Record<string, AlphaSortOrder>;
     tagAppearances: Record<string, TagAppearance>;
+    propertyIcons: Record<string, string>;
+    propertyColors: Record<string, string>;
+    propertyBackgroundColors: Record<string, string>;
+    propertyTreeSortOverrides: Record<string, AlphaSortOrder>;
     navigationSeparators: Record<string, boolean>;
     userColors: string[];
     lastShownVersion: string;

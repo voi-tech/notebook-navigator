@@ -72,3 +72,24 @@ export function buildNoteCountDisplay(
         label: shouldDisplay ? `${combinedCount}` : ''
     };
 }
+
+export function buildSortableNoteCountDisplay(
+    noteCountDisplay: NoteCountDisplay,
+    sortOrderIndicator: string | undefined
+): NoteCountDisplay {
+    if (!sortOrderIndicator) {
+        return noteCountDisplay;
+    }
+
+    if (!noteCountDisplay.shouldDisplay) {
+        return {
+            shouldDisplay: true,
+            label: sortOrderIndicator
+        };
+    }
+
+    return {
+        shouldDisplay: true,
+        label: `${sortOrderIndicator} ${noteCountDisplay.label}`
+    };
+}

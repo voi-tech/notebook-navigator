@@ -104,6 +104,8 @@ export const STRINGS_ZH_TW = {
         folderExists: '資料夾已在捷徑中',
         noteExists: '筆記已在捷徑中',
         tagExists: '標籤已在捷徑中',
+        propertyExists: '屬性已在捷徑中',
+        invalidProperty: '無效的屬性捷徑',
         searchExists: '搜尋捷徑已存在',
         emptySearchQuery: '儲存前請輸入搜尋查詢',
         emptySearchName: '儲存搜尋前請輸入名稱',
@@ -375,10 +377,6 @@ export const STRINGS_ZH_TW = {
         },
         fileIconRuleEditor: {
             addRuleAria: '新增規則'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: '介面圖示',
@@ -732,7 +730,8 @@ export const STRINGS_ZH_TW = {
             tags: '標籤',
             folders: '資料夾',
             folderNotes: '資料夾筆記',
-            foldersAndTags: '資料夾與標籤',
+            foldersAndTags: '資料夾',
+            tagsAndProperties: '標籤與屬性',
             listPane: '列表窗格',
             advanced: '進階'
         },
@@ -766,7 +765,7 @@ export const STRINGS_ZH_TW = {
                 previewText: '預覽文字',
                 featureImage: '特色圖片',
                 tags: '標籤',
-                customProperty: '自訂屬性（frontmatter 或字數）',
+                customProperty: '屬性',
                 date: '日期',
                 parentFolder: '父資料夾'
             }
@@ -1297,8 +1296,8 @@ export const STRINGS_ZH_TW = {
                 desc: '當日期、預覽和圖片被隱藏時顯示標籤。'
             },
             customPropertyType: {
-                name: '屬性類型',
-                desc: '選擇要在檔案項目中顯示的自訂屬性。',
+                name: '筆記屬性',
+                desc: '選擇要在檔案項目中顯示的筆記屬性。',
                 options: {
                     frontmatter: '前置中繼資料屬性',
                     wordCount: '字數統計',
@@ -1307,22 +1306,16 @@ export const STRINGS_ZH_TW = {
             },
             customPropertyFields: {
                 name: '要顯示的屬性',
-                desc: '以逗號分隔的前置中繼資料屬性清單，用於顯示為標籤。清單值屬性每個值顯示一個標籤。[[wikilink]] 格式的值會顯示為可點擊連結。',
+                desc: '以逗號分隔的 frontmatter 屬性清單，用於在導覽面板和檔案項目中作為徽章顯示。清單值屬性每個值顯示一個徽章。',
                 placeholder: 'status, type, category'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: '在個別行中顯示屬性',
                 desc: '將每個屬性顯示在個別行中。'
             },
-            customPropertyColorMap: {
-                name: '屬性顏色',
-                desc: '將前置資料屬性和值對應到徽章顏色。每行一個對應：屬性=顏色 或 屬性:值=顏色',
-                placeholder: '# 屬性 或 屬性:值 顏色\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: '編輯對應'
-            },
             showCustomPropertyInCompactMode: {
-                name: '在精簡模式中顯示自訂屬性',
-                desc: '當日期、預覽和圖片被隱藏時顯示自訂屬性。'
+                name: '在精簡模式下顯示屬性',
+                desc: '精簡模式啟用時顯示屬性。'
             },
             dateFormat: {
                 name: '日期格式',
@@ -1508,6 +1501,29 @@ export const STRINGS_ZH_TW = {
             keepEmptyTagsProperty: {
                 name: '刪除最後一個標籤後保留 tags 屬性',
                 desc: '當所有標籤被刪除時保留 frontmatter 中的 tags 屬性。停用時，tags 屬性將從 frontmatter 中刪除。'
+            },
+            showProperties: {
+                name: '顯示屬性',
+                desc: '在導覽器中顯示屬性區段。'
+            },
+            showPropertyIcons: {
+                name: '顯示屬性圖示',
+                desc: '在導覽面板中屬性旁邊顯示圖示。'
+            },
+            propertySortOrder: {
+                name: '屬性排序方式',
+                desc: '右鍵點擊任意屬性以設定其值的不同排序方式。',
+                options: {
+                    alphaAsc: 'A 到 Z',
+                    alphaDesc: 'Z 到 A',
+                    frequency: '頻率',
+                    lowToHigh: '由低到高',
+                    highToLow: '由高到低'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: '顯示屬性資料夾',
+                desc: '將「屬性」顯示為可摺疊資料夾。'
             },
             hiddenTags: {
                 name: '隱藏標籤（保險庫設定檔）',

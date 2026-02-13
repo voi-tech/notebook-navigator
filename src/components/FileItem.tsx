@@ -85,7 +85,7 @@ import { openAddTagToFilesModal } from '../utils/tagModalHelpers';
 import { getTagSearchModifierOperator } from '../utils/tagUtils';
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { InclusionOperator } from '../utils/filterSearch';
-import { resolvePropertyColorMapColor } from '../utils/propertyColorMapFormat';
+import { buildPropertyValueNodeId, getPropertyKeyNodeIdFromNodeId, normalizePropertyNodeId } from '../utils/propertyTree';
 import { ServiceIcon } from './ServiceIcon';
 
 const FEATURE_IMAGE_MAX_ASPECT_RATIO = 16 / 9;
@@ -98,7 +98,9 @@ type CustomPropertyPill = {
     value: string;
     label: string;
     wikiLink: WikiLinkTarget | null;
+    fieldKey?: string;
     color?: string;
+    background?: string;
 };
 
 interface FileItemProps {
@@ -630,26 +632,70 @@ export const FileItem = React.memo(function FileItem({
         return true;
     }, [categorizedTags, isCompactMode, settings.showFileTags, settings.showFileTagsInCompactMode, settings.showTags]);
 
-    const customPropertyPills = useMemo<CustomPropertyPill[]>(() => {
-        if (appearanceSettings.customPropertyType === 'none') {
-            return [];
+    const customPropertyColorSignature = useMemo(() => {
+        if (!settings.showProperties || !customProperty || customProperty.length === 0) {
+            return '';
         }
+
+        const colorRecord = settings.propertyColors;
+        const backgroundRecord = settings.propertyBackgroundColors;
+        const signatures: string[] = [];
+        const seenValueNodeIds = new Set<string>();
+        const seenKeyNodeIds = new Set<string>();
+
+        for (const entry of customProperty) {
+            const rawValue = entry.value;
+            if (rawValue.trim().length === 0) {
+                continue;
+            }
+
+            const rawValueNodeId = buildPropertyValueNodeId(entry.fieldKey, rawValue);
+            const valueNodeId = normalizePropertyNodeId(rawValueNodeId) ?? rawValueNodeId;
+            if (!seenValueNodeIds.has(valueNodeId)) {
+                seenValueNodeIds.add(valueNodeId);
+                signatures.push(`v:${valueNodeId}\u0000${colorRecord?.[valueNodeId] ?? ''}\u0000${backgroundRecord?.[valueNodeId] ?? ''}`);
+            }
+
+            const keyNodeId = getPropertyKeyNodeIdFromNodeId(valueNodeId);
+            if (!keyNodeId || seenKeyNodeIds.has(keyNodeId)) {
+                continue;
+            }
+
+            seenKeyNodeIds.add(keyNodeId);
+            signatures.push(`k:${keyNodeId}\u0000${colorRecord?.[keyNodeId] ?? ''}\u0000${backgroundRecord?.[keyNodeId] ?? ''}`);
+        }
+
+        if (signatures.length <= 1) {
+            return signatures[0] ?? '';
+        }
+
+        signatures.sort();
+        return signatures.join('\u0001');
+    }, [customProperty, settings.propertyBackgroundColors, settings.propertyColors, settings.showProperties]);
+
+    const customPropertyPills = useMemo<CustomPropertyPill[]>(() => {
+        void customPropertyColorSignature;
+
+        const pills: CustomPropertyPill[] = [];
+
         if (appearanceSettings.customPropertyType === 'wordCount') {
             // Don't show `0`: it can mean "no words", a huge file (content read skipped), or an Excalidraw document.
-            if (typeof wordCount !== 'number' || !Number.isFinite(wordCount) || wordCount <= 0) {
-                return [];
+            if (typeof wordCount === 'number' && Number.isFinite(wordCount) && wordCount > 0) {
+                const rawValue = Math.trunc(wordCount).toString();
+                pills.push({ value: rawValue, label: Math.trunc(wordCount).toLocaleString(), wikiLink: null });
             }
-            const rawValue = Math.trunc(wordCount).toString();
-            return [{ value: rawValue, label: Math.trunc(wordCount).toLocaleString(), wikiLink: null }];
+        }
+
+        if (!settings.showProperties) {
+            return pills;
         }
 
         if (!customProperty || customProperty.length === 0) {
-            return [];
+            return pills;
         }
 
         // Convert cached custom property data to renderable pill models.
-        const pills: CustomPropertyPill[] = [];
-        const colorLookupCache = new Map<string, string | undefined>();
+        const colorLookupCache = new Map<string, { color?: string; background?: string }>();
         for (const entry of customProperty) {
             const rawValue = entry.value;
             if (rawValue.trim().length === 0) {
@@ -662,26 +708,35 @@ export const FileItem = React.memo(function FileItem({
             // Resolve custom property colors at render time from field key and raw value.
             // This keeps persisted custom property items stable across style rule changes.
             const cacheKey = `${entry.fieldKey}\u0000${rawValue}`;
-            let color: string | undefined;
-            if (colorLookupCache.has(cacheKey)) {
-                color = colorLookupCache.get(cacheKey);
-            } else {
-                color = resolvePropertyColorMapColor(settings.customPropertyColorMap, entry.fieldKey, rawValue);
-                colorLookupCache.set(cacheKey, color);
+            let colorData = colorLookupCache.get(cacheKey);
+            if (!colorData) {
+                const propertyNodeId = buildPropertyValueNodeId(entry.fieldKey, rawValue);
+                colorData = metadataService.getPropertyColorData(propertyNodeId);
+                colorLookupCache.set(cacheKey, colorData);
             }
 
-            pills.push({ value: rawValue, label, wikiLink, color });
+            pills.push({
+                value: rawValue,
+                label,
+                wikiLink,
+                fieldKey: entry.fieldKey,
+                color: colorData.color,
+                background: colorData.background
+            });
         }
 
         return pills;
-    }, [appearanceSettings.customPropertyType, customProperty, settings.customPropertyColorMap, wordCount]);
+    }, [
+        appearanceSettings.customPropertyType,
+        customPropertyColorSignature,
+        customProperty,
+        metadataService,
+        settings.showProperties,
+        wordCount
+    ]);
 
     const customPropertyColorData = useMemo(() => {
-        void settings.tagColors;
-        void settings.tagBackgroundColors;
-        void settings.inheritTagColors;
-
-        // Precompute per-token styles (tag colors/backgrounds, or CSS color fallback) so each pill render is O(1).
+        // Precompute per-token styles so each pill render is O(1).
         const entries = new Map<
             string,
             {
@@ -696,34 +751,31 @@ export const FileItem = React.memo(function FileItem({
         }
 
         for (const pill of customPropertyPills) {
-            const colorToken = pill.color?.trim();
-            if (!colorToken || colorToken.length === 0) {
-                continue;
-            }
-            if (entries.has(colorToken)) {
+            const colorToken = pill.color?.trim() ?? '';
+            const backgroundToken = pill.background?.trim() ?? '';
+            if (!colorToken && !backgroundToken) {
                 continue;
             }
 
-            const resolved = getTagColorData(colorToken);
+            const cacheKey = `${colorToken}\u0000${backgroundToken}`;
+            if (entries.has(cacheKey)) {
+                continue;
+            }
+
             const pillStyle: React.CSSProperties & { '--nn-file-tag-custom-bg'?: string } = {};
 
             let hasColor = false;
             let hasBackground = false;
-            if (resolved.background) {
-                pillStyle['--nn-file-tag-custom-bg'] = resolved.background;
+            if (backgroundToken && isSupportedCssColor(backgroundToken)) {
+                pillStyle['--nn-file-tag-custom-bg'] = backgroundToken;
                 hasBackground = true;
             }
-            if (resolved.color) {
-                pillStyle.color = resolved.color;
-                hasColor = true;
-            }
-
-            if (!hasColor && !hasBackground && isSupportedCssColor(colorToken)) {
+            if (colorToken && isSupportedCssColor(colorToken)) {
                 pillStyle.color = colorToken;
                 hasColor = true;
             }
 
-            entries.set(colorToken, {
+            entries.set(cacheKey, {
                 style: hasColor || hasBackground ? pillStyle : undefined,
                 hasColor,
                 hasBackground
@@ -731,41 +783,73 @@ export const FileItem = React.memo(function FileItem({
         }
 
         return entries;
-    }, [customPropertyPills, getTagColorData, settings.inheritTagColors, settings.tagBackgroundColors, settings.tagColors]);
+    }, [customPropertyPills]);
 
     const shouldShowCustomProperty = useMemo(() => {
         return shouldShowCustomPropertyRow({
             customPropertyType: appearanceSettings.customPropertyType,
+            showProperties: settings.showProperties,
             showCustomPropertyInCompactMode: settings.showCustomPropertyInCompactMode,
             isCompactMode,
             file,
             wordCount,
             customProperty
         });
-    }, [appearanceSettings.customPropertyType, customProperty, file, isCompactMode, settings.showCustomPropertyInCompactMode, wordCount]);
-
-    const shouldShowPillRowIcons = useMemo(() => {
-        const tagPillsEnabled = settings.showTags && settings.showFileTags && (!isCompactMode || settings.showFileTagsInCompactMode);
-        const customPropertyPillsEnabled =
-            appearanceSettings.customPropertyType !== 'none' && (!isCompactMode || settings.showCustomPropertyInCompactMode);
-
-        return tagPillsEnabled && customPropertyPillsEnabled;
     }, [
         appearanceSettings.customPropertyType,
+        customProperty,
+        file,
         isCompactMode,
         settings.showCustomPropertyInCompactMode,
-        settings.showFileTags,
-        settings.showFileTagsInCompactMode,
-        settings.showTags
+        settings.showProperties,
+        wordCount
     ]);
+
+    const shouldShowPillRowIcons = useMemo(() => {
+        return shouldShowFileTags && shouldShowCustomProperty;
+    }, [shouldShowCustomProperty, shouldShowFileTags]);
 
     const fileTagPillIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'nav-tag'), [settings.interfaceIcons]);
     const customPropertyPillIconId = useMemo(() => {
-        return resolveUXIcon(
-            settings.interfaceIcons,
-            appearanceSettings.customPropertyType === 'wordCount' ? 'file-word-count' : 'file-custom-property'
+        const hasWordCountPill = appearanceSettings.customPropertyType === 'wordCount';
+        const hasFrontmatterPills = Boolean(
+            settings.showProperties && customProperty && customProperty.some(entry => entry.value.trim().length > 0)
         );
-    }, [appearanceSettings.customPropertyType, settings.interfaceIcons]);
+        const icon = hasWordCountPill && !hasFrontmatterPills ? 'file-word-count' : 'file-custom-property';
+        return resolveUXIcon(settings.interfaceIcons, icon);
+    }, [appearanceSettings.customPropertyType, customProperty, settings.interfaceIcons, settings.showProperties]);
+
+    const customPropertyRows = useMemo((): CustomPropertyPill[][] => {
+        if (!settings.showCustomPropertiesOnSeparateRows) {
+            return [];
+        }
+
+        const rows: CustomPropertyPill[][] = [];
+        const rowsByKey = new Map<string, CustomPropertyPill[]>();
+        let unkeyedRow: CustomPropertyPill[] | null = null;
+
+        for (const pill of customPropertyPills) {
+            const fieldKey = pill.fieldKey?.trim() ?? '';
+            if (!fieldKey) {
+                if (!unkeyedRow) {
+                    unkeyedRow = [];
+                    rows.push(unkeyedRow);
+                }
+                unkeyedRow.push(pill);
+                continue;
+            }
+
+            let row = rowsByKey.get(fieldKey);
+            if (!row) {
+                row = [];
+                rowsByKey.set(fieldKey, row);
+                rows.push(row);
+            }
+            row.push(pill);
+        }
+
+        return rows;
+    }, [customPropertyPills, settings.showCustomPropertiesOnSeparateRows]);
 
     const getTagDisplayName = useCallback(
         (tag: string): string => {
@@ -842,14 +926,16 @@ export const FileItem = React.memo(function FileItem({
             return null;
         }
 
-        const showOnSeparateRows = appearanceSettings.customPropertyType === 'frontmatter' && settings.showCustomPropertiesOnSeparateRows;
+        const showOnSeparateRows = settings.showCustomPropertiesOnSeparateRows;
 
         const renderCustomPropertyPill = (pill: CustomPropertyPill, index: number) => {
             const wikiLink = pill.wikiLink;
             const isLinked = Boolean(wikiLink);
             const className = isLinked ? 'nn-file-tag nn-file-custom-property nn-clickable-tag' : 'nn-file-tag nn-file-custom-property';
-            const colorToken = pill.color?.trim();
-            const resolvedColorData = colorToken && colorToken.length > 0 ? customPropertyColorData.get(colorToken) : undefined;
+            const colorToken = pill.color?.trim() ?? '';
+            const backgroundToken = pill.background?.trim() ?? '';
+            const cacheKey = `${colorToken}\u0000${backgroundToken}`;
+            const resolvedColorData = colorToken || backgroundToken ? customPropertyColorData.get(cacheKey) : undefined;
             const hasColor = Boolean(resolvedColorData?.hasColor);
             const hasBackground = Boolean(resolvedColorData?.hasBackground);
 
@@ -893,9 +979,9 @@ export const FileItem = React.memo(function FileItem({
         if (!shouldShowPillRowIcons) {
             return (
                 <>
-                    {customPropertyPills.map((pill, index) => (
-                        <div key={index} className="nn-file-custom-property-row">
-                            {renderCustomPropertyPill(pill, index)}
+                    {customPropertyRows.map((row, rowIndex) => (
+                        <div key={rowIndex} className="nn-file-custom-property-row">
+                            {row.map((pill, index) => renderCustomPropertyPill(pill, index))}
                         </div>
                     ))}
                 </>
@@ -904,14 +990,14 @@ export const FileItem = React.memo(function FileItem({
 
         return (
             <>
-                {customPropertyPills.map((pill, index) => (
-                    <div key={index} className="nn-file-pill-row nn-file-pill-row-custom-property">
+                {customPropertyRows.map((row, rowIndex) => (
+                    <div key={rowIndex} className="nn-file-pill-row nn-file-pill-row-custom-property">
                         <ServiceIcon
                             iconId={customPropertyPillIconId}
                             className="nn-file-pill-row-icon nn-file-pill-row-icon-custom-property"
                             aria-hidden={true}
                         />
-                        <div className="nn-file-custom-property-row">{renderCustomPropertyPill(pill, index)}</div>
+                        <div className="nn-file-custom-property-row">{row.map((pill, index) => renderCustomPropertyPill(pill, index))}</div>
                     </div>
                 ))}
             </>
@@ -920,8 +1006,8 @@ export const FileItem = React.memo(function FileItem({
         customPropertyPillIconId,
         customPropertyColorData,
         customPropertyPills,
+        customPropertyRows,
         handleCustomPropertyWikilinkClick,
-        appearanceSettings.customPropertyType,
         settings.showCustomPropertiesOnSeparateRows,
         shouldShowCustomProperty,
         shouldShowPillRowIcons

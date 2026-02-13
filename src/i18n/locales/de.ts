@@ -104,6 +104,8 @@ export const STRINGS_DE = {
         folderExists: 'Ordner bereits in Lesezeichen vorhanden',
         noteExists: 'Notiz bereits in Lesezeichen vorhanden',
         tagExists: 'Tag bereits in Lesezeichen vorhanden',
+        propertyExists: 'Eigenschaft bereits in Lesezeichen vorhanden',
+        invalidProperty: 'Ungültiges Eigenschafts-Lesezeichen',
         searchExists: 'Such-Lesezeichen existiert bereits',
         emptySearchQuery: 'Geben Sie eine Suchanfrage ein, bevor Sie sie speichern',
         emptySearchName: 'Geben Sie einen Namen ein, bevor Sie die Suche speichern',
@@ -376,10 +378,6 @@ export const STRINGS_DE = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Regel hinzufügen'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Oberflächensymbole',
@@ -736,7 +734,8 @@ export const STRINGS_DE = {
             tags: 'Tags',
             folders: 'Ordner',
             folderNotes: 'Ordnernotizen',
-            foldersAndTags: 'Ordner & Tags',
+            foldersAndTags: 'Ordner',
+            tagsAndProperties: 'Tags & Eigenschaften',
             listPane: 'Listenbereich',
             advanced: 'Erweitert'
         },
@@ -770,7 +769,7 @@ export const STRINGS_DE = {
                 previewText: 'Vorschautext',
                 featureImage: 'Hauptbild',
                 tags: 'Tags',
-                customProperty: 'Benutzerdefinierte Eigenschaft (Frontmatter oder Wortzahl)',
+                customProperty: 'Eigenschaften',
                 date: 'Datum',
                 parentFolder: 'Übergeordneter Ordner'
             }
@@ -1303,8 +1302,8 @@ export const STRINGS_DE = {
                 desc: 'Tags anzeigen, wenn Datum, Vorschau und Bild ausgeblendet sind.'
             },
             customPropertyType: {
-                name: 'Eigenschaftstyp',
-                desc: 'Wählen Sie die benutzerdefinierte Eigenschaft, die in Datei-Elementen angezeigt werden soll.',
+                name: 'Notiz-Eigenschaft',
+                desc: 'Wählen Sie die Notiz-Eigenschaft, die in Datei-Elementen angezeigt werden soll.',
                 options: {
                     frontmatter: 'Frontmatter-Eigenschaft',
                     wordCount: 'Wortanzahl',
@@ -1313,22 +1312,16 @@ export const STRINGS_DE = {
             },
             customPropertyFields: {
                 name: 'Anzuzeigende Eigenschaften',
-                desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften zur Anzeige als Badges. Listen-Eigenschaften zeigen ein Badge pro Wert. [[Wikilink]]-Werte werden als anklickbare Links angezeigt.',
+                desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften zur Anzeige im Navigationsbereich und als Badges in Datei-Elementen. Listen-Eigenschaften zeigen ein Badge pro Wert.',
                 placeholder: 'status, typ, kategorie'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Eigenschaften in separaten Zeilen anzeigen',
                 desc: 'Jede Eigenschaft in einer eigenen Zeile anzeigen.'
             },
-            customPropertyColorMap: {
-                name: 'Eigenschaftsfarben',
-                desc: 'Ordne Frontmatter-Eigenschaften und -Werte Badge-Farben zu. Eine Zuordnung pro Zeile: Eigenschaft=Farbe oder Eigenschaft:Wert=Farbe',
-                placeholder: '# Eigenschaft oder Eigenschaft:Wert Farbe\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Zuordnungen bearbeiten'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Benutzerdefinierte Eigenschaft im Kompaktmodus anzeigen',
-                desc: 'Die benutzerdefinierte Eigenschaft anzeigen, wenn Datum, Vorschau und Bild ausgeblendet sind.'
+                name: 'Eigenschaften im Kompaktmodus anzeigen',
+                desc: 'Eigenschaften anzeigen, wenn der Kompaktmodus aktiv ist.'
             },
             dateFormat: {
                 name: 'Datumsformat',
@@ -1513,6 +1506,29 @@ export const STRINGS_DE = {
             keepEmptyTagsProperty: {
                 name: 'Tags-Eigenschaft nach Entfernen des letzten Tags beibehalten',
                 desc: 'Behält die Tags-Frontmatter-Eigenschaft, wenn alle Tags entfernt werden. Wenn deaktiviert, wird die Tags-Eigenschaft aus dem Frontmatter gelöscht.'
+            },
+            showProperties: {
+                name: 'Eigenschaften anzeigen',
+                desc: 'Eigenschaftsbereich im Navigator anzeigen.'
+            },
+            showPropertyIcons: {
+                name: 'Eigenschafts-Symbole anzeigen',
+                desc: 'Symbole neben Eigenschaften im Navigationsbereich anzeigen.'
+            },
+            propertySortOrder: {
+                name: 'Sortierreihenfolge der Eigenschaften',
+                desc: 'Rechtsklick auf eine Eigenschaft, um eine andere Sortierreihenfolge für ihre Werte festzulegen.',
+                options: {
+                    alphaAsc: 'A bis Z',
+                    alphaDesc: 'Z bis A',
+                    frequency: 'Häufigkeit',
+                    lowToHigh: 'niedrig bis hoch',
+                    highToLow: 'hoch bis niedrig'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Eigenschafts-Ordner anzeigen',
+                desc: '"Eigenschaften" als einklappbaren Ordner anzeigen.'
             },
             hiddenTags: {
                 name: 'Tags verstecken (Tresorprofil)',

@@ -23,7 +23,7 @@ import type { DualPaneOrientation } from '../types';
 import type { VaultProfile } from '../settings/types';
 import type { FileVisibility } from '../utils/fileTypeUtils';
 import type { ShortcutEntry } from '../types/shortcuts';
-import { isFolderShortcut, isNoteShortcut, isSearchShortcut, isTagShortcut } from '../types/shortcuts';
+import { isFolderShortcut, isNoteShortcut, isSearchShortcut, isTagShortcut, isPropertyShortcut } from '../types/shortcuts';
 import { cloneShortcuts, getActiveVaultProfile } from '../utils/vaultProfiles';
 import { clonePinnedNotesRecord, isStringRecordValue, sanitizeRecord } from '../utils/recordUtils';
 import { areStringArraysEqual } from '../utils/arrayUtils';
@@ -51,6 +51,14 @@ interface SettingsDerivedValue {
 }
 const SettingsDerivedContext = createContext<SettingsDerivedValue | null>(null);
 
+const normalizeShortcutAlias = (alias: string | undefined): string | undefined => {
+    return alias && alias.length > 0 ? alias : undefined;
+};
+
+const areShortcutAliasesEqual = (prevAlias: string | undefined, nextAlias: string | undefined): boolean => {
+    return normalizeShortcutAlias(prevAlias) === normalizeShortcutAlias(nextAlias);
+};
+
 // Compares shortcut lists to reuse the previous profile object when entries are unchanged.
 const areShortcutsEqual = (prev?: ShortcutEntry[] | null, next?: ShortcutEntry[] | null): boolean => {
     if (prev === next) {
@@ -71,21 +79,44 @@ const areShortcutsEqual = (prev?: ShortcutEntry[] | null, next?: ShortcutEntry[]
         }
 
         if (isFolderShortcut(prevShortcut)) {
-            if (!isFolderShortcut(nextShortcut) || prevShortcut.path !== nextShortcut.path) {
+            if (
+                !isFolderShortcut(nextShortcut) ||
+                prevShortcut.path !== nextShortcut.path ||
+                !areShortcutAliasesEqual(prevShortcut.alias, nextShortcut.alias)
+            ) {
                 return false;
             }
             continue;
         }
 
         if (isNoteShortcut(prevShortcut)) {
-            if (!isNoteShortcut(nextShortcut) || prevShortcut.path !== nextShortcut.path) {
+            if (
+                !isNoteShortcut(nextShortcut) ||
+                prevShortcut.path !== nextShortcut.path ||
+                !areShortcutAliasesEqual(prevShortcut.alias, nextShortcut.alias)
+            ) {
                 return false;
             }
             continue;
         }
 
         if (isTagShortcut(prevShortcut)) {
-            if (!isTagShortcut(nextShortcut) || prevShortcut.tagPath !== nextShortcut.tagPath) {
+            if (
+                !isTagShortcut(nextShortcut) ||
+                prevShortcut.tagPath !== nextShortcut.tagPath ||
+                !areShortcutAliasesEqual(prevShortcut.alias, nextShortcut.alias)
+            ) {
+                return false;
+            }
+            continue;
+        }
+
+        if (isPropertyShortcut(prevShortcut)) {
+            if (
+                !isPropertyShortcut(nextShortcut) ||
+                prevShortcut.nodeId !== nextShortcut.nodeId ||
+                !areShortcutAliasesEqual(prevShortcut.alias, nextShortcut.alias)
+            ) {
                 return false;
             }
             continue;
@@ -152,6 +183,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
         // Clone tag color records so settings updates change object identity and trigger consumers
         const tagColors = sanitizeRecord(plugin.settings.tagColors);
         const tagBackgroundColors = sanitizeRecord(plugin.settings.tagBackgroundColors);
+        const propertyColors = sanitizeRecord(plugin.settings.propertyColors);
+        const propertyBackgroundColors = sanitizeRecord(plugin.settings.propertyBackgroundColors);
         const rawInterfaceIcons = plugin.settings.interfaceIcons;
         const interfaceIconsCache = previousInterfaceIconsRef.current;
         const interfaceIcons =
@@ -166,6 +199,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
             dualPaneOrientation: plugin.getDualPaneOrientation(),
             tagColors,
             tagBackgroundColors,
+            propertyColors,
+            propertyBackgroundColors,
             interfaceIcons,
             folderAppearances: cloneAppearanceMap(plugin.settings.folderAppearances),
             tagAppearances: cloneAppearanceMap(plugin.settings.tagAppearances),

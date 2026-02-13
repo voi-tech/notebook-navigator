@@ -31,12 +31,18 @@ import { useUIState, useUIDispatch } from '../context/UIStateContext';
 import { useFileCache } from '../context/StorageContext';
 import { useCommandQueue } from '../context/ServicesContext';
 import { determineTagToReveal, findNearestVisibleTagAncestor, normalizeTagPath } from '../utils/tagUtils';
-import { ItemType, TAGGED_TAG_ID, TAGS_ROOT_VIRTUAL_FOLDER_ID, UNTAGGED_TAG_ID } from '../types';
+import { ItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, TAGGED_TAG_ID, TAGS_ROOT_VIRTUAL_FOLDER_ID, UNTAGGED_TAG_ID } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
 import { normalizeNavigationPath } from '../utils/navigationIndex';
 import { doesFolderContainPath } from '../utils/pathUtils';
 import type { Align } from '../types/scroll';
 import { navigateToTag as navigateToTagInternal, type NavigateToTagOptions } from '../utils/tagNavigation';
+import {
+    determinePropertyToReveal,
+    getPropertyKeyNodeIdFromNodeId,
+    isPropertyTreeNodeId,
+    type PropertySelectionNodeId
+} from '../utils/propertyTree';
 
 interface FocusPaneOptions {
     updateSinglePaneView?: boolean;
@@ -334,6 +340,7 @@ export function useNavigatorReveal({
 
             // Check if we're in tag view and should switch tags
             let targetTag: string | null | undefined = undefined;
+            let targetProperty: PropertySelectionNodeId | null | undefined = undefined;
             let targetFolderOverride: TFolder | null = null;
             let preserveFolder = false;
             const revealSource: SelectionRevealSource | undefined = options?.isStartupReveal ? 'startup' : options?.source;
@@ -393,9 +400,64 @@ export function useNavigatorReveal({
                 }
             }
 
+            if (selectionState.selectionType === 'property') {
+                const fileData = getDB().getFile(file.path);
+                const resolvedProperty = settings.showProperties
+                    ? determinePropertyToReveal(
+                          fileData?.customProperty ?? null,
+                          selectionState.selectedProperty,
+                          settings,
+                          includeDescendantNotes
+                      )
+                    : null;
+                targetProperty = resolvedProperty;
+
+                if (resolvedProperty) {
+                    const isPropertiesRootCollapsed =
+                        settings.showProperties &&
+                        settings.showAllPropertiesFolder &&
+                        !expansionState.expandedVirtualFolders.has(PROPERTIES_ROOT_VIRTUAL_FOLDER_ID);
+
+                    if (includeDescendantNotes && isPropertiesRootCollapsed) {
+                        targetProperty = PROPERTIES_ROOT_VIRTUAL_FOLDER_ID;
+                    } else {
+                        const propertyNodeId = resolvedProperty;
+                        const rawKeyNodeId =
+                            propertyNodeId !== PROPERTIES_ROOT_VIRTUAL_FOLDER_ID ? getPropertyKeyNodeIdFromNodeId(propertyNodeId) : null;
+                        const keyNodeId = rawKeyNodeId && isPropertyTreeNodeId(rawKeyNodeId) ? rawKeyNodeId : null;
+                        const keyCollapsed = Boolean(
+                            keyNodeId && keyNodeId !== propertyNodeId && !expansionState.expandedProperties.has(keyNodeId)
+                        );
+
+                        if (includeDescendantNotes && keyCollapsed) {
+                            targetProperty = keyNodeId;
+                        } else {
+                            if (
+                                !includeDescendantNotes &&
+                                settings.showProperties &&
+                                settings.showAllPropertiesFolder &&
+                                !expansionState.expandedVirtualFolders.has(PROPERTIES_ROOT_VIRTUAL_FOLDER_ID)
+                            ) {
+                                const nextExpandedVirtualFolders = new Set(expansionState.expandedVirtualFolders);
+                                nextExpandedVirtualFolders.add(PROPERTIES_ROOT_VIRTUAL_FOLDER_ID);
+                                expansionDispatch({ type: 'SET_EXPANDED_VIRTUAL_FOLDERS', folders: nextExpandedVirtualFolders });
+                            }
+
+                            if (!includeDescendantNotes && keyCollapsed && keyNodeId) {
+                                expansionDispatch({ type: 'EXPAND_PROPERTIES', propertyNodeIds: [keyNodeId] });
+                            }
+                        }
+                    }
+                }
+            }
+
             let resolvedFolder: TFolder | null = null;
 
-            if ((targetTag === null || targetTag === undefined) && file.parent) {
+            if (
+                (targetTag === null || targetTag === undefined) &&
+                (targetProperty === null || targetProperty === undefined) &&
+                file.parent
+            ) {
                 const { target, expandAncestors } = getRevealTargetFolder(file.parent);
                 resolvedFolder = target;
 
@@ -445,6 +507,7 @@ export function useNavigatorReveal({
                 preserveFolder,
                 isManualReveal: false,
                 targetTag,
+                targetProperty,
                 targetFolder: targetFolderOverride ?? undefined,
                 source: revealSource
             });
@@ -457,7 +520,9 @@ export function useNavigatorReveal({
             if (!shouldSkipShortcutScroll) {
                 if (targetTag && navigationPaneRef.current) {
                     navigationPaneRef.current.requestScroll(targetTag, { align: navigationAlign, itemType: ItemType.TAG });
-                } else if (!targetTag && navigationPaneRef.current) {
+                } else if (!targetTag && targetProperty && navigationPaneRef.current) {
+                    navigationPaneRef.current.requestScroll(targetProperty, { align: navigationAlign, itemType: ItemType.PROPERTY });
+                } else if (!targetTag && !targetProperty && navigationPaneRef.current) {
                     const scrollFolder =
                         targetFolderOverride ??
                         (preserveFolder && selectionState.selectedFolder ? selectionState.selectedFolder : (resolvedFolder ?? file.parent));
@@ -473,8 +538,10 @@ export function useNavigatorReveal({
             selectionState.selectedFolder,
             selectionState.selectionType,
             selectionState.selectedTag,
+            selectionState.selectedProperty,
             expansionState.expandedFolders,
             expansionState.expandedTags,
+            expansionState.expandedProperties,
             expansionState.expandedVirtualFolders,
             expansionDispatch,
             selectionDispatch,
@@ -812,6 +879,11 @@ export function useNavigatorReveal({
                     navigationPaneRef.current?.requestScroll(folderPath, {
                         itemType: ItemType.FOLDER
                     });
+                } else if (selectionState.selectionType === ItemType.PROPERTY && selectionState.selectedProperty) {
+                    const propertyNodeId = normalizeNavigationPath(ItemType.PROPERTY, selectionState.selectedProperty);
+                    navigationPaneRef.current?.requestScroll(propertyNodeId, {
+                        itemType: ItemType.PROPERTY
+                    });
                 }
             }
 
@@ -824,6 +896,7 @@ export function useNavigatorReveal({
         selectionState.selectedFile,
         selectionState.selectionType,
         selectionState.selectedTag,
+        selectionState.selectedProperty,
         selectionState.revealSource,
         navigationPaneRef,
         listPaneRef,

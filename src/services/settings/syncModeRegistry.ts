@@ -32,6 +32,7 @@ import {
     resolvePaneTransitionDuration,
     resolvePinNavigationBanner,
     resolveTagSortOrder,
+    resolvePropertySortOrder,
     resolveToolbarVisibility
 } from '../../settings/migrations/localPreferences';
 import type { NotebookNavigatorSettings, SyncModeSettingId } from '../../settings/types';
@@ -260,6 +261,16 @@ export function createSyncModeRegistry(params: CreateSyncModeRegistryParams): Sy
                 migrated: false
             }),
             sanitizeSynced: () => params.sanitizeTagSortOrderSetting(params.getSettings().tagSortOrder)
+        }),
+        propertySortOrder: createResolvedLocalStorageSettingEntry({
+            settingId: 'propertySortOrder',
+            loadPhase: 'preProfiles',
+            localStorageKey: params.keys.propertySortOrderKey,
+            resolveDeviceLocal: storedData => ({
+                value: resolvePropertySortOrder({ storedData, keys: params.keys, defaultSettings: params.defaultSettings }),
+                migrated: false
+            }),
+            sanitizeSynced: () => params.sanitizeTagSortOrderSetting(params.getSettings().propertySortOrder)
         }),
         includeDescendantNotes: createUXPreferenceEntry({
             settingId: 'includeDescendantNotes',

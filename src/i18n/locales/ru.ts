@@ -105,6 +105,8 @@ export const STRINGS_RU = {
         folderExists: 'Папка уже в ярлыках',
         noteExists: 'Заметка уже в ярлыках',
         tagExists: 'Тег уже в ярлыках',
+        propertyExists: 'Свойство уже в закладках',
+        invalidProperty: 'Недопустимая закладка свойства',
         searchExists: 'Ярлык поиска уже существует',
         emptySearchQuery: 'Введите поисковый запрос перед сохранением',
         emptySearchName: 'Введите название перед сохранением поиска',
@@ -376,10 +378,6 @@ export const STRINGS_RU = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Добавить правило'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Иконки интерфейса',
@@ -732,7 +730,8 @@ export const STRINGS_RU = {
             icons: 'Наборы иконок',
             folders: 'Папки',
             folderNotes: 'Заметки папок',
-            foldersAndTags: 'Папки и теги',
+            foldersAndTags: 'Папки',
+            tagsAndProperties: 'Теги и свойства',
             tags: 'Теги',
             listPane: 'Панель списка',
             notes: 'Заметки',
@@ -768,7 +767,7 @@ export const STRINGS_RU = {
                 previewText: 'Текст превью',
                 featureImage: 'Изображение записи',
                 tags: 'Теги',
-                customProperty: 'Пользовательское свойство (метаданные или количество слов)',
+                customProperty: 'Свойства',
                 date: 'Дата',
                 parentFolder: 'Родительская папка'
             }
@@ -1300,8 +1299,8 @@ export const STRINGS_RU = {
                 desc: 'Отображать теги, когда дата, превью и изображение скрыты.'
             },
             customPropertyType: {
-                name: 'Тип свойства',
-                desc: 'Выберите пользовательское свойство для отображения в элементах файлов.',
+                name: 'Свойство заметки',
+                desc: 'Выберите свойство заметки для отображения в элементах файлов.',
                 options: {
                     frontmatter: 'Свойство frontmatter',
                     wordCount: 'Количество слов',
@@ -1310,22 +1309,16 @@ export const STRINGS_RU = {
             },
             customPropertyFields: {
                 name: 'Свойства для отображения',
-                desc: 'Список свойств frontmatter через запятую для отображения в виде значков. Свойства со списковыми значениями отображают один значок на каждое значение. Значения в формате [[wikilink]] отображаются как кликабельные ссылки.',
+                desc: 'Список свойств метаданных через запятую для отображения в панели навигации и в виде значков в элементах файлов. Свойства со списком значений отображают один значок на значение.',
                 placeholder: 'статус, тип, категория'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Показывать свойства в отдельных строках',
                 desc: 'Показывать каждое свойство в собственной строке.'
             },
-            customPropertyColorMap: {
-                name: 'Цвета свойств',
-                desc: 'Сопоставление свойств и значений frontmatter с цветами значков. Одно сопоставление на строку: свойство=цвет или свойство:значение=цвет',
-                placeholder: '# Свойство или свойство:значение цвет\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Редактировать сопоставления'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Показывать пользовательское свойство в компактном режиме',
-                desc: 'Отображать пользовательское свойство, когда дата, превью и изображение скрыты.'
+                name: 'Показывать свойства в компактном режиме',
+                desc: 'Отображать свойства при активном компактном режиме.'
             },
             dateFormat: {
                 name: 'Формат даты',
@@ -1511,6 +1504,29 @@ export const STRINGS_RU = {
             keepEmptyTagsProperty: {
                 name: 'Сохранять свойство tags после удаления последнего тега',
                 desc: 'Сохранять свойство tags в frontmatter, когда все теги удалены. При отключении свойство tags удаляется из frontmatter.'
+            },
+            showProperties: {
+                name: 'Показать свойства',
+                desc: 'Отображать раздел свойств в навигаторе.'
+            },
+            showPropertyIcons: {
+                name: 'Показать значки свойств',
+                desc: 'Отображать значки рядом со свойствами в панели навигации.'
+            },
+            propertySortOrder: {
+                name: 'Порядок сортировки свойств',
+                desc: 'Щёлкните правой кнопкой мыши по свойству, чтобы задать другой порядок сортировки его значений.',
+                options: {
+                    alphaAsc: 'А до Я',
+                    alphaDesc: 'Я до А',
+                    frequency: 'Частота',
+                    lowToHigh: 'по возрастанию',
+                    highToLow: 'по убыванию'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Показать папку свойств',
+                desc: 'Отображать «Свойства» как сворачиваемую папку.'
             },
             hiddenTags: {
                 name: 'Скрыть теги (профиль хранилища)',

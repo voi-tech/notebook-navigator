@@ -105,6 +105,8 @@ export const STRINGS_TH = {
         folderExists: 'โฟลเดอร์อยู่ในทางลัดแล้ว',
         noteExists: 'โน้ตอยู่ในทางลัดแล้ว',
         tagExists: 'แท็กอยู่ในทางลัดแล้ว',
+        propertyExists: 'คุณสมบัติมีอยู่ในทางลัดแล้ว',
+        invalidProperty: 'ทางลัดคุณสมบัติไม่ถูกต้อง',
         searchExists: 'ทางลัดการค้นหามีอยู่แล้ว',
         emptySearchQuery: 'กรอกคำค้นหาก่อนบันทึก',
         emptySearchName: 'กรอกชื่อก่อนบันทึกการค้นหา',
@@ -375,10 +377,6 @@ export const STRINGS_TH = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'เพิ่มกฎ'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'ไอคอนอินเทอร์เฟซ',
@@ -731,7 +729,8 @@ export const STRINGS_TH = {
             icons: 'ชุดไอคอน',
             folders: 'โฟลเดอร์',
             folderNotes: 'โน้ตโฟลเดอร์',
-            foldersAndTags: 'โฟลเดอร์ & แท็ก',
+            foldersAndTags: 'โฟลเดอร์',
+            tagsAndProperties: 'แท็กและคุณสมบัติ',
             tags: 'แท็ก',
             listPane: 'แผงรายการ',
             notes: 'โน้ต',
@@ -767,7 +766,7 @@ export const STRINGS_TH = {
                 previewText: 'ข้อความตัวอย่าง',
                 featureImage: 'รูปภาพเด่น',
                 tags: 'แท็ก',
-                customProperty: 'คุณสมบัติกำหนดเอง (ฟรอนต์แมตเตอร์หรือจำนวนคำ)',
+                customProperty: 'คุณสมบัติ',
                 date: 'วันที่',
                 parentFolder: 'โฟลเดอร์หลัก'
             }
@@ -1298,8 +1297,8 @@ export const STRINGS_TH = {
                 desc: 'แสดงแท็กเมื่อวันที่ ตัวอย่าง และรูปภาพถูกซ่อน'
             },
             customPropertyType: {
-                name: 'ประเภทคุณสมบัติ',
-                desc: 'เลือกคุณสมบัติกำหนดเองที่จะแสดงในรายการไฟล์',
+                name: 'คุณสมบัติโน้ต',
+                desc: 'เลือกคุณสมบัติโน้ตที่จะแสดงในรายการไฟล์',
                 options: {
                     frontmatter: 'คุณสมบัติ Frontmatter',
                     wordCount: 'จำนวนคำ',
@@ -1308,22 +1307,16 @@ export const STRINGS_TH = {
             },
             customPropertyFields: {
                 name: 'คุณสมบัติที่จะแสดง',
-                desc: 'รายการคุณสมบัติ frontmatter คั่นด้วยเครื่องหมายจุลภาคเพื่อแสดงเป็นป้าย คุณสมบัติที่มีค่าเป็นรายการจะแสดงหนึ่งป้ายต่อค่า ค่าในรูปแบบ [[wikilink]] จะแสดงเป็นลิงก์ที่คลิกได้',
+                desc: 'รายการคุณสมบัติ frontmatter คั่นด้วยเครื่องหมายจุลภาค เพื่อแสดงในแผงนำทางและเป็นป้ายในรายการไฟล์ คุณสมบัติที่เป็นรายการจะแสดงหนึ่งป้ายต่อค่า',
                 placeholder: 'สถานะ, ประเภท, หมวดหมู่'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'แสดงคุณสมบัติแยกเป็นบรรทัด',
                 desc: 'แสดงแต่ละคุณสมบัติในบรรทัดของตัวเอง'
             },
-            customPropertyColorMap: {
-                name: 'สีคุณสมบัติ',
-                desc: 'กำหนดคุณสมบัติและค่า frontmatter ให้กับสีป้าย หนึ่งการกำหนดต่อบรรทัด: คุณสมบัติ=สี หรือ คุณสมบัติ:ค่า=สี',
-                placeholder: '# คุณสมบัติ หรือ คุณสมบัติ:ค่า สี\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'แก้ไขการกำหนด'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'แสดงคุณสมบัติกำหนดเองในโหมดกะทัดรัด',
-                desc: 'แสดงคุณสมบัติกำหนดเองเมื่อวันที่ ตัวอย่าง และรูปภาพถูกซ่อน'
+                name: 'แสดงคุณสมบัติในโหมดกะทัดรัด',
+                desc: 'แสดงคุณสมบัติเมื่อโหมดกะทัดรัดเปิดใช้งาน'
             },
             dateFormat: {
                 name: 'รูปแบบวันที่',
@@ -1509,6 +1502,29 @@ export const STRINGS_TH = {
             keepEmptyTagsProperty: {
                 name: 'เก็บคุณสมบัติแท็กหลังนำแท็กสุดท้ายออก',
                 desc: 'เก็บคุณสมบัติแท็ก frontmatter เมื่อนำแท็กทั้งหมดออก เมื่อปิดใช้งาน คุณสมบัติแท็กจะถูกลบออกจาก frontmatter'
+            },
+            showProperties: {
+                name: 'แสดงคุณสมบัติ',
+                desc: 'แสดงส่วนคุณสมบัติในตัวนำทาง'
+            },
+            showPropertyIcons: {
+                name: 'แสดงไอคอนคุณสมบัติ',
+                desc: 'แสดงไอคอนข้างคุณสมบัติในแผงนำทาง'
+            },
+            propertySortOrder: {
+                name: 'ลำดับการเรียงคุณสมบัติ',
+                desc: 'คลิกขวาที่คุณสมบัติใดก็ได้เพื่อตั้งค่าลำดับการเรียงที่แตกต่างสำหรับค่าต่างๆ',
+                options: {
+                    alphaAsc: 'ก ถึง ฮ',
+                    alphaDesc: 'ฮ ถึง ก',
+                    frequency: 'ความถี่',
+                    lowToHigh: 'ต่ำไปสูง',
+                    highToLow: 'สูงไปต่ำ'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'แสดงโฟลเดอร์คุณสมบัติ',
+                desc: 'แสดง "คุณสมบัติ" เป็นโฟลเดอร์ที่พับได้'
             },
             hiddenTags: {
                 name: 'ซ่อนแท็ก (โปรไฟล์ห้องนิรภัย)',

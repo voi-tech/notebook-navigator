@@ -597,6 +597,36 @@ export function resolveTagSortOrder(params: {
 }
 
 /**
+ * Resolves the effective property sort order preference with local overrides.
+ */
+export function resolvePropertySortOrder(params: {
+    storedData: Record<string, unknown> | null;
+    keys: LocalStorageKeys;
+    defaultSettings: NotebookNavigatorSettings;
+}): TagSortOrder {
+    const { storedData, keys, defaultSettings } = params;
+
+    const storedLocal = localStorage.get<unknown>(keys.propertySortOrderKey);
+    const storedLocalValue = typeof storedLocal === 'string' ? storedLocal : null;
+    if (storedLocalValue && isTagSortOrder(storedLocalValue)) {
+        // Local storage takes precedence for per-device preferences.
+        return storedLocalValue;
+    }
+
+    const storedSetting = storedData?.['propertySortOrder'];
+    const storedSettingValue = typeof storedSetting === 'string' ? storedSetting : null;
+    if (storedSettingValue && isTagSortOrder(storedSettingValue)) {
+        // Migrate legacy synced value into local storage.
+        localStorage.set(keys.propertySortOrderKey, storedSettingValue);
+        return storedSettingValue;
+    }
+
+    // Seed local storage with a valid default value.
+    localStorage.set(keys.propertySortOrderKey, defaultSettings.propertySortOrder);
+    return defaultSettings.propertySortOrder;
+}
+
+/**
  * Resolves the effective folder sort order preference with local overrides.
  */
 export function resolveFolderSortOrder(params: {

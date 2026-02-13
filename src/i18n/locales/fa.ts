@@ -105,6 +105,8 @@ export const STRINGS_FA = {
         folderExists: 'پوشه در میانبرها وجود دارد',
         noteExists: 'یادداشت در میانبرها وجود دارد',
         tagExists: 'برچسب در میانبرها وجود دارد',
+        propertyExists: 'ویژگی از قبل در میانبرها وجود دارد',
+        invalidProperty: 'میانبر ویژگی نامعتبر',
         searchExists: 'میانبر جستجو وجود دارد',
         emptySearchQuery: 'قبل از ذخیره، عبارت جستجو را وارد کنید',
         emptySearchName: 'قبل از ذخیره جستجو، نامی وارد کنید',
@@ -375,10 +377,6 @@ export const STRINGS_FA = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'افزودن قانون'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'آیکون‌های رابط کاربری',
@@ -732,7 +730,8 @@ export const STRINGS_FA = {
             icons: 'بسته‌های آیکون',
             folders: 'پوشه‌ها',
             folderNotes: 'یادداشت‌های پوشه',
-            foldersAndTags: 'پوشه‌ها و برچسب‌ها',
+            foldersAndTags: 'پوشه‌ها',
+            tagsAndProperties: 'برچسب‌ها و ویژگی‌ها',
             tags: 'برچسب‌ها',
             listPane: 'پنل لیست',
             notes: 'یادداشت‌ها',
@@ -768,7 +767,7 @@ export const STRINGS_FA = {
                 previewText: 'متن پیش‌نمایش',
                 featureImage: 'تصویر ویژه',
                 tags: 'برچسب‌ها',
-                customProperty: 'ویژگی سفارشی (فرانت‌متر یا تعداد کلمات)',
+                customProperty: 'ویژگی‌ها',
                 date: 'تاریخ',
                 parentFolder: 'پوشه والد'
             }
@@ -1299,8 +1298,8 @@ export const STRINGS_FA = {
                 desc: 'برچسب‌ها را هنگامی که تاریخ، پیش‌نمایش و تصویر مخفی هستند نمایش دهید.'
             },
             customPropertyType: {
-                name: 'نوع ویژگی',
-                desc: 'ویژگی سفارشی را برای نمایش در آیتم‌های فایل انتخاب کنید.',
+                name: 'ویژگی یادداشت',
+                desc: 'ویژگی یادداشت را برای نمایش در موارد فایل انتخاب کنید.',
                 options: {
                     frontmatter: 'ویژگی Frontmatter',
                     wordCount: 'تعداد کلمات',
@@ -1309,22 +1308,16 @@ export const STRINGS_FA = {
             },
             customPropertyFields: {
                 name: 'ویژگی‌ها برای نمایش',
-                desc: 'لیست ویژگی‌های frontmatter جدا شده با کاما برای نمایش به صورت نشان. ویژگی‌های با مقادیر لیستی یک نشان برای هر مقدار نمایش می‌دهند. مقادیر [[wikilink]] به صورت لینک‌های قابل کلیک نمایش داده می‌شوند.',
+                desc: 'فهرست ویژگی‌های فرانت‌متر جدا شده با کاما برای نمایش در پنل ناوبری و به عنوان نشان در موارد فایل. ویژگی‌های فهرستی یک نشان به ازای هر مقدار نمایش می‌دهند.',
                 placeholder: 'وضعیت، نوع، دسته‌بندی'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'نمایش ویژگی‌ها در ردیف‌های جداگانه',
                 desc: 'هر ویژگی را در ردیف جداگانه نمایش می‌دهد.'
             },
-            customPropertyColorMap: {
-                name: 'رنگ‌های ویژگی',
-                desc: 'نگاشت ویژگی‌ها و مقادیر فرانت‌متر به رنگ‌های نشان. یک نگاشت در هر خط: ویژگی=رنگ یا ویژگی:مقدار=رنگ',
-                placeholder: '# ویژگی یا ویژگی:مقدار رنگ\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'ویرایش نگاشت‌ها'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'نمایش ویژگی سفارشی در حالت فشرده',
-                desc: 'ویژگی سفارشی را هنگامی که تاریخ، پیش‌نمایش و تصویر مخفی هستند نمایش دهید.'
+                name: 'نمایش ویژگی‌ها در حالت فشرده',
+                desc: 'نمایش ویژگی‌ها هنگام فعال بودن حالت فشرده.'
             },
             dateFormat: {
                 name: 'قالب تاریخ',
@@ -1510,6 +1503,29 @@ export const STRINGS_FA = {
             keepEmptyTagsProperty: {
                 name: 'حفظ ویژگی برچسب‌ها بعد از حذف آخرین برچسب',
                 desc: 'ویژگی برچسب‌های فرانت‌متر را هنگام حذف همه برچسب‌ها حفظ کنید. وقتی غیرفعال، ویژگی برچسب‌ها از فرانت‌متر حذف می‌شود.'
+            },
+            showProperties: {
+                name: 'نمایش ویژگی‌ها',
+                desc: 'نمایش بخش ویژگی‌ها در ناوبر.'
+            },
+            showPropertyIcons: {
+                name: 'نمایش نمادهای ویژگی',
+                desc: 'نمایش نمادها در کنار ویژگی‌ها در پنل ناوبری.'
+            },
+            propertySortOrder: {
+                name: 'ترتیب مرتب‌سازی ویژگی‌ها',
+                desc: 'برای تنظیم ترتیب مرتب‌سازی متفاوت برای مقادیر هر ویژگی، روی آن راست‌کلیک کنید.',
+                options: {
+                    alphaAsc: 'الف تا ی',
+                    alphaDesc: 'ی تا الف',
+                    frequency: 'فراوانی',
+                    lowToHigh: 'کم به زیاد',
+                    highToLow: 'زیاد به کم'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'نمایش پوشه ویژگی‌ها',
+                desc: 'نمایش "ویژگی‌ها" به عنوان پوشه جمع‌شدنی.'
             },
             hiddenTags: {
                 name: 'مخفی کردن برچسب‌ها (پروفایل خزانه)',

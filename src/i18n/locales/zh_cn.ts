@@ -104,6 +104,8 @@ export const STRINGS_ZH_CN = {
         folderExists: '文件夹已在快捷方式中',
         noteExists: '笔记已在快捷方式中',
         tagExists: '标签已在快捷方式中',
+        propertyExists: '属性已在快捷方式中',
+        invalidProperty: '无效的属性快捷方式',
         searchExists: '搜索快捷方式已存在',
         emptySearchQuery: '保存前请输入搜索查询',
         emptySearchName: '保存搜索前请输入名称',
@@ -375,10 +377,6 @@ export const STRINGS_ZH_CN = {
         },
         fileIconRuleEditor: {
             addRuleAria: '添加规则'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: '界面图标',
@@ -732,7 +730,8 @@ export const STRINGS_ZH_CN = {
             tags: '标签',
             folders: '文件夹',
             folderNotes: '文件夹笔记',
-            foldersAndTags: '文件夹与标签',
+            foldersAndTags: '文件夹',
+            tagsAndProperties: '标签与属性',
             listPane: '列表窗格',
             advanced: '高级'
         },
@@ -766,7 +765,7 @@ export const STRINGS_ZH_CN = {
                 previewText: '预览文本',
                 featureImage: '特色图片',
                 tags: '标签',
-                customProperty: '自定义属性（frontmatter 或字数）',
+                customProperty: '属性',
                 date: '日期',
                 parentFolder: '父文件夹'
             }
@@ -1298,8 +1297,8 @@ export const STRINGS_ZH_CN = {
                 desc: '当日期、预览和图像被隐藏时显示标签。'
             },
             customPropertyType: {
-                name: '属性类型',
-                desc: '选择要在文件项中显示的自定义属性。',
+                name: '笔记属性',
+                desc: '选择要在文件项中显示的笔记属性。',
                 options: {
                     frontmatter: '前置元数据属性',
                     wordCount: '字数统计',
@@ -1308,22 +1307,16 @@ export const STRINGS_ZH_CN = {
             },
             customPropertyFields: {
                 name: '要显示的属性',
-                desc: '以逗号分隔的前置元数据属性列表，用于显示为标签。列表值属性每个值显示一个标签。[[wikilink]] 格式的值将显示为可点击链接。',
+                desc: '以逗号分隔的 frontmatter 属性列表，用于在导航窗格和文件项中作为徽章显示。列表值属性每个值显示一个徽章。',
                 placeholder: '状态, 类型, 分类'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: '在单独的行中显示属性',
                 desc: '将每个属性显示在单独的行中。'
             },
-            customPropertyColorMap: {
-                name: '属性颜色',
-                desc: '将前置元数据属性和值映射到徽章颜色。每行一个映射：属性=颜色 或 属性:值=颜色',
-                placeholder: '# 属性 或 属性:值 颜色\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: '编辑映射'
-            },
             showCustomPropertyInCompactMode: {
-                name: '在精简模式中显示自定义属性',
-                desc: '当日期、预览和图像被隐藏时显示自定义属性。'
+                name: '在紧凑模式下显示属性',
+                desc: '紧凑模式启用时显示属性。'
             },
             dateFormat: {
                 name: '日期格式',
@@ -1509,6 +1502,29 @@ export const STRINGS_ZH_CN = {
             keepEmptyTagsProperty: {
                 name: '删除最后一个标签后保留 tags 属性',
                 desc: '当所有标签被删除时保留 frontmatter 中的 tags 属性。禁用时,tags 属性将从 frontmatter 中删除。'
+            },
+            showProperties: {
+                name: '显示属性',
+                desc: '在导航器中显示属性部分。'
+            },
+            showPropertyIcons: {
+                name: '显示属性图标',
+                desc: '在导航窗格中属性旁边显示图标。'
+            },
+            propertySortOrder: {
+                name: '属性排序方式',
+                desc: '右键点击任意属性以设置其值的不同排序方式。',
+                options: {
+                    alphaAsc: 'A 到 Z',
+                    alphaDesc: 'Z 到 A',
+                    frequency: '频率',
+                    lowToHigh: '从低到高',
+                    highToLow: '从高到低'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: '显示属性文件夹',
+                desc: '将"属性"显示为可折叠文件夹。'
             },
             hiddenTags: {
                 name: '隐藏标签 (库配置)',

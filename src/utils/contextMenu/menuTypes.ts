@@ -53,6 +53,10 @@ export type MenuConfig =
           item: string; // Tag path
       }
     | {
+          type: typeof ItemType.PROPERTY;
+          item: string; // Property node id
+      }
+    | {
           type: typeof EMPTY_LIST_MENU_TYPE;
           item: TFolder | null;
       };
@@ -81,6 +85,7 @@ export interface MenuState {
     selectionState: SelectionState;
     expandedFolders: Set<string>;
     expandedTags: Set<string>;
+    expandedProperties: Set<string>;
 }
 
 /**
@@ -111,6 +116,10 @@ export interface TagMenuOptions {
     disableNavigationSeparatorActions?: boolean;
 }
 
+export interface PropertyMenuOptions {
+    disableNavigationSeparatorActions?: boolean;
+}
+
 /**
  * Parameters for folder menu builder
  */
@@ -125,6 +134,14 @@ export interface FolderMenuBuilderParams extends MenuBuilderParams {
 export interface TagMenuBuilderParams extends MenuBuilderParams {
     tagPath: string;
     options?: TagMenuOptions;
+}
+
+/**
+ * Parameters for property menu builder
+ */
+export interface PropertyMenuBuilderParams extends MenuBuilderParams {
+    propertyNodeId: string;
+    options?: PropertyMenuOptions;
 }
 
 /**

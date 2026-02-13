@@ -70,6 +70,7 @@ export type SelectionAction =
           preserveFolder?: boolean;
           isManualReveal?: boolean;
           targetTag?: string | null;
+          targetProperty?: PropertySelectionNodeId | null;
           source?: SelectionRevealSource;
           targetFolder?: TFolder | null;
       }
@@ -334,6 +335,47 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 };
             }
 
+            // Auto-reveals: Check if we have a target property
+            if (action.targetProperty !== undefined) {
+                if (action.targetProperty) {
+                    // Switch to or stay in property view
+                    return {
+                        ...state,
+                        selectionType: 'property',
+                        selectedProperty: action.targetProperty,
+                        selectedFolder: null,
+                        selectedTag: null,
+                        selectedFiles: newSelectedFiles,
+                        selectedFile: action.file,
+                        anchorIndex: null,
+                        lastMovementDirection: null,
+                        isRevealOperation: true,
+                        isFolderChangeWithAutoSelect: false,
+                        isKeyboardNavigation: false,
+                        revealSource
+                    };
+                }
+
+                // No property to reveal, switch to folder view
+                const newFolder =
+                    targetFolder ?? (action.preserveFolder && state.selectedFolder ? state.selectedFolder : action.file.parent);
+                return {
+                    ...state,
+                    selectionType: 'folder',
+                    selectedFolder: newFolder,
+                    selectedTag: null,
+                    selectedProperty: null,
+                    selectedFiles: newSelectedFiles,
+                    selectedFile: action.file,
+                    anchorIndex: null,
+                    lastMovementDirection: null,
+                    isRevealOperation: true,
+                    isFolderChangeWithAutoSelect: false,
+                    isKeyboardNavigation: false,
+                    revealSource
+                };
+            }
+
             // When targetTag is not specified, preserve current view type
             const shouldPreserveTag = state.selectionType === 'tag' && state.selectedTag;
             if (shouldPreserveTag) {
@@ -343,6 +385,25 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                     selectedTag: state.selectedTag,
                     selectedFolder: null,
                     selectedProperty: null,
+                    selectedFiles: newSelectedFiles,
+                    selectedFile: action.file,
+                    anchorIndex: null,
+                    lastMovementDirection: null,
+                    isRevealOperation: true,
+                    isFolderChangeWithAutoSelect: false,
+                    isKeyboardNavigation: false,
+                    revealSource
+                };
+            }
+
+            const shouldPreserveProperty = state.selectionType === 'property' && state.selectedProperty;
+            if (shouldPreserveProperty) {
+                return {
+                    ...state,
+                    selectionType: 'property',
+                    selectedProperty: state.selectedProperty,
+                    selectedFolder: null,
+                    selectedTag: null,
                     selectedFiles: newSelectedFiles,
                     selectedFile: action.file,
                     anchorIndex: null,

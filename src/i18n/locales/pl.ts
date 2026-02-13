@@ -104,6 +104,8 @@ export const STRINGS_PL = {
         folderExists: 'Folder już jest w skrótach',
         noteExists: 'Notatka już jest w skrótach',
         tagExists: 'Tag już jest w skrótach',
+        propertyExists: 'Właściwość jest już w skrótach',
+        invalidProperty: 'Nieprawidłowy skrót właściwości',
         searchExists: 'Skrót wyszukiwania już istnieje',
         emptySearchQuery: 'Wprowadź zapytanie wyszukiwania przed zapisaniem',
         emptySearchName: 'Wprowadź nazwę przed zapisaniem wyszukiwania',
@@ -377,10 +379,6 @@ export const STRINGS_PL = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Dodaj regułę'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Ikony interfejsu',
@@ -734,7 +732,8 @@ export const STRINGS_PL = {
             icons: 'Pakiety ikon',
             folders: 'Foldery',
             folderNotes: 'Notatki folderu',
-            foldersAndTags: 'Foldery i tagi',
+            foldersAndTags: 'Foldery',
+            tagsAndProperties: 'Tagi i właściwości',
             tags: 'Tagi',
             listPane: 'Panel listy',
             notes: 'Notatki',
@@ -770,7 +769,7 @@ export const STRINGS_PL = {
                 previewText: 'Tekst podglądu',
                 featureImage: 'Obraz wyróżniający',
                 tags: 'Tagi',
-                customProperty: 'Właściwość niestandardowa (frontmatter lub liczba słów)',
+                customProperty: 'Właściwości',
                 date: 'Data',
                 parentFolder: 'Folder nadrzędny'
             }
@@ -1302,8 +1301,8 @@ export const STRINGS_PL = {
                 desc: 'Wyświetl tagi, gdy data, podgląd i obraz są ukryte.'
             },
             customPropertyType: {
-                name: 'Typ właściwości',
-                desc: 'Wybierz właściwość niestandardową do wyświetlenia w elementach plików.',
+                name: 'Właściwość notatki',
+                desc: 'Wybierz właściwość notatki do wyświetlenia w elementach plików.',
                 options: {
                     frontmatter: 'Właściwość frontmatter',
                     wordCount: 'Liczba słów',
@@ -1312,22 +1311,16 @@ export const STRINGS_PL = {
             },
             customPropertyFields: {
                 name: 'Właściwości do wyświetlenia',
-                desc: 'Lista właściwości frontmatter oddzielonych przecinkami do wyświetlenia jako plakietki. Właściwości z wartościami listowymi wyświetlają jedną plakietkę na wartość. Wartości w formacie [[wikilink]] są wyświetlane jako klikalne linki.',
+                desc: 'Rozdzielona przecinkami lista właściwości frontmatter do wyświetlenia w panelu nawigacji i jako odznaki w elementach plików. Właściwości z wieloma wartościami wyświetlają jedną odznakę na wartość.',
                 placeholder: 'status, typ, kategoria'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Pokaż właściwości w osobnych wierszach',
                 desc: 'Wyświetl każdą właściwość w osobnym wierszu.'
             },
-            customPropertyColorMap: {
-                name: 'Kolory właściwości',
-                desc: 'Przypisz właściwości i wartości frontmatter do kolorów odznak. Jedno przypisanie na wiersz: właściwość=kolor lub właściwość:wartość=kolor',
-                placeholder: '# Właściwość lub właściwość:wartość kolor\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Edytuj przypisania'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Pokaż właściwość niestandardową w trybie kompaktowym',
-                desc: 'Wyświetl właściwość niestandardową, gdy data, podgląd i obraz są ukryte.'
+                name: 'Pokaż właściwości w trybie kompaktowym',
+                desc: 'Wyświetlaj właściwości gdy tryb kompaktowy jest aktywny.'
             },
             dateFormat: {
                 name: 'Format daty',
@@ -1513,6 +1506,29 @@ export const STRINGS_PL = {
             keepEmptyTagsProperty: {
                 name: 'Zachowaj właściwość tags po usunięciu ostatniego tagu',
                 desc: 'Zachowuje właściwość tags we frontmatterze, gdy wszystkie tagi są usuwane. Gdy wyłączone, właściwość tags jest usuwana z frontmattera.'
+            },
+            showProperties: {
+                name: 'Pokaż właściwości',
+                desc: 'Wyświetl sekcję właściwości w nawigatorze.'
+            },
+            showPropertyIcons: {
+                name: 'Pokaż ikony właściwości',
+                desc: 'Wyświetl ikony obok właściwości w panelu nawigacji.'
+            },
+            propertySortOrder: {
+                name: 'Kolejność sortowania właściwości',
+                desc: 'Kliknij prawym przyciskiem na właściwość, aby ustawić inną kolejność sortowania jej wartości.',
+                options: {
+                    alphaAsc: 'A do Z',
+                    alphaDesc: 'Z do A',
+                    frequency: 'Częstotliwość',
+                    lowToHigh: 'od niskiej',
+                    highToLow: 'od wysokiej'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Pokaż folder właściwości',
+                desc: 'Wyświetl "Właściwości" jako zwijany folder.'
             },
             hiddenTags: {
                 name: 'Ukryj tagi (profil sejfu)',

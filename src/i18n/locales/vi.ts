@@ -105,6 +105,8 @@ export const STRINGS_VI = {
         folderExists: 'Thư mục đã có trong lối tắt',
         noteExists: 'Ghi chú đã có trong lối tắt',
         tagExists: 'Thẻ đã có trong lối tắt',
+        propertyExists: 'Thuộc tính đã có trong phím tắt',
+        invalidProperty: 'Phím tắt thuộc tính không hợp lệ',
         searchExists: 'Lối tắt tìm kiếm đã tồn tại',
         emptySearchQuery: 'Nhập truy vấn tìm kiếm trước khi lưu',
         emptySearchName: 'Nhập tên trước khi lưu tìm kiếm',
@@ -375,10 +377,6 @@ export const STRINGS_VI = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Thêm quy tắc'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Biểu tượng giao diện',
@@ -732,7 +730,8 @@ export const STRINGS_VI = {
             icons: 'Gói biểu tượng',
             folders: 'Thư mục',
             folderNotes: 'Ghi chú thư mục',
-            foldersAndTags: 'Thư mục & thẻ',
+            foldersAndTags: 'Thư mục',
+            tagsAndProperties: 'Thẻ và thuộc tính',
             tags: 'Thẻ',
             listPane: 'Ngăn danh sách',
             notes: 'Ghi chú',
@@ -768,7 +767,7 @@ export const STRINGS_VI = {
                 previewText: 'Văn bản xem trước',
                 featureImage: 'Hình ảnh nổi bật',
                 tags: 'Thẻ',
-                customProperty: 'Thuộc tính tùy chỉnh (frontmatter hoặc số từ)',
+                customProperty: 'Thuộc tính',
                 date: 'Ngày',
                 parentFolder: 'Thư mục cha'
             }
@@ -1299,8 +1298,8 @@ export const STRINGS_VI = {
                 desc: 'Hiển thị thẻ khi ngày, xem trước và ảnh bị ẩn.'
             },
             customPropertyType: {
-                name: 'Loại thuộc tính',
-                desc: 'Chọn thuộc tính tùy chỉnh để hiển thị trong các mục tệp.',
+                name: 'Thuộc tính ghi chú',
+                desc: 'Chọn thuộc tính ghi chú để hiển thị trong các mục tệp.',
                 options: {
                     frontmatter: 'Thuộc tính frontmatter',
                     wordCount: 'Số từ',
@@ -1309,22 +1308,16 @@ export const STRINGS_VI = {
             },
             customPropertyFields: {
                 name: 'Các thuộc tính để hiển thị',
-                desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để hiển thị dưới dạng huy hiệu. Thuộc tính có giá trị danh sách hiển thị một huy hiệu cho mỗi giá trị. Giá trị ở định dạng [[wikilink]] được hiển thị dưới dạng liên kết có thể nhấp.',
+                desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để hiển thị trong bảng điều hướng và dưới dạng huy hiệu trong các mục tệp. Thuộc tính dạng danh sách hiển thị một huy hiệu cho mỗi giá trị.',
                 placeholder: 'trạng thái, loại, danh mục'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Hiển thị thuộc tính trên các dòng riêng',
                 desc: 'Hiển thị mỗi thuộc tính trên một dòng riêng.'
             },
-            customPropertyColorMap: {
-                name: 'Màu thuộc tính',
-                desc: 'Ánh xạ thuộc tính và giá trị frontmatter thành màu huy hiệu. Một ánh xạ mỗi dòng: thuộc tính=màu hoặc thuộc tính:giá trị=màu',
-                placeholder: '# Thuộc tính hoặc thuộc tính:giá trị màu\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Chỉnh sửa ánh xạ'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Hiện thuộc tính tùy chỉnh ở chế độ gọn',
-                desc: 'Hiển thị thuộc tính tùy chỉnh khi ngày, xem trước và ảnh bị ẩn.'
+                name: 'Hiển thị thuộc tính trong chế độ thu gọn',
+                desc: 'Hiển thị thuộc tính khi chế độ thu gọn đang hoạt động.'
             },
             dateFormat: {
                 name: 'Định dạng ngày',
@@ -1510,6 +1503,29 @@ export const STRINGS_VI = {
             keepEmptyTagsProperty: {
                 name: 'Giữ thuộc tính tags sau khi gỡ thẻ cuối',
                 desc: 'Giữ thuộc tính tags frontmatter khi tất cả thẻ bị gỡ. Khi tắt, thuộc tính tags bị xóa khỏi frontmatter.'
+            },
+            showProperties: {
+                name: 'Hiển thị thuộc tính',
+                desc: 'Hiển thị phần thuộc tính trong trình điều hướng.'
+            },
+            showPropertyIcons: {
+                name: 'Hiển thị biểu tượng thuộc tính',
+                desc: 'Hiển thị biểu tượng bên cạnh thuộc tính trong bảng điều hướng.'
+            },
+            propertySortOrder: {
+                name: 'Thứ tự sắp xếp thuộc tính',
+                desc: 'Nhấp chuột phải vào bất kỳ thuộc tính nào để đặt thứ tự sắp xếp khác cho các giá trị của nó.',
+                options: {
+                    alphaAsc: 'A đến Z',
+                    alphaDesc: 'Z đến A',
+                    frequency: 'Tần suất',
+                    lowToHigh: 'thấp đến cao',
+                    highToLow: 'cao đến thấp'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Hiển thị thư mục thuộc tính',
+                desc: 'Hiển thị "Thuộc tính" dưới dạng thư mục có thể thu gọn.'
             },
             hiddenTags: {
                 name: 'Ẩn thẻ (hồ sơ vault)',

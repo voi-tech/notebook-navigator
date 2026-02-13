@@ -215,8 +215,6 @@ export function showListPaneAppearanceMenu({
     if (isFolderSelection || isTagSelection) {
         const getCustomPropertyTypeLabel = (type: CustomPropertyType): string => {
             switch (type) {
-                case 'frontmatter':
-                    return strings.settings.items.customPropertyType.options.frontmatter;
                 case 'wordCount':
                     return strings.settings.items.customPropertyType.options.wordCount;
                 case 'none':
@@ -247,7 +245,7 @@ export function showListPaneAppearanceMenu({
         });
 
         // Custom property options
-        const customPropertyOptions: CustomPropertyType[] = ['none', 'frontmatter', 'wordCount'];
+        const customPropertyOptions: CustomPropertyType[] = ['none', 'wordCount'];
         customPropertyOptions.forEach(option => {
             menu.addItem(item => {
                 const isChecked = hasCustomPropertyType && currentCustomPropertyType === option;

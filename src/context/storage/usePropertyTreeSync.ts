@@ -137,7 +137,7 @@ export function usePropertyTreeSync(params: {
         const liveSettings = latestSettingsRef.current;
         const configuredDisplayByKey = buildConfiguredPropertyDisplayByKey(liveSettings);
         const includedPropertyKeys = new Set(configuredDisplayByKey.keys());
-        const shouldBuildTree = liveSettings.customPropertyType === 'frontmatter' && configuredDisplayByKey.size > 0;
+        const shouldBuildTree = liveSettings.showProperties && configuredDisplayByKey.size > 0;
         if (!shouldBuildTree) {
             return clearPropertyTree();
         }
@@ -262,7 +262,7 @@ export function usePropertyTreeSync(params: {
         fileVisibility,
         profileId,
         settings.customPropertyFields,
-        settings.customPropertyType
+        settings.showProperties
     ]);
 
     useEffect(() => {

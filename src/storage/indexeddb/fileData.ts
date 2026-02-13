@@ -29,7 +29,7 @@ function isCustomPropertyValueKind(value: unknown): value is CustomPropertyValue
 
 export interface CustomPropertyItem {
     // Frontmatter field name that produced the value.
-    // Used at render time for property and property:value color rules.
+    // Used at render time for property display metadata lookups.
     fieldKey: string;
     // Rendered pill text (raw frontmatter value after frontmatter flattening).
     value: string;

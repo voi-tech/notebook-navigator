@@ -64,7 +64,7 @@ import { getEffectiveFrontmatterExclusions } from '../utils/exclusionUtils';
 import { shouldDisplayFile } from '../utils/fileTypeUtils';
 import { IndentGuideColumns } from './IndentGuideColumns';
 import type { NoteCountInfo } from '../types/noteCounts';
-import { buildNoteCountDisplay } from '../utils/noteCountFormatting';
+import { buildNoteCountDisplay, buildSortableNoteCountDisplay } from '../utils/noteCountFormatting';
 import { useActiveProfile } from '../context/SettingsContext';
 import { resolveUXIcon } from '../utils/uxIcons';
 import { ItemType, type CSSPropertiesWithVars } from '../types';
@@ -190,15 +190,13 @@ export const FolderItem = React.memo(function FolderItem({
     // Determine if we should show separate counts (e.g., "2 • 5") or combined count (e.g., "7")
     const useSeparateCounts = includeDescendantNotes && settings.separateNoteCounts;
     // Build formatted display object with label and visibility flags
-    const noteCountDisplay = buildNoteCountDisplay(noteCounts, includeDescendantNotes, useSeparateCounts, sortOrderIndicator ?? '•');
-    const noteCountLabel =
-        !useSeparateCounts && sortOrderIndicator && noteCountDisplay.shouldDisplay
-            ? `${sortOrderIndicator} ${noteCountDisplay.label}`
-            : sortOrderIndicator && !noteCountDisplay.shouldDisplay
-              ? sortOrderIndicator
-              : noteCountDisplay.label;
+    const noteCountDisplay = buildSortableNoteCountDisplay(
+        buildNoteCountDisplay(noteCounts, includeDescendantNotes, useSeparateCounts, '•'),
+        sortOrderIndicator
+    );
+    const noteCountLabel = noteCountDisplay.label;
     // Render count badge when note counts are enabled and there is either a count or a sort override indicator
-    const shouldDisplayCount = settings.showNoteCount && (noteCountDisplay.shouldDisplay || Boolean(sortOrderIndicator));
+    const shouldDisplayCount = settings.showNoteCount && noteCountDisplay.shouldDisplay;
 
     // Check if folder has children - not memoized because Obsidian mutates the children array
     // The hasSubfolders function handles the logic of whether to show all or only visible subfolders

@@ -105,6 +105,8 @@ export const STRINGS_AR = {
         folderExists: 'المجلد موجود بالفعل في الاختصارات',
         noteExists: 'الملاحظة موجودة بالفعل في الاختصارات',
         tagExists: 'الوسم موجود بالفعل في الاختصارات',
+        propertyExists: 'الخاصية موجودة بالفعل في الاختصارات',
+        invalidProperty: 'اختصار خاصية غير صالح',
         searchExists: 'اختصار البحث موجود بالفعل',
         emptySearchQuery: 'أدخل استعلام بحث قبل حفظه',
         emptySearchName: 'أدخل اسمًا قبل حفظ البحث',
@@ -375,10 +377,6 @@ export const STRINGS_AR = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'إضافة قاعدة'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'أيقونات الواجهة',
@@ -731,7 +729,8 @@ export const STRINGS_AR = {
             icons: 'حزم الأيقونات',
             folders: 'مجلدات',
             folderNotes: 'ملاحظات المجلد',
-            foldersAndTags: 'مجلدات ووسوم',
+            foldersAndTags: 'مجلدات',
+            tagsAndProperties: 'الوسوم والخصائص',
             tags: 'وسوم',
             listPane: 'لوحة القائمة',
             notes: 'ملاحظات',
@@ -767,7 +766,7 @@ export const STRINGS_AR = {
                 previewText: 'نص المعاينة',
                 featureImage: 'الصورة المميزة',
                 tags: 'الوسوم',
-                customProperty: 'خاصية مخصصة (البيانات الوصفية أو عدد الكلمات)',
+                customProperty: 'الخصائص',
                 date: 'التاريخ',
                 parentFolder: 'المجلد الأصلي'
             }
@@ -1298,8 +1297,8 @@ export const STRINGS_AR = {
                 desc: 'عرض الوسوم عند إخفاء التاريخ والمعاينة والصورة.'
             },
             customPropertyType: {
-                name: 'نوع الخاصية',
-                desc: 'حدد الخاصية المخصصة لعرضها في عناصر الملفات.',
+                name: 'خاصية الملاحظة',
+                desc: 'حدد خاصية الملاحظة لعرضها في عناصر الملفات.',
                 options: {
                     frontmatter: 'خاصية الواجهة الأمامية',
                     wordCount: 'عدد الكلمات',
@@ -1308,22 +1307,16 @@ export const STRINGS_AR = {
             },
             customPropertyFields: {
                 name: 'الخصائص للعرض',
-                desc: 'قائمة خصائص frontmatter مفصولة بفواصل لعرضها كشارات. الخصائص ذات القيم المتعددة تعرض شارة واحدة لكل قيمة. قيم [[wikilink]] تُعرض كروابط قابلة للنقر.',
+                desc: 'قائمة خصائص الواجهة الأمامية مفصولة بفواصل لعرضها في لوحة التنقل وكشارات في عناصر الملفات. الخصائص ذات القوائم تعرض شارة واحدة لكل قيمة.',
                 placeholder: 'الحالة، النوع، الفئة'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'إظهار الخصائص في صفوف منفصلة',
                 desc: 'عرض كل خاصية في صف منفصل.'
             },
-            customPropertyColorMap: {
-                name: 'ألوان الخصائص',
-                desc: 'ربط خصائص وقيم البيانات الوصفية بألوان الشارات. رابط واحد لكل سطر: خاصية=لون أو خاصية:قيمة=لون',
-                placeholder: '# خاصية أو خاصية:قيمة لون\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'تحرير الروابط'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'إظهار الخاصية المخصصة في الوضع المضغوط',
-                desc: 'عرض الخاصية المخصصة عند إخفاء التاريخ والمعاينة والصورة.'
+                name: 'إظهار الخصائص في الوضع المضغوط',
+                desc: 'عرض الخصائص عند تفعيل الوضع المضغوط.'
             },
             dateFormat: {
                 name: 'تنسيق التاريخ',
@@ -1509,6 +1502,29 @@ export const STRINGS_AR = {
             keepEmptyTagsProperty: {
                 name: 'الاحتفاظ بخاصية الوسوم بعد إزالة آخر وسم',
                 desc: 'الاحتفاظ بخاصية الوسوم في البيانات الأمامية عند إزالة جميع الوسوم. عند التعطيل، يتم حذف خاصية الوسوم من البيانات الأمامية.'
+            },
+            showProperties: {
+                name: 'إظهار الخصائص',
+                desc: 'عرض قسم الخصائص في المتصفح.'
+            },
+            showPropertyIcons: {
+                name: 'إظهار أيقونات الخصائص',
+                desc: 'عرض الأيقونات بجانب الخصائص في لوحة التنقل.'
+            },
+            propertySortOrder: {
+                name: 'ترتيب فرز الخصائص',
+                desc: 'انقر بزر الماوس الأيمن على أي خاصية لتعيين ترتيب فرز مختلف لقيمها.',
+                options: {
+                    alphaAsc: 'أ إلى ي',
+                    alphaDesc: 'ي إلى أ',
+                    frequency: 'التكرار',
+                    lowToHigh: 'من الأقل إلى الأعلى',
+                    highToLow: 'من الأعلى إلى الأقل'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'إظهار مجلد الخصائص',
+                desc: 'عرض "الخصائص" كمجلد قابل للطي.'
             },
             hiddenTags: {
                 name: 'إخفاء الوسوم (ملف الخزنة)',

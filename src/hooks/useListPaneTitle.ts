@@ -237,7 +237,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         }
 
         if (selectionState.selectionType === ItemType.PROPERTY && selectionState.selectedProperty) {
-            if (!settings.showTagIcons) {
+            if (!settings.showPropertyIcons) {
                 return '';
             }
             return resolveUXIcon(settings.interfaceIcons, 'nav-properties');
@@ -255,6 +255,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         showHiddenItems,
         settings.interfaceIcons,
         settings.showFolderIcons,
+        settings.showPropertyIcons,
         settings.showTagIcons,
         metadataVersion
     ]);
@@ -446,7 +447,7 @@ export function useListPaneTitle(): UseListPaneTitleResult {
         showIcon:
             (selectionState.selectionType === ItemType.FOLDER && settings.showFolderIcons && iconName.length > 0) ||
             (selectionState.selectionType === ItemType.TAG && settings.showTagIcons && iconName.length > 0) ||
-            (selectionState.selectionType === ItemType.PROPERTY && settings.showTagIcons && iconName.length > 0),
+            (selectionState.selectionType === ItemType.PROPERTY && settings.showPropertyIcons && iconName.length > 0),
         selectionType: selectionState.selectionType
     };
 }

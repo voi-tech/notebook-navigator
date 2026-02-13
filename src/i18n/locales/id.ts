@@ -105,6 +105,8 @@ export const STRINGS_ID = {
         folderExists: 'Folder sudah ada di pintasan',
         noteExists: 'Catatan sudah ada di pintasan',
         tagExists: 'Tag sudah ada di pintasan',
+        propertyExists: 'Properti sudah ada di pintasan',
+        invalidProperty: 'Pintasan properti tidak valid',
         searchExists: 'Pintasan pencarian sudah ada',
         emptySearchQuery: 'Masukkan kueri pencarian sebelum menyimpan',
         emptySearchName: 'Masukkan nama sebelum menyimpan pencarian',
@@ -376,10 +378,6 @@ export const STRINGS_ID = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Tambah aturan'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Ikon antarmuka',
@@ -732,7 +730,8 @@ export const STRINGS_ID = {
             icons: 'Paket ikon',
             folders: 'Folder',
             folderNotes: 'Catatan folder',
-            foldersAndTags: 'Folder & tag',
+            foldersAndTags: 'Folder',
+            tagsAndProperties: 'Tag & properti',
             tags: 'Tag',
             listPane: 'Panel daftar',
             notes: 'Catatan',
@@ -768,7 +767,7 @@ export const STRINGS_ID = {
                 previewText: 'Teks pratinjau',
                 featureImage: 'Gambar fitur',
                 tags: 'Tag',
-                customProperty: 'Properti kustom (frontmatter atau jumlah kata)',
+                customProperty: 'Properti',
                 date: 'Tanggal',
                 parentFolder: 'Folder induk'
             }
@@ -1300,8 +1299,8 @@ export const STRINGS_ID = {
                 desc: 'Tampilkan tag saat tanggal, pratinjau, dan gambar disembunyikan.'
             },
             customPropertyType: {
-                name: 'Tipe properti',
-                desc: 'Pilih properti kustom untuk ditampilkan di item file.',
+                name: 'Properti catatan',
+                desc: 'Pilih properti catatan untuk ditampilkan di item file.',
                 options: {
                     frontmatter: 'Properti frontmatter',
                     wordCount: 'Jumlah kata',
@@ -1310,22 +1309,16 @@ export const STRINGS_ID = {
             },
             customPropertyFields: {
                 name: 'Properti-properti untuk ditampilkan',
-                desc: 'Daftar properti frontmatter yang dipisahkan koma untuk ditampilkan sebagai lencana. Properti bernilai daftar menampilkan satu lencana per nilai. Nilai [[wikilink]] ditampilkan sebagai tautan yang dapat diklik.',
+                desc: 'Daftar properti frontmatter dipisahkan koma untuk ditampilkan di panel navigasi dan sebagai lencana di item file. Properti bernilai daftar menampilkan satu lencana per nilai.',
                 placeholder: 'status, tipe, kategori'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Tampilkan properti pada baris terpisah',
                 desc: 'Tampilkan setiap properti pada barisnya sendiri.'
             },
-            customPropertyColorMap: {
-                name: 'Warna properti',
-                desc: 'Petakan properti dan nilai frontmatter ke warna lencana. Satu pemetaan per baris: properti=warna atau properti:nilai=warna',
-                placeholder: '# Properti atau properti:nilai warna\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Edit pemetaan'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Tampilkan properti kustom dalam mode kompak',
-                desc: 'Tampilkan properti kustom saat tanggal, pratinjau, dan gambar disembunyikan.'
+                name: 'Tampilkan properti dalam mode ringkas',
+                desc: 'Tampilkan properti saat mode ringkas aktif.'
             },
             dateFormat: {
                 name: 'Format tanggal',
@@ -1511,6 +1504,29 @@ export const STRINGS_ID = {
             keepEmptyTagsProperty: {
                 name: 'Pertahankan properti tag setelah menghapus tag terakhir',
                 desc: 'Pertahankan properti tag frontmatter saat semua tag dihapus. Saat dinonaktifkan, properti tag dihapus dari frontmatter.'
+            },
+            showProperties: {
+                name: 'Tampilkan properti',
+                desc: 'Tampilkan bagian properti di navigator.'
+            },
+            showPropertyIcons: {
+                name: 'Tampilkan ikon properti',
+                desc: 'Tampilkan ikon di samping properti di panel navigasi.'
+            },
+            propertySortOrder: {
+                name: 'Urutan sortir properti',
+                desc: 'Klik kanan pada properti mana saja untuk mengatur urutan sortir yang berbeda untuk nilainya.',
+                options: {
+                    alphaAsc: 'A ke Z',
+                    alphaDesc: 'Z ke A',
+                    frequency: 'Frekuensi',
+                    lowToHigh: 'rendah ke tinggi',
+                    highToLow: 'tinggi ke rendah'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Tampilkan folder properti',
+                desc: 'Tampilkan "Properti" sebagai folder yang dapat dilipat.'
             },
             hiddenTags: {
                 name: 'Sembunyikan tag (profil vault)',

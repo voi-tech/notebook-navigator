@@ -52,11 +52,17 @@ export type TagSeparatorTarget = {
     path: string;
 };
 
-export type NavigationSeparatorTarget = SectionSeparatorTarget | FolderSeparatorTarget | TagSeparatorTarget;
+export type PropertySeparatorTarget = {
+    type: 'property';
+    nodeId: string;
+};
+
+export type NavigationSeparatorTarget = SectionSeparatorTarget | FolderSeparatorTarget | TagSeparatorTarget | PropertySeparatorTarget;
 
 const SECTION_PREFIX = 'section:';
 const FOLDER_PREFIX = 'folder:';
 const TAG_PREFIX = 'tag:';
+const PROPERTY_PREFIX = 'property:';
 
 /** Builds the persisted key for a section separator entry */
 export function buildSectionSeparatorKey(id: NavigationSectionId): string {
@@ -72,6 +78,11 @@ export function buildFolderSeparatorKey(path: string): string {
 /** Builds the persisted key for a tag separator entry */
 export function buildTagSeparatorKey(path: string): string {
     return `${TAG_PREFIX}${path}`;
+}
+
+/** Builds the persisted key for a property separator entry */
+export function buildPropertySeparatorKey(nodeId: string): string {
+    return `${PROPERTY_PREFIX}${nodeId}`;
 }
 
 /** Parses a section key suffix (e.g. "shortcuts", "recents") into a NavigationSectionId */
@@ -106,6 +117,17 @@ export function parseNavigationSeparatorKey(key: string): NavigationSeparatorTar
         return {
             type: 'tag',
             path
+        };
+    }
+
+    if (key.startsWith(PROPERTY_PREFIX)) {
+        const nodeId = key.slice(PROPERTY_PREFIX.length);
+        if (!nodeId) {
+            return null;
+        }
+        return {
+            type: 'property',
+            nodeId
         };
     }
 

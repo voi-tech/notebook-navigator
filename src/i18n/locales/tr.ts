@@ -105,6 +105,8 @@ export const STRINGS_TR = {
         folderExists: 'Klasör zaten kısayollarda',
         noteExists: 'Not zaten kısayollarda',
         tagExists: 'Etiket zaten kısayollarda',
+        propertyExists: 'Özellik zaten kısayollarda mevcut',
+        invalidProperty: 'Geçersiz özellik kısayolu',
         searchExists: 'Arama kısayolu zaten mevcut',
         emptySearchQuery: 'Kaydetmeden önce bir arama sorgusu girin',
         emptySearchName: 'Aramayı kaydetmeden önce bir ad girin',
@@ -376,10 +378,6 @@ export const STRINGS_TR = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Kural ekle'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Arayüz simgeleri',
@@ -733,7 +731,8 @@ export const STRINGS_TR = {
             icons: 'Simge paketleri',
             folders: 'Klasörler',
             folderNotes: 'Klasör notları',
-            foldersAndTags: 'Klasörler ve etiketler',
+            foldersAndTags: 'Klasörler',
+            tagsAndProperties: 'Etiketler ve özellikler',
             tags: 'Etiketler',
             listPane: 'Liste bölmesi',
             notes: 'Notlar',
@@ -769,7 +768,7 @@ export const STRINGS_TR = {
                 previewText: 'Önizleme metni',
                 featureImage: 'Öne çıkan görsel',
                 tags: 'Etiketler',
-                customProperty: 'Özel özellik (frontmatter veya kelime sayısı)',
+                customProperty: 'Özellikler',
                 date: 'Tarih',
                 parentFolder: 'Üst klasör'
             }
@@ -1300,8 +1299,8 @@ export const STRINGS_TR = {
                 desc: 'Tarih, önizleme ve görsel gizlendiğinde etiketleri görüntüle.'
             },
             customPropertyType: {
-                name: 'Özellik türü',
-                desc: 'Dosya öğelerinde görüntülenecek özel özelliği seçin.',
+                name: 'Not özelliği',
+                desc: 'Dosya öğelerinde görüntülenecek not özelliğini seçin.',
                 options: {
                     frontmatter: 'Frontmatter özelliği',
                     wordCount: 'Kelime sayısı',
@@ -1310,22 +1309,16 @@ export const STRINGS_TR = {
             },
             customPropertyFields: {
                 name: 'Görüntülenecek özellikler',
-                desc: 'Rozet olarak gösterilecek virgülle ayrılmış frontmatter özellikleri listesi. Liste değerli özellikler değer başına bir rozet gösterir. [[wikilink]] formatındaki değerler tıklanabilir bağlantılar olarak gösterilir.',
+                desc: 'Gezinme panelinde ve dosya öğelerinde rozet olarak görüntülenecek virgülle ayrılmış ön bilgi özellikleri listesi. Liste değerli özellikler değer başına bir rozet gösterir.',
                 placeholder: 'durum, tür, kategori'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Özellikleri ayrı satırlarda göster',
                 desc: 'Her özelliği kendi satırında göster.'
             },
-            customPropertyColorMap: {
-                name: 'Özellik renkleri',
-                desc: 'Frontmatter özelliklerini ve değerlerini rozet renklerine eşle. Satır başına bir eşleme: özellik=renk veya özellik:değer=renk',
-                placeholder: '# Özellik veya özellik:değer renk\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Eşlemeleri düzenle'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Kompakt modda özel özelliği göster',
-                desc: 'Tarih, önizleme ve görsel gizlendiğinde özel özelliği görüntüle.'
+                name: 'Kompakt modda özellikleri göster',
+                desc: 'Kompakt mod etkinken özellikleri görüntüle.'
             },
             dateFormat: {
                 name: 'Tarih formatı',
@@ -1511,6 +1504,29 @@ export const STRINGS_TR = {
             keepEmptyTagsProperty: {
                 name: 'Son etiket kaldırıldıktan sonra tags özelliğini koru',
                 desc: "Tüm etiketler kaldırıldığında tags frontmatter özelliğini koru. Devre dışı bırakıldığında, tags özelliği frontmatter'dan silinir."
+            },
+            showProperties: {
+                name: 'Özellikleri göster',
+                desc: 'Gezginde özellikler bölümünü görüntüle.'
+            },
+            showPropertyIcons: {
+                name: 'Özellik simgelerini göster',
+                desc: 'Gezinme panelinde özelliklerin yanında simgeleri görüntüle.'
+            },
+            propertySortOrder: {
+                name: 'Özellik sıralama düzeni',
+                desc: 'Değerler için farklı bir sıralama düzeni ayarlamak üzere herhangi bir özelliğe sağ tıklayın.',
+                options: {
+                    alphaAsc: "A'dan Z'ye",
+                    alphaDesc: "Z'den A'ya",
+                    frequency: 'Sıklık',
+                    lowToHigh: 'düşükten yükseğe',
+                    highToLow: 'yüksekten düşüğe'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Özellikler klasörünü göster',
+                desc: '"Özellikler"i daraltılabilir klasör olarak görüntüle.'
             },
             hiddenTags: {
                 name: 'Etiketleri gizle (kasa profili)',

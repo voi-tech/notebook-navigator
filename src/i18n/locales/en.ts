@@ -105,6 +105,8 @@ export const STRINGS_EN = {
         folderExists: 'Folder already in shortcuts',
         noteExists: 'Note already in shortcuts',
         tagExists: 'Tag already in shortcuts',
+        propertyExists: 'Property already in shortcuts',
+        invalidProperty: 'Invalid property shortcut',
         searchExists: 'Search shortcut already exists',
         emptySearchQuery: 'Enter a search query before saving it',
         emptySearchName: 'Enter a name before saving the search',
@@ -375,10 +377,6 @@ export const STRINGS_EN = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Add rule'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Interface icons',
@@ -731,7 +729,8 @@ export const STRINGS_EN = {
             icons: 'Icon packs',
             folders: 'Folders',
             folderNotes: 'Folder notes',
-            foldersAndTags: 'Folders & tags',
+            foldersAndTags: 'Folders',
+            tagsAndProperties: 'Tags & properties',
             tags: 'Tags',
             listPane: 'List pane',
             notes: 'Notes',
@@ -767,7 +766,7 @@ export const STRINGS_EN = {
                 previewText: 'Preview text',
                 featureImage: 'Feature image',
                 tags: 'Tags',
-                customProperty: 'Custom property (frontmatter or word count)',
+                customProperty: 'Properties',
                 date: 'Date',
                 parentFolder: 'Parent folder'
             }
@@ -1297,8 +1296,8 @@ export const STRINGS_EN = {
                 desc: 'Display tags when date, preview, and image are hidden.'
             },
             customPropertyType: {
-                name: 'Property type',
-                desc: 'Select the custom property to display in file items.',
+                name: 'Note property',
+                desc: 'Select the note property to display in file items.',
                 options: {
                     frontmatter: 'Frontmatter property',
                     wordCount: 'Word count',
@@ -1307,22 +1306,16 @@ export const STRINGS_EN = {
             },
             customPropertyFields: {
                 name: 'Properties to display',
-                desc: 'Comma-separated list of frontmatter properties to display as badges. List-valued properties render one badge per value. [[wikilink]] values displayed as clickable links.',
+                desc: 'Comma-separated list of frontmatter properties to display in the navigation pane and as badges in file items. List-valued properties render one badge per value.',
                 placeholder: 'status, type, category'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Show properties on separate rows',
                 desc: 'Display each property on its own row.'
             },
-            customPropertyColorMap: {
-                name: 'Property colors',
-                desc: 'Map frontmatter properties and values to badge colors. One mapping per line: property=color or property:value=color',
-                placeholder: '# property=color or property:value=color\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Edit mappings'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Show custom property in compact mode',
-                desc: 'Display the custom property when date, preview, and image are hidden.'
+                name: 'Show properties in compact mode',
+                desc: 'Display properties when compact mode is active.'
             },
             dateFormat: {
                 name: 'Date format',
@@ -1507,6 +1500,29 @@ export const STRINGS_EN = {
             keepEmptyTagsProperty: {
                 name: 'Retain tags property after removing last tag',
                 desc: 'Keep the tags frontmatter property when all tags are removed. When disabled, the tags property is deleted from frontmatter.'
+            },
+            showProperties: {
+                name: 'Show properties',
+                desc: 'Display properties section in the navigator.'
+            },
+            showPropertyIcons: {
+                name: 'Show property icons',
+                desc: 'Display icons next to properties in the navigation pane.'
+            },
+            propertySortOrder: {
+                name: 'Property sort order',
+                desc: 'Right-click any property to set a different sort order for its values.',
+                options: {
+                    alphaAsc: 'A to Z',
+                    alphaDesc: 'Z to A',
+                    frequency: 'Frequency',
+                    lowToHigh: 'low to high',
+                    highToLow: 'high to low'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Show properties folder',
+                desc: 'Display "Properties" as a collapsible folder.'
             },
             hiddenTags: {
                 name: 'Hide tags (vault profile)',

@@ -33,12 +33,6 @@ import {
     serializeIconMapRecord,
     type IconMapParseResult
 } from '../../utils/iconizeFormat';
-import {
-    normalizePropertyColorMapKey,
-    parsePropertyColorMapText,
-    serializePropertyColorMapRecord,
-    type PropertyColorMapParseResult
-} from '../../utils/propertyColorMapFormat';
 import { formatCommaSeparatedList, normalizeCommaSeparatedList, parseCommaSeparatedList } from '../../utils/commaSeparatedListUtils';
 import { createSettingDescriptionWithExternalLink } from './externalLink';
 
@@ -78,10 +72,6 @@ function parseFileTypeIconMapText(value: string): IconMapParseResult {
 
 function parseFileNameIconMapText(value: string): IconMapParseResult {
     return parseIconMapText(value, normalizeFileNameIconMapKey);
-}
-
-function parseCustomPropertyColorMapText(value: string): PropertyColorMapParseResult {
-    return parsePropertyColorMapText(value, normalizePropertyColorMapKey);
 }
 
 /** Renders the notes settings tab */
@@ -401,47 +391,6 @@ export function renderNotesTab(context: SettingsTabContext): void {
         );
     };
 
-    const addPropertyColorMapEditorButton = (options: {
-        setting: Setting;
-        tooltip: string;
-        title: string;
-        getMap: () => Record<string, string>;
-        setMap: (nextMap: Record<string, string>) => void;
-    }): void => {
-        options.setting.addExtraButton(button =>
-            button
-                .setIcon('lucide-pencil')
-                .setTooltip(options.tooltip)
-                .onClick(() => {
-                    runAsyncAction(async () => {
-                        const metadataService = plugin.metadataService;
-                        if (!metadataService) {
-                            showNotice(strings.common.unknownError, { variant: 'warning' });
-                            return;
-                        }
-
-                        const { PropertyColorRuleEditorModal } = await import('../../modals/PropertyColorRuleEditorModal');
-                        const modal = new PropertyColorRuleEditorModal(app, {
-                            title: options.title,
-                            initialMap: options.getMap(),
-                            metadataService,
-                            onSave: async nextMap => {
-                                options.setMap(nextMap);
-
-                                const textarea = options.setting.controlEl.querySelector('textarea');
-                                if (textarea instanceof HTMLTextAreaElement) {
-                                    textarea.value = serializePropertyColorMapRecord(nextMap);
-                                }
-
-                                await plugin.saveSettingsAndUpdate();
-                            }
-                        });
-                        modal.open();
-                    });
-                })
-        );
-    };
-
     new Setting(fileIconSubSettingsEl)
         .setName(strings.settings.items.showFilenameMatchIcons.name)
         .setDesc(strings.settings.items.showFilenameMatchIcons.desc)
@@ -736,98 +685,43 @@ export function renderNotesTab(context: SettingsTabContext): void {
             })
         );
 
-    let updateCustomPropertyFieldsVisibility: (() => void) | null = null;
-
     customPropertyGroup.addSetting(setting => {
         setting.setName(strings.settings.items.customPropertyType.name).setDesc(strings.settings.items.customPropertyType.desc);
         setting.addDropdown(dropdown =>
             dropdown
                 .addOption('none', strings.settings.items.customPropertyType.options.none)
-                .addOption('frontmatter', strings.settings.items.customPropertyType.options.frontmatter)
                 .addOption('wordCount', strings.settings.items.customPropertyType.options.wordCount)
                 .setValue(plugin.settings.customPropertyType)
                 .onChange(async value => {
-                    plugin.settings.customPropertyType = value === 'frontmatter' || value === 'wordCount' ? value : 'none';
-                    await plugin.saveSettingsAndUpdate();
-                    updateCustomPropertyFieldsVisibility?.();
-                })
-        );
-    });
-
-    const customPropertyFieldsSetting = customPropertyGroup.addSetting(setting => {
-        context.configureDebouncedTextSetting(
-            setting,
-            strings.settings.items.customPropertyFields.name,
-            strings.settings.items.customPropertyFields.desc,
-            strings.settings.items.customPropertyFields.placeholder,
-            () => normalizeCommaSeparatedList(plugin.settings.customPropertyFields),
-            value => {
-                plugin.settings.customPropertyFields = normalizeCommaSeparatedList(value);
-            }
-        );
-    });
-    customPropertyFieldsSetting.controlEl.addClass('nn-setting-wide-input');
-
-    const customPropertyColorMapSetting = customPropertyGroup.addSetting(setting => {
-        context.configureDebouncedTextAreaSetting(
-            setting,
-            strings.settings.items.customPropertyColorMap.name,
-            strings.settings.items.customPropertyColorMap.desc,
-            strings.settings.items.customPropertyColorMap.placeholder,
-            () => serializePropertyColorMapRecord(plugin.settings.customPropertyColorMap),
-            value => {
-                const parsed = parseCustomPropertyColorMapText(value);
-                plugin.settings.customPropertyColorMap = parsed.map;
-            },
-            {
-                rows: 3,
-                validator: value => parseCustomPropertyColorMapText(value).invalidLines.length === 0
-            }
-        );
-    });
-
-    addPropertyColorMapEditorButton({
-        setting: customPropertyColorMapSetting,
-        tooltip: strings.settings.items.customPropertyColorMap.editTooltip,
-        title: strings.settings.items.customPropertyColorMap.name,
-        getMap: () => plugin.settings.customPropertyColorMap,
-        setMap: nextMap => {
-            plugin.settings.customPropertyColorMap = nextMap;
-        }
-    });
-    customPropertyColorMapSetting.controlEl.addClass('nn-setting-wide-input');
-
-    const showCustomPropertiesOnSeparateRowsSetting = customPropertyGroup.addSetting(setting => {
-        setting
-            .setName(strings.settings.items.showCustomPropertiesOnSeparateRows.name)
-            .setDesc(strings.settings.items.showCustomPropertiesOnSeparateRows.desc)
-            .addToggle(toggle =>
-                toggle.setValue(plugin.settings.showCustomPropertiesOnSeparateRows).onChange(async value => {
-                    plugin.settings.showCustomPropertiesOnSeparateRows = value;
+                    plugin.settings.customPropertyType = value === 'wordCount' ? 'wordCount' : 'none';
                     await plugin.saveSettingsAndUpdate();
                 })
-            );
+        );
     });
 
     customPropertyGroup.addSetting(setting => {
         setting
             .setName(strings.settings.items.showCustomPropertyInCompactMode.name)
-            .setDesc(strings.settings.items.showCustomPropertyInCompactMode.desc)
-            .addToggle(toggle =>
-                toggle.setValue(plugin.settings.showCustomPropertyInCompactMode).onChange(async value => {
-                    plugin.settings.showCustomPropertyInCompactMode = value;
-                    await plugin.saveSettingsAndUpdate();
-                })
-            );
+            .setDesc(strings.settings.items.showCustomPropertyInCompactMode.desc);
+        setting.addToggle(toggle =>
+            toggle.setValue(plugin.settings.showCustomPropertyInCompactMode).onChange(async value => {
+                plugin.settings.showCustomPropertyInCompactMode = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
     });
 
-    updateCustomPropertyFieldsVisibility = () => {
-        const isFrontmatter = plugin.settings.customPropertyType === 'frontmatter';
-        setElementVisible(customPropertyFieldsSetting.settingEl, isFrontmatter);
-        setElementVisible(showCustomPropertiesOnSeparateRowsSetting.settingEl, isFrontmatter);
-        setElementVisible(customPropertyColorMapSetting.settingEl, isFrontmatter);
-    };
-    updateCustomPropertyFieldsVisibility();
+    customPropertyGroup.addSetting(setting => {
+        setting
+            .setName(strings.settings.items.showCustomPropertiesOnSeparateRows.name)
+            .setDesc(strings.settings.items.showCustomPropertiesOnSeparateRows.desc);
+        setting.addToggle(toggle =>
+            toggle.setValue(plugin.settings.showCustomPropertiesOnSeparateRows).onChange(async value => {
+                plugin.settings.showCustomPropertiesOnSeparateRows = value;
+                await plugin.saveSettingsAndUpdate();
+            })
+        );
+    });
 
     const showFileDateSetting = dateGroup.addSetting(setting => {
         setting.setName(strings.settings.items.showFileDate.name).setDesc(strings.settings.items.showFileDate.desc);

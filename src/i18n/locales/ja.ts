@@ -104,6 +104,8 @@ export const STRINGS_JA = {
         folderExists: 'フォルダは既にショートカットにあります',
         noteExists: 'ノートは既にショートカットにあります',
         tagExists: 'タグは既にショートカットにあります',
+        propertyExists: 'プロパティはすでにショートカットに追加されています',
+        invalidProperty: '無効なプロパティショートカット',
         searchExists: '検索ショートカットは既に存在します',
         emptySearchQuery: '保存前に検索クエリを入力してください',
         emptySearchName: '検索を保存する前に名前を入力してください',
@@ -375,10 +377,6 @@ export const STRINGS_JA = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'ルールを追加'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'インターフェースアイコン',
@@ -734,7 +732,8 @@ export const STRINGS_JA = {
             tags: 'タグ表示',
             folders: 'フォルダノート',
             folderNotes: 'フォルダノート',
-            foldersAndTags: 'フォルダとタグ',
+            foldersAndTags: 'フォルダ',
+            tagsAndProperties: 'タグとプロパティ',
             listPane: 'リストペイン',
             advanced: '詳細設定'
         },
@@ -768,7 +767,7 @@ export const STRINGS_JA = {
                 previewText: 'プレビューテキスト',
                 featureImage: 'アイキャッチ画像',
                 tags: 'タグ',
-                customProperty: 'カスタムプロパティ（フロントマターまたは文字数）',
+                customProperty: 'プロパティ',
                 date: '日付',
                 parentFolder: '親フォルダ'
             }
@@ -1301,8 +1300,8 @@ export const STRINGS_JA = {
                 desc: '日付、プレビュー、画像が非表示のときにタグを表示します。'
             },
             customPropertyType: {
-                name: 'プロパティタイプ',
-                desc: 'ファイルアイテムに表示するカスタムプロパティを選択します。',
+                name: 'ノートプロパティ',
+                desc: 'ファイル項目に表示するノートプロパティを選択します。',
                 options: {
                     frontmatter: 'フロントマタープロパティ',
                     wordCount: '文字数',
@@ -1311,22 +1310,16 @@ export const STRINGS_JA = {
             },
             customPropertyFields: {
                 name: '表示するプロパティ',
-                desc: 'バッジとして表示するフロントマタープロパティのカンマ区切りリスト。リスト値のプロパティは値ごとに1つのバッジを表示します。[[wikilink]]値はクリック可能なリンクとして表示されます。',
+                desc: 'ナビゲーションペインとファイル項目のバッジとして表示するフロントマタープロパティのカンマ区切りリスト。リスト値のプロパティは値ごとに1つのバッジを表示します。',
                 placeholder: 'ステータス, タイプ, カテゴリ'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'プロパティを別の行に表示',
                 desc: '各プロパティを個別の行に表示します。'
             },
-            customPropertyColorMap: {
-                name: 'プロパティの色',
-                desc: 'フロントマターのプロパティと値をバッジの色にマッピングします。1行に1つのマッピング: プロパティ=色 または プロパティ:値=色',
-                placeholder: '# プロパティ または プロパティ:値 色\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'マッピングを編集'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'スリムモードでカスタムプロパティを表示',
-                desc: '日付、プレビュー、画像が非表示のときにカスタムプロパティを表示します。'
+                name: 'コンパクトモードでプロパティを表示',
+                desc: 'コンパクトモードが有効な時にプロパティを表示します。'
             },
             dateFormat: {
                 name: '日付形式',
@@ -1512,6 +1505,29 @@ export const STRINGS_JA = {
             keepEmptyTagsProperty: {
                 name: '最後のタグを削除した後も tags プロパティを保持',
                 desc: 'すべてのタグが削除されても frontmatter の tags プロパティを保持します。無効にすると、tags プロパティは frontmatter から削除されます。'
+            },
+            showProperties: {
+                name: 'プロパティを表示',
+                desc: 'ナビゲーターにプロパティセクションを表示します。'
+            },
+            showPropertyIcons: {
+                name: 'プロパティアイコンを表示',
+                desc: 'ナビゲーションペインのプロパティの横にアイコンを表示します。'
+            },
+            propertySortOrder: {
+                name: 'プロパティの並べ替え順',
+                desc: '任意のプロパティを右クリックして、その値に別の並べ替え順を設定します。',
+                options: {
+                    alphaAsc: 'A から Z',
+                    alphaDesc: 'Z から A',
+                    frequency: '頻度',
+                    lowToHigh: '低い順',
+                    highToLow: '高い順'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'プロパティフォルダを表示',
+                desc: '「プロパティ」を折りたたみ可能なフォルダとして表示します。'
             },
             hiddenTags: {
                 name: 'タグを非表示 (ボルトプロファイル)',

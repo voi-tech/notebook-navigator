@@ -170,7 +170,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     navItemHeight: NAVPANE_MEASUREMENTS.defaultItemHeight,
     navItemHeightScaleText: true,
 
-    // Folders & tags tab
+    // Folders tab
     autoSelectFirstFileOnFocusChange: false,
     autoExpandNavItems: false,
     springLoadedFolders: true,
@@ -180,7 +180,6 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     showRootFolder: true,
     inheritFolderColors: false,
     folderSortOrder: 'alpha-asc',
-    inheritTagColors: true,
     enableFolderNotes: false,
     folderNoteType: 'markdown',
     folderNoteName: '',
@@ -189,12 +188,22 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     openFolderNotesInNewTab: false,
     hideFolderNoteInList: true,
     pinCreatedFolderNote: false,
+
+    // Tags tab
     showTags: true,
     showTagIcons: true,
     showAllTagsFolder: true,
     showUntagged: true,
     tagSortOrder: 'alpha-asc',
+    inheritTagColors: true,
     keepEmptyTagsProperty: false,
+
+    // Properties tab
+    showProperties: true,
+    showPropertyIcons: true,
+    propertySortOrder: 'alpha-asc',
+    showAllPropertiesFolder: true,
+    customPropertyFields: '',
 
     // List pane tab
     defaultListMode: 'standard',
@@ -250,10 +259,8 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     showFileTagAncestors: false,
     showFileTagsInCompactMode: false,
     customPropertyType: 'none',
-    customPropertyFields: '',
-    showCustomPropertiesOnSeparateRows: true,
-    customPropertyColorMap: {},
     showCustomPropertyInCompactMode: false,
+    showCustomPropertiesOnSeparateRows: true,
     showFileDate: true,
     // Default to showing modified date when sorting alphabetically
     alphabeticalDateMode: 'modified',
@@ -290,6 +297,10 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     tagSortOverrides: {},
     tagTreeSortOverrides: {},
     tagAppearances: {} as Record<string, TagAppearance>,
+    propertyIcons: {},
+    propertyColors: {},
+    propertyBackgroundColors: {},
+    propertyTreeSortOverrides: {},
     navigationSeparators: {},
     userColors: [...DEFAULT_CUSTOM_COLORS],
     lastShownVersion: '',

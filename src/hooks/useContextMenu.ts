@@ -34,6 +34,7 @@ import {
     MenuDispatchers,
     buildFolderMenu,
     buildTagMenu,
+    buildPropertyMenu,
     buildFileMenu,
     buildEmptyListMenu,
     EMPTY_LIST_MENU_TYPE
@@ -80,7 +81,7 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
     const showHiddenItems = uxPreferences.showHiddenItems;
     const selectionState = useSelectionState();
-    const { expandedFolders, expandedTags } = useExpansionState();
+    const { expandedFolders, expandedTags, expandedProperties } = useExpansionState();
     const selectionDispatch = useSelectionDispatch();
     const expansionDispatch = useExpansionDispatch();
     const uiDispatch = useUIDispatch();
@@ -171,6 +172,17 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
                         dispatchers
                     });
                 };
+            } else if (menuConfig.type === ItemType.PROPERTY) {
+                buildMenu = menuInstance => {
+                    buildPropertyMenu({
+                        propertyNodeId: menuConfig.item,
+                        menu: menuInstance,
+                        services,
+                        settings,
+                        state,
+                        dispatchers
+                    });
+                };
             } else if (menuConfig.type === ItemType.FILE) {
                 buildMenu = menuInstance => {
                     buildFileMenu({
@@ -233,7 +245,8 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
             const state: MenuState = {
                 selectionState,
                 expandedFolders,
-                expandedTags
+                expandedTags,
+                expandedProperties
             };
 
             const dispatchers: MenuDispatchers = {
@@ -288,6 +301,7 @@ export function useContextMenu(elementRef: React.RefObject<HTMLElement | null>, 
             selectionState,
             expandedFolders,
             expandedTags,
+            expandedProperties,
             selectionDispatch,
             expansionDispatch,
             uiDispatch,

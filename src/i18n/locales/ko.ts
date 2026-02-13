@@ -104,6 +104,8 @@ export const STRINGS_KO = {
         folderExists: '폴더가 이미 바로가기에 있습니다',
         noteExists: '노트가 이미 바로가기에 있습니다',
         tagExists: '태그가 이미 바로가기에 있습니다',
+        propertyExists: '속성이 이미 바로가기에 있습니다',
+        invalidProperty: '잘못된 속성 바로가기',
         searchExists: '검색 바로가기가 이미 존재합니다',
         emptySearchQuery: '저장하기 전에 검색 쿼리를 입력하세요',
         emptySearchName: '검색을 저장하기 전에 이름을 입력하세요',
@@ -374,10 +376,6 @@ export const STRINGS_KO = {
         },
         fileIconRuleEditor: {
             addRuleAria: '규칙 추가'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: '인터페이스 아이콘',
@@ -732,7 +730,8 @@ export const STRINGS_KO = {
             icons: '아이콘 팩',
             folders: '폴더',
             folderNotes: '폴더 노트',
-            foldersAndTags: '폴더 및 태그',
+            foldersAndTags: '폴더',
+            tagsAndProperties: '태그 및 속성',
             tags: '태그',
             listPane: '목록 창',
             notes: '노트',
@@ -768,7 +767,7 @@ export const STRINGS_KO = {
                 previewText: '미리보기 텍스트',
                 featureImage: '대표 이미지',
                 tags: '태그',
-                customProperty: '사용자 정의 속성 (프론트매터 또는 단어 수)',
+                customProperty: '속성',
                 date: '날짜',
                 parentFolder: '상위 폴더'
             }
@@ -1299,8 +1298,8 @@ export const STRINGS_KO = {
                 desc: '날짜, 미리보기, 이미지가 숨겨져 있을 때 태그를 표시합니다.'
             },
             customPropertyType: {
-                name: '속성 유형',
-                desc: '파일 항목에 표시할 사용자 정의 속성을 선택합니다.',
+                name: '노트 속성',
+                desc: '파일 항목에 표시할 노트 속성을 선택합니다.',
                 options: {
                     frontmatter: '프론트매터 속성',
                     wordCount: '단어 수',
@@ -1309,22 +1308,16 @@ export const STRINGS_KO = {
             },
             customPropertyFields: {
                 name: '표시할 속성들',
-                desc: '배지로 표시할 프론트매터 속성의 쉼표로 구분된 목록. 목록 값 속성은 값당 하나의 배지를 표시합니다. [[위키링크]] 값은 클릭 가능한 링크로 표시됩니다.',
+                desc: '탐색 창과 파일 항목의 배지로 표시할 프론트매터 속성의 쉼표로 구분된 목록. 목록 값 속성은 값당 하나의 배지를 표시합니다.',
                 placeholder: '상태, 유형, 카테고리'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: '속성을 별도 행에 표시',
                 desc: '각 속성을 개별 행에 표시합니다.'
             },
-            customPropertyColorMap: {
-                name: '속성 색상',
-                desc: '프론트매터 속성과 값을 배지 색상에 매핑합니다. 한 줄에 하나의 매핑: 속성=색상 또는 속성:값=색상',
-                placeholder: '# 속성 또는 속성:값 색상\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: '매핑 편집'
-            },
             showCustomPropertyInCompactMode: {
-                name: '슬림 모드에서 사용자 정의 속성 표시',
-                desc: '날짜, 미리보기, 이미지가 숨겨져 있을 때 사용자 정의 속성을 표시합니다.'
+                name: '간결 모드에서 속성 표시',
+                desc: '간결 모드가 활성화되면 속성을 표시합니다.'
             },
             dateFormat: {
                 name: '날짜 형식',
@@ -1510,6 +1503,29 @@ export const STRINGS_KO = {
             keepEmptyTagsProperty: {
                 name: '마지막 태그 제거 후 tags 속성 유지',
                 desc: '모든 태그가 제거될 때 frontmatter 의 tags 속성을 유지합니다. 비활성화하면 tags 속성이 frontmatter 에서 삭제됩니다.'
+            },
+            showProperties: {
+                name: '속성 표시',
+                desc: '탐색기에 속성 섹션을 표시합니다.'
+            },
+            showPropertyIcons: {
+                name: '속성 아이콘 표시',
+                desc: '탐색 창에서 속성 옆에 아이콘을 표시합니다.'
+            },
+            propertySortOrder: {
+                name: '속성 정렬 순서',
+                desc: '속성을 마우스 오른쪽 버튼으로 클릭하여 값의 정렬 순서를 변경합니다.',
+                options: {
+                    alphaAsc: '가나다순',
+                    alphaDesc: '역가나다순',
+                    frequency: '빈도',
+                    lowToHigh: '낮은 순',
+                    highToLow: '높은 순'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: '속성 폴더 표시',
+                desc: '"속성"을 접을 수 있는 폴더로 표시합니다.'
             },
             hiddenTags: {
                 name: '태그 숨기기 (볼트 프로필)',

@@ -128,6 +128,7 @@ export const NavigationPaneItemType = {
     SHORTCUT_NOTE: 'shortcut-note',
     SHORTCUT_SEARCH: 'shortcut-search',
     SHORTCUT_TAG: 'shortcut-tag',
+    SHORTCUT_PROPERTY: 'shortcut-property',
     RECENT_NOTE: 'recent-note',
     TOP_SPACER: 'top-spacer',
     BOTTOM_SPACER: 'bottom-spacer',
@@ -270,6 +271,7 @@ export interface LocalStorageKeys {
     searchProviderKey: string;
     folderSortOrderKey: string;
     tagSortOrderKey: string;
+    propertySortOrderKey: string;
     recentColorsKey: string;
     paneTransitionDurationKey: string;
     toolbarVisibilityKey: string;
@@ -322,6 +324,7 @@ export const STORAGE_KEYS: LocalStorageKeys = {
     searchProviderKey: 'notebook-navigator-search-provider',
     folderSortOrderKey: 'notebook-navigator-folder-sort-order',
     tagSortOrderKey: 'notebook-navigator-tag-sort-order',
+    propertySortOrderKey: 'notebook-navigator-property-sort-order',
     recentColorsKey: 'notebook-navigator-recent-colors',
     paneTransitionDurationKey: 'notebook-navigator-pane-transition-duration',
     toolbarVisibilityKey: 'notebook-navigator-toolbar-visibility',

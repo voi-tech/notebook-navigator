@@ -286,6 +286,7 @@ export function useListPaneScroll({
             // `getCustomPropertyRowCount` applies the same trimming rules and separate-row behavior.
             const customPropertyRowCount = getCustomPropertyRowCount({
                 customPropertyType: folderSettings.customPropertyType,
+                showProperties: settings.showProperties,
                 showCustomPropertiesOnSeparateRows: settings.showCustomPropertiesOnSeparateRows,
                 showCustomPropertyInCompactMode: settings.showCustomPropertyInCompactMode,
                 isCompactMode,

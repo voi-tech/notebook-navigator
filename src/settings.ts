@@ -31,7 +31,9 @@ import {
 import { renderGeneralTab } from './settings/tabs/GeneralTab';
 import { renderNavigationPaneTab } from './settings/tabs/NavigationPaneTab';
 import { renderCalendarTab } from './settings/tabs/CalendarTab';
-import { renderFoldersTagsTab } from './settings/tabs/FoldersTagsTab';
+import { renderFoldersTab } from './settings/tabs/FoldersTab';
+import { renderTagsTab } from './settings/tabs/TagsTab';
+import { renderPropertiesTab } from './settings/tabs/PropertiesTab';
 import { renderListPaneTab } from './settings/tabs/ListPaneTab';
 import { renderNotesTab } from './settings/tabs/NotesTab';
 import { renderIconPacksTab } from './settings/tabs/IconPacksTab';
@@ -47,7 +49,17 @@ import { NOTEBOOK_NAVIGATOR_ICON_ID } from './constants/notebookNavigatorIcon';
 import { getDBInstanceOrNull } from './storage/fileOperations';
 
 /** Identifiers for different settings tab panes */
-type SettingsPaneId = 'general' | 'navigation-pane' | 'calendar' | 'folders-tags' | 'list-pane' | 'notes' | 'icon-packs' | 'advanced';
+type SettingsPaneId =
+    | 'general'
+    | 'navigation-pane'
+    | 'calendar'
+    | 'folders'
+    | 'tags'
+    | 'properties'
+    | 'list-pane'
+    | 'notes'
+    | 'icon-packs'
+    | 'advanced';
 
 /** Definition of a settings pane with its ID, label, and render function */
 interface SettingsPaneDefinition {
@@ -529,6 +541,7 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
      * - Calendar
      * - Folders
      * - Tags
+     * - Properties
      * - File list
      * - Notes
      * - Advanced
@@ -567,10 +580,12 @@ export class NotebookNavigatorSettingTab extends PluginSettingTab {
             { id: 'calendar', label: strings.settings.sections.calendar, render: renderCalendarTab },
             { id: 'navigation-pane', label: strings.settings.sections.navigationPane, render: renderNavigationPaneTab },
             {
-                id: 'folders-tags',
-                label: strings.settings.sections.foldersAndTags,
-                render: renderFoldersTagsTab
+                id: 'folders',
+                label: strings.settings.sections.folders,
+                render: renderFoldersTab
             },
+            { id: 'tags', label: strings.settings.sections.tags, render: renderTagsTab },
+            { id: 'properties', label: strings.navigationPane.properties, render: renderPropertiesTab },
             { id: 'list-pane', label: strings.settings.sections.listPane, render: renderListPaneTab },
             { id: 'notes', label: strings.settings.sections.notes, render: renderNotesTab },
             { id: 'icon-packs', label: strings.settings.sections.icons, render: renderIconPacksTab },

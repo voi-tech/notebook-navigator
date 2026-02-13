@@ -21,10 +21,9 @@ import type { NotebookNavigatorSettings } from '../types';
 import type { LocalStorageKeys } from '../../types';
 import type { FolderAppearance } from '../../hooks/useListPaneAppearance';
 import { localStorage } from '../../utils/localStorage';
-import { isPlainObjectRecordValue } from '../../utils/recordUtils';
 import { cloneShortcuts, DEFAULT_VAULT_PROFILE_ID } from '../../utils/vaultProfiles';
 import { ShortcutType, type ShortcutEntry } from '../../types/shortcuts';
-import { isCustomPropertyType } from '../types';
+import { isCustomPropertyType, isTagSortOrder } from '../types';
 import { normalizeCalendarCustomRootFolder } from '../../utils/calendarCustomNotePatterns';
 import { normalizeFolderNoteNamePattern } from '../../utils/folderNoteName';
 import { normalizeOptionalVaultFilePath } from '../../utils/pathUtils';
@@ -145,13 +144,26 @@ export function migrateLegacySyncedSettings(params: {
     }
 
     delete mutableSettings['customPropertyColorFields'];
-
-    if (!isPlainObjectRecordValue(settings.customPropertyColorMap)) {
-        settings.customPropertyColorMap = defaultSettings.customPropertyColorMap;
-    }
+    delete mutableSettings['customPropertyColorMap'];
 
     if (typeof settings.showCustomPropertyInCompactMode !== 'boolean') {
         settings.showCustomPropertyInCompactMode = defaultSettings.showCustomPropertyInCompactMode;
+    }
+
+    if (typeof settings.showProperties !== 'boolean') {
+        settings.showProperties = defaultSettings.showProperties;
+    }
+
+    if (typeof settings.showPropertyIcons !== 'boolean') {
+        settings.showPropertyIcons = defaultSettings.showPropertyIcons;
+    }
+
+    if (typeof settings.showAllPropertiesFolder !== 'boolean') {
+        settings.showAllPropertiesFolder = defaultSettings.showAllPropertiesFolder;
+    }
+
+    if (!isTagSortOrder(settings.propertySortOrder)) {
+        settings.propertySortOrder = defaultSettings.propertySortOrder;
     }
 
     type LegacyAppearance = FolderAppearance & {
@@ -190,6 +202,16 @@ export function migrateLegacySyncedSettings(params: {
         Object.entries(collection).forEach(([key, appearance]) => {
             const migratedAppearance = migrateLegacyAppearanceMode(appearance);
             if (migratedAppearance) {
+                const rawCustomPropertyType = (migratedAppearance as unknown as Record<string, unknown>)['customPropertyType'];
+                if (rawCustomPropertyType === 'frontmatter') {
+                    migratedAppearance.customPropertyType = 'none';
+                } else if (
+                    typeof rawCustomPropertyType === 'string' &&
+                    rawCustomPropertyType.length > 0 &&
+                    !isCustomPropertyType(rawCustomPropertyType)
+                ) {
+                    delete (migratedAppearance as unknown as Record<string, unknown>)['customPropertyType'];
+                }
                 collection[key] = migratedAppearance;
             }
         });
@@ -286,6 +308,7 @@ export function extractLegacyShortcuts(params: { storedData: Record<string, unkn
             shortcutType !== ShortcutType.FOLDER &&
             shortcutType !== ShortcutType.NOTE &&
             shortcutType !== ShortcutType.TAG &&
+            shortcutType !== ShortcutType.PROPERTY &&
             shortcutType !== ShortcutType.SEARCH
         ) {
             return;

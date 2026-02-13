@@ -74,7 +74,6 @@ import {
     normalizeFileTypeIconMapKey,
     normalizeIconMapRecord
 } from './utils/iconizeFormat';
-import { normalizePropertyColorMapKey, normalizePropertyColorMapRecord } from './utils/propertyColorMapFormat';
 import { normalizeUXIconMapRecord } from './utils/uxIcons';
 import {
     clonePinnedNotesRecord,
@@ -539,7 +538,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         const migratedShortcutNegationSyntax = migrateSearchShortcutNegationSyntax({ settings: this.settings });
         this.normalizeIconSettings(this.settings);
         this.normalizeFileIconMapSettings(this.settings);
-        this.normalizeCustomPropertyColorMapSettings(this.settings);
         this.normalizeInterfaceIconsSettings(this.settings);
         syncModeRegistry.vaultProfile.resolveOnLoad({ storedData });
         this.refreshMatcherCachesIfNeeded();
@@ -929,7 +927,12 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         // Initialize services
         this.tagTreeService = new TagTreeService();
         this.propertyTreeService = new PropertyTreeService();
-        this.metadataService = new MetadataService(this.app, this, () => this.tagTreeService);
+        this.metadataService = new MetadataService(
+            this.app,
+            this,
+            () => this.tagTreeService,
+            () => this.propertyTreeService
+        );
         this.tagOperations = new TagOperations(
             this.app,
             () => this.settings,
@@ -1151,6 +1154,13 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
     }
 
     /**
+     * Returns the current property sort order preference.
+     */
+    public getPropertySortOrder(): TagSortOrder {
+        return this.settings.propertySortOrder;
+    }
+
+    /**
      * Returns the current folder sort order preference.
      */
     public getFolderSortOrder(): AlphaSortOrder {
@@ -1167,6 +1177,18 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.settings.tagSortOrder = order;
         localStorage.set(this.keys.tagSortOrderKey, order);
         this.persistSyncModeSettingUpdate('tagSortOrder');
+    }
+
+    /**
+     * Updates the property sort order preference and persists to local storage.
+     */
+    public setPropertySortOrder(order: TagSortOrder): void {
+        if (!isTagSortOrder(order) || this.settings.propertySortOrder === order) {
+            return;
+        }
+        this.settings.propertySortOrder = order;
+        localStorage.set(this.keys.propertySortOrderKey, order);
+        this.persistSyncModeSettingUpdate('propertySortOrder');
     }
 
     /**
@@ -1835,10 +1857,13 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
         this.settings.fileColors = sanitizeStringMap(this.settings.fileColors);
         this.settings.tagColors = sanitizeStringMap(this.settings.tagColors);
         this.settings.tagBackgroundColors = sanitizeStringMap(this.settings.tagBackgroundColors);
+        this.settings.propertyColors = sanitizeStringMap(this.settings.propertyColors);
+        this.settings.propertyBackgroundColors = sanitizeStringMap(this.settings.propertyBackgroundColors);
         this.settings.folderSortOverrides = sanitizeSortMap(this.settings.folderSortOverrides);
         this.settings.tagSortOverrides = sanitizeSortMap(this.settings.tagSortOverrides);
         this.settings.folderTreeSortOverrides = sanitizeAlphaSortOrderMap(this.settings.folderTreeSortOverrides);
         this.settings.tagTreeSortOverrides = sanitizeAlphaSortOrderMap(this.settings.tagTreeSortOverrides);
+        this.settings.propertyTreeSortOverrides = sanitizeAlphaSortOrderMap(this.settings.propertyTreeSortOverrides);
         this.settings.folderAppearances = sanitizeAppearanceMap(this.settings.folderAppearances);
         this.settings.tagAppearances = sanitizeAppearanceMap(this.settings.tagAppearances);
         this.settings.navigationSeparators = sanitizeBooleanMap(this.settings.navigationSeparators);
@@ -1863,6 +1888,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         settings.folderIcons = normalizeRecord(settings.folderIcons);
         settings.tagIcons = normalizeRecord(settings.tagIcons);
+        settings.propertyIcons = normalizeRecord(settings.propertyIcons);
         settings.fileIcons = normalizeRecord(settings.fileIcons);
     }
 
@@ -1907,28 +1933,6 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
             normalizeFileNameIconMapKey,
             DEFAULT_SETTINGS.fileNameIconMap
         );
-    }
-
-    private normalizeCustomPropertyColorMapSettings(settings: NotebookNavigatorSettings): void {
-        const normalizeColorMap = (input: unknown, fallback: Record<string, string>) => {
-            if (!isPlainObjectRecordValue(input)) {
-                // Invalid or non-record inputs resolve to a normalized record shape.
-                return normalizePropertyColorMapRecord(fallback, normalizePropertyColorMapKey);
-            }
-
-            const source = sanitizeRecord<string>(undefined);
-            Object.entries(input).forEach(([key, value]) => {
-                if (typeof value !== 'string') {
-                    return;
-                }
-                source[key] = value;
-            });
-
-            // Entries with invalid key grammar normalize to empty keys and are removed.
-            return normalizePropertyColorMapRecord(source, normalizePropertyColorMapKey);
-        };
-
-        settings.customPropertyColorMap = normalizeColorMap(settings.customPropertyColorMap, DEFAULT_SETTINGS.customPropertyColorMap);
     }
 
     private normalizeInterfaceIconsSettings(settings: NotebookNavigatorSettings): void {
@@ -2208,7 +2212,7 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
      */
     public async getMetadataCleanupSummary(): Promise<MetadataCleanupSummary> {
         if (!this.metadataService || this.isUnloading) {
-            return { folders: 0, tags: 0, files: 0, pinnedNotes: 0, separators: 0, total: 0 };
+            return { folders: 0, tags: 0, properties: 0, files: 0, pinnedNotes: 0, separators: 0, total: 0 };
         }
 
         return this.metadataService.getCleanupSummary();

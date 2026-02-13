@@ -87,6 +87,9 @@ export interface PropertyKeyTreeItem {
     data: PropertyTreeNode;
     level: number;
     key: string;
+    color?: string;
+    backgroundColor?: string;
+    icon?: string;
 }
 
 export interface PropertyValueTreeItem {
@@ -94,6 +97,9 @@ export interface PropertyValueTreeItem {
     data: PropertyTreeNode;
     level: number;
     key: string;
+    color?: string;
+    backgroundColor?: string;
+    icon?: string;
 }
 
 export interface VirtualFolderItem {
@@ -163,6 +169,12 @@ export interface ShortcutTagNavItem extends ShortcutNavigationBase {
     displayName: string;
 }
 
+export interface ShortcutPropertyNavItem extends ShortcutNavigationBase {
+    type: typeof NavigationPaneItemType.SHORTCUT_PROPERTY;
+    propertyNodeId: string;
+    displayName: string;
+}
+
 export interface RootSpacerItem {
     type: typeof NavigationPaneItemType.ROOT_SPACER;
     key: string;
@@ -199,6 +211,7 @@ export type CombinedNavigationItem =
     | RecentNoteNavItem
     | ShortcutSearchNavItem
     | ShortcutTagNavItem
+    | ShortcutPropertyNavItem
     | RootSpacerItem
     | TopSpacerItem
     | BottomSpacerItem

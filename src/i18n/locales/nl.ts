@@ -105,6 +105,8 @@ export const STRINGS_NL = {
         folderExists: 'Map staat al in snelkoppelingen',
         noteExists: 'Notitie staat al in snelkoppelingen',
         tagExists: 'Tag staat al in snelkoppelingen',
+        propertyExists: 'Eigenschap staat al in snelkoppelingen',
+        invalidProperty: 'Ongeldige eigenschapssnelkoppeling',
         searchExists: 'Zoeksnelkoppeling bestaat al',
         emptySearchQuery: 'Voer een zoekopdracht in voordat u deze opslaat',
         emptySearchName: 'Voer een naam in voordat u de zoekopdracht opslaat',
@@ -377,10 +379,6 @@ export const STRINGS_NL = {
         },
         fileIconRuleEditor: {
             addRuleAria: 'Regel toevoegen'
-        },
-        propertyColorRuleEditor: {
-            propertyPlaceholder: 'Property',
-            valuePlaceholder: 'Value'
         },
         interfaceIcons: {
             title: 'Interface-iconen',
@@ -734,7 +732,8 @@ export const STRINGS_NL = {
             icons: 'Pictogrampakketten',
             folders: 'Mappen',
             folderNotes: 'Mapnotities',
-            foldersAndTags: 'Mappen & tags',
+            foldersAndTags: 'Mappen',
+            tagsAndProperties: 'Tags & eigenschappen',
             tags: 'Tags',
             listPane: 'Lijstpaneel',
             notes: 'Notities',
@@ -770,7 +769,7 @@ export const STRINGS_NL = {
                 previewText: 'Voorbeeldtekst',
                 featureImage: 'Uitgelichte afbeelding',
                 tags: 'Tags',
-                customProperty: 'Aangepaste eigenschap (frontmatter of woordtelling)',
+                customProperty: 'Eigenschappen',
                 date: 'Datum',
                 parentFolder: 'Bovenliggende map'
             }
@@ -1303,8 +1302,8 @@ export const STRINGS_NL = {
                 desc: 'Tags weergeven wanneer datum, voorbeeld en afbeelding verborgen zijn.'
             },
             customPropertyType: {
-                name: 'Eigenschapstype',
-                desc: 'Selecteer de aangepaste eigenschap om weer te geven in bestandsitems.',
+                name: 'Notitie-eigenschap',
+                desc: 'Selecteer de notitie-eigenschap om weer te geven in bestandsitems.',
                 options: {
                     frontmatter: 'Frontmatter eigenschap',
                     wordCount: 'Woordentelling',
@@ -1313,22 +1312,16 @@ export const STRINGS_NL = {
             },
             customPropertyFields: {
                 name: 'Weer te geven eigenschappen',
-                desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen om als badges weer te geven. Lijstwaarde-eigenschappen tonen één badge per waarde. Waarden in [[wikilink]]-formaat worden weergegeven als aanklikbare links.",
+                desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen om weer te geven in het navigatiepaneel en als badges in bestandsitems. Lijst-eigenschappen tonen één badge per waarde.",
                 placeholder: 'status, type, categorie'
             },
             showCustomPropertiesOnSeparateRows: {
                 name: 'Eigenschappen op afzonderlijke regels tonen',
                 desc: 'Toon elke eigenschap op een eigen regel.'
             },
-            customPropertyColorMap: {
-                name: 'Eigenschapkleuren',
-                desc: 'Koppel frontmatter-eigenschappen en -waarden aan badge-kleuren. Eén koppeling per regel: eigenschap=kleur of eigenschap:waarde=kleur',
-                placeholder: '# Eigenschap of eigenschap:waarde kleur\nstatus=#f59e0b\nstatus:done=#10b981\nstatus:todo=#ef4444',
-                editTooltip: 'Koppelingen bewerken'
-            },
             showCustomPropertyInCompactMode: {
-                name: 'Toon aangepaste eigenschap in compacte modus',
-                desc: 'Toon de aangepaste eigenschap wanneer datum, voorbeeld en afbeelding verborgen zijn.'
+                name: 'Eigenschappen tonen in compacte modus',
+                desc: 'Eigenschappen weergeven wanneer de compacte modus actief is.'
             },
             dateFormat: {
                 name: 'Datumformaat',
@@ -1514,6 +1507,29 @@ export const STRINGS_NL = {
             keepEmptyTagsProperty: {
                 name: 'Tags-eigenschap behouden na verwijderen laatste tag',
                 desc: 'De tags frontmatter-eigenschap behouden wanneer alle tags worden verwijderd. Indien uitgeschakeld, wordt de tags-eigenschap verwijderd uit frontmatter.'
+            },
+            showProperties: {
+                name: 'Eigenschappen tonen',
+                desc: 'Eigenschappensectie tonen in de navigator.'
+            },
+            showPropertyIcons: {
+                name: 'Eigenschapspictogrammen tonen',
+                desc: 'Pictogrammen naast eigenschappen in het navigatiepaneel tonen.'
+            },
+            propertySortOrder: {
+                name: 'Sorteervolgorde eigenschappen',
+                desc: 'Klik met de rechtermuisknop op een eigenschap om een andere sorteervolgorde voor de waarden in te stellen.',
+                options: {
+                    alphaAsc: 'A tot Z',
+                    alphaDesc: 'Z tot A',
+                    frequency: 'Frequentie',
+                    lowToHigh: 'laag naar hoog',
+                    highToLow: 'hoog naar laag'
+                }
+            },
+            showAllPropertiesFolder: {
+                name: 'Eigenschappenmap tonen',
+                desc: '"Eigenschappen" als een inklapbare map tonen.'
             },
             hiddenTags: {
                 name: 'Tags verbergen (kluisprofiel)',

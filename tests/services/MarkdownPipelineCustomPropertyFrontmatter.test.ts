@@ -35,7 +35,7 @@ function createSettings(overrides: Partial<NotebookNavigatorSettings>): Notebook
         ...DEFAULT_SETTINGS,
         showFilePreview: false,
         showFeatureImage: false,
-        customPropertyType: 'frontmatter',
+        customPropertyType: 'none',
         ...overrides
     };
 }
@@ -98,14 +98,10 @@ describe('MarkdownPipelineContentProvider frontmatter custom properties', () => 
         ]);
     });
 
-    it('does not persist colors in custom property items', async () => {
+    it('does not persist presentation data in custom property items', async () => {
         const context = createApp();
         const settings = createSettings({
-            customPropertyFields: 'status, type',
-            customPropertyColorMap: {
-                status: '#ff0000',
-                type: '#00ff00'
-            }
+            customPropertyFields: 'status, type'
         });
         const provider = new TestMarkdownPipelineContentProvider(context.app);
         const file = createFile('notes/note.md');

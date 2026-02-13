@@ -57,7 +57,7 @@ import { getIconService, useIconServiceVersion } from '../services/icons';
 import { ItemType, type CSSPropertiesWithVars } from '../types';
 import { TagTreeNode } from '../types/storage';
 import type { NoteCountInfo } from '../types/noteCounts';
-import { buildNoteCountDisplay } from '../utils/noteCountFormatting';
+import { buildNoteCountDisplay, buildSortableNoteCountDisplay } from '../utils/noteCountFormatting';
 import { buildSearchMatchContentClass } from '../utils/searchHighlight';
 import { getTotalNoteCount } from '../utils/tagTree';
 import { resolveUXIcon } from '../utils/uxIcons';
@@ -161,20 +161,13 @@ export const TagTreeItem = React.memo(
         // Determine if counts should be shown separately (e.g., "2 • 5") or combined
         const useSeparateCounts = includeDescendantNotes && settings.separateNoteCounts;
         // Build formatted display object with label and visibility flags
-        const noteCountDisplay = buildNoteCountDisplay(
-            resolvedCounts,
-            includeDescendantNotes,
-            useSeparateCounts,
-            sortOrderIndicator ?? '•'
+        const noteCountDisplay = buildSortableNoteCountDisplay(
+            buildNoteCountDisplay(resolvedCounts, includeDescendantNotes, useSeparateCounts, '•'),
+            sortOrderIndicator
         );
-        const noteCountLabel =
-            !useSeparateCounts && sortOrderIndicator && noteCountDisplay.shouldDisplay
-                ? `${sortOrderIndicator} ${noteCountDisplay.label}`
-                : sortOrderIndicator && !noteCountDisplay.shouldDisplay
-                  ? sortOrderIndicator
-                  : noteCountDisplay.label;
+        const noteCountLabel = noteCountDisplay.label;
         // Render count badge when enabled and there is either a count or a sort override indicator
-        const shouldDisplayCount = showFileCount && (noteCountDisplay.shouldDisplay || Boolean(sortOrderIndicator));
+        const shouldDisplayCount = showFileCount && noteCountDisplay.shouldDisplay;
 
         // Memoize computed values
         const hasChildren = useMemo(() => tagNode.children.size > 0, [tagNode.children.size]);

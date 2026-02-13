@@ -19,5 +19,6 @@
 export type { EntityType } from './BaseMetadataService';
 export { FolderMetadataService, type FolderDisplayData } from './FolderMetadataService';
 export { TagMetadataService, type TagColorData } from './TagMetadataService';
+export { PropertyMetadataService, type PropertyColorData } from './PropertyMetadataService';
 export { FileMetadataService, type FileMetadataMigrationResult } from './FileMetadataService';
 export { NavigationSeparatorService } from './NavigationSeparatorService';
