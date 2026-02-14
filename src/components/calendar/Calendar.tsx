@@ -523,7 +523,8 @@ export function Calendar({
         return weeks.length;
     }, [weeks.length, weeksToShowSetting]);
 
-    const trailingSpacerWeekCount = Math.max(0, renderedWeekRowCount - weeks.length);
+    const showYearCalendar = isRightSidebar && settings.calendarShowYearCalendar;
+    const trailingSpacerWeekCount = showYearCalendar ? Math.max(0, renderedWeekRowCount - weeks.length) : 0;
 
     useLayoutEffect(() => {
         if (weeks.length === 0) {
@@ -673,7 +674,6 @@ export function Calendar({
 
     const showWeekNumbers = settings.calendarShowWeekNumber;
     const highlightToday = settings.calendarHighlightToday;
-    const showYearCalendar = isRightSidebar && settings.calendarShowYearCalendar;
     const showYearInHeader = !isRightSidebar || !showYearCalendar;
     const useRightSidebarYearCalendarHeaderLayout = isRightSidebar && showYearCalendar;
     const useSplitHeaderLayout = !useRightSidebarYearCalendarHeaderLayout;
