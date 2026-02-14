@@ -408,6 +408,13 @@ export function useNavigationPaneScroll({
     useEffect(() => {
         if (!selectedPath || !rowVirtualizer || !isScrollContainerReady) return;
 
+        if (selectionState.isRevealOperation) {
+            prevSelectedPathRef.current = selectedPath;
+            prevVisibleRef.current = isScrollContainerReady;
+            prevFocusedPaneRef.current = uiState.focusedPane;
+            return;
+        }
+
         const currentSelectionType = selectedItemType ?? ItemType.FOLDER;
         const suppressShortcutScroll = settings.skipAutoScroll && selectionState.revealSource === 'shortcut';
 
@@ -459,6 +466,7 @@ export function useNavigationPaneScroll({
         selectedPath,
         rowVirtualizer,
         isScrollContainerReady,
+        selectionState.isRevealOperation,
         uiState.focusedPane,
         showHiddenItems,
         selectedItemType,
@@ -476,6 +484,11 @@ export function useNavigationPaneScroll({
      */
     useEffect(() => {
         if (!selectedPath || !selectedItemType || !rowVirtualizer || !isScrollContainerReady) {
+            return;
+        }
+
+        if (selectionState.isRevealOperation) {
+            prevSelectedDeferredPathRef.current = selectedPath;
             return;
         }
 
@@ -523,6 +536,7 @@ export function useNavigationPaneScroll({
         selectedPath,
         rowVirtualizer,
         isScrollContainerReady,
+        selectionState.isRevealOperation,
         showHiddenItems,
         resolveIndex,
         activeShortcutKey,

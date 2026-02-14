@@ -20,7 +20,6 @@ import { useEffect, useRef, useCallback, RefObject, useState } from 'react';
 import { TFile, TFolder, App, FileView } from 'obsidian';
 import { getLeafSplitLocation } from '../utils/workspaceSplit';
 import { shouldSkipNavigatorAutoReveal } from '../utils/autoRevealUtils';
-import type { ListPaneHandle } from '../components/ListPane';
 import type { NavigationPaneHandle } from '../components/NavigationPane';
 import { useExpansionState, useExpansionDispatch } from '../context/ExpansionContext';
 import { useSelectionState, useSelectionDispatch } from '../context/SelectionContext';
@@ -33,7 +32,6 @@ import { useCommandQueue } from '../context/ServicesContext';
 import { determineTagToReveal, findNearestVisibleTagAncestor, normalizeTagPath } from '../utils/tagUtils';
 import { ItemType, PROPERTIES_ROOT_VIRTUAL_FOLDER_ID, TAGGED_TAG_ID, TAGS_ROOT_VIRTUAL_FOLDER_ID, UNTAGGED_TAG_ID } from '../types';
 import { TIMEOUTS } from '../types/obsidian-extended';
-import { normalizeNavigationPath } from '../utils/navigationIndex';
 import { doesFolderContainPath } from '../utils/pathUtils';
 import type { Align } from '../types/scroll';
 import { navigateToTag as navigateToTagInternal, type NavigateToTagOptions } from '../utils/tagNavigation';
@@ -52,7 +50,6 @@ interface FocusPaneOptions {
 interface UseNavigatorRevealOptions {
     app: App;
     navigationPaneRef: RefObject<NavigationPaneHandle | null>;
-    listPaneRef: RefObject<ListPaneHandle | null>;
     focusNavigationPane: (options?: FocusPaneOptions) => void;
     focusFilesPane: (options?: FocusPaneOptions) => void;
 }
@@ -103,13 +100,7 @@ export interface RevealPropertyOptions {
  * This hook encapsulates the complex reveal logic that was previously
  * in the NotebookNavigatorComponent, making it reusable and testable.
  */
-export function useNavigatorReveal({
-    app,
-    navigationPaneRef,
-    listPaneRef,
-    focusNavigationPane,
-    focusFilesPane
-}: UseNavigatorRevealOptions) {
+export function useNavigatorReveal({ app, navigationPaneRef, focusNavigationPane, focusFilesPane }: UseNavigatorRevealOptions) {
     const settings = useSettingsState();
     const uxPreferences = useUXPreferences();
     const includeDescendantNotes = uxPreferences.includeDescendantNotes;
@@ -994,58 +985,6 @@ export function useNavigatorReveal({
         revealProperty,
         settings.startView,
         uiState.singlePane
-    ]);
-
-    /**
-     * Request scrolling to revealed items after selection changes.
-     * Folder/tag expansion happens in the reveal functions BEFORE selection changes.
-     * The actual scrolling is handled by the navigation and list panes.
-     */
-    useEffect(() => {
-        // ONLY process if this is a reveal operation, not normal keyboard navigation
-        if (selectionState.isRevealOperation && selectionState.selectedFile) {
-            if (selectionState.revealSource === 'shortcut') {
-                return;
-            }
-            // Request scroll in navigation pane if visible
-            const shouldScrollNavigation = !uiState.singlePane || uiState.currentSinglePaneView === 'navigation';
-
-            if (shouldScrollNavigation) {
-                if (selectionState.selectionType === ItemType.TAG && selectionState.selectedTag) {
-                    // Request scroll to tag
-                    const tagPath = normalizeNavigationPath(ItemType.TAG, selectionState.selectedTag);
-                    navigationPaneRef.current?.requestScroll(tagPath, {
-                        itemType: ItemType.TAG
-                    });
-                } else if (selectionState.selectionType === ItemType.FOLDER && selectionState.selectedFolder) {
-                    // Scroll to the selected folder even when it remains an ancestor during descendant reveals
-                    const folderPath = normalizeNavigationPath(ItemType.FOLDER, selectionState.selectedFolder.path);
-                    navigationPaneRef.current?.requestScroll(folderPath, {
-                        itemType: ItemType.FOLDER
-                    });
-                } else if (selectionState.selectionType === ItemType.PROPERTY && selectionState.selectedProperty) {
-                    const propertyNodeId = normalizeNavigationPath(ItemType.PROPERTY, selectionState.selectedProperty);
-                    navigationPaneRef.current?.requestScroll(propertyNodeId, {
-                        itemType: ItemType.PROPERTY
-                    });
-                }
-            }
-
-            // ListPane handles its own scroll requests via pendingScrollRef
-            // This ensures proper measurement for large folders before scrolling
-        }
-    }, [
-        selectionState.isRevealOperation,
-        selectionState.selectedFolder,
-        selectionState.selectedFile,
-        selectionState.selectionType,
-        selectionState.selectedTag,
-        selectionState.selectedProperty,
-        selectionState.revealSource,
-        navigationPaneRef,
-        listPaneRef,
-        uiState.singlePane,
-        uiState.currentSinglePaneView
     ]);
 
     return {

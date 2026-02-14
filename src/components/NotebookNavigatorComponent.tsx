@@ -477,7 +477,6 @@ export const NotebookNavigatorComponent = React.memo(
         } = useNavigatorReveal({
             app,
             navigationPaneRef,
-            listPaneRef,
             focusNavigationPane: focusNavigationPaneCallback,
             focusFilesPane: focusFilesPaneCallback
         });
