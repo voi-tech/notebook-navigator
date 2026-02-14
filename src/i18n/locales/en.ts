@@ -1312,7 +1312,7 @@ export const STRINGS_EN = {
             },
             showFileProperties: {
                 name: 'Show file properties',
-                desc: 'Display configured property values in file items.'
+                desc: 'Display clickable properties in file items.'
             },
             colorFileProperties: {
                 name: 'Color file properties',

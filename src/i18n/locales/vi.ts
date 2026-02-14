@@ -1314,7 +1314,7 @@ export const STRINGS_VI = {
             },
             showFileProperties: {
                 name: 'Hiện thuộc tính tệp',
-                desc: 'Hiển thị các giá trị thuộc tính đã cấu hình trong mục tệp.'
+                desc: 'Hiển thị các thuộc tính có thể nhấp trong mục tệp.'
             },
             colorFileProperties: {
                 name: 'Tô màu thuộc tính tệp',

@@ -1320,7 +1320,7 @@ export const STRINGS_FR = {
             },
             showFileProperties: {
                 name: 'Afficher les propriétés de fichier',
-                desc: 'Afficher les valeurs de propriétés configurées dans les éléments de fichier.'
+                desc: 'Afficher les propriétés cliquables dans les éléments de fichier.'
             },
             colorFileProperties: {
                 name: 'Colorer les propriétés de fichier',

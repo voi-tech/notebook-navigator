@@ -1320,7 +1320,7 @@ export const STRINGS_PT_BR = {
             },
             showFileProperties: {
                 name: 'Mostrar propriedades de arquivo',
-                desc: 'Exibir valores de propriedades configuradas nos itens de arquivo.'
+                desc: 'Exibir propriedades clicáveis nos itens de arquivo.'
             },
             colorFileProperties: {
                 name: 'Colorir propriedades de arquivo',

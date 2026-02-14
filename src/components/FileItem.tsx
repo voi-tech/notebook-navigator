@@ -86,10 +86,12 @@ import { getTagSearchModifierOperator } from '../utils/tagUtils';
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { InclusionOperator } from '../utils/filterSearch';
 import {
+    buildPropertyKeyNodeId,
     buildPropertyValueNodeId,
     getPropertyKeyNodeIdFromNodeId,
     isPropertyKeyOnlyValuePath,
     normalizePropertyNodeId,
+    parsePropertyNodeId,
     normalizePropertyTreeValuePath
 } from '../utils/propertyTree';
 import { ServiceIcon } from './ServiceIcon';
@@ -154,6 +156,9 @@ type PropertyPill = {
     fieldKey?: string;
     color?: string;
     background?: string;
+    propertyNodeId?: string;
+    propertySearchKey?: string;
+    propertySearchValuePath?: string | null;
 };
 
 interface FileItemProps {
@@ -176,6 +181,8 @@ interface FileItemProps {
     isHidden?: boolean;
     /** Modifies the active search query with a tag token when modifier clicking */
     onModifySearchWithTag?: (tag: string, operator: InclusionOperator) => void;
+    /** Modifies the active search query with a property token when modifier clicking */
+    onModifySearchWithProperty?: (key: string, value: string | null, operator: InclusionOperator) => void;
     /** Icon size for rendering file icons */
     fileIconSize: number;
 }
@@ -357,6 +364,7 @@ export const FileItem = React.memo(function FileItem({
     searchMeta,
     isHidden = false,
     onModifySearchWithTag,
+    onModifySearchWithProperty,
     fileIconSize
 }: FileItemProps) {
     // === Hooks (all hooks together at the top) ===
@@ -369,7 +377,7 @@ export const FileItem = React.memo(function FileItem({
     const showHiddenItems = uxPreferences.showHiddenItems;
     const appearanceSettings = useListPaneAppearance();
     const { getFileDisplayName, getDB, getFileTimestamps, hasPreview, regenerateFeatureImageForFile } = useFileCache();
-    const { navigateToTag } = useTagNavigation();
+    const { navigateToTag, navigateToProperty } = useTagNavigation();
     const metadataService = useMetadataService();
     const { addNoteShortcut, hasNoteShortcut, noteShortcutKeysByPath, removeShortcut } = useShortcuts();
     const hiddenTagVisibility = useMemo(() => createHiddenTagVisibility(hiddenTags, showHiddenItems), [hiddenTags, showHiddenItems]);
@@ -586,13 +594,28 @@ export const FileItem = React.memo(function FileItem({
         [navigateToTag, onModifySearchWithTag, settings.multiSelectModifier, isMobile]
     );
 
-    const handlePropertyWikilinkClick = useCallback(
-        (event: React.MouseEvent, wikiLink: WikiLinkTarget) => {
+    const handlePropertyClick = useCallback(
+        (event: React.MouseEvent, pill: PropertyPill) => {
+            const propertyNodeId = pill.propertyNodeId;
+            const propertySearchKey = pill.propertySearchKey;
+            if (!propertyNodeId || !propertySearchKey) {
+                return;
+            }
+
             event.stopPropagation();
-            event.preventDefault();
-            void app.workspace.openLinkText(wikiLink.target, file.path, false);
+
+            if (onModifySearchWithProperty) {
+                const operator = getTagSearchModifierOperator(event, settings.multiSelectModifier, isMobile);
+                if (operator) {
+                    event.preventDefault();
+                    onModifySearchWithProperty(propertySearchKey, pill.propertySearchValuePath ?? null, operator);
+                    return;
+                }
+            }
+
+            navigateToProperty(propertyNodeId, { preserveNavigationFocus: false });
         },
-        [app.workspace, file.path]
+        [isMobile, navigateToProperty, onModifySearchWithProperty, settings.multiSelectModifier]
     );
 
     const getTagColorData = useCallback(
@@ -770,6 +793,7 @@ export const FileItem = React.memo(function FileItem({
                 continue;
             }
 
+            const trimmedFieldKey = entry.fieldKey.trim();
             const normalizedValuePath = normalizePropertyTreeValuePath(rawValue);
             const isKeyOnlyValue = isPropertyKeyOnlyValuePath(normalizedValuePath, entry.valueKind);
             const wikiLink = isKeyOnlyValue ? null : parseStrictWikiLink(rawValue);
@@ -789,13 +813,31 @@ export const FileItem = React.memo(function FileItem({
                 colorLookupCache.set(cacheKey, colorData);
             }
 
+            const propertyNodeId = (() => {
+                if (!trimmedFieldKey) {
+                    return undefined;
+                }
+
+                const rawPropertyNodeId = isKeyOnlyValue
+                    ? buildPropertyKeyNodeId(trimmedFieldKey)
+                    : buildPropertyValueNodeId(trimmedFieldKey, normalizedValuePath);
+                return normalizePropertyNodeId(rawPropertyNodeId) ?? rawPropertyNodeId;
+            })();
+
+            const parsedPropertyNode = propertyNodeId ? parsePropertyNodeId(propertyNodeId) : null;
+            const propertySearchKey = parsedPropertyNode?.key || trimmedFieldKey;
+            const propertySearchValuePath = isKeyOnlyValue ? null : (parsedPropertyNode?.valuePath ?? normalizedValuePath);
+
             frontmatterPills.push({
                 value: rawValue,
                 label,
                 wikiLink,
                 fieldKey: entry.fieldKey,
                 color: colorData.color,
-                background: colorData.background
+                background: colorData.background,
+                propertyNodeId,
+                propertySearchKey: propertySearchKey.length > 0 ? propertySearchKey : undefined,
+                propertySearchValuePath
             });
         }
 
@@ -1034,9 +1076,16 @@ export const FileItem = React.memo(function FileItem({
         const showOnSeparateRows = settings.showPropertiesOnSeparateRows;
 
         const renderPropertyPill = (pill: PropertyPill, index: number) => {
-            const wikiLink = pill.wikiLink;
-            const isLinked = Boolean(wikiLink);
-            const className = isLinked ? 'nn-file-tag nn-file-property nn-clickable-tag' : 'nn-file-tag nn-file-property';
+            const isClickable = Boolean(pill.propertyNodeId) && Boolean(pill.propertySearchKey);
+            const isWikiLink = Boolean(pill.wikiLink);
+            const className = [
+                'nn-file-tag',
+                'nn-file-property',
+                isClickable ? 'nn-clickable-tag' : '',
+                isWikiLink ? 'nn-file-property-wikilink' : ''
+            ]
+                .filter(classToken => classToken.length > 0)
+                .join(' ');
             const colorToken = pill.color?.trim() ?? '';
             const backgroundToken = pill.background?.trim() ?? '';
             const cacheKey = `${colorToken}\u0000${backgroundToken}`;
@@ -1050,9 +1099,9 @@ export const FileItem = React.memo(function FileItem({
                     className={className}
                     data-has-color={hasColor ? 'true' : undefined}
                     data-has-background={hasBackground ? 'true' : undefined}
-                    onClick={wikiLink ? event => handlePropertyWikilinkClick(event, wikiLink) : undefined}
-                    role={isLinked ? 'button' : undefined}
-                    tabIndex={isLinked ? 0 : undefined}
+                    onClick={isClickable ? event => handlePropertyClick(event, pill) : undefined}
+                    role={isClickable ? 'button' : undefined}
+                    tabIndex={isClickable ? 0 : undefined}
                     style={resolvedColorData?.style}
                 >
                     {pill.label}
@@ -1110,7 +1159,7 @@ export const FileItem = React.memo(function FileItem({
         propertyColorData,
         propertyPills,
         propertyRows,
-        handlePropertyWikilinkClick,
+        handlePropertyClick,
         settings.showPropertiesOnSeparateRows,
         shouldShowProperty,
         shouldShowPillRowIcons

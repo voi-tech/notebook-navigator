@@ -1318,7 +1318,7 @@ export const STRINGS_NL = {
             },
             showFileProperties: {
                 name: 'Bestandseigenschappen tonen',
-                desc: 'Geconfigureerde eigenschapwaarden weergeven in bestandsitems.'
+                desc: 'Klikbare eigenschappen weergeven in bestandsitems.'
             },
             colorFileProperties: {
                 name: 'Bestandseigenschappen kleuren',

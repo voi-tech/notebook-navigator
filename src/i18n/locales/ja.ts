@@ -1316,7 +1316,7 @@ export const STRINGS_JA = {
             },
             showFileProperties: {
                 name: 'ファイルプロパティを表示',
-                desc: '設定されたプロパティ値をファイル項目に表示します。'
+                desc: 'ファイル項目にクリック可能なプロパティを表示します。'
             },
             colorFileProperties: {
                 name: 'ファイルプロパティに色を付ける',

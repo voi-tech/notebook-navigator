@@ -1318,7 +1318,7 @@ export const STRINGS_DE = {
             },
             showFileProperties: {
                 name: 'Datei-Eigenschaften anzeigen',
-                desc: 'Konfigurierte Eigenschaftswerte in Datei-Elementen anzeigen.'
+                desc: 'Klickbare Eigenschaften in Datei-Elementen anzeigen.'
             },
             colorFileProperties: {
                 name: 'Datei-Eigenschaften einfärben',

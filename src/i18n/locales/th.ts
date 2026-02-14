@@ -1313,7 +1313,7 @@ export const STRINGS_TH = {
             },
             showFileProperties: {
                 name: 'แสดงคุณสมบัติไฟล์',
-                desc: 'แสดงค่าคุณสมบัติที่กำหนดไว้ในรายการไฟล์'
+                desc: 'แสดงคุณสมบัติที่คลิกได้ในรายการไฟล์'
             },
             colorFileProperties: {
                 name: 'ระบายสีคุณสมบัติไฟล์',

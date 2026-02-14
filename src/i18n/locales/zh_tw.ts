@@ -1312,7 +1312,7 @@ export const STRINGS_ZH_TW = {
             },
             showFileProperties: {
                 name: '顯示檔案屬性',
-                desc: '在檔案項目中顯示已設定的屬性值。'
+                desc: '在檔案項目中顯示可點擊的屬性。'
             },
             colorFileProperties: {
                 name: '為檔案屬性著色',

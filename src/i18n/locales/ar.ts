@@ -1313,7 +1313,7 @@ export const STRINGS_AR = {
             },
             showFileProperties: {
                 name: 'إظهار خصائص الملفات',
-                desc: 'عرض قيم الخصائص المُعدَّة في عناصر الملفات.'
+                desc: 'عرض الخصائص القابلة للنقر في عناصر الملفات.'
             },
             colorFileProperties: {
                 name: 'تلوين خصائص الملفات',

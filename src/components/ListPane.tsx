@@ -1760,6 +1760,7 @@ export const ListPane = React.memo(
                                                             // Pass hidden state for muted rendering style
                                                             isHidden={Boolean(item.isHidden)}
                                                             onModifySearchWithTag={modifySearchWithTag}
+                                                            onModifySearchWithProperty={modifySearchWithProperty}
                                                             fileIconSize={listMeasurements.fileIconSize}
                                                         />
                                                     ) : null}

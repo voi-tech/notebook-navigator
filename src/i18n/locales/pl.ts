@@ -1317,7 +1317,7 @@ export const STRINGS_PL = {
             },
             showFileProperties: {
                 name: 'Pokaż właściwości plików',
-                desc: 'Wyświetl skonfigurowane wartości właściwości w elementach plików.'
+                desc: 'Wyświetl klikalne właściwości w elementach plików.'
             },
             colorFileProperties: {
                 name: 'Koloruj właściwości plików',

@@ -1315,7 +1315,7 @@ export const STRINGS_TR = {
             },
             showFileProperties: {
                 name: 'Dosya özelliklerini göster',
-                desc: 'Dosya öğelerinde yapılandırılmış özellik değerlerini görüntüle.'
+                desc: 'Dosya öğelerinde tıklanabilir özellikleri görüntüle.'
             },
             colorFileProperties: {
                 name: 'Dosya özelliklerini renklendir',

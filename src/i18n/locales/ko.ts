@@ -1314,7 +1314,7 @@ export const STRINGS_KO = {
             },
             showFileProperties: {
                 name: '파일 속성 표시',
-                desc: '파일 항목에 설정된 속성 값을 표시합니다.'
+                desc: '파일 항목에 클릭 가능한 속성을 표시합니다.'
             },
             colorFileProperties: {
                 name: '파일 속성에 색상 적용',
