@@ -79,7 +79,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-02-16',
         showOnUpdate: true,
         new: [
-            '==Property browser==. You can now browse file properties in the navigation pane. Properties are organized in a tree showing property keys and their values with file counts, just like tags. Supports custom colors, icons, context menus, and drag and drop.',
+            '==Property browser==. You can now browse file properties in the navigation pane. Properties are organized in a tree showing property keys and their values with file counts, just like tags. Supports custom colors, icons, context menus, and drag and drop. Just right-click "Properties" and choose "Add property key" to get started!',
             '==Create new note in tag==. Right-click a tag in the navigation pane and select "New note" to create a file with that tag. Respects Obsidian\'s "Default location for new notes" setting. This makes it possible to finally work 100% in the tag browser in Notebook Navigator.',
             '==Filter search: folder filters==. Filter notes by folder with "folder:" and "-folder:" tokens. Supports both wildcards "folder:notes" and specific paths "folder:/work/meetingnotes".',
             '==Filter search: extension filters==. Filter files by extension with "ext:" and "-ext:" tokens. For example, "ext:pdf" to show only PDF files or "-ext:md" to exclude markdown files. Can be combined with other filters.',
