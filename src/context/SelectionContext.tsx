@@ -47,7 +47,16 @@ export interface SelectionState {
     selectedFiles: Set<string>; // Changed from single file to Set of file paths
     anchorIndex: number | null; // Anchor position for multi-selection
     lastMovementDirection: 'up' | 'down' | null; // Track direction for expand/contract
-    isRevealOperation: boolean; // Flag to track if the current selection is from a REVEAL_FILE action
+    /**
+     * True after a `REVEAL_FILE` action.
+     *
+     * Cleared by non-reveal selection actions such as `SET_SELECTED_FOLDER`, `SET_SELECTED_TAG`, `SET_SELECTED_PROPERTY`,
+     * `SET_SELECTED_FILE`, `SET_SELECTION_TYPE`, and `CLEAR_SELECTION`.
+     *
+     * Scroll hooks treat reveal operations as explicit scroll requests (via `requestScroll`) and suppress selection-driven
+     * auto-scroll while this flag is true.
+     */
+    isRevealOperation: boolean;
     isFolderChangeWithAutoSelect: boolean; // Flag to track if we just changed folders and auto-selected a file
     isKeyboardNavigation: boolean; // Flag to track if selection is from Tab/Right arrow navigation
     isFolderNavigation: boolean; // Flag to track if we just navigated to a different folder
@@ -268,6 +277,8 @@ function selectionReducer(state: SelectionState, action: SelectionAction, app?: 
                 return state;
             }
 
+            // `REVEAL_FILE` marks the selection update as a reveal operation so scroll behavior is driven by explicit
+            // `requestScroll(...)` calls instead of selection-change auto-scroll effects.
             const normalizedTargetTag = action.targetTag === undefined ? undefined : normalizeTagPath(action.targetTag);
             const newSelectedFiles = new Set<string>();
             newSelectedFiles.add(action.file.path);

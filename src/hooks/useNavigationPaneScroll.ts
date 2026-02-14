@@ -409,6 +409,8 @@ export function useNavigationPaneScroll({
         if (!selectedPath || !rowVirtualizer || !isScrollContainerReady) return;
 
         if (selectionState.isRevealOperation) {
+            // Reveal operations issue explicit `requestScroll(...)` calls. Keep the previous-state refs in sync but
+            // skip selection-driven auto-scroll while the reveal flag is set.
             prevSelectedPathRef.current = selectedPath;
             prevVisibleRef.current = isScrollContainerReady;
             prevFocusedPaneRef.current = uiState.focusedPane;
@@ -488,6 +490,8 @@ export function useNavigationPaneScroll({
         }
 
         if (selectionState.isRevealOperation) {
+            // Tag/property reveals request scroll explicitly. This deferred-scroll effect is for restored selections
+            // where the navigation rows may not exist yet.
             prevSelectedDeferredPathRef.current = selectedPath;
             return;
         }

@@ -222,6 +222,8 @@ export function useNavigatorReveal({ app, navigationPaneRef, focusNavigationPane
             }
 
             // Switch selection to the file and its resolved folder so the list pane updates immediately
+            // `REVEAL_FILE` marks this update as a reveal operation. Scroll orchestration for reveals uses explicit
+            // `requestScroll(...)` calls (below) instead of selection-change auto-scroll.
             selectionDispatch({
                 type: 'REVEAL_FILE',
                 file,
@@ -574,6 +576,8 @@ export function useNavigatorReveal({ app, navigationPaneRef, focusNavigationPane
             }
 
             // Trigger the reveal - this is an auto-reveal, not manual
+            // `REVEAL_FILE` marks this update as a reveal operation. NavigationPane selection auto-scroll is suppressed
+            // while the reveal flag is set; reveals request navigation scrolling explicitly via `requestScroll(...)`.
             selectionDispatch({
                 type: 'REVEAL_FILE',
                 file,
