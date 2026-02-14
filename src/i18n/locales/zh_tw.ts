@@ -537,6 +537,7 @@ export const STRINGS_ZH_TW = {
         },
         propertySuggest: {
             placeholder: '選擇屬性鍵...',
+            navigatePlaceholder: '導航到屬性...',
             instructions: {
                 navigate: '導覽',
                 select: '新增屬性',
@@ -694,6 +695,7 @@ export const STRINGS_ZH_TW = {
         pinAllFolderNotes: '釘選所有資料夾筆記',
         navigateToFolder: '導覽至資料夾',
         navigateToTag: '導覽至標籤',
+        navigateToProperty: '導航到屬性',
         addShortcut: '新增至捷徑',
         openShortcut: '開啟捷徑 {number}',
         toggleDescendants: '切換後代',

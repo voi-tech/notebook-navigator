@@ -539,6 +539,7 @@ export const STRINGS_NL = {
         },
         propertySuggest: {
             placeholder: 'Eigenschap selecteren...',
+            navigatePlaceholder: 'Navigeer naar eigenschap...',
             instructions: {
                 navigate: 'om te navigeren',
                 select: 'om eigenschap toe te voegen',
@@ -698,6 +699,7 @@ export const STRINGS_NL = {
         pinAllFolderNotes: 'Alle mapnotities vastpinnen',
         navigateToFolder: 'Navigeren naar map',
         navigateToTag: 'Navigeren naar tag',
+        navigateToProperty: 'Navigeer naar eigenschap',
         addShortcut: 'Toevoegen aan snelkoppelingen',
         openShortcut: 'Snelkoppeling {number} openen',
         toggleDescendants: 'Afstammelingen in-/uitschakelen',

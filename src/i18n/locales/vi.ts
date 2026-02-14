@@ -538,6 +538,7 @@ export const STRINGS_VI = {
         },
         propertySuggest: {
             placeholder: 'Chọn khóa thuộc tính...',
+            navigatePlaceholder: 'Điều hướng đến thuộc tính...',
             instructions: {
                 navigate: 'để điều hướng',
                 select: 'để thêm thuộc tính',
@@ -696,6 +697,7 @@ export const STRINGS_VI = {
         pinAllFolderNotes: 'Ghim tất cả ghi chú thư mục', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Chuyển đến thư mục', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Chuyển đến thẻ', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
+        navigateToProperty: 'Điều hướng đến thuộc tính', // Command palette: Navigate to a property key or value using fuzzy search (English: Navigate to property)
         addShortcut: 'Thêm vào lối tắt', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
         openShortcut: 'Mở lối tắt {number}',
         toggleDescendants: 'Bật/tắt phần tử con', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)

@@ -539,6 +539,7 @@ export const STRINGS_TR = {
         },
         propertySuggest: {
             placeholder: 'Özellik anahtarı seç...',
+            navigatePlaceholder: 'Özelliğe git...',
             instructions: {
                 navigate: 'gezinmek için',
                 select: 'özellik eklemek için',
@@ -697,6 +698,7 @@ export const STRINGS_TR = {
         pinAllFolderNotes: 'Tüm klasör notlarını sabitle', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Klasöre git', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Etikete git', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
+        navigateToProperty: 'Özelliğe git', // Command palette: Navigate to a property key or value using fuzzy search (English: Navigate to property)
         addShortcut: 'Kısayollara ekle', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
         openShortcut: 'Kısayol {number} aç',
         toggleDescendants: 'Alt öğeleri aç/kapat', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)

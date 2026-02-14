@@ -538,6 +538,7 @@ export const STRINGS_FA = {
         },
         propertySuggest: {
             placeholder: 'انتخاب کلید ویژگی...',
+            navigatePlaceholder: 'رفتن به ویژگی...',
             instructions: {
                 navigate: 'برای ناوبری',
                 select: 'برای افزودن ویژگی',
@@ -696,6 +697,7 @@ export const STRINGS_FA = {
         pinAllFolderNotes: 'سنجاق کردن همه یادداشت‌های پوشه',
         navigateToFolder: 'رفتن به پوشه',
         navigateToTag: 'رفتن به برچسب',
+        navigateToProperty: 'رفتن به ویژگی',
         addShortcut: 'افزودن به میانبرها',
         openShortcut: 'باز کردن میانبر {number}',
         toggleDescendants: 'تغییر زیرمجموعه‌ها',

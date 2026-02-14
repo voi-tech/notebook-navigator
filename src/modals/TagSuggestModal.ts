@@ -19,7 +19,6 @@
 import { App, FuzzyMatch } from 'obsidian';
 import { strings } from '../i18n';
 import { TagTreeNode } from '../types/storage';
-import { getTotalNoteCount } from '../utils/tagTree';
 import { BaseSuggestModal } from './BaseSuggestModal';
 import NotebookNavigatorPlugin from '../main';
 import { hasValidTagCharacters } from '../utils/tagUtils';
@@ -148,7 +147,7 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
 
     /**
      * Gets the display text for a tag
-     * Shows the full path with # prefix and note count
+     * Shows the full path with # prefix
      * @param tag - The tag node to get text for
      * @returns The display text
      */
@@ -196,20 +195,6 @@ export class TagSuggestModal extends BaseSuggestModal<TagTreeNode> {
         // Special class for untagged
         if (tag.path === '__untagged__') {
             itemEl.addClass('nn-tag-suggest-untagged');
-        }
-
-        // Don't add note count for create new tag
-        if (tag.path === '__create_new__') {
-            return;
-        }
-
-        // Add note count
-        const noteCount = getTotalNoteCount(tag);
-        if (noteCount > 0) {
-            itemEl.createSpan({
-                text: ` (${noteCount})`,
-                cls: 'nn-tag-suggest-count'
-            });
         }
     }
 }

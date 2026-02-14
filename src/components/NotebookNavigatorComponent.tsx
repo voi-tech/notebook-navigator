@@ -37,6 +37,7 @@ import { strings } from '../i18n';
 import { runAsyncAction } from '../utils/async';
 import { useUpdateNotice } from '../hooks/useUpdateNotice';
 import { FolderSuggestModal } from '../modals/FolderSuggestModal';
+import { buildPropertyNodeSuggestions, PropertyNodeSuggestModal } from '../modals/PropertyNodeSuggestModal';
 import { TagSuggestModal } from '../modals/TagSuggestModal';
 import { FILE_PANE_DIMENSIONS, ItemType, NAVPANE_MEASUREMENTS, type BackgroundMode, type DualPaneOrientation } from '../types';
 import { getSelectedPath, getFilesForSelection } from '../utils/selectionUtils';
@@ -93,9 +94,11 @@ export interface NotebookNavigatorHandle {
     addShortcutForCurrentSelection: () => Promise<void>;
     navigateToFolder: (folder: TFolder, options?: NavigateToFolderOptions) => void;
     navigateToTag: (tagPath: string) => void;
+    navigateToProperty: (propertyNodeId: string) => void;
     addDateFilterToSearch: (dateToken: string) => void;
     navigateToFolderWithModal: () => void;
     navigateToTagWithModal: () => void;
+    navigateToPropertyWithModal: () => void;
     addTagToSelectedFiles: () => Promise<void>;
     removeTagFromSelectedFiles: () => Promise<void>;
     removeAllTagsFromSelectedFiles: () => Promise<void>;
@@ -463,7 +466,15 @@ export const NotebookNavigatorComponent = React.memo(
         );
 
         // Use navigator reveal logic
-        const { revealFileInActualFolder, revealFileInNearestFolder, navigateToFolder, navigateToTag, revealTag } = useNavigatorReveal({
+        const {
+            revealFileInActualFolder,
+            revealFileInNearestFolder,
+            navigateToFolder,
+            navigateToTag,
+            navigateToProperty,
+            revealTag,
+            revealProperty
+        } = useNavigatorReveal({
             app,
             navigationPaneRef,
             listPaneRef,
@@ -742,6 +753,7 @@ export const NotebookNavigatorComponent = React.memo(
                 },
                 navigateToFolder,
                 navigateToTag,
+                navigateToProperty,
                 addDateFilterToSearch: handleModifySearchWithDateFilter,
                 navigateToFolderWithModal: () => {
                     // Show the folder selection modal for navigation
@@ -770,6 +782,19 @@ export const NotebookNavigatorComponent = React.memo(
                         strings.modals.tagSuggest.instructions.select,
                         true, // Include untagged option
                         false // Do not allow creating tags for navigation
+                    );
+                    modal.open();
+                },
+                navigateToPropertyWithModal: () => {
+                    const suggestions = propertyTreeService ? buildPropertyNodeSuggestions(propertyTreeService.getPropertyTree()) : [];
+                    const modal = new PropertyNodeSuggestModal(
+                        app,
+                        suggestions,
+                        nodeId => {
+                            navigateToProperty(nodeId);
+                        },
+                        strings.modals.propertySuggest.navigatePlaceholder,
+                        strings.modals.propertySuggest.instructions.navigate
                     );
                     modal.open();
                 },
@@ -851,6 +876,7 @@ export const NotebookNavigatorComponent = React.memo(
             selectionDispatch,
             navigateToFolder,
             navigateToTag,
+            navigateToProperty,
             uiState.singlePane,
             uiState.currentSinglePaneView,
             uiState.focusedPane,
@@ -1026,6 +1052,7 @@ export const NotebookNavigatorComponent = React.memo(
                         onExecuteSearchShortcut={handleSearchShortcutExecution}
                         onNavigateToFolder={navigateToFolder}
                         onRevealTag={revealTag}
+                        onRevealProperty={revealProperty}
                         onRevealFile={revealFileInNearestFolder}
                         onRevealShortcutFile={handleShortcutNoteReveal}
                         onModifySearchWithTag={handleModifySearchWithTag}

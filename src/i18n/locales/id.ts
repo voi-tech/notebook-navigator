@@ -538,6 +538,7 @@ export const STRINGS_ID = {
         },
         propertySuggest: {
             placeholder: 'Pilih kunci properti...',
+            navigatePlaceholder: 'Navigasi ke properti...',
             instructions: {
                 navigate: 'untuk navigasi',
                 select: 'untuk menambah properti',
@@ -696,6 +697,7 @@ export const STRINGS_ID = {
         pinAllFolderNotes: 'Sematkan semua catatan folder',
         navigateToFolder: 'Navigasi ke folder',
         navigateToTag: 'Navigasi ke tag',
+        navigateToProperty: 'Navigasi ke properti',
         addShortcut: 'Tambahkan ke pintasan',
         openShortcut: 'Buka pintasan {number}',
         toggleDescendants: 'Alihkan turunan',

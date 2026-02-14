@@ -540,6 +540,7 @@ export const STRINGS_PT_BR = {
         },
         propertySuggest: {
             placeholder: 'Selecionar chave de propriedade...',
+            navigatePlaceholder: 'Navegar para propriedade...',
             instructions: {
                 navigate: 'para navegar',
                 select: 'para adicionar propriedade',
@@ -699,6 +700,7 @@ export const STRINGS_PT_BR = {
         pinAllFolderNotes: 'Fixar todas as notas de pasta',
         navigateToFolder: 'Navegar para pasta',
         navigateToTag: 'Navegar para tag',
+        navigateToProperty: 'Navegar para propriedade',
         addShortcut: 'Adicionar aos atalhos',
         openShortcut: 'Abrir atalho {number}',
         toggleDescendants: 'Alternar descendentes',

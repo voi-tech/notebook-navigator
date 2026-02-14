@@ -1267,6 +1267,21 @@ export default function registerNavigatorCommands(plugin: NotebookNavigatorPlugi
         }
     });
 
+    // Command to show a modal for navigating to any property key or value
+    plugin.addCommand({
+        id: 'navigate-to-property',
+        name: strings.commands.navigateToProperty,
+        callback: () => {
+            // Wrap property navigation with error handling
+            runAsyncAction(async () => {
+                const view = await ensureNavigatorOpen(plugin);
+                if (view) {
+                    await view.navigateToPropertyWithModal();
+                }
+            });
+        }
+    });
+
     // Command to add the current selection or active file to shortcuts
     plugin.addCommand({
         id: 'add-shortcut',

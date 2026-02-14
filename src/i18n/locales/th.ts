@@ -537,6 +537,7 @@ export const STRINGS_TH = {
         },
         propertySuggest: {
             placeholder: 'เลือกคีย์คุณสมบัติ...',
+            navigatePlaceholder: 'นำทางไปยังคุณสมบัติ...',
             instructions: {
                 navigate: 'เพื่อนำทาง',
                 select: 'เพื่อเพิ่มคุณสมบัติ',
@@ -695,6 +696,7 @@ export const STRINGS_TH = {
         pinAllFolderNotes: 'ปักหมุดโน้ตโฟลเดอร์ทั้งหมด',
         navigateToFolder: 'นำทางไปยังโฟลเดอร์',
         navigateToTag: 'นำทางไปยังแท็ก',
+        navigateToProperty: 'นำทางไปยังคุณสมบัติ',
         addShortcut: 'เพิ่มในทางลัด',
         openShortcut: 'เปิดทางลัด {number}',
         toggleDescendants: 'สลับลูกหลาน',

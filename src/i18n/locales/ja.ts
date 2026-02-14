@@ -537,6 +537,7 @@ export const STRINGS_JA = {
         },
         propertySuggest: {
             placeholder: 'プロパティキーを選択...',
+            navigatePlaceholder: 'プロパティに移動...',
             instructions: {
                 navigate: 'でナビゲート',
                 select: 'プロパティを追加',
@@ -696,6 +697,7 @@ export const STRINGS_JA = {
         pinAllFolderNotes: 'フォルダノートをすべてピン留め', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'フォルダにナビゲート', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'タグにナビゲート', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
+        navigateToProperty: 'プロパティに移動', // Command palette: Navigate to a property key or value using fuzzy search (English: Navigate to property)
         addShortcut: 'ショートカットに追加', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
         openShortcut: 'ショートカット {number} を開く',
         toggleDescendants: '子孫切り替え', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)

@@ -538,6 +538,7 @@ export const STRINGS_UK = {
         },
         propertySuggest: {
             placeholder: 'Виберіть ключ властивості...',
+            navigatePlaceholder: 'Перейти до властивості...',
             instructions: {
                 navigate: 'для навігації',
                 select: 'для додавання властивості',
@@ -696,6 +697,7 @@ export const STRINGS_UK = {
         pinAllFolderNotes: 'Закріпити всі нотатки папок', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Перейти до папки', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Перейти до тегу', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
+        navigateToProperty: 'Перейти до властивості', // Command palette: Navigate to a property key or value using fuzzy search (English: Navigate to property)
         addShortcut: 'Додати до ярликів', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
         openShortcut: 'Відкрити ярлик {number}',
         toggleDescendants: 'Перемкнути нащадків', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)

@@ -539,6 +539,7 @@ export const STRINGS_DE = {
         },
         propertySuggest: {
             placeholder: 'Eigenschaftsschlüssel auswählen...',
+            navigatePlaceholder: 'Zu Eigenschaft navigieren...',
             instructions: {
                 navigate: 'zum Navigieren',
                 select: 'zum Hinzufügen der Eigenschaft',
@@ -698,6 +699,7 @@ export const STRINGS_DE = {
         pinAllFolderNotes: 'Alle Ordnernotizen anheften', // Command palette: Pins all folder notes to shortcuts (English: Pin all folder notes)
         navigateToFolder: 'Zu Ordner navigieren', // Command palette: Navigate to a folder using fuzzy search (English: Navigate to folder)
         navigateToTag: 'Zu Tag navigieren', // Command palette: Navigate to a tag using fuzzy search (English: Navigate to tag)
+        navigateToProperty: 'Zu Eigenschaft navigieren', // Command palette: Navigate to a property key or value using fuzzy search (English: Navigate to property)
         addShortcut: 'Zu Shortcuts hinzufügen', // Command palette: Adds the current file, folder, or tag to shortcuts (English: Add to shortcuts)
         openShortcut: 'Shortcut {number} öffnen',
         toggleDescendants: 'Nachkommen umschalten', // Command palette: Toggles showing notes from descendants (English: Toggle descendants)

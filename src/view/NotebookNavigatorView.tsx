@@ -323,6 +323,13 @@ export class NotebookNavigatorView extends ItemView {
     }
 
     /**
+     * Navigates directly to the provided property node id
+     */
+    navigateToProperty(propertyNodeId: string) {
+        this.componentRef.current?.navigateToProperty(propertyNodeId);
+    }
+
+    /**
      * Reveals a file while attempting to preserve the current navigation context
      */
     revealFileInNearestFolder(file: TFile, options?: RevealFileOptions) {
@@ -411,6 +418,13 @@ export class NotebookNavigatorView extends ItemView {
      */
     async navigateToTagWithModal(): Promise<void> {
         this.componentRef.current?.navigateToTagWithModal();
+    }
+
+    /**
+     * Navigate to a property by showing the property suggest modal
+     */
+    async navigateToPropertyWithModal(): Promise<void> {
+        this.componentRef.current?.navigateToPropertyWithModal();
     }
 
     /**
