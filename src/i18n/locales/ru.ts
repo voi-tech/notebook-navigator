@@ -1622,7 +1622,7 @@ export const STRINGS_RU = {
                 loading: 'Проверка метаданных...',
                 statusClean: 'Нет метаданных для очистки',
                 statusCounts:
-                    'Осиротевшие элементы: {folders} папок, {tags} тегов, {files} файлов, {pinned} закреплённых, {separators} разделителей'
+                    'Осиротевшие элементы: {folders} папок, {tags} тегов, {properties} свойств, {files} файлов, {pinned} закреплённых, {separators} разделителей'
             },
             rebuildCache: {
                 name: 'Пересобрать кэш',

@@ -1621,7 +1621,8 @@ export const STRINGS_TR = {
                 error: 'Ayarlar temizliği başarısız',
                 loading: 'Meta veriler kontrol ediliyor...',
                 statusClean: 'Temizlenecek meta veri yok',
-                statusCounts: 'Yetim öğeler: {folders} klasör, {tags} etiket, {files} dosya, {pinned} sabitleme, {separators} ayırıcı'
+                statusCounts:
+                    'Yetim öğeler: {folders} klasör, {tags} etiket, {properties} özellik, {files} dosya, {pinned} sabitleme, {separators} ayırıcı'
             },
             rebuildCache: {
                 name: 'Önbelleği yeniden oluştur',

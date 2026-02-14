@@ -1625,7 +1625,7 @@ export const STRINGS_PT = {
                 loading: 'A verificar metadados...',
                 statusClean: 'Sem metadados para limpar',
                 statusCounts:
-                    'Itens órfãos: {folders} pastas, {tags} etiquetas, {files} ficheiros, {pinned} fixados, {separators} separadores'
+                    'Itens órfãos: {folders} pastas, {tags} etiquetas, {properties} propriedades, {files} ficheiros, {pinned} fixados, {separators} separadores'
             },
             rebuildCache: {
                 name: 'Reconstruir cache',

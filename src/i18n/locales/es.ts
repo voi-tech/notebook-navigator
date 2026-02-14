@@ -1625,7 +1625,7 @@ export const STRINGS_ES = {
                 loading: 'Verificando metadatos...',
                 statusClean: 'No hay metadatos para limpiar',
                 statusCounts:
-                    'Elementos huérfanos: {folders} carpetas, {tags} etiquetas, {files} archivos, {pinned} fijados, {separators} separadores'
+                    'Elementos huérfanos: {folders} carpetas, {tags} etiquetas, {properties} propiedades, {files} archivos, {pinned} fijados, {separators} separadores'
             },
             rebuildCache: {
                 name: 'Reconstruir caché',

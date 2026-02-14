@@ -1619,7 +1619,8 @@ export const STRINGS_AR = {
                 error: 'فشل تنظيف الإعدادات',
                 loading: 'جارٍ فحص البيانات الوصفية...',
                 statusClean: 'لا توجد بيانات وصفية لتنظيفها',
-                statusCounts: 'عناصر يتيمة: {folders} مجلدات، {tags} وسوم، {files} ملفات، {pinned} تثبيتات، {separators} فواصل'
+                statusCounts:
+                    'عناصر يتيمة: {folders} مجلدات، {tags} وسوم، {properties} خصائص، {files} ملفات، {pinned} تثبيتات، {separators} فواصل'
             },
             rebuildCache: {
                 name: 'إعادة بناء الذاكرة المؤقتة',

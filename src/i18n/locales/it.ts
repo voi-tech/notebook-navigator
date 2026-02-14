@@ -1622,7 +1622,8 @@ export const STRINGS_IT = {
                 error: 'Pulizia impostazioni fallita',
                 loading: 'Controllo metadati...',
                 statusClean: 'Nessun metadato da pulire',
-                statusCounts: 'Elementi orfani: {folders} cartelle, {tags} tag, {files} file, {pinned} fissati, {separators} separatori'
+                statusCounts:
+                    'Elementi orfani: {folders} cartelle, {tags} tag, {properties} proprietà, {files} file, {pinned} fissati, {separators} separatori'
             },
             rebuildCache: {
                 name: 'Ricostruisci cache',

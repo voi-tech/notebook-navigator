@@ -1621,7 +1621,8 @@ export const STRINGS_ID = {
                 error: 'Pembersihan pengaturan gagal',
                 loading: 'Memeriksa metadata...',
                 statusClean: 'Tidak ada metadata untuk dibersihkan',
-                statusCounts: 'Item yatim: {folders} folder, {tags} tag, {files} file, {pinned} pin, {separators} pemisah'
+                statusCounts:
+                    'Item yatim: {folders} folder, {tags} tag, {properties} properti, {files} file, {pinned} pin, {separators} pemisah'
             },
             rebuildCache: {
                 name: 'Bangun ulang cache',

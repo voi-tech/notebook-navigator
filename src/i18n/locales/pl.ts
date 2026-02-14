@@ -1624,7 +1624,7 @@ export const STRINGS_PL = {
                 loading: 'Sprawdzanie metadanych...',
                 statusClean: 'Brak metadanych do wyczyszczenia',
                 statusCounts:
-                    'Osierocone elementy: {folders} folderów, {tags} tagów, {files} plików, {pinned} przypiętych, {separators} separatorów'
+                    'Osierocone elementy: {folders} folderów, {tags} tagów, {properties} właściwości, {files} plików, {pinned} przypiętych, {separators} separatorów'
             },
             rebuildCache: {
                 name: 'Odbuduj pamięć podręczną',

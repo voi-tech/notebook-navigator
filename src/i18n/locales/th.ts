@@ -1619,7 +1619,8 @@ export const STRINGS_TH = {
                 error: 'ล้างการตั้งค่าล้มเหลว',
                 loading: 'กำลังตรวจสอบเมตาดาต้า...',
                 statusClean: 'ไม่มีเมตาดาต้าให้ล้าง',
-                statusCounts: 'รายการกำพร้า: {folders} โฟลเดอร์, {tags} แท็ก, {files} ไฟล์, {pinned} ปักหมุด, {separators} ตัวคั่น'
+                statusCounts:
+                    'รายการกำพร้า: {folders} โฟลเดอร์, {tags} แท็ก, {properties} คุณสมบัติ, {files} ไฟล์, {pinned} ปักหมุด, {separators} ตัวคั่น'
             },
             rebuildCache: {
                 name: 'สร้างแคชใหม่',

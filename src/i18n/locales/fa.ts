@@ -1620,7 +1620,8 @@ export const STRINGS_FA = {
                 error: 'پاکسازی تنظیمات ناموفق بود',
                 loading: 'بررسی متادیتا...',
                 statusClean: 'متادیتایی برای پاکسازی نیست',
-                statusCounts: 'آیتم‌های یتیم: {folders} پوشه، {tags} برچسب، {files} فایل، {pinned} سنجاق، {separators} جداکننده'
+                statusCounts:
+                    'آیتم‌های یتیم: {folders} پوشه، {tags} برچسب، {properties} ویژگی، {files} فایل، {pinned} سنجاق، {separators} جداکننده'
             },
             rebuildCache: {
                 name: 'بازسازی کش',

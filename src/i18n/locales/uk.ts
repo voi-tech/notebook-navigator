@@ -1622,7 +1622,7 @@ export const STRINGS_UK = {
                 loading: 'Перевірка метаданих...',
                 statusClean: 'Немає метаданих для очищення',
                 statusCounts:
-                    'Осиротілі елементи: {folders} папок, {tags} тегів, {files} файлів, {pinned} закріплень, {separators} роздільників'
+                    'Осиротілі елементи: {folders} папок, {tags} тегів, {properties} властивостей, {files} файлів, {pinned} закріплень, {separators} роздільників'
             },
             rebuildCache: {
                 name: 'Перебудувати кеш',

@@ -1620,7 +1620,8 @@ export const STRINGS_VI = {
                 error: 'Dọn dẹp cài đặt thất bại',
                 loading: 'Đang kiểm tra metadata...',
                 statusClean: 'Không có metadata cần dọn',
-                statusCounts: 'Mục mồ côi: {folders} thư mục, {tags} thẻ, {files} tệp, {pinned} ghim, {separators} dấu phân cách'
+                statusCounts:
+                    'Mục mồ côi: {folders} thư mục, {tags} thẻ, {properties} thuộc tính, {files} tệp, {pinned} ghim, {separators} dấu phân cách'
             },
             rebuildCache: {
                 name: 'Xây dựng lại cache',

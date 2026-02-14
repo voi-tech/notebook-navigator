@@ -134,11 +134,11 @@ export function renderAdvancedTab(context: SettingsTabContext): void {
         const infoText = strings.settings.items.metadataCleanup.statusCounts
             .replace('{folders}', folders.toString())
             .replace('{tags}', tags.toString())
+            .replace('{properties}', properties.toString())
             .replace('{files}', files.toString())
             .replace('{pinned}', pinnedNotes.toString())
             .replace('{separators}', separators.toString());
-        const propertyInfoText = `${strings.navigationPane.properties}: ${properties.toString()}`;
-        metadataCleanupInfoText.setText(`${infoText} | ${propertyInfoText}`);
+        metadataCleanupInfoText.setText(infoText);
         metadataCleanupButton?.setDisabled(false);
     };
 

@@ -1622,7 +1622,8 @@ export const STRINGS_JA = {
                 error: '設定のクリーンアップに失敗しました',
                 loading: 'メタデータを確認中...',
                 statusClean: 'クリーンアップするメタデータはありません',
-                statusCounts: '孤立した項目: {folders} フォルダ, {tags} タグ, {files} ファイル, {pinned} ピン, {separators} セパレーター'
+                statusCounts:
+                    '孤立した項目: {folders} フォルダ, {tags} タグ, {properties} プロパティ, {files} ファイル, {pinned} ピン, {separators} セパレーター'
             },
             rebuildCache: {
                 name: 'キャッシュを再構築',

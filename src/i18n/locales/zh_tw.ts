@@ -1618,7 +1618,7 @@ export const STRINGS_ZH_TW = {
                 error: '設定清理失敗',
                 loading: '正在檢查中繼資料...',
                 statusClean: '沒有需要清理的中繼資料',
-                statusCounts: '孤立項目：{folders} 資料夾，{tags} 標籤，{files} 檔案，{pinned} 釘選，{separators} 分隔線'
+                statusCounts: '孤立項目：{folders} 資料夾，{tags} 標籤，{properties} 屬性，{files} 檔案，{pinned} 釘選，{separators} 分隔線'
             },
             rebuildCache: {
                 name: '重建快取',
