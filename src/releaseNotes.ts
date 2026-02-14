@@ -79,8 +79,16 @@ const RELEASE_NOTES: ReleaseNote[] = [
         date: '2026-02-16',
         showOnUpdate: true,
         new: [
-            '==Filter search: folder filters==. You can now filter notes by specific folder with "folder:" and "-folder:" tokens. You can use both wildcards "notes" and specific paths "/work/meetingnotes".',
-            '==Filter search: extension filters==. You can now filter files by extension with "ext:" and "-ext:" tokens. For example, "ext:pdf" to show only PDF files or "-ext:md" to exclude markdown files. Can be combined with other filters.'
+            '==Property browser==. You can now browse file properties in the navigation pane. Properties are organized in a tree showing property keys and their values with file counts, just like tags. Supports custom colors, icons, context menus, and drag and drop.',
+            '==Create new note in tag==. Right-click a tag in the navigation pane and select "New note" to create a file with that tag. Respects Obsidian\'s "Default location for new notes" setting. This makes it possible to finally work 100% in the tag browser in Notebook Navigator.',
+            '==Filter search: folder filters==. Filter notes by folder with "folder:" and "-folder:" tokens. Supports both wildcards "folder:notes" and specific paths "folder:/work/meetingnotes".',
+            '==Filter search: extension filters==. Filter files by extension with "ext:" and "-ext:" tokens. For example, "ext:pdf" to show only PDF files or "-ext:md" to exclude markdown files. Can be combined with other filters.',
+            'New command: ==Navigate to property==. Opens a fuzzy search modal listing all property keys and values. Selecting one navigates to it in the navigation pane.',
+            'New icons for ==tags, property keys, and property values== in the navigation pane. Configurable in settings.',
+            'Public API 1.3: ==Property metadata and navigation==. New methods for getting and setting property colors, background colors, and icons. New navigateToProperty() method for navigating to properties in the UI.'
+        ],
+        changed: [
+            'Settings are now organized in a ==two-level hierarchy==. Main groups (General, Navigation Pane, List Pane, Calendar) now have subtabs for easier navigation.'
         ]
     },
     {
