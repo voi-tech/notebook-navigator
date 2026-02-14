@@ -725,9 +725,11 @@ export function ShortcutsProvider({ children }: ShortcutsProviderProps) {
         async (nodeId: string, options?: { index?: number }) => {
             const normalizedNodeId = normalizePropertyNodeId(nodeId);
             if (!normalizedNodeId) {
+                showNotice(strings.shortcuts.invalidProperty, { variant: 'warning' });
                 return false;
             }
             if (propertyShortcutKeysByNodeId.has(normalizedNodeId)) {
+                showNotice(strings.shortcuts.propertyExists, { variant: 'warning' });
                 return false;
             }
             return insertShortcut({ type: ShortcutType.PROPERTY, nodeId: normalizedNodeId }, options?.index);

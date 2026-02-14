@@ -21,6 +21,10 @@ interface TagDragPayload {
     displayPath?: unknown;
 }
 
+interface PropertyDragPayload {
+    nodeId?: unknown;
+}
+
 // Determines if a value is a non-empty string
 function isNonEmptyString(value: unknown): value is string {
     return typeof value === 'string' && value.length > 0;
@@ -115,6 +119,33 @@ export function parseTagDragPayload(raw: string): string | null {
                 return display;
             }
             return null;
+        }
+    } catch {
+        return trimmed;
+    }
+
+    return null;
+}
+
+/**
+ * Parses property drag payloads originating from Notebook Navigator's property tree.
+ * Accepts legacy string payloads or structured JSON with nodeId.
+ */
+export function parsePropertyDragPayload(raw: string): string | null {
+    const trimmed = raw.trim();
+    if (!trimmed) {
+        return null;
+    }
+
+    try {
+        const parsed: unknown = JSON.parse(trimmed);
+        if (isNonEmptyString(parsed)) {
+            return parsed;
+        }
+        if (parsed && typeof parsed === 'object') {
+            const payload = parsed as PropertyDragPayload;
+            const nodeId = isNonEmptyString(payload.nodeId) ? payload.nodeId : null;
+            return nodeId;
         }
     } catch {
         return trimmed;

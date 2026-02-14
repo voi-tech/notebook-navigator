@@ -44,6 +44,7 @@ interface PropertyTreeItemProps {
     backgroundColor?: string;
     icon?: string;
     searchMatch?: 'include' | 'exclude';
+    isDraggable: boolean;
 }
 
 export const PropertyTreeItem = React.memo(
@@ -62,7 +63,8 @@ export const PropertyTreeItem = React.memo(
             color,
             backgroundColor,
             icon,
-            searchMatch
+            searchMatch,
+            isDraggable
         },
         ref
     ) {
@@ -98,6 +100,14 @@ export const PropertyTreeItem = React.memo(
         const shouldDisplayCount = showFileCount && noteCountDisplay.shouldDisplay;
         const hasChildren = useMemo(() => propertyNode.children.size > 0, [propertyNode.children.size]);
         const applyColorToName = Boolean(color) && !settings.colorIconOnly;
+        const dragIconId = useMemo(() => {
+            if (icon) {
+                return icon;
+            }
+            return propertyNode.kind === 'value'
+                ? resolveUXIcon(settings.interfaceIcons, 'nav-property-value')
+                : resolveUXIcon(settings.interfaceIcons, 'nav-property');
+        }, [icon, propertyNode.kind, settings.interfaceIcons]);
 
         const className = useMemo(() => {
             const classes = ['nn-navitem', 'nn-property'];
@@ -203,6 +213,18 @@ export const PropertyTreeItem = React.memo(
                 ref={itemRef}
                 className={className}
                 data-property-node={propertyNode.id}
+                // Property node id used as drag source identifier
+                data-drag-path={propertyNode.id}
+                // Identifies element as a property node for drag operations
+                data-drag-type="property"
+                // Marks element as draggable for drag handler filtering
+                data-draggable={isDraggable ? 'true' : undefined}
+                // Icon displayed in drag ghost
+                data-drag-icon={dragIconId}
+                // Optional color applied to drag ghost icon
+                data-drag-icon-color={color || undefined}
+                // Enable native drag and drop when not on mobile
+                draggable={isDraggable}
                 data-drop-zone="property"
                 data-drop-path={propertyNode.id}
                 data-allow-external-drop="false"

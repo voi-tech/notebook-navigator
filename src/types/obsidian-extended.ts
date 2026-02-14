@@ -26,6 +26,8 @@ declare module 'obsidian' {
 
 /** MIME type identifier for tag drag-and-drop operations */
 export const TAG_DRAG_MIME = 'application/x-notebook-navigator-tag';
+/** MIME type identifier for property drag-and-drop operations */
+export const PROPERTY_DRAG_MIME = 'application/x-notebook-navigator-property';
 
 /**
  * Extended Obsidian type definitions for internal/undocumented APIs

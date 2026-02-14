@@ -28,7 +28,7 @@ import { strings } from '../i18n';
 import { showNotice } from '../utils/noticeUtils';
 import { ItemType, TAGGED_TAG_ID, UNTAGGED_TAG_ID } from '../types';
 import { SHORTCUT_DRAG_MIME } from '../types/shortcuts';
-import { DragManagerPayload, TAG_DRAG_MIME, hasDragManager, TIMEOUTS } from '../types/obsidian-extended';
+import { DragManagerPayload, PROPERTY_DRAG_MIME, TAG_DRAG_MIME, hasDragManager, TIMEOUTS } from '../types/obsidian-extended';
 import { getPathFromDataAttribute } from '../utils/domUtils';
 import { generateUniqueFilename } from '../utils/fileCreationUtils';
 import { createDragGhostManager } from '../utils/dragGhost';
@@ -320,12 +320,12 @@ export function useDragAndDrop(containerRef: React.RefObject<HTMLElement | null>
                 e.dataTransfer.setData('obsidian/file', path);
             }
 
-            if (type === ItemType.FILE || type === ItemType.FOLDER || type === ItemType.TAG) {
+            if (type === ItemType.FILE || type === ItemType.FOLDER || type === ItemType.TAG || type === ItemType.PROPERTY) {
                 dragTypeRef.current = type;
             } else {
                 dragTypeRef.current = ItemType.FILE;
             }
-            e.dataTransfer.effectAllowed = 'all';
+            e.dataTransfer.effectAllowed = type === ItemType.PROPERTY ? 'copy' : 'all';
 
             if (type === ItemType.FILE) {
                 const file = app.vault.getFileByPath(path);
@@ -356,6 +356,13 @@ export function useDragAndDrop(containerRef: React.RefObject<HTMLElement | null>
                     type: 'tag',
                     title: path
                 });
+            } else if (type === ItemType.PROPERTY) {
+                try {
+                    const payload = { nodeId: path };
+                    e.dataTransfer.setData(PROPERTY_DRAG_MIME, JSON.stringify(payload));
+                } catch (error) {
+                    console.error('[Notebook Navigator] Failed to attach property drag payload', error);
+                }
             }
 
             draggable.classList.add('nn-dragging');
@@ -540,6 +547,16 @@ export function useDragAndDrop(containerRef: React.RefObject<HTMLElement | null>
             }
 
             if (isShortcutDrag) {
+                dropZone.classList.remove('nn-drag-over');
+                dragOverElement.current = null;
+                clearAutoExpandTimer();
+                if (e.dataTransfer) {
+                    e.dataTransfer.dropEffect = 'none';
+                }
+                return;
+            }
+
+            if (dragTypeRef.current === ItemType.PROPERTY) {
                 dropZone.classList.remove('nn-drag-over');
                 dragOverElement.current = null;
                 clearAutoExpandTimer();
@@ -952,6 +969,11 @@ export function useDragAndDrop(containerRef: React.RefObject<HTMLElement | null>
 
                 const isShortcutDrag = Boolean(e.dataTransfer?.types?.includes(SHORTCUT_DRAG_MIME));
                 if (isShortcutDrag) {
+                    clearAutoExpandTimer();
+                    return;
+                }
+
+                if (dragTypeRef.current === ItemType.PROPERTY) {
                     clearAutoExpandTimer();
                     return;
                 }

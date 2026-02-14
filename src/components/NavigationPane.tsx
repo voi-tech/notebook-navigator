@@ -121,7 +121,7 @@ import {
 } from '../types';
 import { localStorage } from '../utils/localStorage';
 import { runAsyncAction } from '../utils/async';
-import { extractFilePathsFromDataTransfer, parseTagDragPayload } from '../utils/dragData';
+import { extractFilePathsFromDataTransfer, parsePropertyDragPayload, parseTagDragPayload } from '../utils/dragData';
 import { resolveFolderNoteClickOpenContext } from '../utils/keyboardOpenContext';
 import { openFileInContext } from '../utils/openFileInContext';
 import { useShortcuts } from '../context/ShortcutsContext';
@@ -164,7 +164,7 @@ import { compositeWithBase } from '../utils/colorUtils';
 import { useMeasuredElementHeight } from '../hooks/useMeasuredElementHeight';
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { NAVIGATION_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
-import { TAG_DRAG_MIME } from '../types/obsidian-extended';
+import { PROPERTY_DRAG_MIME, TAG_DRAG_MIME } from '../types/obsidian-extended';
 import { SHORTCUT_POINTER_CONSTRAINT, verticalAxisOnly } from '../utils/dndConfig';
 import { createHiddenFileNameMatcherForVisibility } from '../utils/fileFilters';
 import { createHiddenTagVisibility } from '../utils/tagPrefixMatcher';
@@ -315,6 +315,7 @@ export const NavigationPane = React.memo(
             hydratedShortcuts,
             reorderShortcuts,
             addTagShortcut,
+            addPropertyShortcut,
             addShortcutsBatch,
             hasFolderShortcut,
             hasNoteShortcut
@@ -782,7 +783,8 @@ export const NavigationPane = React.memo(
 
                 const hasObsidianFiles = types.includes('obsidian/file') || types.includes('obsidian/files');
                 const hasTagPayload = types.includes(TAG_DRAG_MIME);
-                if (!hasObsidianFiles && !hasTagPayload) {
+                const hasPropertyPayload = types.includes(PROPERTY_DRAG_MIME);
+                if (!hasObsidianFiles && !hasTagPayload && !hasPropertyPayload) {
                     return false;
                 }
 
@@ -819,6 +821,22 @@ export const NavigationPane = React.memo(
                         const baseInsertIndex = computeShortcutInsertIndex(event, key);
                         runAsyncAction(async () => {
                             await addTagShortcut(droppedTagPath, { index: Math.max(0, baseInsertIndex) });
+                        });
+
+                        return true;
+                    }
+                }
+
+                const propertyPayloadRaw = dataTransfer.getData(PROPERTY_DRAG_MIME);
+                if (propertyPayloadRaw) {
+                    const droppedNodeId = parsePropertyDragPayload(propertyPayloadRaw);
+                    if (droppedNodeId) {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        const baseInsertIndex = computeShortcutInsertIndex(event, key);
+                        runAsyncAction(async () => {
+                            await addPropertyShortcut(droppedNodeId, { index: Math.max(0, baseInsertIndex) });
                         });
 
                         return true;
@@ -897,6 +915,7 @@ export const NavigationPane = React.memo(
             [
                 addShortcutsBatch,
                 addTagShortcut,
+                addPropertyShortcut,
                 app.vault,
                 computeShortcutInsertIndex,
                 shortcutsExpanded,
@@ -3066,6 +3085,7 @@ export const NavigationPane = React.memo(
                                 backgroundColor={getSolidBackground(item.backgroundColor)}
                                 icon={item.icon}
                                 searchMatch={searchMatch}
+                                isDraggable={!isMobile}
                                 countInfo={propertyCounts.get(propertyNode.id)}
                                 showFileCount={settings.showNoteCount}
                             />
