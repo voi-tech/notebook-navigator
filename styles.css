@@ -5835,7 +5835,6 @@ body.nn-resizing {
 
 .nn-settings-tab-button-primary.is-group-active {
     background-color: transparent;
-    box-shadow: inset 0 0 0 1px var(--interactive-accent);
     color: var(--interactive-accent);
     opacity: 0.85;
 }
@@ -5851,7 +5850,6 @@ body.nn-resizing {
 
 .nn-settings-tab-button-secondary.is-active {
     background-color: var(--background-modifier-hover);
-    box-shadow: inset 0 0 0 1px var(--interactive-accent);
     color: var(--text-normal);
 }
 
