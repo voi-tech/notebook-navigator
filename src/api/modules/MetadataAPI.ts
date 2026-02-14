@@ -18,14 +18,21 @@
 
 import { TFile, TFolder } from 'obsidian';
 import type { NotebookNavigatorAPI } from '../NotebookNavigatorAPI';
-import type { FolderMetadata, TagMetadata, IconString, PinContext, Pinned } from '../types';
+import type { FolderMetadata, TagMetadata, PropertyMetadata, IconString, PinContext, Pinned } from '../types';
 import type { NotebookNavigatorSettings } from '../../settings';
 import { PinnedNotes } from '../../types';
 import { normalizeCanonicalIconId } from '../../utils/iconizeFormat';
+import { normalizePropertyNodeId } from '../../utils/propertyTree';
 import { clonePinnedNotesRecord, normalizePinnedNoteContext } from '../../utils/recordUtils';
 
+type MetadataUpdate = {
+    color?: string | null;
+    backgroundColor?: string | null;
+    icon?: IconString | null;
+};
+
 /**
- * Metadata API - Manage folder and tag appearance, icons, colors, and pinned files
+ * Metadata API - Manage folder, tag, and property appearance, icons, colors, and pinned files
  */
 export class MetadataAPI {
     /**
@@ -41,6 +48,11 @@ export class MetadataAPI {
         tagColors: {} as Record<string, string>,
         tagBackgroundColors: {} as Record<string, string>,
         tagIcons: {} as Record<string, string>,
+
+        // Property metadata
+        propertyColors: {} as Record<string, string>,
+        propertyBackgroundColors: {} as Record<string, string>,
+        propertyIcons: {} as Record<string, string>,
 
         // File metadata
         fileIcons: {} as Record<string, string>,
@@ -60,6 +72,9 @@ export class MetadataAPI {
         tagColors: Record<string, string>;
         tagBackgroundColors: Record<string, string>;
         tagIcons: Record<string, string>;
+        propertyColors: Record<string, string>;
+        propertyBackgroundColors: Record<string, string>;
+        propertyIcons: Record<string, string>;
         fileIcons: Record<string, string>;
         fileColors: Record<string, string>;
         pinnedNotes: PinnedNotes;
@@ -71,6 +86,9 @@ export class MetadataAPI {
         tagColors: {},
         tagBackgroundColors: {},
         tagIcons: {},
+        propertyColors: {},
+        propertyBackgroundColors: {},
+        propertyIcons: {},
         fileIcons: {},
         fileColors: {},
         pinnedNotes: {},
@@ -167,6 +185,9 @@ export class MetadataAPI {
             tagColors: settings.tagColors || {},
             tagBackgroundColors: settings.tagBackgroundColors || {},
             tagIcons: settings.tagIcons || {},
+            propertyColors: settings.propertyColors || {},
+            propertyBackgroundColors: settings.propertyBackgroundColors || {},
+            propertyIcons: settings.propertyIcons || {},
             fileIcons: settings.fileIcons || {},
             fileColors: settings.fileColors || {},
             pinnedNotes: clonePinnedNotesRecord(settings.pinnedNotes)
@@ -180,6 +201,9 @@ export class MetadataAPI {
             tagColors: { ...current.tagColors },
             tagBackgroundColors: { ...current.tagBackgroundColors },
             tagIcons: { ...current.tagIcons },
+            propertyColors: { ...current.propertyColors },
+            propertyBackgroundColors: { ...current.propertyBackgroundColors },
+            propertyIcons: { ...current.propertyIcons },
             fileIcons: { ...current.fileIcons },
             fileColors: { ...current.fileColors },
             pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes)
@@ -194,6 +218,9 @@ export class MetadataAPI {
                 tagColors: { ...current.tagColors },
                 tagBackgroundColors: { ...current.tagBackgroundColors },
                 tagIcons: { ...current.tagIcons },
+                propertyColors: { ...current.propertyColors },
+                propertyBackgroundColors: { ...current.propertyBackgroundColors },
+                propertyIcons: { ...current.propertyIcons },
                 fileIcons: { ...current.fileIcons },
                 fileColors: { ...current.fileColors },
                 pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes),
@@ -235,6 +262,24 @@ export class MetadataAPI {
             });
         }
 
+        // Find changed property nodes
+        const changedPropertyColors = this.findChangedKeys(this.previousState.propertyColors, current.propertyColors);
+        const changedPropertyBackgrounds = this.findChangedKeys(
+            this.previousState.propertyBackgroundColors,
+            current.propertyBackgroundColors
+        );
+        const changedPropertyIcons = this.findChangedKeys(this.previousState.propertyIcons, current.propertyIcons);
+        const changedProperties = new Set([...changedPropertyColors, ...changedPropertyBackgrounds, ...changedPropertyIcons]);
+
+        // Fire events for changed properties
+        for (const nodeId of changedProperties) {
+            const metadata = this.getPropertyMeta(nodeId);
+            this.api.trigger('property-changed', {
+                nodeId,
+                metadata: metadata || { color: undefined, backgroundColor: undefined, icon: undefined }
+            });
+        }
+
         // Check pinned notes
         if (this.pinnedNotesChanged(this.previousState.pinnedNotes, current.pinnedNotes)) {
             const pinnedMap = this.getPinned();
@@ -249,6 +294,9 @@ export class MetadataAPI {
             tagColors: { ...current.tagColors },
             tagBackgroundColors: { ...current.tagBackgroundColors },
             tagIcons: { ...current.tagIcons },
+            propertyColors: { ...current.propertyColors },
+            propertyBackgroundColors: { ...current.propertyBackgroundColors },
+            propertyIcons: { ...current.propertyIcons },
             fileIcons: { ...current.fileIcons },
             fileColors: { ...current.fileColors },
             pinnedNotes: clonePinnedNotesRecord(current.pinnedNotes),
@@ -266,7 +314,7 @@ export class MetadataAPI {
      */
     private async updateMetadata(
         key: string,
-        meta: Partial<FolderMetadata | TagMetadata>,
+        meta: MetadataUpdate,
         colorStore: Record<string, string>,
         iconStore: Record<string, string>,
         backgroundStore: Record<string, string>
@@ -389,7 +437,7 @@ export class MetadataAPI {
     }
 
     /**
-     * Set tag metadata (color and/or icon)
+     * Set tag metadata (color and/or icon). Pass null to clear a property.
      * @param tag - Tag string (with or without '#' prefix)
      * @param meta - Partial metadata object with properties to update
      */
@@ -404,6 +452,58 @@ export class MetadataAPI {
             plugin.settings.tagColors,
             plugin.settings.tagIcons,
             plugin.settings.tagBackgroundColors
+        );
+    }
+
+    // ===================================================================
+    // Property Metadata
+    // ===================================================================
+
+    /**
+     * Get property metadata
+     * @param nodeId - Property node id (key or key=value)
+     */
+    getPropertyMeta(nodeId: string): PropertyMetadata | null {
+        const normalizedNodeId = normalizePropertyNodeId(nodeId);
+        if (!normalizedNodeId) {
+            return null;
+        }
+
+        const color = this.metadataState.propertyColors[normalizedNodeId];
+        const backgroundColor = this.metadataState.propertyBackgroundColors[normalizedNodeId];
+        const icon = this.metadataState.propertyIcons[normalizedNodeId];
+
+        if (!color && !backgroundColor && !icon) {
+            return null;
+        }
+
+        return {
+            color,
+            backgroundColor,
+            icon: icon as IconString | undefined
+        };
+    }
+
+    /**
+     * Set property metadata (color and/or icon). Pass null to clear a property.
+     * @param nodeId - Property node id (key or key=value)
+     * @param meta - Partial metadata object with properties to update
+     */
+    async setPropertyMeta(nodeId: string, meta: Partial<PropertyMetadata>): Promise<void> {
+        const plugin = this.api.getPlugin();
+        if (!plugin) return;
+
+        const normalizedNodeId = normalizePropertyNodeId(nodeId);
+        if (!normalizedNodeId) {
+            return;
+        }
+
+        await this.updateMetadata(
+            normalizedNodeId,
+            meta,
+            plugin.settings.propertyColors,
+            plugin.settings.propertyIcons,
+            plugin.settings.propertyBackgroundColors
         );
     }
 

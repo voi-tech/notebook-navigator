@@ -18,7 +18,7 @@
 
 /**
  * Notebook Navigator Plugin API Type Definitions
- * Version: 1.2.0
+ * Version: 1.3.0
  *
  * Download this file to your Obsidian plugin project to get TypeScript support
  * for the Notebook Navigator API.
@@ -75,6 +75,18 @@ export interface FolderMetadata {
  * Metadata associated with a tag
  */
 export interface TagMetadata {
+    /** CSS color value (hex, rgb, hsl, named colors) */
+    color?: string;
+    /** CSS background color value */
+    backgroundColor?: string;
+    /** Icon identifier in format 'lucide:<name>' or 'emoji:<unicode>' */
+    icon?: IconString;
+}
+
+/**
+ * Metadata associated with a property node
+ */
+export interface PropertyMetadata {
     /** CSS color value (hex, rgb, hsl, named colors) */
     color?: string;
     /** CSS background color value */
@@ -200,11 +212,17 @@ export interface NotebookNavigatorEvents {
         tag: string;
         metadata: TagMetadata;
     };
+
+    /** Fired when property metadata changes */
+    'property-changed': {
+        nodeId: string;
+        metadata: PropertyMetadata;
+    };
 }
 
 /**
  * Main Notebook Navigator API interface
- * @version 1.2.0
+ * @version 1.3.0
  */
 export interface NotebookNavigatorAPI {
     /** Get the API version string */
@@ -213,7 +231,7 @@ export interface NotebookNavigatorAPI {
     /** Check if storage system is ready for metadata operations */
     isStorageReady(): boolean;
 
-    /** Metadata operations for folders, tags, and pinned files */
+    /** Metadata operations for folders, tags, property nodes, and pinned files */
     metadata: {
         // Folder metadata
         /** Get all metadata for a folder */
@@ -226,6 +244,12 @@ export interface NotebookNavigatorAPI {
         getTagMeta(tag: string): TagMetadata | null;
         /** Set tag metadata (color and/or icon). Pass null to clear a property */
         setTagMeta(tag: string, meta: Partial<TagMetadata>): Promise<void>;
+
+        // Property metadata
+        /** Get all metadata for a property node */
+        getPropertyMeta(nodeId: string): PropertyMetadata | null;
+        /** Set property metadata (color and/or icon). Pass null to clear a property */
+        setPropertyMeta(nodeId: string, meta: Partial<PropertyMetadata>): Promise<void>;
 
         // Pinned files
         /** Get all pinned files with their context information as a Map */
@@ -246,6 +270,8 @@ export interface NotebookNavigatorAPI {
         navigateToFolder(folder: TFolder): Promise<void>;
         /** Select a tag in the navigator navigation pane (e.g. '#work' or 'work'). Requires tag data to be available (`storage-ready`). */
         navigateToTag(tag: string): Promise<void>;
+        /** Select a property node in the navigator navigation pane (e.g. 'key:status' or 'key:status=done'). */
+        navigateToProperty(nodeId: string): Promise<void>;
     };
 
     /** Query current selection state */
@@ -275,6 +301,12 @@ export interface NotebookNavigatorAPI {
 
 /**
  * API Changelog
+ *
+ * Version 1.3.0 (2026-02-14)
+ * - Added metadata.getPropertyMeta(nodeId)
+ * - Added metadata.setPropertyMeta(nodeId, meta)
+ * - Added navigation.navigateToProperty(nodeId)
+ * - Added property-changed event
  *
  * Version 1.2.0 (2025-12-22)
  * - Added navigation.navigateToFolder(folder)

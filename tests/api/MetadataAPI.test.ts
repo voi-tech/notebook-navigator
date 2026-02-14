@@ -29,12 +29,14 @@ describe('MetadataAPI icon normalization', () => {
         saveSettingsAndUpdate: ReturnType<typeof vi.fn>;
     };
     let api: NotebookNavigatorAPI;
+    let triggerMock: ReturnType<typeof vi.fn>;
 
     beforeEach(() => {
         plugin = {
             settings: structuredClone(DEFAULT_SETTINGS),
             saveSettingsAndUpdate: vi.fn().mockResolvedValue(undefined)
         };
+        triggerMock = vi.fn();
 
         api = {
             getPlugin: () => plugin,
@@ -44,7 +46,7 @@ describe('MetadataAPI icon normalization', () => {
                         getFolderByPath: () => null
                     }
                 }) as unknown,
-            trigger: vi.fn()
+            trigger: triggerMock
         } as unknown as NotebookNavigatorAPI;
     });
 
@@ -71,5 +73,86 @@ describe('MetadataAPI icon normalization', () => {
         });
 
         expect(plugin.settings.folderIcons.Folder).toBe('phosphor:apple-logo');
+    });
+
+    it('normalizes property node ids when setting property metadata', async () => {
+        const metadataAPI = new MetadataAPI(api);
+
+        await metadataAPI.setPropertyMeta('key:Status=Done', {
+            color: '#112233'
+        });
+        metadataAPI.updateFromSettings(plugin.settings);
+
+        expect(plugin.settings.propertyColors['key:status=done']).toBe('#112233');
+        expect(metadataAPI.getPropertyMeta('key:status=done')).toEqual({
+            color: '#112233',
+            backgroundColor: undefined,
+            icon: undefined
+        });
+    });
+
+    it('ignores invalid property node ids when setting property metadata', async () => {
+        const metadataAPI = new MetadataAPI(api);
+
+        await metadataAPI.setPropertyMeta('properties-root', {
+            color: '#112233'
+        });
+
+        expect(plugin.settings.propertyColors['properties-root']).toBeUndefined();
+        expect(plugin.saveSettingsAndUpdate).not.toHaveBeenCalled();
+    });
+
+    it('emits property-changed events when property metadata changes', () => {
+        const metadataAPI = new MetadataAPI(api);
+
+        const updatedSettings = structuredClone(plugin.settings);
+        updatedSettings.propertyColors['key:status'] = '#334455';
+
+        metadataAPI.updateFromSettings(updatedSettings);
+
+        expect(triggerMock).toHaveBeenCalledWith('property-changed', {
+            nodeId: 'key:status',
+            metadata: {
+                color: '#334455',
+                backgroundColor: undefined,
+                icon: undefined
+            }
+        });
+    });
+
+    it('emits property-changed events when property background metadata changes', () => {
+        const metadataAPI = new MetadataAPI(api);
+
+        const updatedSettings = structuredClone(plugin.settings);
+        updatedSettings.propertyBackgroundColors['key:status'] = '#223344';
+
+        metadataAPI.updateFromSettings(updatedSettings);
+
+        expect(triggerMock).toHaveBeenCalledWith('property-changed', {
+            nodeId: 'key:status',
+            metadata: {
+                color: undefined,
+                backgroundColor: '#223344',
+                icon: undefined
+            }
+        });
+    });
+
+    it('emits property-changed events when property icon metadata changes', () => {
+        const metadataAPI = new MetadataAPI(api);
+
+        const updatedSettings = structuredClone(plugin.settings);
+        updatedSettings.propertyIcons['key:status'] = 'lucide:hash';
+
+        metadataAPI.updateFromSettings(updatedSettings);
+
+        expect(triggerMock).toHaveBeenCalledWith('property-changed', {
+            nodeId: 'key:status',
+            metadata: {
+                color: undefined,
+                backgroundColor: undefined,
+                icon: 'lucide:hash'
+            }
+        });
     });
 });

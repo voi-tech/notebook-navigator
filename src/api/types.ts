@@ -76,6 +76,18 @@ export interface TagMetadata {
     icon?: IconString;
 }
 
+/**
+ * Metadata for customizing property node appearance in the navigator
+ */
+export interface PropertyMetadata {
+    /** CSS color value (hex, rgb, hsl, named colors) */
+    color?: string;
+    /** CSS background color value */
+    backgroundColor?: string;
+    /** Icon identifier (e.g., 'lucide:hash' or 'emoji:🔖') */
+    icon?: IconString;
+}
+
 // ============================================================================
 // PIN CONTEXT TYPES
 // ============================================================================
@@ -147,6 +159,12 @@ export interface NotebookNavigatorEvents {
     'tag-changed': {
         tag: string;
         metadata: TagMetadata;
+    };
+
+    /** Fired when property metadata changes */
+    'property-changed': {
+        nodeId: string;
+        metadata: PropertyMetadata;
     };
 }
 
