@@ -93,6 +93,8 @@ export function Calendar({
     const dayNoteFileLookupCacheRef = useRef<Map<string, TFile | null>>(new Map());
     const vaultVersionDebounceRef = useRef<number | null>(null);
     const scheduleVaultVersionUpdate = useCallback(() => {
+        dayNoteFileLookupCacheRef.current.clear();
+
         if (typeof window === 'undefined') {
             setVaultVersion(v => v + 1);
             return;
