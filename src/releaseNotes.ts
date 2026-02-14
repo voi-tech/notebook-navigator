@@ -87,9 +87,13 @@ const RELEASE_NOTES: ReleaseNote[] = [
             'New icons for ==tags, property keys, and property values== in the navigation pane. Configurable in settings.',
             'Public API 1.3: ==Property metadata and navigation==. New methods for getting and setting property colors, background colors, and icons. New navigateToProperty() method for navigating to properties in the UI.'
         ],
+        improved: [
+            'Subfolder group headers in list pane are now clickable when grouping by folder.'
+        ],
         changed: [
             'Settings are now organized in a ==two-level hierarchy==. Main groups (General, Navigation Pane, List Pane, Calendar) now have subtabs for easier navigation.'
-        ]
+        ],
+        fixed: ['Fixed an issue where moving files did not update list pane until refreshing the view.']
     },
     {
         version: '2.3.1',

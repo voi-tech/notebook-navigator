@@ -29,7 +29,7 @@
  */
 
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { TFile, TFolder, debounce } from 'obsidian';
+import { TFile, TFolder, debounce, normalizePath } from 'obsidian';
 import { useServices } from '../context/ServicesContext';
 import { OperationType } from '../services/CommandQueueService';
 import { useFileCache } from '../context/StorageContext';
@@ -826,15 +826,18 @@ export function useListPaneData({
                     sortKey: string;
                     files: TFile[];
                     isCurrentFolder: boolean;
+                    folderPath: string | null;
                 }
             >();
 
             // Determines which folder group a file belongs to based on its parent path
-            const resolveFolderGroup = (file: TFile): { key: string; label: string; sortKey: string; isCurrentFolder: boolean } => {
+            const resolveFolderGroup = (
+                file: TFile
+            ): { key: string; label: string; sortKey: string; isCurrentFolder: boolean; folderPath: string | null } => {
                 const parent = file.parent;
                 // Files at vault root
                 if (!(parent instanceof TFolder)) {
-                    return { key: 'folder:/', label: vaultRootLabel, sortKey: vaultRootSortKey, isCurrentFolder: false };
+                    return { key: 'folder:/', label: vaultRootLabel, sortKey: vaultRootSortKey, isCurrentFolder: false, folderPath: null };
                 }
 
                 // When viewing a folder, group by immediate parent folder
@@ -842,7 +845,14 @@ export function useListPaneData({
                     // Files directly in the selected folder
                     if (parent.path === baseFolderPath) {
                         const label = baseFolderName ?? parent.name;
-                        return { key: `folder:${baseFolderPath}`, label, sortKey: `0-${label.toLowerCase()}`, isCurrentFolder: true };
+                        const folderPath = baseFolderPath === '/' ? null : baseFolderPath;
+                        return {
+                            key: `folder:${baseFolderPath}`,
+                            label,
+                            sortKey: `0-${label.toLowerCase()}`,
+                            isCurrentFolder: true,
+                            folderPath
+                        };
                     }
                     // Files in subfolders - group by first level subfolder name
                     if (basePrefix && parent.path.startsWith(basePrefix)) {
@@ -850,11 +860,15 @@ export function useListPaneData({
                         const [firstSegment] = relativePath.split('/');
                         if (firstSegment && firstSegment.length > 0) {
                             const label = firstSegment;
+                            const folderPath = normalizePath(
+                                !baseFolderPath || baseFolderPath === '/' ? label : `${baseFolderPath}/${label}`
+                            );
                             return {
                                 key: `folder:${baseFolderPath}/${label}`,
                                 label,
                                 sortKey: `1-${label.toLowerCase()}`,
-                                isCurrentFolder: false
+                                isCurrentFolder: false,
+                                folderPath
                             };
                         }
                     }
@@ -865,19 +879,25 @@ export function useListPaneData({
                 const [topLevel] = parentPath.split('/');
                 if (topLevel && topLevel.length > 0) {
                     const label = topLevel;
-                    return { key: `folder:/${label}`, label, sortKey: `1-${label.toLowerCase()}`, isCurrentFolder: false };
+                    return {
+                        key: `folder:/${label}`,
+                        label,
+                        sortKey: `1-${label.toLowerCase()}`,
+                        isCurrentFolder: false,
+                        folderPath: topLevel
+                    };
                 }
 
                 // Fallback to vault root
-                return { key: 'folder:/', label: vaultRootLabel, sortKey: vaultRootSortKey, isCurrentFolder: false };
+                return { key: 'folder:/', label: vaultRootLabel, sortKey: vaultRootSortKey, isCurrentFolder: false, folderPath: null };
             };
 
             // Collect files into folder groups
             unpinnedFiles.forEach(file => {
-                const { key, label, sortKey, isCurrentFolder } = resolveFolderGroup(file);
+                const { key, label, sortKey, isCurrentFolder, folderPath } = resolveFolderGroup(file);
                 let group = folderGroups.get(key);
                 if (!group) {
-                    group = { label, sortKey, files: [], isCurrentFolder };
+                    group = { label, sortKey, files: [], isCurrentFolder, folderPath };
                     folderGroups.set(key, group);
                 }
                 group.files.push(file);
@@ -913,6 +933,7 @@ export function useListPaneData({
                     items.push({
                         type: ListPaneItemType.HEADER,
                         data: group.label,
+                        headerFolderPath: group.folderPath,
                         key: `header-${group.key}`
                     });
                 }

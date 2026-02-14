@@ -45,7 +45,7 @@
  */
 
 import React, { useCallback, useRef, useEffect, useImperativeHandle, forwardRef, useState, useMemo } from 'react';
-import { TFile, Platform, requireApiVersion, debounce } from 'obsidian';
+import { TFile, TFolder, Platform, requireApiVersion, debounce } from 'obsidian';
 import { Virtualizer } from '@tanstack/react-virtual';
 import { useSelectionState, useSelectionDispatch, resolvePrimarySelectedFile } from '../context/SelectionContext';
 import { useServices } from '../context/ServicesContext';
@@ -92,7 +92,7 @@ import {
 import { useSurfaceColorVariables } from '../hooks/useSurfaceColorVariables';
 import { LIST_PANE_SURFACE_COLOR_MAPPINGS } from '../constants/surfaceColorMappings';
 import { runAsyncAction } from '../utils/async';
-import { isCmdCtrlModifierPressed, isMultiSelectModifierPressed } from '../utils/keyboardOpenContext';
+import { isCmdCtrlModifierPressed, isMultiSelectModifierPressed, resolveFolderNoteClickOpenContext } from '../utils/keyboardOpenContext';
 import { openFileInContext } from '../utils/openFileInContext';
 import { getListPaneMeasurements } from '../utils/listPaneMeasurements';
 import { ServiceIcon } from './ServiceIcon';
@@ -100,6 +100,8 @@ import { resolveUXIcon } from '../utils/uxIcons';
 import { showNotice } from '../utils/noticeUtils';
 import { focusElementPreventScroll, isKeyboardEventContextBlocked } from '../utils/domUtils';
 import { buildPropertyKeyNodeId, buildPropertyValueNodeId } from '../utils/propertyTree';
+import { getFolderNote, openFolderNoteFile } from '../utils/folderNotes';
+import type { NavigateToFolderOptions } from '../hooks/useNavigatorReveal';
 
 /**
  * Renders the list pane displaying files from the selected folder.
@@ -170,6 +172,7 @@ interface ListPaneProps {
      * Callback invoked whenever tag-related search tokens change.
      */
     onSearchTokensChange?: (state: SearchNavFilterState) => void;
+    onNavigateToFolder: (folderPath: string, options?: NavigateToFolderOptions) => void;
 }
 
 interface ListPaneTitleChromeProps {
@@ -178,6 +181,11 @@ interface ListPaneTitleChromeProps {
     onSearchToggle?: () => void;
     shouldShowDesktopTitleArea: boolean;
     children: React.ReactNode;
+}
+
+interface FolderGroupHeaderTarget {
+    folder: TFolder;
+    folderNote: TFile | null;
 }
 
 function ListPaneTitleChrome({
@@ -208,6 +216,7 @@ function ListPaneTitleChrome({
 export const ListPane = React.memo(
     forwardRef<ListPaneHandle, ListPaneProps>(function ListPane(props, ref) {
         const { app, commandQueue, isMobile, plugin } = useServices();
+        const { onNavigateToFolder } = props;
         const openFileInWorkspace = useFileOpener();
         const selectionState = useSelectionState();
         const selectionDispatch = useSelectionDispatch();
@@ -1192,6 +1201,97 @@ export const ListPane = React.memo(
             [handleFileClick, orderedFiles]
         );
 
+        const folderGroupHeaderTargets = useMemo<Map<string, FolderGroupHeaderTarget>>(() => {
+            const targets = new Map<string, FolderGroupHeaderTarget>();
+
+            listItems.forEach(item => {
+                if (item.type !== ListPaneItemType.HEADER) {
+                    return;
+                }
+
+                const folderPath = item.headerFolderPath;
+                if (!folderPath || targets.has(folderPath)) {
+                    return;
+                }
+
+                const folder = app.vault.getFolderByPath(folderPath);
+                if (!folder) {
+                    return;
+                }
+
+                const folderNote = settings.enableFolderNotes
+                    ? getFolderNote(folder, {
+                          enableFolderNotes: settings.enableFolderNotes,
+                          folderNoteName: settings.folderNoteName,
+                          folderNoteNamePattern: settings.folderNoteNamePattern
+                      })
+                    : null;
+
+                targets.set(folderPath, { folder, folderNote });
+            });
+
+            return targets;
+        }, [app.vault, listItems, settings.enableFolderNotes, settings.folderNoteName, settings.folderNoteNamePattern]);
+
+        const handleFolderGroupHeaderClick = useCallback(
+            (event: React.MouseEvent<HTMLSpanElement>, target: FolderGroupHeaderTarget) => {
+                event.stopPropagation();
+                const folderNote = target.folderNote;
+                const navigateOptions: NavigateToFolderOptions = {
+                    source: 'manual',
+                    suppressAutoSelect: Boolean(folderNote)
+                };
+                onNavigateToFolder(target.folder.path, navigateOptions);
+
+                if (!folderNote) {
+                    return;
+                }
+
+                const openContext = resolveFolderNoteClickOpenContext(
+                    event,
+                    settings.openFolderNotesInNewTab,
+                    settings.multiSelectModifier,
+                    isMobile
+                );
+
+                runAsyncAction(() =>
+                    openFolderNoteFile({
+                        app,
+                        commandQueue,
+                        folder: target.folder,
+                        folderNote,
+                        context: openContext
+                    })
+                );
+            },
+            [settings.openFolderNotesInNewTab, settings.multiSelectModifier, isMobile, app, commandQueue, onNavigateToFolder]
+        );
+
+        const handleFolderGroupHeaderMouseDown = useCallback(
+            (event: React.MouseEvent<HTMLSpanElement>, target: FolderGroupHeaderTarget) => {
+                const folderNote = target.folderNote;
+                if (event.button !== 1 || !folderNote) {
+                    return;
+                }
+
+                // Middle-click opens folder notes in a new tab.
+                event.preventDefault();
+                event.stopPropagation();
+                onNavigateToFolder(target.folder.path, { source: 'manual', suppressAutoSelect: true });
+
+                runAsyncAction(() =>
+                    openFolderNoteFile({
+                        app,
+                        commandQueue,
+                        folder: target.folder,
+                        folderNote,
+                        context: 'tab'
+                    })
+                );
+            },
+            [app, commandQueue, onNavigateToFolder]
+        );
+
         // Returns array element at index or undefined if out of bounds
         const safeGetItem = <T,>(array: T[], index: number): T | undefined => {
             return index >= 0 && index < array.length ? array[index] : undefined;
@@ -1672,6 +1772,11 @@ export const ListPane = React.memo(
                                                 item.type === ListPaneItemType.HEADER && item.key === PINNED_SECTION_HEADER_KEY;
                                             const headerLabel =
                                                 item.type === ListPaneItemType.HEADER && typeof item.data === 'string' ? item.data : '';
+                                            const headerFolderPath =
+                                                item.type === ListPaneItemType.HEADER ? (item.headerFolderPath ?? null) : null;
+                                            const folderGroupHeaderTarget =
+                                                headerFolderPath !== null ? (folderGroupHeaderTargets.get(headerFolderPath) ?? null) : null;
+                                            const isClickableFolderGroupHeader = Boolean(folderGroupHeaderTarget) && !isPinnedHeader;
 
                                             // Find current date group for file items
                                             let dateGroup: string | null = null;
@@ -1679,8 +1784,12 @@ export const ListPane = React.memo(
                                                 // Look backwards to find the most recent header
                                                 for (let i = virtualItem.index - 1; i >= 0; i--) {
                                                     const prevItem = safeGetItem(listItems, i);
-                                                    if (prevItem && prevItem.type === ListPaneItemType.HEADER) {
-                                                        dateGroup = prevItem.data as string;
+                                                    if (
+                                                        prevItem &&
+                                                        prevItem.type === ListPaneItemType.HEADER &&
+                                                        typeof prevItem.data === 'string'
+                                                    ) {
+                                                        dateGroup = prevItem.data;
                                                         break;
                                                     }
                                                 }
@@ -1734,7 +1843,33 @@ export const ListPane = React.memo(
                                                                     <span className="nn-date-group-header-text">{headerLabel}</span>
                                                                 </>
                                                             ) : (
-                                                                <span className="nn-date-group-header-text">{headerLabel}</span>
+                                                                <span
+                                                                    className={`nn-date-group-header-text ${
+                                                                        isClickableFolderGroupHeader
+                                                                            ? 'nn-date-group-header-text--folder-note'
+                                                                            : ''
+                                                                    }`}
+                                                                    onClick={
+                                                                        folderGroupHeaderTarget
+                                                                            ? event =>
+                                                                                  handleFolderGroupHeaderClick(
+                                                                                      event,
+                                                                                      folderGroupHeaderTarget
+                                                                                  )
+                                                                            : undefined
+                                                                    }
+                                                                    onMouseDown={
+                                                                        folderGroupHeaderTarget
+                                                                            ? event =>
+                                                                                  handleFolderGroupHeaderMouseDown(
+                                                                                      event,
+                                                                                      folderGroupHeaderTarget
+                                                                                  )
+                                                                            : undefined
+                                                                    }
+                                                                >
+                                                                    {headerLabel}
+                                                                </span>
                                                             )}
                                                         </div>
                                                     ) : item.type === ListPaneItemType.TOP_SPACER ? (

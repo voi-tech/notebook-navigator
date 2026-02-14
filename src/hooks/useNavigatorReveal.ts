@@ -70,6 +70,8 @@ export interface NavigateToFolderOptions {
     source?: SelectionRevealSource;
     // When true, keep the navigation pane focused in single pane mode
     preserveNavigationFocus?: boolean;
+    // When true, prevents automatic first-file selection for the target folder
+    suppressAutoSelect?: boolean;
 }
 
 export interface RevealTagOptions {
@@ -657,8 +659,14 @@ export function useNavigatorReveal({ app, navigationPaneRef, focusNavigationPane
                 expansionDispatch({ type: 'EXPAND_FOLDERS', folderPaths: foldersToExpand });
             }
 
+            const suppressAutoSelect = Boolean(options?.suppressAutoSelect);
             // Select the folder
-            selectionDispatch({ type: 'SET_SELECTED_FOLDER', folder, source: options?.source });
+            selectionDispatch({
+                type: 'SET_SELECTED_FOLDER',
+                folder,
+                source: options?.source,
+                autoSelectedFile: suppressAutoSelect ? null : undefined
+            });
 
             if (uiState.singlePane) {
                 if (options?.preserveNavigationFocus) {

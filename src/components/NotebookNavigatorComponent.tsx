@@ -1079,6 +1079,7 @@ export const NotebookNavigatorComponent = React.memo(
                         ref={listPaneRef}
                         rootContainerRef={containerRef}
                         onSearchTokensChange={handleSearchTokensChange}
+                        onNavigateToFolder={navigateToFolder}
                         resizeHandleProps={!uiState.singlePane ? resizeHandleProps : undefined}
                     />
                     {shouldRenderSinglePaneCalendar ? (

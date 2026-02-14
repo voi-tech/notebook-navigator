@@ -34,6 +34,9 @@ export interface ListPaneItem {
     type: ListPaneItemType;
     data: TFile | string; // File or header text
     parentFolder?: string | null;
+    // Folder path associated with a folder-group header.
+    // Present only when grouping by folder in the list pane.
+    headerFolderPath?: string | null;
     key: string;
     // Pre-computed file index for stable onClick handlers
     fileIndex?: number;
