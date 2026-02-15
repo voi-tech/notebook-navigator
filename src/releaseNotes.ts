@@ -89,6 +89,7 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         improved: ['Subfolder group headers in list pane are now clickable when grouping by folder.'],
         changed: [
+            'Removed the setting ==Save icons and colors to frontmatter==. Icons and colors are now always saved to frontmatter if frontmatter metadata is enabled.',
             'Settings are now organized in a ==two-level hierarchy==. Main groups (General, Navigation Pane, List Pane, Calendar) now have subtabs for easier navigation.'
         ],
         fixed: [
