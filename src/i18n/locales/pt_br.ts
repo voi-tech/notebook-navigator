@@ -1358,7 +1358,7 @@ export const STRINGS_PT_BR = {
             propertyFields: {
                 name: 'Propriedades a exibir',
                 desc: 'Lista de propriedades de metadados separada por vírgulas para exibir no painel de navegação e como emblemas nos itens de arquivo. Propriedades com múltiplos valores exibem um emblema por valor.',
-                placeholder: 'status, tipo, categoria',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Adicionar chave de propriedade',
                 emptySelectorNotice: 'Nenhuma chave de propriedade encontrada no cache de metadados.'
             },
@@ -1401,7 +1401,7 @@ export const STRINGS_PT_BR = {
             previewProperties: {
                 name: 'Propriedades de visualização',
                 desc: 'Lista separada por vírgulas de propriedades do frontmatter para verificar texto de visualização. A primeira propriedade com texto será usada.',
-                placeholder: 'resumo, descrição, abstrato',
+                placeholder: 'summary, description, abstract',
                 info: 'Se nenhum texto de visualização for encontrado nas propriedades especificadas, a visualização será gerada a partir do conteúdo da nota.'
             },
             previewRows: {
@@ -1439,7 +1439,7 @@ export const STRINGS_PT_BR = {
             featureImageExcludeProperties: {
                 name: 'Excluir notas com propriedades',
                 desc: 'Lista separada por vírgulas de propriedades do frontmatter. Notas contendo qualquer uma dessas propriedades não armazenam imagens de destaque.',
-                placeholder: 'privado, confidencial'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1605,7 +1605,7 @@ export const STRINGS_PT_BR = {
             folderNoteName: {
                 name: 'Nome da nota de pasta',
                 desc: 'Nome da nota de pasta sem extensão. Deixe em branco para usar o mesmo nome da pasta.',
-                placeholder: 'índice'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'Padrão de nome da nota de pasta',
@@ -1668,17 +1668,17 @@ export const STRINGS_PT_BR = {
             frontmatterIconField: {
                 name: 'Campo de ícone',
                 desc: 'Campo do frontmatter para ícones de arquivo. Deixe em branco para usar ícones armazenados nas configurações.',
-                placeholder: 'ícone'
+                placeholder: 'icon'
             },
             frontmatterColorField: {
                 name: 'Campo de cor',
                 desc: 'Campo do frontmatter para cores de arquivo. Deixe em branco para usar cores armazenadas nas configurações.',
-                placeholder: 'cor'
+                placeholder: 'color'
             },
             frontmatterBackgroundField: {
                 name: 'Campo de fundo',
                 desc: 'Campo do frontmatter para cores de fundo. Deixe em branco para usar cores de fundo armazenadas nas configurações.',
-                placeholder: 'fundo'
+                placeholder: 'background'
             },
             frontmatterMigration: {
                 name: 'Migrar ícones e cores das configurações',
@@ -1693,17 +1693,17 @@ export const STRINGS_PT_BR = {
             frontmatterNameField: {
                 name: 'Campos de nome',
                 desc: 'Lista de campos frontmatter separados por vírgula. O primeiro valor não vazio é usado. Usa o nome do arquivo como alternativa.',
-                placeholder: 'título, nome'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Campo de timestamp de criação',
                 desc: 'Nome do campo do frontmatter para o timestamp de criação. Deixe em branco para usar apenas a data do sistema de arquivos.',
-                placeholder: 'criado'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'Campo de timestamp de modificação',
                 desc: 'Nome do campo do frontmatter para o timestamp de modificação. Deixe em branco para usar apenas a data do sistema de arquivos.',
-                placeholder: 'modificado'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'Formato de timestamp',

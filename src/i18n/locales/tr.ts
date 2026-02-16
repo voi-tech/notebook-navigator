@@ -1353,7 +1353,7 @@ export const STRINGS_TR = {
             propertyFields: {
                 name: 'Görüntülenecek özellikler',
                 desc: 'Gezinme panelinde ve dosya öğelerinde rozet olarak görüntülenecek virgülle ayrılmış ön bilgi özellikleri listesi. Liste değerli özellikler değer başına bir rozet gösterir.',
-                placeholder: 'durum, tür, kategori',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Özellik anahtarı ekle',
                 emptySelectorNotice: 'Meta veri önbelleğinde özellik anahtarı bulunamadı.'
             },
@@ -1396,7 +1396,7 @@ export const STRINGS_TR = {
             previewProperties: {
                 name: 'Önizleme özellikleri',
                 desc: 'Önizleme metni için kontrol edilecek virgülle ayrılmış frontmatter özellikleri listesi. Metni olan ilk özellik kullanılacak.',
-                placeholder: 'özet, açıklama, abstract',
+                placeholder: 'summary, description, abstract',
                 info: 'Belirtilen özelliklerde önizleme metni bulunamazsa, önizleme not içeriğinden oluşturulacak.'
             },
             previewRows: {
@@ -1434,7 +1434,7 @@ export const STRINGS_TR = {
             featureImageExcludeProperties: {
                 name: 'Özellikli notları hariç tut',
                 desc: 'Virgülle ayrılmış frontmatter özellikleri listesi. Bu özelliklerden herhangi birini içeren notlar öne çıkan görsel saklamaz.',
-                placeholder: 'özel, gizli'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1663,17 +1663,17 @@ export const STRINGS_TR = {
             frontmatterIconField: {
                 name: 'Simge alanı',
                 desc: 'Dosya simgeleri için frontmatter alanı. Ayarlarda saklanan simgeleri kullanmak için boş bırakın.',
-                placeholder: 'simge'
+                placeholder: 'icon'
             },
             frontmatterColorField: {
                 name: 'Renk alanı',
                 desc: 'Dosya renkleri için frontmatter alanı. Ayarlarda saklanan renkleri kullanmak için boş bırakın.',
-                placeholder: 'renk'
+                placeholder: 'color'
             },
             frontmatterBackgroundField: {
                 name: 'Arka plan alanı',
                 desc: 'Arka plan renkleri için frontmatter alanı. Ayarlarda saklanan arka plan renklerini kullanmak için boş bırakın.',
-                placeholder: 'arka plan'
+                placeholder: 'background'
             },
             frontmatterMigration: {
                 name: 'Simgeleri ve renkleri ayarlardan taşı',
@@ -1688,17 +1688,17 @@ export const STRINGS_TR = {
             frontmatterNameField: {
                 name: 'Ad alanları',
                 desc: 'Virgülle ayrılmış frontmatter alanları listesi. İlk boş olmayan değer kullanılır. Dosya adına geri döner.',
-                placeholder: 'başlık, ad'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Oluşturma zaman damgası alanı',
                 desc: 'Oluşturma zaman damgası için frontmatter alan adı. Yalnızca dosya sistemi tarihini kullanmak için boş bırakın.',
-                placeholder: 'oluşturuldu'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'Değiştirme zaman damgası alanı',
                 desc: 'Değiştirme zaman damgası için frontmatter alan adı. Yalnızca dosya sistemi tarihini kullanmak için boş bırakın.',
-                placeholder: 'değiştirildi'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'Zaman damgası formatı',

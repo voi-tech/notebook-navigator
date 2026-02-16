@@ -1352,7 +1352,7 @@ export const STRINGS_KO = {
             propertyFields: {
                 name: '표시할 속성들',
                 desc: '탐색 창과 파일 항목의 배지로 표시할 프론트매터 속성의 쉼표로 구분된 목록. 목록 값 속성은 값당 하나의 배지를 표시합니다.',
-                placeholder: '상태, 유형, 카테고리',
+                placeholder: 'status, type, category',
                 addButtonTooltip: '속성 키 추가',
                 emptySelectorNotice: '메타데이터 캐시에서 속성 키를 찾을 수 없습니다.'
             },
@@ -1433,7 +1433,7 @@ export const STRINGS_KO = {
             featureImageExcludeProperties: {
                 name: '속성이 있는 노트 제외',
                 desc: '쉼표로 구분된 frontmatter 속성 목록입니다. 이러한 속성 중 하나라도 포함된 노트는 대표 이미지를 저장하지 않습니다.',
-                placeholder: '비공개, 기밀'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1661,7 +1661,7 @@ export const STRINGS_KO = {
             frontmatterNameField: {
                 name: '이름 필드들',
                 desc: '쉼표로 구분된 frontmatter 필드 목록. 첫 번째 비어 있지 않은 값을 사용. 파일 이름으로 대체.',
-                placeholder: '제목, 이름'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: '아이콘 필드',

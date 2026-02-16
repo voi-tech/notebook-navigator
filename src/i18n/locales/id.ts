@@ -1353,7 +1353,7 @@ export const STRINGS_ID = {
             propertyFields: {
                 name: 'Properti-properti untuk ditampilkan',
                 desc: 'Daftar properti frontmatter dipisahkan koma untuk ditampilkan di panel navigasi dan sebagai lencana di item file. Properti bernilai daftar menampilkan satu lencana per nilai.',
-                placeholder: 'status, tipe, kategori',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Tambah kunci properti',
                 emptySelectorNotice: 'Tidak ditemukan kunci properti dalam cache metadata.'
             },
@@ -1396,7 +1396,7 @@ export const STRINGS_ID = {
             previewProperties: {
                 name: 'Properti pratinjau',
                 desc: 'Daftar properti frontmatter yang dipisahkan koma untuk memeriksa teks pratinjau. Properti pertama dengan teks akan digunakan.',
-                placeholder: 'ringkasan, deskripsi, abstrak',
+                placeholder: 'summary, description, abstract',
                 info: 'Jika tidak ada teks pratinjau yang ditemukan di properti yang ditentukan, pratinjau akan dihasilkan dari konten catatan.'
             },
             previewRows: {
@@ -1434,7 +1434,7 @@ export const STRINGS_ID = {
             featureImageExcludeProperties: {
                 name: 'Kecualikan catatan dengan properti',
                 desc: 'Daftar properti frontmatter yang dipisahkan koma. Catatan yang mengandung properti ini tidak menyimpan gambar fitur.',
-                placeholder: 'pribadi, rahasia'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1688,7 +1688,7 @@ export const STRINGS_ID = {
             frontmatterNameField: {
                 name: 'Field-field nama',
                 desc: 'Daftar field frontmatter dipisahkan koma. Nilai tidak kosong pertama digunakan. Kembali ke nama file.',
-                placeholder: 'judul, nama'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Field timestamp dibuat',

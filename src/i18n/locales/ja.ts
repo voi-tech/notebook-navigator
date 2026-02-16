@@ -1354,7 +1354,7 @@ export const STRINGS_JA = {
             propertyFields: {
                 name: '表示するプロパティ',
                 desc: 'ナビゲーションペインとファイル項目のバッジとして表示するフロントマタープロパティのカンマ区切りリスト。リスト値のプロパティは値ごとに1つのバッジを表示します。',
-                placeholder: 'ステータス, タイプ, カテゴリ',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'プロパティキーを追加',
                 emptySelectorNotice: 'メタデータキャッシュにプロパティキーが見つかりません。'
             },
@@ -1397,7 +1397,7 @@ export const STRINGS_JA = {
             previewProperties: {
                 name: 'プレビュープロパティ',
                 desc: 'プレビューテキストを検索するフロントマタープロパティのカンマ区切りリスト。テキストがある最初のプロパティが使用されます。',
-                placeholder: '要約, 説明, 概要',
+                placeholder: 'summary, description, abstract',
                 info: '指定されたプロパティにプレビューテキストが見つからない場合、プレビューはノートの内容から生成されます。'
             },
             previewRows: {
@@ -1435,7 +1435,7 @@ export const STRINGS_JA = {
             featureImageExcludeProperties: {
                 name: 'プロパティを持つノートを除外',
                 desc: 'フロントマタープロパティのカンマ区切りリスト。これらのプロパティを含むノートはフィーチャー画像を保存しません。',
-                placeholder: 'プライベート, 機密'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1601,7 +1601,7 @@ export const STRINGS_JA = {
             folderNoteName: {
                 name: 'フォルダノート名',
                 desc: 'フォルダノートの名前。空のままにするとフォルダと同じ名前を使用します。',
-                placeholder: 'フォルダ名には空のまま'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'フォルダノート名パターン',
@@ -1664,7 +1664,7 @@ export const STRINGS_JA = {
             frontmatterNameField: {
                 name: '名前フィールド（複数可）',
                 desc: 'フロントマターフィールドのカンマ区切りリスト。最初の空でない値を使用。ファイル名にフォールバック。',
-                placeholder: 'タイトル, 名前'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: 'アイコンフィールド',
@@ -1694,12 +1694,12 @@ export const STRINGS_JA = {
             frontmatterCreatedField: {
                 name: '作成タイムスタンプフィールド',
                 desc: '作成タイムスタンプのフロントマターフィールド名。空のままにするとファイルシステムの日付のみを使用。',
-                placeholder: '作成日'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: '変更タイムスタンプフィールド',
                 desc: '変更タイムスタンプのフロントマターフィールド名。空のままにするとファイルシステムの日付のみを使用。',
-                placeholder: '更新日'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'タイムスタンプ形式',

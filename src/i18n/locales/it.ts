@@ -1354,7 +1354,7 @@ export const STRINGS_IT = {
             propertyFields: {
                 name: 'Proprietà da visualizzare',
                 desc: 'Elenco di proprietà dei metadati separati da virgola da visualizzare nel pannello di navigazione e come badge negli elementi file. Le proprietà con valori multipli mostrano un badge per valore.',
-                placeholder: 'stato, tipo, categoria',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Aggiungi chiave proprietà',
                 emptySelectorNotice: 'Nessuna chiave di proprietà trovata nella cache dei metadati.'
             },
@@ -1397,7 +1397,7 @@ export const STRINGS_IT = {
             previewProperties: {
                 name: 'Proprietà anteprima',
                 desc: 'Lista di proprietà frontmatter separate da virgola da controllare per testo anteprima. La prima proprietà con testo sarà usata.',
-                placeholder: 'sommario, descrizione, abstract',
+                placeholder: 'summary, description, abstract',
                 info: "Se nessun testo anteprima viene trovato nelle proprietà specificate, l'anteprima sarà generata dal contenuto nota."
             },
             previewRows: {
@@ -1435,7 +1435,7 @@ export const STRINGS_IT = {
             featureImageExcludeProperties: {
                 name: 'Escludi note con proprietà',
                 desc: 'Lista di proprietà frontmatter separate da virgola. Le note contenenti una di queste proprietà non memorizzano immagini di copertina.',
-                placeholder: 'privato, confidenziale'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1689,7 +1689,7 @@ export const STRINGS_IT = {
             frontmatterNameField: {
                 name: 'Campi nome',
                 desc: 'Elenco di campi frontmatter separati da virgola. Viene usato il primo valore non vuoto. Usa il nome file come alternativa.',
-                placeholder: 'titolo, nome'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Campo timestamp creazione',

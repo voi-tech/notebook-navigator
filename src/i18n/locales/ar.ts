@@ -1351,7 +1351,7 @@ export const STRINGS_AR = {
             propertyFields: {
                 name: 'الخصائص للعرض',
                 desc: 'قائمة خصائص الواجهة الأمامية مفصولة بفواصل لعرضها في لوحة التنقل وكشارات في عناصر الملفات. الخصائص ذات القوائم تعرض شارة واحدة لكل قيمة.',
-                placeholder: 'الحالة، النوع، الفئة',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'إضافة مفتاح خاصية',
                 emptySelectorNotice: 'لم يتم العثور على مفاتيح خصائص في ذاكرة البيانات الوصفية.'
             },
@@ -1432,7 +1432,7 @@ export const STRINGS_AR = {
             featureImageExcludeProperties: {
                 name: 'استبعاد الملاحظات ذات الخصائص',
                 desc: 'قائمة مفصولة بفاصلة من خصائص البيانات الأمامية. الملاحظات التي تحتوي على أي من هذه الخصائص لا تخزن صور العرض.',
-                placeholder: 'خاص, سري'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1671,7 +1671,7 @@ export const STRINGS_AR = {
             frontmatterBackgroundField: {
                 name: 'حقل الخلفية',
                 desc: 'حقل البيانات الأمامية لألوان الخلفية. اتركه فارغًا لاستخدام ألوان الخلفية المخزنة في الإعدادات.',
-                placeholder: 'خلفية'
+                placeholder: 'background'
             },
             frontmatterMigration: {
                 name: 'ترحيل الأيقونات والألوان من الإعدادات',
@@ -1686,7 +1686,7 @@ export const STRINGS_AR = {
             frontmatterNameField: {
                 name: 'حقول الاسم',
                 desc: 'قائمة حقول البيانات الأمامية مفصولة بفواصل. يُستخدم أول قيمة غير فارغة. يعود لاسم الملف.',
-                placeholder: 'عنوان, اسم'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'حقل طابع وقت الإنشاء',

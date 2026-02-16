@@ -1352,7 +1352,7 @@ export const STRINGS_FA = {
             propertyFields: {
                 name: 'ویژگی‌ها برای نمایش',
                 desc: 'فهرست ویژگی‌های فرانت‌متر جدا شده با کاما برای نمایش در پنل ناوبری و به عنوان نشان در موارد فایل. ویژگی‌های فهرستی یک نشان به ازای هر مقدار نمایش می‌دهند.',
-                placeholder: 'وضعیت، نوع، دسته‌بندی',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'افزودن کلید ویژگی',
                 emptySelectorNotice: 'کلید ویژگی‌ای در حافظه نهان فراداده یافت نشد.'
             },
@@ -1395,7 +1395,7 @@ export const STRINGS_FA = {
             previewProperties: {
                 name: 'ویژگی‌های پیش‌نمایش',
                 desc: 'لیست ویژگی‌های فرانت‌متر جدا شده با کاما برای بررسی متن پیش‌نمایش. اولین ویژگی با متن استفاده می‌شود.',
-                placeholder: 'خلاصه، توضیحات، چکیده',
+                placeholder: 'summary, description, abstract',
                 info: 'اگر متن پیش‌نمایش در ویژگی‌های مشخص‌شده یافت نشود، پیش‌نمایش از محتوای یادداشت تولید می‌شود.'
             },
             previewRows: {
@@ -1433,7 +1433,7 @@ export const STRINGS_FA = {
             featureImageExcludeProperties: {
                 name: 'استثنای یادداشت‌ها با ویژگی‌ها',
                 desc: 'لیست ویژگی‌های فرانت‌متر جدا شده با کاما. یادداشت‌هایی که هر یک از این ویژگی‌ها را دارند، تصاویر ویژه را ذخیره نمی‌کنند.',
-                placeholder: 'خصوصی, محرمانه'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1599,7 +1599,7 @@ export const STRINGS_FA = {
             folderNoteName: {
                 name: 'نام یادداشت پوشه',
                 desc: 'نام یادداشت پوشه بدون پسوند. برای استفاده از نام پوشه خالی بگذارید.',
-                placeholder: 'فهرست'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'الگوی نام یادداشت پوشه',
@@ -1662,17 +1662,17 @@ export const STRINGS_FA = {
             frontmatterIconField: {
                 name: 'فیلد آیکون',
                 desc: 'فیلد فرانت‌متر برای آیکون‌های فایل. برای استفاده از آیکون‌های ذخیره‌شده در تنظیمات خالی بگذارید.',
-                placeholder: 'آیکون'
+                placeholder: 'icon'
             },
             frontmatterColorField: {
                 name: 'فیلد رنگ',
                 desc: 'فیلد فرانت‌متر برای رنگ‌های فایل. برای استفاده از رنگ‌های ذخیره‌شده در تنظیمات خالی بگذارید.',
-                placeholder: 'رنگ'
+                placeholder: 'color'
             },
             frontmatterBackgroundField: {
                 name: 'فیلد پس‌زمینه',
                 desc: 'فیلد فرانت‌متر برای رنگ‌های پس‌زمینه. برای استفاده از رنگ‌های پس‌زمینه ذخیره‌شده در تنظیمات خالی بگذارید.',
-                placeholder: 'پس‌زمینه'
+                placeholder: 'background'
             },
             frontmatterMigration: {
                 name: 'مهاجرت آیکون‌ها و رنگ‌ها از تنظیمات',
@@ -1687,17 +1687,17 @@ export const STRINGS_FA = {
             frontmatterNameField: {
                 name: 'فیلدهای نام',
                 desc: 'لیست فیلدهای فرانت‌متر جداشده با کاما. اولین مقدار غیرخالی استفاده می‌شود. به نام فایل برمی‌گردد.',
-                placeholder: 'عنوان, نام'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'فیلد زمان ایجاد',
                 desc: 'نام فیلد فرانت‌متر برای زمان ایجاد. برای استفاده فقط از تاریخ سیستم فایل خالی بگذارید.',
-                placeholder: 'ایجاد'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'فیلد زمان تغییر',
                 desc: 'نام فیلد فرانت‌متر برای زمان تغییر. برای استفاده فقط از تاریخ سیستم فایل خالی بگذارید.',
-                placeholder: 'تغییر'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'قالب زمان',

@@ -1356,7 +1356,7 @@ export const STRINGS_ES = {
             propertyFields: {
                 name: 'Propiedades a mostrar',
                 desc: 'Lista separada por comas de propiedades de metadatos para mostrar en el panel de navegación y como insignias en los elementos de archivo. Las propiedades de lista muestran una insignia por valor.',
-                placeholder: 'estado, tipo, categoría',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Añadir clave de propiedad',
                 emptySelectorNotice: 'No se encontraron claves de propiedad en la caché de metadatos.'
             },
@@ -1399,7 +1399,7 @@ export const STRINGS_ES = {
             previewProperties: {
                 name: 'Propiedades de vista previa',
                 desc: 'Lista separada por comas de propiedades de frontmatter para buscar texto de vista previa. Se usará la primera propiedad con texto.',
-                placeholder: 'resumen, descripción, abstracto',
+                placeholder: 'summary, description, abstract',
                 info: 'Si no se encuentra texto de vista previa en las propiedades especificadas, la vista previa se generará a partir del contenido de la nota.'
             },
             previewRows: {
@@ -1437,7 +1437,7 @@ export const STRINGS_ES = {
             featureImageExcludeProperties: {
                 name: 'Excluir notas con propiedades',
                 desc: 'Lista separada por comas de propiedades del frontmatter. Las notas que contengan cualquiera de estas propiedades no almacenan imágenes destacadas.',
-                placeholder: 'privado, confidencial'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1603,7 +1603,7 @@ export const STRINGS_ES = {
             folderNoteName: {
                 name: 'Nombre de la nota de carpeta',
                 desc: 'Nombre de la nota de carpeta. Dejar vacío para usar el mismo nombre que la carpeta.',
-                placeholder: 'Dejar vacío para el nombre de la carpeta'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'Patrón de nombre de nota de carpeta',
@@ -1666,7 +1666,7 @@ export const STRINGS_ES = {
             frontmatterNameField: {
                 name: 'Campos de nombre',
                 desc: 'Lista de campos frontmatter separados por comas. Se usa el primer valor no vacío. Usa el nombre de archivo como alternativa.',
-                placeholder: 'título, nombre'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: 'Campo de icono',
@@ -1696,12 +1696,12 @@ export const STRINGS_ES = {
             frontmatterCreatedField: {
                 name: 'Campo de marca de tiempo de creación',
                 desc: 'Nombre del campo del frontmatter para la marca de tiempo de creación. Dejar vacío para usar solo la fecha del sistema.',
-                placeholder: 'creado'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'Campo de marca de tiempo de modificación',
                 desc: 'Nombre del campo del frontmatter para la marca de tiempo de modificación. Dejar vacío para usar solo la fecha del sistema.',
-                placeholder: 'modificado'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'Formato de marca de tiempo',

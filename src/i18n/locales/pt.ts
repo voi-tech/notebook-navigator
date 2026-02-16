@@ -1356,7 +1356,7 @@ export const STRINGS_PT = {
             propertyFields: {
                 name: 'Propriedades a mostrar',
                 desc: 'Lista de propriedades de metadados separada por vírgulas para exibir no painel de navegação e como emblemas nos itens de ficheiro. Propriedades com múltiplos valores exibem um emblema por valor.',
-                placeholder: 'estado, tipo, categoria',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Adicionar chave de propriedade',
                 emptySelectorNotice: 'Nenhuma chave de propriedade encontrada na cache de metadados.'
             },
@@ -1399,7 +1399,7 @@ export const STRINGS_PT = {
             previewProperties: {
                 name: 'Propriedades de pré-visualização',
                 desc: 'Lista de propriedades frontmatter separadas por vírgulas para verificar texto de pré-visualização. A primeira propriedade com texto será usada.',
-                placeholder: 'resumo, descrição, abstract',
+                placeholder: 'summary, description, abstract',
                 info: 'Se nenhum texto de pré-visualização for encontrado nas propriedades especificadas, a pré-visualização será gerada a partir do conteúdo da nota.'
             },
             previewRows: {
@@ -1437,7 +1437,7 @@ export const STRINGS_PT = {
             featureImageExcludeProperties: {
                 name: 'Excluir notas com propriedades',
                 desc: 'Lista separada por vírgulas de propriedades frontmatter. Notas contendo qualquer uma destas propriedades não armazenam imagens de destaque.',
-                placeholder: 'privado, confidencial'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1691,7 +1691,7 @@ export const STRINGS_PT = {
             frontmatterNameField: {
                 name: 'Campos de nome',
                 desc: 'Lista de campos frontmatter separados por vírgula. O primeiro valor não vazio é usado. Usa o nome do ficheiro como alternativa.',
-                placeholder: 'título, nome'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Campo de timestamp de criação',

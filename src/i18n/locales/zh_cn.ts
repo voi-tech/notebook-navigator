@@ -1351,7 +1351,7 @@ export const STRINGS_ZH_CN = {
             propertyFields: {
                 name: '要显示的属性',
                 desc: '以逗号分隔的 frontmatter 属性列表，用于在导航窗格和文件项中作为徽章显示。列表值属性每个值显示一个徽章。',
-                placeholder: '状态, 类型, 分类',
+                placeholder: 'status, type, category',
                 addButtonTooltip: '添加属性键',
                 emptySelectorNotice: '在元数据缓存中未找到属性键。'
             },
@@ -1394,7 +1394,7 @@ export const STRINGS_ZH_CN = {
             previewProperties: {
                 name: '预览属性',
                 desc: '用于查找预览文本的前置属性的逗号分隔列表。将使用第一个包含文本的属性。',
-                placeholder: '摘要, 描述, 概要',
+                placeholder: 'summary, description, abstract',
                 info: '如果在指定的属性中找不到预览文本，预览将从笔记内容中生成。'
             },
             previewRows: {
@@ -1432,7 +1432,7 @@ export const STRINGS_ZH_CN = {
             featureImageExcludeProperties: {
                 name: '排除含有属性的笔记',
                 desc: '逗号分隔的前置元数据属性列表。包含这些属性的笔记不会存储特色图片。',
-                placeholder: '私密, 机密'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1598,7 +1598,7 @@ export const STRINGS_ZH_CN = {
             folderNoteName: {
                 name: '文件夹笔记名称',
                 desc: '文件夹笔记的名称。留空以使用与文件夹相同的名称。',
-                placeholder: '留空以使用文件夹名称'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: '文件夹笔记名称模式',
@@ -1660,7 +1660,7 @@ export const STRINGS_ZH_CN = {
             frontmatterNameField: {
                 name: '名称字段（多个）',
                 desc: '逗号分隔的前言字段列表。使用第一个非空值。回退到文件名。',
-                placeholder: '标题, 名称'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: '图标字段',
@@ -1690,12 +1690,12 @@ export const STRINGS_ZH_CN = {
             frontmatterCreatedField: {
                 name: '创建时间戳字段',
                 desc: '创建时间戳的前言字段名称。留空仅使用文件系统日期。',
-                placeholder: '创建时间'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: '修改时间戳字段',
                 desc: '修改时间戳的前言字段名称。留空仅使用文件系统日期。',
-                placeholder: '修改时间'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: '时间戳格式',

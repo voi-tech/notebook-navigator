@@ -1356,7 +1356,7 @@ export const STRINGS_NL = {
             propertyFields: {
                 name: 'Weer te geven eigenschappen',
                 desc: "Door komma's gescheiden lijst van frontmatter-eigenschappen om weer te geven in het navigatiepaneel en als badges in bestandsitems. Lijst-eigenschappen tonen één badge per waarde.",
-                placeholder: 'status, type, categorie',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Eigenschap toevoegen',
                 emptySelectorNotice: 'Geen eigenschappen gevonden in de metadatacache.'
             },
@@ -1437,7 +1437,7 @@ export const STRINGS_NL = {
             featureImageExcludeProperties: {
                 name: 'Notities met eigenschappen uitsluiten',
                 desc: 'Kommagescheiden lijst van frontmatter-eigenschappen. Notities met een van deze eigenschappen slaan geen uitgelichte afbeeldingen op.',
-                placeholder: 'privé, vertrouwelijk'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1691,7 +1691,7 @@ export const STRINGS_NL = {
             frontmatterNameField: {
                 name: 'Naamvelden',
                 desc: 'Kommagescheiden lijst van frontmatter-velden. Eerste niet-lege waarde wordt gebruikt. Valt terug op bestandsnaam.',
-                placeholder: 'titel, naam'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Aangemaakt tijdstempelveld',

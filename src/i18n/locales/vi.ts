@@ -1352,7 +1352,7 @@ export const STRINGS_VI = {
             propertyFields: {
                 name: 'Các thuộc tính để hiển thị',
                 desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để hiển thị trong bảng điều hướng và dưới dạng huy hiệu trong các mục tệp. Thuộc tính dạng danh sách hiển thị một huy hiệu cho mỗi giá trị.',
-                placeholder: 'trạng thái, loại, danh mục',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Thêm khóa thuộc tính',
                 emptySelectorNotice: 'Không tìm thấy khóa thuộc tính trong bộ nhớ đệm siêu dữ liệu.'
             },
@@ -1395,7 +1395,7 @@ export const STRINGS_VI = {
             previewProperties: {
                 name: 'Thuộc tính xem trước',
                 desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy để kiểm tra văn bản xem trước. Thuộc tính đầu tiên có văn bản sẽ được dùng.',
-                placeholder: 'tóm tắt, mô tả, abstract',
+                placeholder: 'summary, description, abstract',
                 info: 'Nếu không tìm thấy văn bản xem trước trong các thuộc tính đã chỉ định, xem trước sẽ được tạo từ nội dung ghi chú.'
             },
             previewRows: {
@@ -1433,7 +1433,7 @@ export const STRINGS_VI = {
             featureImageExcludeProperties: {
                 name: 'Loại trừ ghi chú có thuộc tính',
                 desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy. Ghi chú chứa bất kỳ thuộc tính nào trong số này không lưu trữ ảnh nổi bật.',
-                placeholder: 'riêng tư, bí mật'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1687,7 +1687,7 @@ export const STRINGS_VI = {
             frontmatterNameField: {
                 name: 'Các trường tên',
                 desc: 'Danh sách trường frontmatter phân cách bằng dấu phẩy. Sử dụng giá trị không trống đầu tiên. Quay lại tên tệp.',
-                placeholder: 'tiêu đề, tên'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Trường dấu thời gian tạo',

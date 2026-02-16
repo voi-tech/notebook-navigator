@@ -1358,7 +1358,7 @@ export const STRINGS_FR = {
             propertyFields: {
                 name: 'Propriétés à afficher',
                 desc: 'Liste de propriétés de métadonnées séparées par des virgules à afficher dans le panneau de navigation et sous forme de badges dans les éléments de fichier. Les propriétés de liste affichent un badge par valeur.',
-                placeholder: 'statut, type, catégorie',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Ajouter une clé de propriété',
                 emptySelectorNotice: 'Aucune clé de propriété trouvée dans le cache de métadonnées.'
             },
@@ -1401,7 +1401,7 @@ export const STRINGS_FR = {
             previewProperties: {
                 name: "Propriétés d'aperçu",
                 desc: "Liste séparée par des virgules de propriétés frontmatter pour le texte d'aperçu. La première propriété avec du texte sera utilisée.",
-                placeholder: 'résumé, description, abstrait',
+                placeholder: 'summary, description, abstract',
                 info: "Si aucun texte d'aperçu n'est trouvé dans les propriétés spécifiées, l'aperçu sera généré à partir du contenu de la note."
             },
             previewRows: {
@@ -1439,7 +1439,7 @@ export const STRINGS_FR = {
             featureImageExcludeProperties: {
                 name: 'Exclure les notes avec propriétés',
                 desc: "Liste de propriétés frontmatter séparées par des virgules. Les notes contenant l'une de ces propriétés ne stockent pas d'images principales.",
-                placeholder: 'privé, confidentiel'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1605,7 +1605,7 @@ export const STRINGS_FR = {
             folderNoteName: {
                 name: 'Nom de la note de dossier',
                 desc: 'Nom de la note de dossier. Laisser vide pour utiliser le même nom que le dossier.',
-                placeholder: 'Laisser vide pour le nom du dossier'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'Modèle de nom de note de dossier',
@@ -1668,7 +1668,7 @@ export const STRINGS_FR = {
             frontmatterNameField: {
                 name: 'Champs de nom',
                 desc: 'Liste de champs frontmatter séparés par des virgules. La première valeur non vide est utilisée. Retombe sur le nom du fichier.',
-                placeholder: 'titre, nom'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: "Champ d'icône",
@@ -1698,12 +1698,12 @@ export const STRINGS_FR = {
             frontmatterCreatedField: {
                 name: "Champ d'horodatage de création",
                 desc: "Nom du champ frontmatter pour l'horodatage de création. Laisser vide pour utiliser uniquement la date du système.",
-                placeholder: 'créé'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: "Champ d'horodatage de modification",
                 desc: "Nom du champ frontmatter pour l'horodatage de modification. Laisser vide pour utiliser uniquement la date du système.",
-                placeholder: 'modifié'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: "Format d'horodatage",

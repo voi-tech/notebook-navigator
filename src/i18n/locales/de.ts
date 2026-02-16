@@ -1356,7 +1356,7 @@ export const STRINGS_DE = {
             propertyFields: {
                 name: 'Anzuzeigende Eigenschaften',
                 desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften zur Anzeige im Navigationsbereich und als Badges in Datei-Elementen. Listen-Eigenschaften zeigen ein Badge pro Wert.',
-                placeholder: 'status, typ, kategorie',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Eigenschaftsschlüssel hinzufügen',
                 emptySelectorNotice: 'Keine Eigenschaftsschlüssel im Metadaten-Cache gefunden.'
             },
@@ -1399,7 +1399,7 @@ export const STRINGS_DE = {
             previewProperties: {
                 name: 'Vorschau-Eigenschaften',
                 desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften für Vorschautext. Die erste Eigenschaft mit Text wird verwendet.',
-                placeholder: 'zusammenfassung, beschreibung, abstrakt',
+                placeholder: 'summary, description, abstract',
                 info: 'Wenn kein Vorschautext in den angegebenen Eigenschaften gefunden wird, wird die Vorschau aus dem Notizinhalt generiert.'
             },
             previewRows: {
@@ -1437,7 +1437,7 @@ export const STRINGS_DE = {
             featureImageExcludeProperties: {
                 name: 'Notizen mit Eigenschaften ausschließen',
                 desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften. Notizen mit einer dieser Eigenschaften speichern keine Feature-Bilder.',
-                placeholder: 'privat, vertraulich'
+                placeholder: 'private, confidential'
             },
             downloadExternalFeatureImages: {
                 name: 'Externe Bilder herunterladen',
@@ -1602,7 +1602,7 @@ export const STRINGS_DE = {
             folderNoteName: {
                 name: 'Name der Ordnernotiz',
                 desc: 'Name der Ordnernotiz. Leer lassen, um denselben Namen wie der Ordner zu verwenden.',
-                placeholder: 'Leer lassen für Ordnernamen'
+                placeholder: 'index'
             },
             folderNoteNamePattern: {
                 name: 'Namensmuster der Ordnernotiz',
@@ -1665,7 +1665,7 @@ export const STRINGS_DE = {
             frontmatterNameField: {
                 name: 'Namensfelder',
                 desc: 'Kommagetrennte Liste von Frontmatter-Feldern. Erster nicht-leerer Wert wird verwendet. Fällt auf Dateinamen zurück.',
-                placeholder: 'titel, name'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: 'Icon-Feld',
@@ -1695,12 +1695,12 @@ export const STRINGS_DE = {
             frontmatterCreatedField: {
                 name: 'Feld für Erstellungszeitstempel',
                 desc: 'Frontmatter-Feldname für den Erstellungszeitstempel. Leer lassen, um nur das Dateisystemdatum zu verwenden.',
-                placeholder: 'erstellt'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'Feld für Änderungszeitstempel',
                 desc: 'Frontmatter-Feldname für den Änderungszeitstempel. Leer lassen, um nur das Dateisystemdatum zu verwenden.',
-                placeholder: 'geändert'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'Zeitstempelformat',

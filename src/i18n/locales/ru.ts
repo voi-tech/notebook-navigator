@@ -1353,7 +1353,7 @@ export const STRINGS_RU = {
             propertyFields: {
                 name: 'Свойства для отображения',
                 desc: 'Список свойств метаданных через запятую для отображения в панели навигации и в виде значков в элементах файлов. Свойства со списком значений отображают один значок на значение.',
-                placeholder: 'статус, тип, категория',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Добавить ключ свойства',
                 emptySelectorNotice: 'Ключи свойств не найдены в кеше метаданных.'
             },
@@ -1434,7 +1434,7 @@ export const STRINGS_RU = {
             featureImageExcludeProperties: {
                 name: 'Исключить заметки со свойствами',
                 desc: 'Список свойств frontmatter через запятую. Заметки, содержащие любое из этих свойств, не сохраняют главные изображения.',
-                placeholder: 'личное, конфиденциальное'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1688,7 +1688,7 @@ export const STRINGS_RU = {
             frontmatterNameField: {
                 name: 'Поля названия',
                 desc: 'Список полей frontmatter через запятую. Используется первое непустое значение. Возвращается к имени файла.',
-                placeholder: 'заголовок, название'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Поле даты создания',

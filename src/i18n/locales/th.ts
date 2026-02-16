@@ -1351,7 +1351,7 @@ export const STRINGS_TH = {
             propertyFields: {
                 name: 'คุณสมบัติที่จะแสดง',
                 desc: 'รายการคุณสมบัติ frontmatter คั่นด้วยเครื่องหมายจุลภาค เพื่อแสดงในแผงนำทางและเป็นป้ายในรายการไฟล์ คุณสมบัติที่เป็นรายการจะแสดงหนึ่งป้ายต่อค่า',
-                placeholder: 'สถานะ, ประเภท, หมวดหมู่',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'เพิ่มคีย์คุณสมบัติ',
                 emptySelectorNotice: 'ไม่พบคีย์คุณสมบัติในแคชเมตาดาต้า'
             },
@@ -1432,7 +1432,7 @@ export const STRINGS_TH = {
             featureImageExcludeProperties: {
                 name: 'ยกเว้นโน้ตที่มีคุณสมบัติ',
                 desc: 'รายการคุณสมบัติ frontmatter คั่นด้วยเครื่องหมายจุลภาค โน้ตที่มีคุณสมบัติใดๆ เหล่านี้จะไม่เก็บภาพเด่น',
-                placeholder: 'ส่วนตัว, ลับ'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1686,7 +1686,7 @@ export const STRINGS_TH = {
             frontmatterNameField: {
                 name: 'ฟิลด์ชื่อ (หลายรายการ)',
                 desc: 'รายการฟิลด์ frontmatter คั่นด้วยเครื่องหมายจุลภาค ใช้ค่าแรกที่ไม่ว่าง กลับไปใช้ชื่อไฟล์',
-                placeholder: 'หัวข้อ, ชื่อ'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'ฟิลด์ timestamp สร้าง',

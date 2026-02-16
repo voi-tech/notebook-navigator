@@ -1355,7 +1355,7 @@ export const STRINGS_PL = {
             propertyFields: {
                 name: 'Właściwości do wyświetlenia',
                 desc: 'Rozdzielona przecinkami lista właściwości frontmatter do wyświetlenia w panelu nawigacji i jako odznaki w elementach plików. Właściwości z wieloma wartościami wyświetlają jedną odznakę na wartość.',
-                placeholder: 'status, typ, kategoria',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Dodaj klucz właściwości',
                 emptySelectorNotice: 'Nie znaleziono kluczy właściwości w pamięci podręcznej metadanych.'
             },
@@ -1436,7 +1436,7 @@ export const STRINGS_PL = {
             featureImageExcludeProperties: {
                 name: 'Wyklucz notatki z właściwościami',
                 desc: 'Lista właściwości frontmatter oddzielonych przecinkami. Notatki zawierające dowolną z tych właściwości nie przechowują obrazów głównych.',
-                placeholder: 'prywatny, poufny'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1665,7 +1665,7 @@ export const STRINGS_PL = {
             frontmatterNameField: {
                 name: 'Pola nazwy',
                 desc: 'Lista pól frontmatter oddzielonych przecinkami. Używana jest pierwsza niepusta wartość. Powrót do nazwy pliku.',
-                placeholder: 'tytuł, nazwa'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: 'Pole ikony',

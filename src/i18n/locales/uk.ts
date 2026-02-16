@@ -1353,7 +1353,7 @@ export const STRINGS_UK = {
             propertyFields: {
                 name: 'Властивості для відображення',
                 desc: 'Список властивостей метаданих через кому для відображення на панелі навігації та у вигляді значків в елементах файлів. Властивості зі списком значень відображають один значок на значення.',
-                placeholder: 'статус, тип, категорія',
+                placeholder: 'status, type, category',
                 addButtonTooltip: 'Додати ключ властивості',
                 emptySelectorNotice: 'Ключі властивостей не знайдено в кеші метаданих.'
             },
@@ -1396,7 +1396,7 @@ export const STRINGS_UK = {
             previewProperties: {
                 name: 'Властивості попереднього перегляду',
                 desc: 'Список властивостей frontmatter для перевірки на текст попереднього перегляду, розділених комами. Буде використано першу властивість з текстом.',
-                placeholder: 'підсумок, опис, анотація',
+                placeholder: 'summary, description, abstract',
                 info: 'Якщо текст попереднього перегляду не знайдено у вказаних властивостях, попередній перегляд буде згенеровано з вмісту нотатки.'
             },
             previewRows: {
@@ -1434,7 +1434,7 @@ export const STRINGS_UK = {
             featureImageExcludeProperties: {
                 name: 'Виключити нотатки з властивостями',
                 desc: 'Список властивостей frontmatter, розділених комами. Нотатки, що містять будь-яку з цих властивостей, не зберігають головні зображення.',
-                placeholder: 'приватне, конфіденційне'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1663,17 +1663,17 @@ export const STRINGS_UK = {
             frontmatterIconField: {
                 name: 'Поле іконки',
                 desc: 'Поле frontmatter для іконок файлів. Залиште порожнім для використання іконок, збережених у налаштуваннях.',
-                placeholder: 'іконка'
+                placeholder: 'icon'
             },
             frontmatterColorField: {
                 name: 'Поле кольору',
                 desc: 'Поле frontmatter для кольорів файлів. Залиште порожнім для використання кольорів, збережених у налаштуваннях.',
-                placeholder: 'колір'
+                placeholder: 'color'
             },
             frontmatterBackgroundField: {
                 name: 'Поле фону',
                 desc: 'Поле frontmatter для кольорів фону. Залиште порожнім для використання кольорів фону, збережених у налаштуваннях.',
-                placeholder: 'фон'
+                placeholder: 'background'
             },
             frontmatterMigration: {
                 name: 'Перенести іконки та кольори з налаштувань',
@@ -1688,17 +1688,17 @@ export const STRINGS_UK = {
             frontmatterNameField: {
                 name: 'Поля назви',
                 desc: 'Список полів frontmatter через кому. Використовується перше непорожнє значення. Повертається до назви файлу.',
-                placeholder: 'заголовок, назва'
+                placeholder: 'title, name'
             },
             frontmatterCreatedField: {
                 name: 'Поле часової мітки створення',
                 desc: 'Назва поля frontmatter для часової мітки створення. Залиште порожнім для використання лише дати файлової системи.',
-                placeholder: 'створено'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: 'Поле часової мітки зміни',
                 desc: 'Назва поля frontmatter для часової мітки зміни. Залиште порожнім для використання лише дати файлової системи.',
-                placeholder: 'змінено'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: 'Формат часової мітки',

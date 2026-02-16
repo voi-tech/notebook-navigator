@@ -1393,7 +1393,7 @@ export const STRINGS_ZH_TW = {
             previewProperties: {
                 name: '預覽屬性',
                 desc: '用於尋找預覽文字的前置屬性的逗號分隔列表。將使用第一個包含文字的屬性。',
-                placeholder: '摘要, 描述, 概要',
+                placeholder: 'summary, description, abstract',
                 info: '如果在指定的屬性中找不到預覽文字，預覽將從筆記內容中產生。'
             },
             previewRows: {
@@ -1431,7 +1431,7 @@ export const STRINGS_ZH_TW = {
             featureImageExcludeProperties: {
                 name: '排除含有屬性的筆記',
                 desc: '逗號分隔的前置中繼資料屬性列表。包含這些屬性的筆記不會儲存特色圖片。',
-                placeholder: '私密, 機密'
+                placeholder: 'private, confidential'
             },
 
             downloadExternalFeatureImages: {
@@ -1659,7 +1659,7 @@ export const STRINGS_ZH_TW = {
             frontmatterNameField: {
                 name: '名稱欄位（多個）',
                 desc: '逗號分隔的前置欄位列表。使用第一個非空值。回退到檔名。',
-                placeholder: '標題, 名稱'
+                placeholder: 'title, name'
             },
             frontmatterIconField: {
                 name: '圖示欄位',
@@ -1689,12 +1689,12 @@ export const STRINGS_ZH_TW = {
             frontmatterCreatedField: {
                 name: '建立時間戳記欄位',
                 desc: '建立時間戳記的前置欄位名稱。留空僅使用檔案系統日期。',
-                placeholder: '建立時間'
+                placeholder: 'created'
             },
             frontmatterModifiedField: {
                 name: '修改時間戳記欄位',
                 desc: '修改時間戳記的前置欄位名稱。留空僅使用檔案系統日期。',
-                placeholder: '修改時間'
+                placeholder: 'modified'
             },
             frontmatterDateFormat: {
                 name: '時間戳記格式',
