@@ -40,6 +40,10 @@
     display: none;
 }
 
+.nn-settings-tabs-nav-row.is-icons-hidden .nn-settings-tab-icon {
+    display: none;
+}
+
 /* Separator between primary and secondary tab rows */
 .nn-settings-tabs-nav-secondary {
     gap: var(--size-2-2);
@@ -56,7 +60,7 @@
     font-size: var(--font-ui-small);
 }
 
-/* Icon inside primary tab buttons */
+/* Icon inside settings tab buttons */
 .nn-settings-tab-icon {
     display: inline-flex;
     align-items: center;
