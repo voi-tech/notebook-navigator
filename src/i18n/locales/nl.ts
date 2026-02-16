@@ -1248,9 +1248,9 @@ export const STRINGS_NL = {
                 }
             },
             excludedNotes: {
-                name: 'Notities met eigenschappen verbergen (kluisprofiel)',
-                desc: 'Kommagescheiden lijst van frontmatter-eigenschappen. Notities met een van deze eigenschappen worden verborgen (bijv. draft, private, archived).',
-                placeholder: 'draft, private'
+                name: 'Notities verbergen met eigenschapsregels (kluisprofiel)',
+                desc: 'Kommagescheiden lijst van frontmatter-regels. Gebruik `key` of `key=value` items (bijv. status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Bestanden verbergen (kluisprofiel)',

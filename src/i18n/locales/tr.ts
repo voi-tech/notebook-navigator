@@ -1246,9 +1246,9 @@ export const STRINGS_TR = {
                 }
             },
             excludedNotes: {
-                name: 'Özellikli notları gizle (kasa profili)',
-                desc: 'Virgülle ayrılmış frontmatter özellikleri listesi. Bu özelliklerden herhangi birini içeren notlar gizlenecektir (örn. taslak, özel, arşiv).',
-                placeholder: 'taslak, özel'
+                name: 'Özellik kurallarıyla notları gizle (kasa profili)',
+                desc: 'Virgülle ayrılmış frontmatter kuralları listesi. `key` veya `key=value` girdileri kullanın (örn. status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Dosyaları gizle (kasa profili)',

@@ -1248,9 +1248,9 @@ export const STRINGS_PT = {
                 }
             },
             excludedNotes: {
-                name: 'Ocultar notas com propriedades (perfil do cofre)',
-                desc: 'Lista de propriedades frontmatter separadas por vírgulas. Notas contendo qualquer destas propriedades serão ocultadas (ex: rascunho, privado, arquivo).',
-                placeholder: 'rascunho, privado'
+                name: 'Ocultar notas com regras de propriedades (perfil do cofre)',
+                desc: 'Lista de regras de frontmatter separadas por vírgulas. Use entradas `key` ou `key=value` (ex: status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Ocultar ficheiros (perfil do cofre)',

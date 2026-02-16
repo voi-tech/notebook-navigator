@@ -1245,9 +1245,9 @@ export const STRINGS_FA = {
                 }
             },
             excludedNotes: {
-                name: 'مخفی کردن یادداشت‌ها با ویژگی‌ها (پروفایل خزانه)',
-                desc: 'لیست ویژگی‌های فرانت‌متر جدا شده با کاما. یادداشت‌های حاوی هر یک از این ویژگی‌ها مخفی می‌شوند (مثل پیش‌نویس، خصوصی، بایگانی).',
-                placeholder: 'پیش‌نویس، خصوصی'
+                name: 'مخفی کردن یادداشت‌ها با قوانین ویژگی (پروفایل خزانه)',
+                desc: 'لیست قوانین فرانت‌متر جدا شده با کاما. از ورودی‌های `key` یا `key=value` استفاده کنید (مثل status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'مخفی کردن فایل‌ها (پروفایل خزانه)',

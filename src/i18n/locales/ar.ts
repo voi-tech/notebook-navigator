@@ -1244,9 +1244,9 @@ export const STRINGS_AR = {
                 }
             },
             excludedNotes: {
-                name: 'إخفاء الملاحظات ذات الخصائص (ملف الخزنة)',
-                desc: 'قائمة مفصولة بفاصلة من خصائص البيانات الأمامية. الملاحظات التي تحتوي على أي من هذه الخصائص ستكون مخفية (مثل draft، private، archived).',
-                placeholder: 'draft, private'
+                name: 'إخفاء الملاحظات بقواعد الخصائص (ملف الخزنة)',
+                desc: 'قائمة مفصولة بفاصلة من قواعد البيانات الأمامية. استخدم إدخالات `key` أو `key=value` (مثل status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'إخفاء الملفات (ملف الخزنة)',

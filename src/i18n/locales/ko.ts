@@ -1245,9 +1245,9 @@ export const STRINGS_KO = {
                 }
             },
             excludedNotes: {
-                name: '속성이 있는 노트 숨기기 (볼트 프로필)',
-                desc: '쉼표로 구분된 frontmatter 속성 목록입니다. 이러한 속성 중 하나라도 포함된 노트는 숨겨집니다 (예: draft, private, archived).',
-                placeholder: 'draft, private'
+                name: '속성 규칙으로 노트 숨기기 (볼트 프로필)',
+                desc: '쉼표로 구분된 frontmatter 규칙 목록입니다. `key` 또는 `key=value` 항목을 사용합니다 (예: status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: '파일 숨기기 (볼트 프로필)',

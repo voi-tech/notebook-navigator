@@ -1222,9 +1222,9 @@ export const STRINGS_ZH_TW = {
                 desc: '按 Ctrl+Enter 在新分頁、分割或視窗中開啟所選檔案。'
             },
             excludedNotes: {
-                name: '隱藏帶有屬性的筆記（保險庫設定檔）',
-                desc: '逗號分隔的前置中繼資料屬性列表。包含任何這些屬性的筆記將被隱藏（例如：draft, private, archived）。',
-                placeholder: 'draft, private'
+                name: '依屬性規則隱藏筆記（保險庫設定檔）',
+                desc: '逗號分隔的前置中繼資料規則列表。使用 `key` 或 `key=value` 條目（例如：status=done, published=true, archived）。',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: '隱藏檔案（保險庫設定檔）',

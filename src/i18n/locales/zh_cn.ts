@@ -1222,9 +1222,9 @@ export const STRINGS_ZH_CN = {
                 desc: '按 Ctrl+Enter 在新标签页、分栏或窗口中打开所选文件。'
             },
             excludedNotes: {
-                name: '隐藏带属性的笔记 (库配置)',
-                desc: '逗号分隔的前置元数据属性列表。包含任何这些属性的笔记将被隐藏（例如：draft, private, archived）。',
-                placeholder: 'draft, private'
+                name: '按属性规则隐藏笔记 (库配置)',
+                desc: '逗号分隔的前置元数据规则列表。使用 `key` 或 `key=value` 条目（例如：status=done, published=true, archived）。',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: '隐藏文件 (库配置)',

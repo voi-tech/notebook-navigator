@@ -1227,9 +1227,9 @@ export const STRINGS_ES = {
                 desc: 'Abrir el archivo seleccionado en una nueva pestaña, división o ventana al pulsar Ctrl+Enter.'
             },
             excludedNotes: {
-                name: 'Ocultar notas con propiedades (perfil de bóveda)',
-                desc: 'Lista de propiedades del frontmatter separadas por comas. Las notas que contengan cualquiera de estas propiedades se ocultarán (ej.: draft, private, archived).',
-                placeholder: 'draft, private'
+                name: 'Ocultar notas con reglas de propiedades (perfil de bóveda)',
+                desc: 'Lista de reglas de frontmatter separadas por comas. Use entradas `key` o `key=value` (ej.: status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Ocultar archivos (perfil de bóveda)',

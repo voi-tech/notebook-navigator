@@ -1228,9 +1228,9 @@ export const STRINGS_FR = {
                 desc: 'Ouvrir le fichier sélectionné dans un nouvel onglet, une division ou une fenêtre avec Ctrl+Entrée.'
             },
             excludedNotes: {
-                name: 'Masquer les notes avec propriétés (profil du coffre)',
-                desc: "Liste de propriétés de métadonnées séparées par des virgules. Les notes contenant l'une de ces propriétés seront masquées (ex. : draft, private, archived).",
-                placeholder: 'draft, private'
+                name: 'Masquer les notes avec des règles de propriétés (profil du coffre)',
+                desc: 'Liste de règles de métadonnées séparées par des virgules. Utilisez des entrées `key` ou `key=value` (ex. : status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Masquer les fichiers (profil du coffre)',

@@ -1228,9 +1228,9 @@ export const STRINGS_DE = {
                 desc: 'Ausgewählte Datei in neuem Tab, geteilter Ansicht oder Fenster öffnen mit Strg+Enter.'
             },
             excludedNotes: {
-                name: 'Notizen mit Eigenschaften verstecken (Tresorprofil)',
-                desc: 'Kommagetrennte Liste von Frontmatter-Eigenschaften. Notizen mit diesen Eigenschaften werden ausgeblendet (z.B. Entwurf, privat, archiviert).',
-                placeholder: 'entwurf, privat'
+                name: 'Notizen mit Eigenschaftsregeln verstecken (Tresorprofil)',
+                desc: 'Kommagetrennte Liste von Frontmatter-Regeln. Verwenden Sie `key` oder `key=value` Einträge (z.B. status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Dateien verstecken (Tresorprofil)',

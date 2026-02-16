@@ -1245,9 +1245,9 @@ export const STRINGS_ID = {
                 }
             },
             excludedNotes: {
-                name: 'Sembunyikan catatan dengan properti (profil vault)',
-                desc: 'Daftar properti frontmatter yang dipisahkan koma. Catatan yang berisi properti ini akan disembunyikan (misal, draf, pribadi, arsip).',
-                placeholder: 'draf, pribadi'
+                name: 'Sembunyikan catatan dengan aturan properti (profil vault)',
+                desc: 'Daftar aturan frontmatter yang dipisahkan koma. Gunakan entri `key` atau `key=value` (misal, status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Sembunyikan file (profil vault)',

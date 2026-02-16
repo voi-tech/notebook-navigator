@@ -1247,9 +1247,9 @@ export const STRINGS_PL = {
                 }
             },
             excludedNotes: {
-                name: 'Ukryj notatki z właściwościami (profil sejfu)',
-                desc: 'Lista właściwości frontmatter oddzielonych przecinkami. Notatki zawierające którekolwiek z tych właściwości będą ukryte (np. draft, private, archived).',
-                placeholder: 'draft, private'
+                name: 'Ukryj notatki według reguł właściwości (profil sejfu)',
+                desc: 'Lista reguł frontmatter oddzielonych przecinkami. Użyj wpisów `key` lub `key=value` (np. status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Ukryj pliki (profil sejfu)',

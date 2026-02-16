@@ -1224,9 +1224,9 @@ export const STRINGS_JA = {
                 desc: 'Ctrl+Enterで選択したファイルを新しいタブ、分割、またはウィンドウで開きます。'
             },
             excludedNotes: {
-                name: 'プロパティ付きノートを非表示 (ボルトプロファイル)',
-                desc: 'カンマ区切りのフロントマター属性のリスト。これらの属性を含むノートは非表示になります（例：draft, private, archived）。',
-                placeholder: 'draft, private'
+                name: 'プロパティルールでノートを非表示 (ボルトプロファイル)',
+                desc: 'カンマ区切りのフロントマタールールのリスト。`key` または `key=value` エントリを使用します（例：status=done, published=true, archived）。',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'ファイルを非表示 (ボルトプロファイル)',

@@ -1245,9 +1245,9 @@ export const STRINGS_UK = {
                 }
             },
             excludedNotes: {
-                name: 'Приховати нотатки з властивостями (профіль сховища)',
-                desc: 'Список властивостей frontmatter, розділених комами. Нотатки, що містять будь-яку з цих властивостей, будуть приховані (наприклад, чернетка, приватний, архів).',
-                placeholder: 'чернетка, приватний'
+                name: 'Приховати нотатки за правилами властивостей (профіль сховища)',
+                desc: 'Список правил frontmatter, розділених комами. Використовуйте записи `key` або `key=value` (наприклад, status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Приховати файли (профіль сховища)',

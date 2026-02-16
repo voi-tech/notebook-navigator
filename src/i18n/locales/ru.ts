@@ -1245,9 +1245,9 @@ export const STRINGS_RU = {
                 }
             },
             excludedNotes: {
-                name: 'Скрыть заметки со свойствами (профиль хранилища)',
-                desc: 'Список свойств frontmatter через запятую. Заметки, содержащие любое из этих свойств, будут скрыты (например, draft, private, archived).',
-                placeholder: 'draft, private'
+                name: 'Скрыть заметки по правилам свойств (профиль хранилища)',
+                desc: 'Список правил frontmatter через запятую. Используйте записи `key` или `key=value` (например, status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Скрыть файлы (профиль хранилища)',

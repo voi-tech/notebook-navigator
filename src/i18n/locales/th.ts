@@ -1244,9 +1244,9 @@ export const STRINGS_TH = {
                 }
             },
             excludedNotes: {
-                name: 'ซ่อนโน้ตที่มีคุณสมบัติ (โปรไฟล์ห้องนิรภัย)',
-                desc: 'รายการคุณสมบัติ frontmatter คั่นด้วยเครื่องหมายจุลภาค โน้ตที่มีคุณสมบัติเหล่านี้จะถูกซ่อน (เช่น ฉบับร่าง, ส่วนตัว, เก็บถาวร)',
-                placeholder: 'ฉบับร่าง, ส่วนตัว'
+                name: 'ซ่อนโน้ตตามกฎคุณสมบัติ (โปรไฟล์ห้องนิรภัย)',
+                desc: 'รายการกฎ frontmatter คั่นด้วยเครื่องหมายจุลภาค ใช้รูปแบบ `key` หรือ `key=value` (เช่น status=done, published=true, archived)',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'ซ่อนไฟล์ (โปรไฟล์ห้องนิรภัย)',

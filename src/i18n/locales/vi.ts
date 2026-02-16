@@ -1245,9 +1245,9 @@ export const STRINGS_VI = {
                 }
             },
             excludedNotes: {
-                name: 'Ẩn ghi chú có thuộc tính (hồ sơ vault)',
-                desc: 'Danh sách thuộc tính frontmatter phân cách bằng dấu phẩy. Ghi chú chứa bất kỳ thuộc tính nào sẽ bị ẩn (ví dụ: nháp, riêng tư, lưu trữ).',
-                placeholder: 'nháp, riêng tư'
+                name: 'Ẩn ghi chú theo quy tắc thuộc tính (hồ sơ vault)',
+                desc: 'Danh sách quy tắc frontmatter phân cách bằng dấu phẩy. Sử dụng mục `key` hoặc `key=value` (ví dụ: status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Ẩn tệp (hồ sơ vault)',

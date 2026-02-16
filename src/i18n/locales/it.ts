@@ -1246,9 +1246,9 @@ export const STRINGS_IT = {
                 }
             },
             excludedNotes: {
-                name: 'Nascondi note con proprietà (profilo vault)',
-                desc: 'Lista di proprietà frontmatter separate da virgola. Le note contenenti una qualsiasi di queste proprietà saranno nascoste (es. bozza, privato, archiviato).',
-                placeholder: 'bozza, privato'
+                name: 'Nascondi note con regole di proprietà (profilo vault)',
+                desc: 'Lista di regole frontmatter separate da virgola. Usa voci `key` o `key=value` (es. status=done, published=true, archived).',
+                placeholder: 'status=done, published=true, archived'
             },
             excludedFileNamePatterns: {
                 name: 'Nascondi file (profilo vault)',
