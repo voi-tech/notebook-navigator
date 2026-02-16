@@ -184,7 +184,7 @@ export const TIMEOUTS = {
     /** Debounce for content processing and tree updates */
     DEBOUNCE_CONTENT: 300,
     /** Debounce for tag tree rebuild requests */
-    DEBOUNCE_TAG_TREE: 2000,
+    DEBOUNCE_TAG_TREE: 500,
     /** Debounce for settings text input */
     DEBOUNCE_SETTINGS: 1000,
 
