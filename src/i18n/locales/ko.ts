@@ -828,6 +828,16 @@ export const STRINGS_KO = {
                 desc: '속성 정렬과 함께 사용됩니다. 이 frontmatter 속성이 있는 노트가 먼저 나열되고 속성 값으로 정렬됩니다. 배열은 하나의 값으로 결합됩니다.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: '보조 정렬',
+                desc: '속성 정렬 사용 시 노트의 속성 값이 같거나 속성 값이 없을 때 적용됩니다.',
+                options: {
+                    title: '제목',
+                    filename: '파일 이름',
+                    created: '생성 날짜',
+                    modified: '편집 날짜'
+                }
+            },
             revealFileOnListChanges: {
                 name: '목록 변경 시 선택된 파일로 스크롤',
                 desc: '노트 고정, 하위 노트 표시, 폴더 모양 변경 또는 파일 작업 실행 시 선택된 파일로 스크롤합니다.'

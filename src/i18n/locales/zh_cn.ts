@@ -826,6 +826,16 @@ export const STRINGS_ZH_CN = {
                 desc: '用于属性排序。具有此 frontmatter 属性的笔记首先列出，并按属性值排序。数组合并为单一值。',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: '次要排序',
+                desc: '与属性排序配合使用，当笔记具有相同的属性值或没有属性值时生效。',
+                options: {
+                    title: '标题',
+                    filename: '文件名',
+                    created: '创建日期',
+                    modified: '编辑日期'
+                }
+            },
             revealFileOnListChanges: {
                 name: '列表变更时滚动到选定文件',
                 desc: '在固定笔记、显示后代笔记、更改文件夹外观或执行文件操作时滚动到选定的文件。'

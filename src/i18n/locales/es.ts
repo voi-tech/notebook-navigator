@@ -830,6 +830,16 @@ export const STRINGS_ES = {
                 desc: 'Utilizado con la ordenación por propiedad. Las notas con esta propiedad de frontmatter se listan primero y se ordenan por el valor de la propiedad. Los arrays se combinan en un valor.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Orden secundario',
+                desc: 'Se usa con el orden por propiedad cuando las notas tienen el mismo valor de propiedad o no tienen valor.',
+                options: {
+                    title: 'Título',
+                    filename: 'Nombre de archivo',
+                    created: 'Fecha de creación',
+                    modified: 'Fecha de edición'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Desplazar al archivo seleccionado cuando cambia la lista',
                 desc: 'Desplazar al archivo seleccionado al anclar notas, mostrar notas descendientes, cambiar la apariencia de carpetas o ejecutar operaciones de archivos.'

@@ -828,6 +828,16 @@ export const STRINGS_JA = {
                 desc: 'プロパティソートで使用されます。このfrontmatterプロパティを持つノートが最初にリストされ、プロパティの値でソートされます。配列は1つの値に結合されます。',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: '二次ソート',
+                desc: 'プロパティソート使用時、同じプロパティ値またはプロパティ値がないノートに適用されます。',
+                options: {
+                    title: 'タイトル',
+                    filename: 'ファイル名',
+                    created: '作成日',
+                    modified: '編集日'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'リスト変更時に選択ファイルへスクロール',
                 desc: 'ノートのピン留め、子孫ノートの表示、フォルダ外観の変更、ファイル操作の実行時に選択したファイルへスクロールします。'

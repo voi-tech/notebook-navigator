@@ -830,6 +830,16 @@ export const STRINGS_NL = {
                 desc: 'Gebruikt met Eigenschap-sortering. Notities met deze frontmatter-eigenschap worden eerst weergegeven en gesorteerd op de eigenschapswaarde. Arrays worden samengevoegd tot één waarde.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Secundaire sortering',
+                desc: 'Gebruikt bij Eigenschap-sortering wanneer notities dezelfde eigenschapswaarde of geen eigenschapswaarde hebben.',
+                options: {
+                    title: 'Titel',
+                    filename: 'Bestandsnaam',
+                    created: 'Aanmaakdatum',
+                    modified: 'Bewerkingsdatum'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Scroll naar geselecteerd bestand bij lijstwijzigingen',
                 desc: 'Scroll naar het geselecteerde bestand bij het vastpinnen van notities, tonen van afstammelingen-notities, wijzigen van mapweergave of uitvoeren van bestandsoperaties.'

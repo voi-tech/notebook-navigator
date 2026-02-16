@@ -826,6 +826,16 @@ export const STRINGS_ZH_TW = {
                 desc: '用於屬性排序。具有此 frontmatter 屬性的筆記首先列出，並按屬性值排序。陣列合併為單一值。',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: '次要排序',
+                desc: '與屬性排序配合使用，當筆記具有相同的屬性值或沒有屬性值時生效。',
+                options: {
+                    title: '標題',
+                    filename: '檔案名稱',
+                    created: '建立日期',
+                    modified: '編輯日期'
+                }
+            },
             revealFileOnListChanges: {
                 name: '列表變更時捲動到選定檔案',
                 desc: '在釘選筆記、顯示後代筆記、變更資料夾外觀或執行檔案操作時捲動到選定的檔案。'

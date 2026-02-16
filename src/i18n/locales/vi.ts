@@ -828,6 +828,16 @@ export const STRINGS_VI = {
                 desc: 'Dùng với sắp xếp theo thuộc tính. Ghi chú có thuộc tính frontmatter này được liệt kê trước và sắp xếp theo giá trị thuộc tính. Mảng được kết hợp thành một giá trị.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Sắp xếp phụ',
+                desc: 'Dùng với sắp xếp theo thuộc tính khi các ghi chú có cùng giá trị thuộc tính hoặc không có giá trị thuộc tính.',
+                options: {
+                    title: 'Tiêu đề',
+                    filename: 'Tên tệp',
+                    created: 'Ngày tạo',
+                    modified: 'Ngày chỉnh sửa'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Cuộn đến tệp đã chọn khi danh sách thay đổi',
                 desc: 'Cuộn đến tệp đã chọn khi ghim ghi chú, hiện ghi chú con, đổi giao diện thư mục hoặc thao tác tệp.'

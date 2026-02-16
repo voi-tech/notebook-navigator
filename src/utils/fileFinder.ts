@@ -281,14 +281,14 @@ function sortNavigationFiles(
             return getDisplayName(file, { fn: metadata.fn }, settings);
         };
 
-        sortFiles(files, sortOption, getCreatedTime, getModifiedTime, getTitle, getPropertySortValue);
+        sortFiles(files, sortOption, getCreatedTime, getModifiedTime, getTitle, getPropertySortValue, settings.propertySortSecondary);
         return;
     }
 
     const getCreatedTime = (file: TFile) => file.stat.ctime;
     const getModifiedTime = (file: TFile) => file.stat.mtime;
     const getTitle = (file: TFile) => file.basename;
-    sortFiles(files, sortOption, getCreatedTime, getModifiedTime, getTitle, getPropertySortValue);
+    sortFiles(files, sortOption, getCreatedTime, getModifiedTime, getTitle, getPropertySortValue, settings.propertySortSecondary);
 }
 
 /**

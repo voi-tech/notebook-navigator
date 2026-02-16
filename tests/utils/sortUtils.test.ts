@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sortFiles } from '../../src/utils/sortUtils';
+import { sortFiles, shouldRefreshOnFileModifyForSort, shouldRefreshOnMetadataChangeForSort } from '../../src/utils/sortUtils';
 import { createTestTFile } from './createTestTFile';
 
 describe('sortFiles', () => {
@@ -125,5 +125,200 @@ describe('sortFiles', () => {
         );
 
         expect(files.map(file => file.basename)).toEqual(['with-b', 'with-a', 'missing-z', 'missing-a']);
+    });
+
+    it('sorts by property then created date when configured', () => {
+        const propertyValueByPath = new Map<string, string | null>([
+            ['z/one.md', 'a'],
+            ['z/two.md', 'a'],
+            ['z/three.md', 'a']
+        ]);
+        const createdTimeByPath = new Map<string, number>([
+            ['z/one.md', 10],
+            ['z/two.md', 30],
+            ['z/three.md', 20]
+        ]);
+
+        const files = [createTestTFile('z/two.md'), createTestTFile('z/three.md'), createTestTFile('z/one.md')];
+
+        sortFiles(
+            files,
+            'property-asc',
+            file => createdTimeByPath.get(file.path) ?? 0,
+            () => 0,
+            file => file.basename,
+            file => propertyValueByPath.get(file.path) ?? null,
+            'created'
+        );
+
+        expect(files.map(file => file.basename)).toEqual(['one', 'three', 'two']);
+
+        sortFiles(
+            files,
+            'property-desc',
+            file => createdTimeByPath.get(file.path) ?? 0,
+            () => 0,
+            file => file.basename,
+            file => propertyValueByPath.get(file.path) ?? null,
+            'created'
+        );
+
+        expect(files.map(file => file.basename)).toEqual(['two', 'three', 'one']);
+    });
+
+    it('sorts by property then file name when configured', () => {
+        const propertyValueByPath = new Map<string, string | null>([
+            ['z/a.md', 'a'],
+            ['z/b.md', 'a']
+        ]);
+        const displayNameByPath = new Map<string, string>([
+            ['z/a.md', 'zebra'],
+            ['z/b.md', 'alpha']
+        ]);
+
+        const files = [createTestTFile('z/b.md'), createTestTFile('z/a.md')];
+
+        sortFiles(
+            files,
+            'property-asc',
+            () => 0,
+            () => 0,
+            file => displayNameByPath.get(file.path) ?? file.basename,
+            file => propertyValueByPath.get(file.path) ?? null,
+            'filename'
+        );
+
+        expect(files.map(file => file.basename)).toEqual(['a', 'b']);
+    });
+});
+
+describe('sort refresh triggers', () => {
+    it('detects when file modify events should refresh sorted results', () => {
+        expect(shouldRefreshOnFileModifyForSort('modified-desc', 'title')).toBe(true);
+        expect(shouldRefreshOnFileModifyForSort('property-asc', 'modified')).toBe(true);
+        expect(shouldRefreshOnFileModifyForSort('property-desc', 'title')).toBe(false);
+        expect(shouldRefreshOnFileModifyForSort('title-asc', 'modified')).toBe(false);
+    });
+
+    it('detects when metadata change events should refresh sorted results', () => {
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'title-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'created',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(false);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: 'order',
+                propertySortSecondary: 'title',
+                useFrontmatterMetadata: false,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(true);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'created',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(false);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'created',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: 'created',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(true);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'modified',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(false);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'modified',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: 'modified'
+            })
+        ).toBe(true);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'modified',
+                useFrontmatterMetadata: false,
+                frontmatterNameField: '',
+                frontmatterCreatedField: 'created',
+                frontmatterModifiedField: 'modified'
+            })
+        ).toBe(false);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'title',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: '',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(false);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'title',
+                useFrontmatterMetadata: true,
+                frontmatterNameField: 'title',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(true);
+
+        expect(
+            shouldRefreshOnMetadataChangeForSort({
+                sortOption: 'property-asc',
+                propertySortKey: '',
+                propertySortSecondary: 'title',
+                useFrontmatterMetadata: false,
+                frontmatterNameField: 'title',
+                frontmatterCreatedField: '',
+                frontmatterModifiedField: ''
+            })
+        ).toBe(false);
     });
 });

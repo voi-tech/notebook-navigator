@@ -830,6 +830,16 @@ export const STRINGS_PL = {
                 desc: 'Używane z sortowaniem według właściwości. Notatki z tą właściwością frontmatter są wyświetlane jako pierwsze i sortowane według wartości właściwości. Tablice są łączone w jedną wartość.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Sortowanie drugorzędne',
+                desc: 'Używane z sortowaniem wg właściwości, gdy notatki mają tę samą wartość właściwości lub nie mają wartości.',
+                options: {
+                    title: 'Tytuł',
+                    filename: 'Nazwa pliku',
+                    created: 'Data utworzenia',
+                    modified: 'Data edycji'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Przewiń do wybranego pliku przy zmianach listy',
                 desc: 'Przewiń do wybranego pliku przy przypinaniu notatek, pokazywaniu notatek potomnych, zmianie wyglądu folderów lub wykonywaniu operacji na plikach.'

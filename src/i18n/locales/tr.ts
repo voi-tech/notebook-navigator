@@ -829,6 +829,16 @@ export const STRINGS_TR = {
                 desc: 'Özellik sıralaması ile kullanılır. Bu frontmatter özelliğine sahip notlar önce listelenir ve özellik değerine göre sıralanır. Diziler tek bir değere birleştirilir.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'İkincil sıralama',
+                desc: 'Özellik sıralamasında notlar aynı özellik değerine sahip olduğunda veya özellik değeri olmadığında kullanılır.',
+                options: {
+                    title: 'Başlık',
+                    filename: 'Dosya adı',
+                    created: 'Oluşturma tarihi',
+                    modified: 'Düzenleme tarihi'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Liste değişikliklerinde seçili dosyaya kaydır',
                 desc: 'Notları sabitleme, alt notları gösterme, klasör görünümünü değiştirme veya dosya işlemleri çalıştırma sırasında seçili dosyaya kaydır.'

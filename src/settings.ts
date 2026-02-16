@@ -1115,6 +1115,7 @@ export type {
     ItemScope,
     MultiSelectModifier,
     ListPaneTitleOption,
+    PropertySortSecondaryOption,
     AlphabeticalDateMode,
     NotePropertyType
 } from './settings/types';

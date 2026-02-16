@@ -827,6 +827,16 @@ export const STRINGS_EN = {
                 desc: 'Used with Property sort. Notes with this frontmatter property are listed first and sorted by the property value. Arrays are joined into one value.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Secondary sort',
+                desc: 'Used with Property sort when notes have the same property value or no property value.',
+                options: {
+                    title: 'Title',
+                    filename: 'File name',
+                    created: 'Date created',
+                    modified: 'Date edited'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Scroll to selected file on list changes',
                 desc: 'Scroll to the selected file when pinning notes, showing descendant notes, changing folder appearance, or running file operations.'

@@ -827,6 +827,16 @@ export const STRINGS_IT = {
                 desc: "Utilizzato con l'ordinamento per proprietà. Le note con questa proprietà frontmatter vengono elencate per prime e ordinate per valore della proprietà. Gli array vengono uniti in un unico valore.",
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Ordinamento secondario',
+                desc: 'Usato con l\'ordinamento per proprietà quando le note hanno lo stesso valore di proprietà o nessun valore.',
+                options: {
+                    title: 'Titolo',
+                    filename: 'Nome file',
+                    created: 'Data di creazione',
+                    modified: 'Data di modifica'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Scorri al file selezionato quando la lista cambia',
                 desc: "Scorri al file selezionato quando fissi note, mostri note discendenti, cambi l'aspetto cartella o esegui operazioni sui file."

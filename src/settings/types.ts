@@ -88,6 +88,15 @@ export function isSortOption(value: unknown): value is SortOption {
     return typeof value === 'string' && SORT_OPTIONS.includes(value as SortOption);
 }
 
+/** Available secondary sort options used when sorting by frontmatter property values. */
+export type PropertySortSecondaryOption = 'title' | 'filename' | 'created' | 'modified';
+
+export const PROPERTY_SORT_SECONDARY_OPTIONS: PropertySortSecondaryOption[] = ['title', 'filename', 'created', 'modified'];
+
+export function isPropertySortSecondaryOption(value: unknown): value is PropertySortSecondaryOption {
+    return value === 'title' || value === 'filename' || value === 'created' || value === 'modified';
+}
+
 /** Alphabetical ordering options used by navigation trees. */
 export type AlphaSortOrder = 'alpha-asc' | 'alpha-desc';
 
@@ -326,6 +335,7 @@ export interface NotebookNavigatorSettings {
     includeDescendantNotes: boolean;
     defaultFolderSort: SortOption;
     propertySortKey: string;
+    propertySortSecondary: PropertySortSecondaryOption;
     revealFileOnListChanges: boolean;
     listPaneTitle: ListPaneTitleOption;
     noteGrouping: ListNoteGroupingOption;

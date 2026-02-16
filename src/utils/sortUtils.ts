@@ -17,7 +17,7 @@
  */
 
 import { TFile, TFolder } from 'obsidian';
-import type { AlphabeticalDateMode, SortOption, NotebookNavigatorSettings } from '../settings';
+import type { AlphabeticalDateMode, SortOption, NotebookNavigatorSettings, PropertySortSecondaryOption } from '../settings';
 import { NavigationItemType, ItemType } from '../types';
 
 export { SORT_OPTIONS } from '../settings/types';
@@ -34,6 +34,55 @@ export function isPropertySortOption(sortOption: SortOption): sortOption is 'pro
     return sortOption === 'property-asc' || sortOption === 'property-desc';
 }
 
+export function shouldRefreshOnFileModifyForSort(sortOption: SortOption, propertySortSecondary: PropertySortSecondaryOption): boolean {
+    return sortOption.startsWith('modified') || (isPropertySortOption(sortOption) && propertySortSecondary === 'modified');
+}
+
+export function shouldRefreshOnMetadataChangeForSort(params: {
+    sortOption: SortOption;
+    propertySortKey: string;
+    propertySortSecondary: PropertySortSecondaryOption;
+    useFrontmatterMetadata: boolean;
+    frontmatterNameField: string;
+    frontmatterCreatedField: string;
+    frontmatterModifiedField: string;
+}): boolean {
+    const {
+        sortOption,
+        propertySortKey,
+        propertySortSecondary,
+        useFrontmatterMetadata,
+        frontmatterNameField,
+        frontmatterCreatedField,
+        frontmatterModifiedField
+    } = params;
+    if (!isPropertySortOption(sortOption)) {
+        return false;
+    }
+
+    if (propertySortKey.trim().length > 0) {
+        return true;
+    }
+
+    if (!useFrontmatterMetadata) {
+        return false;
+    }
+
+    if (propertySortSecondary === 'created') {
+        return frontmatterCreatedField.trim().length > 0;
+    }
+
+    if (propertySortSecondary === 'modified') {
+        return frontmatterModifiedField.trim().length > 0;
+    }
+
+    if (propertySortSecondary === 'title') {
+        return frontmatterNameField.trim().length > 0;
+    }
+
+    return false;
+}
+
 /**
  * Natural string comparison that treats digit sequences as numbers.
  */
@@ -47,6 +96,35 @@ export function naturalCompare(a: string, b: string): number {
         collatorCache.set(cacheKey, collator);
     }
     return collator.compare(a, b);
+}
+
+function compareTextValues(valueA: string, valueB: string, descending: boolean): number {
+    const cmp = naturalCompare(valueA, valueB);
+    if (cmp !== 0) {
+        return descending ? -cmp : cmp;
+    }
+    if (valueA.length !== valueB.length) {
+        return valueA.length - valueB.length;
+    }
+    return 0;
+}
+
+function compareDisplayNames(a: TFile, b: TFile, getDisplayName: ((file: TFile) => string) | undefined, descending: boolean): number {
+    const nameA = getDisplayName ? getDisplayName(a) : a.basename;
+    const nameB = getDisplayName ? getDisplayName(b) : b.basename;
+    return compareTextValues(nameA, nameB, descending);
+}
+
+function compareFileNames(a: TFile, b: TFile, descending: boolean): number {
+    return compareTextValues(a.basename, b.basename, descending);
+}
+
+function compareDates(a: TFile, b: TFile, getDate: (file: TFile) => number, descending: boolean): number {
+    const cmp = getDate(a) - getDate(b);
+    if (cmp === 0) {
+        return 0;
+    }
+    return descending ? -cmp : cmp;
 }
 
 /**
@@ -85,7 +163,8 @@ export function sortFiles(
     getCreatedTime: (file: TFile) => number,
     getModifiedTime: (file: TFile) => number,
     getDisplayName?: (file: TFile) => string,
-    getPropertyValue?: (file: TFile) => string | null
+    getPropertyValue?: (file: TFile) => string | null,
+    propertySortSecondary: PropertySortSecondaryOption = 'title'
 ): void {
     // Helper function to get timestamp for sorting
     const getTimestamp = (file: TFile, type: 'created' | 'modified'): number => {
@@ -107,44 +186,29 @@ export function sortFiles(
             break;
         case 'title-asc':
             files.sort((a, b) => {
-                const nameA = getDisplayName ? getDisplayName(a) : a.basename;
-                const nameB = getDisplayName ? getDisplayName(b) : b.basename;
-                const cmp = naturalCompare(nameA, nameB);
+                const cmp = compareDisplayNames(a, b, getDisplayName, false);
                 if (cmp !== 0) return cmp;
-                // Tie-breaker 1: shorter name first (file1 before file001)
-                if (nameA.length !== nameB.length) return nameA.length - nameB.length;
-                // Tie-breaker 2: path for total ordering
                 return a.path.localeCompare(b.path);
             });
             break;
         case 'title-desc':
             files.sort((a, b) => {
-                const nameA = getDisplayName ? getDisplayName(a) : a.basename;
-                const nameB = getDisplayName ? getDisplayName(b) : b.basename;
-                const cmp = naturalCompare(nameA, nameB);
-                if (cmp !== 0) return -cmp; // reverse order for desc
-                // Keep tie-breakers consistent to ensure deterministic order across contexts
-                if (nameA.length !== nameB.length) return nameA.length - nameB.length;
+                const cmp = compareDisplayNames(a, b, getDisplayName, true);
+                if (cmp !== 0) return cmp;
                 return a.path.localeCompare(b.path);
             });
             break;
         case 'filename-asc':
             files.sort((a, b) => {
-                const nameA = a.basename;
-                const nameB = b.basename;
-                const cmp = naturalCompare(nameA, nameB);
+                const cmp = compareFileNames(a, b, false);
                 if (cmp !== 0) return cmp;
-                if (nameA.length !== nameB.length) return nameA.length - nameB.length;
                 return a.path.localeCompare(b.path);
             });
             break;
         case 'filename-desc':
             files.sort((a, b) => {
-                const nameA = a.basename;
-                const nameB = b.basename;
-                const cmp = naturalCompare(nameA, nameB);
-                if (cmp !== 0) return -cmp;
-                if (nameA.length !== nameB.length) return nameA.length - nameB.length;
+                const cmp = compareFileNames(a, b, true);
+                if (cmp !== 0) return cmp;
                 return a.path.localeCompare(b.path);
             });
             break;
@@ -162,22 +226,33 @@ export function sortFiles(
                 }
 
                 if (hasValueA && hasValueB && valueA && valueB) {
-                    const cmp = naturalCompare(valueA, valueB);
+                    const cmp = compareTextValues(valueA, valueB, descending);
                     if (cmp !== 0) {
-                        return descending ? -cmp : cmp;
-                    }
-                    if (valueA.length !== valueB.length) {
-                        return valueA.length - valueB.length;
+                        return cmp;
                     }
                 }
 
-                const nameA = getDisplayName ? getDisplayName(a) : a.basename;
-                const nameB = getDisplayName ? getDisplayName(b) : b.basename;
-                const cmp = naturalCompare(nameA, nameB);
-                if (cmp !== 0) {
-                    return descending ? -cmp : cmp;
+                let secondaryCmp = 0;
+                if (propertySortSecondary === 'created') {
+                    secondaryCmp = compareDates(a, b, getCreatedTime, descending);
+                } else if (propertySortSecondary === 'modified') {
+                    secondaryCmp = compareDates(a, b, getModifiedTime, descending);
+                } else if (propertySortSecondary === 'filename') {
+                    secondaryCmp = compareFileNames(a, b, descending);
+                } else {
+                    secondaryCmp = compareDisplayNames(a, b, getDisplayName, descending);
                 }
-                if (nameA.length !== nameB.length) return nameA.length - nameB.length;
+                if (secondaryCmp !== 0) {
+                    return secondaryCmp;
+                }
+
+                if (propertySortSecondary !== 'title') {
+                    const titleCmp = compareDisplayNames(a, b, getDisplayName, descending);
+                    if (titleCmp !== 0) {
+                        return titleCmp;
+                    }
+                }
+
                 return a.path.localeCompare(b.path);
             });
             break;

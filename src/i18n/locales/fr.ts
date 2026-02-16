@@ -830,6 +830,16 @@ export const STRINGS_FR = {
                 desc: 'Utilisé avec le tri par propriété. Les notes avec cette propriété frontmatter sont listées en premier et triées par la valeur de la propriété. Les tableaux sont combinés en une seule valeur.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Tri secondaire',
+                desc: 'Utilisé avec le tri par propriété lorsque les notes ont la même valeur de propriété ou aucune valeur.',
+                options: {
+                    title: 'Titre',
+                    filename: 'Nom de fichier',
+                    created: 'Date de création',
+                    modified: 'Date de modification'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Défiler vers le fichier sélectionné lors des changements de liste',
                 desc: "Défiler vers le fichier sélectionné lors de l'épinglage de notes, l'affichage de notes descendantes, le changement d'apparence de dossier ou l'exécution d'opérations sur les fichiers."

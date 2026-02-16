@@ -103,6 +103,7 @@ import {
     isCalendarWeekendDays,
     isAlphaSortOrder,
     isRecentNotesHideMode,
+    isPropertySortSecondaryOption,
     isSettingSyncMode,
     isSortOption,
     isTagSortOrder,
@@ -482,6 +483,10 @@ export default class NotebookNavigatorPlugin extends Plugin implements ISettings
 
         if (!isRecentNotesHideMode(this.settings.hideRecentNotes)) {
             this.settings.hideRecentNotes = DEFAULT_SETTINGS.hideRecentNotes;
+        }
+
+        if (!isPropertySortSecondaryOption(this.settings.propertySortSecondary)) {
+            this.settings.propertySortSecondary = DEFAULT_SETTINGS.propertySortSecondary;
         }
 
         if (!isCalendarWeekendDays(this.settings.calendarWeekendDays)) {

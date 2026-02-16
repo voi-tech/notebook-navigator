@@ -828,6 +828,16 @@ export const STRINGS_ID = {
                 desc: 'Digunakan dengan pengurutan Properti. Catatan dengan properti frontmatter ini ditampilkan lebih dulu dan diurutkan berdasarkan nilai properti. Array digabungkan menjadi satu nilai.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Urutan sekunder',
+                desc: 'Digunakan dengan urutan Properti ketika catatan memiliki nilai properti yang sama atau tidak memiliki nilai properti.',
+                options: {
+                    title: 'Judul',
+                    filename: 'Nama file',
+                    created: 'Tanggal dibuat',
+                    modified: 'Tanggal diedit'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Gulir ke file yang dipilih saat perubahan daftar',
                 desc: 'Gulir ke file yang dipilih saat menyematkan catatan, menampilkan catatan turunan, mengubah tampilan folder, atau menjalankan operasi file.'

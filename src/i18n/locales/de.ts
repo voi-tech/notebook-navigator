@@ -830,6 +830,16 @@ export const STRINGS_DE = {
                 desc: 'Wird mit der Eigenschafts-Sortierung verwendet. Notizen mit dieser Frontmatter-Eigenschaft werden zuerst aufgelistet und nach dem Eigenschaftswert sortiert. Arrays werden zu einem Wert zusammengefügt.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Sekundäre Sortierung',
+                desc: 'Wird bei der Eigenschafts-Sortierung verwendet, wenn Notizen denselben Eigenschaftswert oder keinen Eigenschaftswert haben.',
+                options: {
+                    title: 'Titel',
+                    filename: 'Dateiname',
+                    created: 'Erstellungsdatum',
+                    modified: 'Bearbeitungsdatum'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Zu ausgewählter Datei bei Listenänderungen scrollen',
                 desc: 'Zur ausgewählten Datei scrollen beim Anheften von Notizen, Anzeigen von Unternotizen, Ändern der Ordnerdarstellung oder bei Dateioperationen.'

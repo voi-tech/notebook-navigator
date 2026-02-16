@@ -19,8 +19,8 @@
 import { DropdownComponent, Platform, Setting, SliderComponent, setIcon } from 'obsidian';
 import { strings } from '../../i18n';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
-import type { ListDisplayMode, ListNoteGroupingOption, ListPaneTitleOption, SortOption } from '../types';
-import { SORT_OPTIONS } from '../types';
+import type { ListDisplayMode, ListNoteGroupingOption, ListPaneTitleOption, PropertySortSecondaryOption, SortOption } from '../types';
+import { PROPERTY_SORT_SECONDARY_OPTIONS, SORT_OPTIONS } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import { runAsyncAction } from '../../utils/async';
 import { createSettingGroupFactory } from '../settingGroups';
@@ -81,7 +81,7 @@ export function renderListPaneTab(context: SettingsTabContext): void {
             });
     });
 
-    topGroup.addSetting(setting => {
+    const propertySortKeySetting = topGroup.addSetting(setting => {
         setting
             .setName(strings.settings.items.propertySortKey.name)
             .setDesc(strings.settings.items.propertySortKey.desc)
@@ -95,6 +95,21 @@ export function renderListPaneTab(context: SettingsTabContext): void {
                     })
             );
     });
+
+    const propertySortSecondarySettingsEl = createSubSettingsContainer(propertySortKeySetting);
+
+    new Setting(propertySortSecondarySettingsEl)
+        .setName(strings.settings.items.propertySortSecondary.name)
+        .setDesc(strings.settings.items.propertySortSecondary.desc)
+        .addDropdown(dropdown => {
+            PROPERTY_SORT_SECONDARY_OPTIONS.forEach(option => {
+                dropdown.addOption(option, strings.settings.items.propertySortSecondary.options[option]);
+            });
+            return dropdown.setValue(plugin.settings.propertySortSecondary).onChange(async (value: PropertySortSecondaryOption) => {
+                plugin.settings.propertySortSecondary = value;
+                await plugin.saveSettingsAndUpdate();
+            });
+        });
 
     addToggleSetting(
         topGroup.addSetting,

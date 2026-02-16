@@ -829,6 +829,16 @@ export const STRINGS_PT = {
                 desc: 'Utilizado com a ordenação por propriedade. Notas com esta propriedade frontmatter são listadas primeiro e ordenadas pelo valor da propriedade. Arrays são combinados num único valor.',
                 placeholder: 'order'
             },
+            propertySortSecondary: {
+                name: 'Ordenação secundária',
+                desc: 'Usada com a ordenação por propriedade quando as notas têm o mesmo valor de propriedade ou não têm valor.',
+                options: {
+                    title: 'Título',
+                    filename: 'Nome do ficheiro',
+                    created: 'Data de criação',
+                    modified: 'Data de edição'
+                }
+            },
             revealFileOnListChanges: {
                 name: 'Deslocar para ficheiro selecionado em alterações da lista',
                 desc: 'Deslocar para o ficheiro selecionado ao fixar notas, mostrar notas descendentes, alterar aparência da pasta ou executar operações de ficheiros.'

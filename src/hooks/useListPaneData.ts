@@ -49,8 +49,9 @@ import {
     getDateField,
     getEffectiveSortOption,
     isDateSortOption,
-    isPropertySortOption,
     naturalCompare,
+    shouldRefreshOnFileModifyForSort,
+    shouldRefreshOnMetadataChangeForSort,
     resolveDefaultDateField
 } from '../utils/sortUtils';
 import { strings } from '../i18n';
@@ -278,6 +279,7 @@ export function useListPaneData({
         settings.pinnedNotes,
         settings.defaultFolderSort,
         settings.propertySortKey,
+        settings.propertySortSecondary,
         settings.propertyFields,
         settings.showProperties,
         settings.folderSortOverrides,
@@ -1080,9 +1082,16 @@ export function useListPaneData({
             });
         }
 
-        const isModifiedSort = sortOption.startsWith('modified');
-        const propertySortKey = settings.propertySortKey.trim();
-        const shouldRefreshOnMetadataChange = isPropertySortOption(sortOption) && propertySortKey.length > 0;
+        const shouldRefreshOnFileModify = shouldRefreshOnFileModifyForSort(sortOption, settings.propertySortSecondary);
+        const shouldRefreshOnMetadataChange = shouldRefreshOnMetadataChangeForSort({
+            sortOption,
+            propertySortKey: settings.propertySortKey,
+            propertySortSecondary: settings.propertySortSecondary,
+            useFrontmatterMetadata: settings.useFrontmatterMetadata,
+            frontmatterNameField: settings.frontmatterNameField,
+            frontmatterCreatedField: settings.frontmatterCreatedField,
+            frontmatterModifiedField: settings.frontmatterModifiedField
+        });
 
         const vaultEvents = [
             app.vault.on('create', () => {
@@ -1107,7 +1116,7 @@ export function useListPaneData({
                 }
             }),
             app.vault.on('modify', file => {
-                if (!isModifiedSort) {
+                if (!shouldRefreshOnFileModify) {
                     return;
                 }
                 if (!(file instanceof TFile)) {
@@ -1310,7 +1319,12 @@ export function useListPaneData({
         propertyTreeService,
         basePathSet,
         sortOption,
-        settings.propertySortKey
+        settings.propertySortKey,
+        settings.propertySortSecondary,
+        settings.useFrontmatterMetadata,
+        settings.frontmatterNameField,
+        settings.frontmatterCreatedField,
+        settings.frontmatterModifiedField
     ]);
 
     return {
