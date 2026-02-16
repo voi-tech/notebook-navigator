@@ -34,10 +34,50 @@ import { addCopyPathSubmenu, setAsyncOnClick } from './menuAsyncHelpers';
 import { addShortcutRenameMenuItem } from './shortcutRenameMenuItem';
 import { openFileInContext } from '../openFileInContext';
 import { confirmRemoveAllTagsFromFiles, openAddTagToFilesModal, removeTagFromFilesWithPrompt } from '../tagModalHelpers';
-import { addStyleMenu } from './styleMenuBuilder';
+import { addFolderStyleChangeActions, addFolderStyleMenu, addStyleMenu } from './styleMenuBuilder';
 import { resolveUXIconForMenu } from '../uxIcons';
 import { isFolderNote } from '../../utils/folderNotes';
 import { getFilesForNavigationSelection } from '../selectionUtils';
+
+type FileStyleTarget = { type: 'folder'; folderPath: string } | { type: 'files'; files: TFile[] };
+
+interface ResolveFileStyleTargetParams {
+    file: TFile;
+    isFolderNoteFile: boolean;
+    shouldShowMultiOptions: boolean;
+    selectedFiles: TFile[];
+}
+
+interface AddStyleActionsForFileContextParams {
+    menu: Menu;
+    app: App;
+    metadataService: MetadataService;
+    settings: NotebookNavigatorSettings;
+    file: TFile;
+    styleTarget: FileStyleTarget;
+}
+
+interface FileStyleActionsParams {
+    menu: Menu;
+    app: App;
+    metadataService: MetadataService;
+    settings: NotebookNavigatorSettings;
+    file: TFile;
+    targetFiles: TFile[];
+}
+
+interface FolderStyleActionsParams {
+    menu: Menu;
+    app: App;
+    metadataService: MetadataService;
+    settings: NotebookNavigatorSettings;
+    folderPath: string;
+}
+
+interface FileStyleRemovalAvailability {
+    hasRemovableIcon: boolean;
+    hasRemovableColor: boolean;
+}
 
 /**
  * Builds the context menu for a file
@@ -72,9 +112,13 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
         file.parent instanceof TFolder &&
         isFolderNote(file, file.parent, settings);
 
-    // Cache the current file list to avoid regenerating it multiple times
-    const cachedFileList = (() => {
-        return getFilesForNavigationSelection(
+    let cachedFileList: TFile[] | null = null;
+    const getCachedFileList = (): TFile[] => {
+        if (cachedFileList) {
+            return cachedFileList;
+        }
+
+        cachedFileList = getFilesForNavigationSelection(
             {
                 selectionType: selectionState.selectionType,
                 selectedFolder: selectionState.selectedFolder,
@@ -87,7 +131,9 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
             tagTreeService,
             propertyTreeService
         );
-    })();
+
+        return cachedFileList;
+    };
 
     // Cache selected files to avoid repeated path-to-file conversions
     const cachedSelectedFiles = shouldShowMultiOptions
@@ -106,95 +152,19 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
 
     menu.addSeparator();
 
-    const targetFilesForStyle = shouldShowMultiOptions ? cachedSelectedFiles : [file];
-
-    if (settings.showFileIcons) {
-        menu.addItem((item: MenuItem) => {
-            setAsyncOnClick(item.setTitle(strings.contextMenu.file.changeIcon).setIcon('lucide-image'), async () => {
-                const { IconPickerModal } = await import('../../modals/IconPickerModal');
-                const modal = new IconPickerModal(app, metadataService, file.path, ItemType.FILE);
-                modal.onChooseIcon = async iconId => {
-                    if (iconId === undefined) {
-                        return { handled: true };
-                    }
-                    const actions = targetFilesForStyle.map(selectedFile =>
-                        iconId === null
-                            ? metadataService.removeFileIcon(selectedFile.path)
-                            : metadataService.setFileIcon(selectedFile.path, iconId)
-                    );
-                    await Promise.all(actions);
-                    return { handled: true };
-                };
-                modal.open();
-            });
-        });
-    }
-
-    menu.addItem((item: MenuItem) => {
-        setAsyncOnClick(item.setTitle(strings.contextMenu.file.changeColor).setIcon('lucide-palette'), async () => {
-            const { ColorPickerModal } = await import('../../modals/ColorPickerModal');
-            const modal = new ColorPickerModal(app, metadataService, file.path, ItemType.FILE, 'foreground');
-            modal.onChooseColor = async color => {
-                if (color === undefined) {
-                    return { handled: true };
-                }
-                const actions = targetFilesForStyle.map(selectedFile =>
-                    color === null
-                        ? metadataService.removeFileColor(selectedFile.path)
-                        : metadataService.setFileColor(selectedFile.path, color)
-                );
-                await Promise.all(actions);
-                return { handled: true };
-            };
-            modal.open();
-        });
+    const styleTarget = resolveFileStyleTarget({
+        file,
+        isFolderNoteFile,
+        shouldShowMultiOptions,
+        selectedFiles: cachedSelectedFiles
     });
-
-    const fileIcon = metadataService.getFileIcon(file.path);
-    const fileColor = metadataService.getFileColor(file.path);
-
-    const hasRemovableIcon = targetFilesForStyle.some(selectedFile => Boolean(metadataService.getFileIcon(selectedFile.path)));
-    const hasRemovableColor = targetFilesForStyle.some(selectedFile => Boolean(metadataService.getFileColor(selectedFile.path)));
-
-    addStyleMenu({
+    addStyleActionsForFileContext({
         menu,
-        styleData: {
-            icon: fileIcon,
-            color: fileColor
-        },
-        hasIcon: settings.showFileIcons,
-        hasColor: true,
-        applyStyle: async clipboard => {
-            const { icon, color } = clipboard;
-            const actions: Promise<void>[] = [];
-
-            targetFilesForStyle.forEach(selectedFile => {
-                if (icon) {
-                    actions.push(metadataService.setFileIcon(selectedFile.path, icon));
-                }
-                if (color) {
-                    actions.push(metadataService.setFileColor(selectedFile.path, color));
-                }
-            });
-
-            await Promise.all(actions);
-        },
-        removeIcon: hasRemovableIcon
-            ? async () => {
-                  const actions = targetFilesForStyle
-                      .filter(selectedFile => metadataService.getFileIcon(selectedFile.path))
-                      .map(selectedFile => metadataService.removeFileIcon(selectedFile.path));
-                  await Promise.all(actions);
-              }
-            : undefined,
-        removeColor: hasRemovableColor
-            ? async () => {
-                  const actions = targetFilesForStyle
-                      .filter(selectedFile => metadataService.getFileColor(selectedFile.path))
-                      .map(selectedFile => metadataService.removeFileColor(selectedFile.path));
-                  await Promise.all(actions);
-              }
-            : undefined
+        app,
+        metadataService,
+        settings,
+        file,
+        styleTarget
     });
 
     menu.addSeparator();
@@ -356,7 +326,7 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
                     await fileSystemOps.moveFilesWithModal(currentFiles, {
                         selectedFile: selectionState.selectedFile,
                         dispatch: selectionDispatch,
-                        allFiles: cachedFileList
+                        allFiles: getCachedFileList()
                     });
                 }
             );
@@ -366,7 +336,15 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
         addMultipleFilesDuplicateOption(menu, cachedSelectedFiles, selectionState, app, fileSystemOps);
 
         // Delete note(s)
-        addMultipleFilesDeleteOption(menu, cachedSelectedFiles, selectionState, settings, fileSystemOps, selectionDispatch, cachedFileList);
+        addMultipleFilesDeleteOption(
+            menu,
+            cachedSelectedFiles,
+            selectionState,
+            settings,
+            fileSystemOps,
+            selectionDispatch,
+            getCachedFileList
+        );
     }
 
     // Copy actions - single selection only
@@ -474,7 +452,7 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
                     await fileSystemOps.moveFilesWithModal([file], {
                         selectedFile: selectionState.selectedFile,
                         dispatch: selectionDispatch,
-                        allFiles: cachedFileList
+                        allFiles: getCachedFileList()
                     });
                 }
             );
@@ -486,6 +464,178 @@ export function buildFileMenu(params: FileMenuBuilderParams): void {
         // Delete note
         addSingleFileDeleteOption(menu, file, selectionState, settings, fileSystemOps, selectionDispatch, isFolderNoteFile);
     }
+}
+
+function resolveFileStyleTarget(params: ResolveFileStyleTargetParams): FileStyleTarget {
+    const { file, isFolderNoteFile, shouldShowMultiOptions, selectedFiles } = params;
+    if (isFolderNoteFile && file.parent instanceof TFolder) {
+        return { type: 'folder', folderPath: file.parent.path };
+    }
+
+    return {
+        type: 'files',
+        files: shouldShowMultiOptions ? selectedFiles : [file]
+    };
+}
+
+function addStyleActionsForFileContext(params: AddStyleActionsForFileContextParams): void {
+    const { menu, app, metadataService, settings, file, styleTarget } = params;
+    if (styleTarget.type === 'folder') {
+        addFolderStyleActionsForFileContext({
+            menu,
+            app,
+            metadataService,
+            settings,
+            folderPath: styleTarget.folderPath
+        });
+        return;
+    }
+
+    addFileStyleActionsForFileContext({
+        menu,
+        app,
+        metadataService,
+        settings,
+        file,
+        targetFiles: styleTarget.files
+    });
+}
+
+function addFolderStyleActionsForFileContext(params: FolderStyleActionsParams): void {
+    const { menu, app, metadataService, settings, folderPath } = params;
+
+    addFolderStyleChangeActions({
+        menu,
+        app,
+        metadataService,
+        folderPath,
+        showFolderIcons: settings.showFolderIcons
+    });
+
+    addFolderStyleMenu({
+        menu,
+        metadataService,
+        folderPath,
+        inheritFolderColors: settings.inheritFolderColors,
+        showFolderIcons: settings.showFolderIcons
+    });
+}
+
+function addFileStyleActionsForFileContext(params: FileStyleActionsParams): void {
+    const { menu, app, metadataService, settings, file, targetFiles } = params;
+    const fileIcon = metadataService.getFileIcon(file.path);
+    const fileColor = metadataService.getFileColor(file.path);
+    const removableStyleAvailability = resolveFileStyleRemovalAvailability(targetFiles, metadataService);
+    const { hasRemovableIcon, hasRemovableColor } = removableStyleAvailability;
+
+    if (settings.showFileIcons) {
+        menu.addItem((item: MenuItem) => {
+            setAsyncOnClick(item.setTitle(strings.contextMenu.file.changeIcon).setIcon('lucide-image'), async () => {
+                const { IconPickerModal } = await import('../../modals/IconPickerModal');
+                const modal = new IconPickerModal(app, metadataService, file.path, ItemType.FILE);
+                modal.onChooseIcon = async iconId => {
+                    if (iconId === undefined) {
+                        return { handled: true };
+                    }
+
+                    const actions = targetFiles.map(selectedFile =>
+                        iconId === null
+                            ? metadataService.removeFileIcon(selectedFile.path)
+                            : metadataService.setFileIcon(selectedFile.path, iconId)
+                    );
+                    await Promise.all(actions);
+                    return { handled: true };
+                };
+                modal.open();
+            });
+        });
+    }
+
+    menu.addItem((item: MenuItem) => {
+        setAsyncOnClick(item.setTitle(strings.contextMenu.file.changeColor).setIcon('lucide-palette'), async () => {
+            const { ColorPickerModal } = await import('../../modals/ColorPickerModal');
+            const modal = new ColorPickerModal(app, metadataService, file.path, ItemType.FILE, 'foreground');
+            modal.onChooseColor = async color => {
+                if (color === undefined) {
+                    return { handled: true };
+                }
+
+                const actions = targetFiles.map(selectedFile =>
+                    color === null
+                        ? metadataService.removeFileColor(selectedFile.path)
+                        : metadataService.setFileColor(selectedFile.path, color)
+                );
+                await Promise.all(actions);
+                return { handled: true };
+            };
+            modal.open();
+        });
+    });
+
+    addStyleMenu({
+        menu,
+        styleData: {
+            icon: fileIcon,
+            color: fileColor
+        },
+        hasIcon: settings.showFileIcons,
+        hasColor: true,
+        applyStyle: async clipboard => {
+            const { icon, color } = clipboard;
+            const actions: Promise<void>[] = [];
+
+            targetFiles.forEach(selectedFile => {
+                if (icon) {
+                    actions.push(metadataService.setFileIcon(selectedFile.path, icon));
+                }
+                if (color) {
+                    actions.push(metadataService.setFileColor(selectedFile.path, color));
+                }
+            });
+
+            await Promise.all(actions);
+        },
+        removeIcon: hasRemovableIcon
+            ? async () => {
+                  const actions = targetFiles
+                      .filter(selectedFile => metadataService.getFileIcon(selectedFile.path))
+                      .map(selectedFile => metadataService.removeFileIcon(selectedFile.path));
+                  await Promise.all(actions);
+              }
+            : undefined,
+        removeColor: hasRemovableColor
+            ? async () => {
+                  const actions = targetFiles
+                      .filter(selectedFile => metadataService.getFileColor(selectedFile.path))
+                      .map(selectedFile => metadataService.removeFileColor(selectedFile.path));
+                  await Promise.all(actions);
+              }
+            : undefined
+    });
+}
+
+function resolveFileStyleRemovalAvailability(targetFiles: TFile[], metadataService: MetadataService): FileStyleRemovalAvailability {
+    let hasRemovableIcon = false;
+    let hasRemovableColor = false;
+
+    for (const selectedFile of targetFiles) {
+        if (!hasRemovableIcon && metadataService.getFileIcon(selectedFile.path)) {
+            hasRemovableIcon = true;
+        }
+
+        if (!hasRemovableColor && metadataService.getFileColor(selectedFile.path)) {
+            hasRemovableColor = true;
+        }
+
+        if (hasRemovableIcon && hasRemovableColor) {
+            break;
+        }
+    }
+
+    return {
+        hasRemovableIcon,
+        hasRemovableColor
+    };
 }
 
 /**
@@ -817,7 +967,7 @@ function addMultipleFilesDeleteOption(
     settings: NotebookNavigatorSettings,
     fileSystemOps: FileSystemOperations,
     selectionDispatch: React.Dispatch<SelectionAction>,
-    cachedFileList: TFile[]
+    getCachedFileList: () => TFile[]
 ): void {
     const allMarkdown = selectedFiles.every(f => f.extension === 'md');
     const selectedCount = selectedFiles.length;
@@ -835,7 +985,7 @@ function addMultipleFilesDeleteOption(
                 // Use centralized delete method with smart selection
                 await fileSystemOps.deleteFilesWithSmartSelection(
                     selectionState.selectedFiles,
-                    cachedFileList,
+                    getCachedFileList(),
                     selectionDispatch,
                     settings.confirmBeforeDelete
                 );
