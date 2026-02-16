@@ -109,9 +109,13 @@ export const CalendarHeader = React.memo(function CalendarHeader({
                 onClick={event => onPeriodClick(event, 'quarter')}
                 onContextMenu={event => onPeriodContextMenu(event, 'quarter')}
             >
-                <span aria-hidden="true">(</span>
-                {quarterLabel}
-                <span aria-hidden="true">)</span>
+                <span className="nn-navigation-calendar-quarter-paren" aria-hidden="true">
+                    (
+                </span>
+                <span className="nn-navigation-calendar-quarter-value">{quarterLabel}</span>
+                <span className="nn-navigation-calendar-quarter-paren" aria-hidden="true">
+                    )
+                </span>
             </button>
         );
     };

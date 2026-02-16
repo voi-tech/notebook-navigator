@@ -204,6 +204,16 @@
     text-underline-offset: 2px;
 }
 
+.nn-navigation-calendar-quarter-button.has-period-note {
+    text-decoration: none;
+}
+
+.nn-navigation-calendar-quarter-button.has-period-note .nn-navigation-calendar-quarter-value {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
 .nn-navigation-calendar button.nn-navigation-calendar-period-button {
     color: var(--nn-theme-calendar-header-color);
 }
