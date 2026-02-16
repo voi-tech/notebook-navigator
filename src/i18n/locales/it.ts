@@ -829,7 +829,7 @@ export const STRINGS_IT = {
             },
             propertySortSecondary: {
                 name: 'Ordinamento secondario',
-                desc: 'Usato con l\'ordinamento per proprietà quando le note hanno lo stesso valore di proprietà o nessun valore.',
+                desc: "Usato con l'ordinamento per proprietà quando le note hanno lo stesso valore di proprietà o nessun valore.",
                 options: {
                     title: 'Titolo',
                     filename: 'Nome file',
