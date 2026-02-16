@@ -1035,6 +1035,14 @@ export const STRINGS_ZH_CN = {
                 name: '显示最近笔记',
                 desc: '在导航窗格中显示最近笔记部分。'
             },
+            hideRecentNotes: {
+                name: '隐藏笔记',
+                desc: '选择在最近笔记部分中隐藏的笔记类型。',
+                options: {
+                    none: '无',
+                    folderNotes: '文件夹笔记'
+                }
+            },
             recentNotesCount: {
                 name: '最近笔记数量',
                 desc: '要显示的最近笔记数量。'

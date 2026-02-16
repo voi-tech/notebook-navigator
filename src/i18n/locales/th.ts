@@ -1036,6 +1036,14 @@ export const STRINGS_TH = {
                 name: 'แสดงโน้ตล่าสุด',
                 desc: 'แสดงส่วนโน้ตล่าสุดในแผงนำทาง'
             },
+            hideRecentNotes: {
+                name: 'ซ่อนโน้ต',
+                desc: 'เลือกประเภทโน้ตที่ต้องการซ่อนในส่วนโน้ตล่าสุด',
+                options: {
+                    none: 'ไม่มี',
+                    folderNotes: 'โน้ตโฟลเดอร์'
+                }
+            },
             recentNotesCount: {
                 name: 'จำนวนโน้ตล่าสุด',
                 desc: 'จำนวนโน้ตล่าสุดที่จะแสดง'

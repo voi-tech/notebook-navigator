@@ -1039,6 +1039,14 @@ export const STRINGS_DE = {
                 name: 'Neueste Notizen anzeigen',
                 desc: 'Den Bereich für neueste Notizen im Navigationsbereich anzeigen.'
             },
+            hideRecentNotes: {
+                name: 'Notizen ausblenden',
+                desc: 'Wähle aus, welche Notiztypen im Bereich der neuesten Notizen ausgeblendet werden sollen.',
+                options: {
+                    none: 'Keine',
+                    folderNotes: 'Ordnernotizen'
+                }
+            },
             recentNotesCount: {
                 name: 'Anzahl neuester Notizen',
                 desc: 'Anzahl der anzuzeigenden neuesten Notizen.'

@@ -1038,6 +1038,14 @@ export const STRINGS_TR = {
                 name: 'Son notları göster',
                 desc: 'Gezinme bölmesinde son notlar bölümünü görüntüle.'
             },
+            hideRecentNotes: {
+                name: 'Notları gizle',
+                desc: 'Son notlar bölümünde gizlenecek not türlerini seç.',
+                options: {
+                    none: 'Hiçbiri',
+                    folderNotes: 'Klasör notları'
+                }
+            },
             recentNotesCount: {
                 name: 'Son not sayısı',
                 desc: 'Görüntülenecek son not sayısı.'

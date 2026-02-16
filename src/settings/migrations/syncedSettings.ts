@@ -23,7 +23,7 @@ import type { FolderAppearance } from '../../hooks/useListPaneAppearance';
 import { localStorage } from '../../utils/localStorage';
 import { cloneShortcuts, DEFAULT_VAULT_PROFILE_ID } from '../../utils/vaultProfiles';
 import { ShortcutType, type ShortcutEntry } from '../../types/shortcuts';
-import { isNotePropertyType, isTagSortOrder } from '../types';
+import { isNotePropertyType, isRecentNotesHideMode, isTagSortOrder } from '../types';
 import { normalizeCalendarCustomRootFolder } from '../../utils/calendarCustomNotePatterns';
 import { normalizeFolderNoteNamePattern } from '../../utils/folderNoteName';
 import { normalizeOptionalVaultFilePath } from '../../utils/pathUtils';
@@ -129,6 +129,16 @@ export function migrateLegacySyncedSettings(params: {
         settings.shortcutBadgeDisplay !== 'none'
     ) {
         settings.shortcutBadgeDisplay = defaultSettings.shortcutBadgeDisplay;
+    }
+
+    const legacyHideFolderNotesInRecentNotes = mutableSettings['hideFolderNotesInRecentNotes'];
+    if (typeof storedData?.['hideRecentNotes'] === 'undefined' && typeof legacyHideFolderNotesInRecentNotes === 'boolean') {
+        settings.hideRecentNotes = legacyHideFolderNotesInRecentNotes ? 'folder-notes' : 'none';
+    }
+    delete mutableSettings['hideFolderNotesInRecentNotes'];
+
+    if (!isRecentNotesHideMode(settings.hideRecentNotes)) {
+        settings.hideRecentNotes = defaultSettings.hideRecentNotes;
     }
 
     const legacyNotePropertyType = mutableSettings['customPropertyType'];

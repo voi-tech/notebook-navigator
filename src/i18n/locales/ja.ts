@@ -1037,6 +1037,14 @@ export const STRINGS_JA = {
                 name: '最近のノートを表示',
                 desc: 'ナビゲーションペインに最近のノートセクションを表示します。'
             },
+            hideRecentNotes: {
+                name: 'ノートを非表示',
+                desc: '最近のノートセクションで非表示にするノートの種類を選択します。',
+                options: {
+                    none: 'なし',
+                    folderNotes: 'フォルダノート'
+                }
+            },
             recentNotesCount: {
                 name: '最近のノート数',
                 desc: '表示する最近のノートの数。'

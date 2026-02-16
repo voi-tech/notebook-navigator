@@ -1037,6 +1037,14 @@ export const STRINGS_VI = {
                 name: 'Hiện ghi chú gần đây',
                 desc: 'Hiển thị phần ghi chú gần đây trong ngăn điều hướng.'
             },
+            hideRecentNotes: {
+                name: 'Ẩn ghi chú',
+                desc: 'Chọn loại ghi chú cần ẩn trong phần ghi chú gần đây.',
+                options: {
+                    none: 'Không',
+                    folderNotes: 'Ghi chú thư mục'
+                }
+            },
             recentNotesCount: {
                 name: 'Số lượng ghi chú gần đây',
                 desc: 'Số ghi chú gần đây để hiển thị.'

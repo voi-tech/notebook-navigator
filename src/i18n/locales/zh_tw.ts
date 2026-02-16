@@ -1035,6 +1035,14 @@ export const STRINGS_ZH_TW = {
                 name: '顯示最近筆記',
                 desc: '在導覽窗格中顯示最近筆記區段。'
             },
+            hideRecentNotes: {
+                name: '隱藏筆記',
+                desc: '選擇在最近筆記區段中隱藏的筆記類型。',
+                options: {
+                    none: '無',
+                    folderNotes: '資料夾筆記'
+                }
+            },
             recentNotesCount: {
                 name: '最近筆記數量',
                 desc: '要顯示的最近筆記數量。'

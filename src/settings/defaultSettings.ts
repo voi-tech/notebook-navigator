@@ -157,6 +157,7 @@ export const DEFAULT_SETTINGS: NotebookNavigatorSettings = {
     shortcutBadgeDisplay: 'index',
     skipAutoScroll: false,
     showRecentNotes: true,
+    hideRecentNotes: 'none',
     pinRecentNotesWithShortcuts: false,
     recentNotesCount: 5,
 

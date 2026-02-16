@@ -1040,6 +1040,14 @@ export const STRINGS_PT_BR = {
                 name: 'Mostrar notas recentes',
                 desc: 'Exibir a seção de notas recentes no painel de navegação.'
             },
+            hideRecentNotes: {
+                name: 'Ocultar notas',
+                desc: 'Escolher os tipos de notas a ocultar na seção de notas recentes.',
+                options: {
+                    none: 'Nenhum',
+                    folderNotes: 'Notas de pasta'
+                }
+            },
             recentNotesCount: {
                 name: 'Contagem de notas recentes',
                 desc: 'Número de notas recentes a exibir.'

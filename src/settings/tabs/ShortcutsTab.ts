@@ -18,7 +18,7 @@
 
 import { DropdownComponent, Setting } from 'obsidian';
 import { strings } from '../../i18n';
-import type { ShortcutBadgeDisplayMode } from '../types';
+import type { RecentNotesHideMode, ShortcutBadgeDisplayMode } from '../types';
 import type { SettingsTabContext } from './SettingsTabContext';
 import { createSettingGroupFactory } from '../settingGroups';
 import { wireToggleSettingWithSubSettings } from '../subSettings';
@@ -89,6 +89,20 @@ export function renderShortcutsTab(context: SettingsTabContext): void {
             await plugin.saveSettingsAndUpdate();
         }
     );
+
+    new Setting(recentNotesSubSettings)
+        .setName(strings.settings.items.hideRecentNotes.name)
+        .setDesc(strings.settings.items.hideRecentNotes.desc)
+        .addDropdown((dropdown: DropdownComponent) =>
+            dropdown
+                .addOption('none', strings.settings.items.hideRecentNotes.options.none)
+                .addOption('folder-notes', strings.settings.items.hideRecentNotes.options.folderNotes)
+                .setValue(plugin.settings.hideRecentNotes)
+                .onChange(async (value: RecentNotesHideMode) => {
+                    plugin.settings.hideRecentNotes = value;
+                    await plugin.saveSettingsAndUpdate();
+                })
+        );
 
     new Setting(recentNotesSubSettings)
         .setName(strings.settings.items.pinRecentNotesWithShortcuts.name)

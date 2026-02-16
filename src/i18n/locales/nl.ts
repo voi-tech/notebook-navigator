@@ -1039,6 +1039,14 @@ export const STRINGS_NL = {
                 name: 'Recente notities tonen',
                 desc: 'De sectie recente notities weergeven in het navigatiepaneel.'
             },
+            hideRecentNotes: {
+                name: 'Notities verbergen',
+                desc: 'Kies welke soorten notities verborgen worden in de sectie recente notities.',
+                options: {
+                    none: 'Geen',
+                    folderNotes: 'Mapnotities'
+                }
+            },
             recentNotesCount: {
                 name: 'Aantal recente notities',
                 desc: 'Aantal weer te geven recente notities.'

@@ -1037,6 +1037,14 @@ export const STRINGS_KO = {
                 name: '최근 노트 표시',
                 desc: '탐색 창에 최근 노트 섹션을 표시합니다.'
             },
+            hideRecentNotes: {
+                name: '노트 숨기기',
+                desc: '최근 노트 섹션에서 숨길 노트 유형을 선택합니다.',
+                options: {
+                    none: '없음',
+                    folderNotes: '폴더 노트'
+                }
+            },
             recentNotesCount: {
                 name: '최근 노트 수',
                 desc: '표시할 최근 노트의 수입니다.'

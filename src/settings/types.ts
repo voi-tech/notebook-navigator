@@ -121,6 +121,13 @@ export type ListPaneTitleOption = 'header' | 'list' | 'hidden';
 /** Display options for shortcut row badges in the navigation pane */
 export type ShortcutBadgeDisplayMode = 'index' | 'count' | 'none';
 
+/** Filter options for hidden items in the recent notes section */
+export type RecentNotesHideMode = 'none' | 'folder-notes';
+
+export function isRecentNotesHideMode(value: unknown): value is RecentNotesHideMode {
+    return value === 'none' || value === 'folder-notes';
+}
+
 /** Number of calendar week rows shown in the navigation pane */
 export type CalendarWeeksToShow = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -278,6 +285,7 @@ export interface NotebookNavigatorSettings {
     shortcutBadgeDisplay: ShortcutBadgeDisplayMode;
     skipAutoScroll: boolean;
     showRecentNotes: boolean;
+    hideRecentNotes: RecentNotesHideMode;
     pinRecentNotesWithShortcuts: boolean;
     recentNotesCount: number;
 

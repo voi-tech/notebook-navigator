@@ -1039,6 +1039,14 @@ export const STRINGS_PL = {
                 name: 'Pokaż ostatnie notatki',
                 desc: 'Wyświetl sekcję ostatnich notatek w panelu nawigacji.'
             },
+            hideRecentNotes: {
+                name: 'Ukryj notatki',
+                desc: 'Wybierz typy notatek do ukrycia w sekcji ostatnich notatek.',
+                options: {
+                    none: 'Brak',
+                    folderNotes: 'Notatki folderów'
+                }
+            },
             recentNotesCount: {
                 name: 'Liczba ostatnich notatek',
                 desc: 'Liczba ostatnich notatek do wyświetlenia.'

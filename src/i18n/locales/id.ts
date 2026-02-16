@@ -1037,6 +1037,14 @@ export const STRINGS_ID = {
                 name: 'Tampilkan catatan terbaru',
                 desc: 'Tampilkan bagian catatan terbaru di panel navigasi.'
             },
+            hideRecentNotes: {
+                name: 'Sembunyikan catatan',
+                desc: 'Pilih jenis catatan yang disembunyikan di bagian catatan terbaru.',
+                options: {
+                    none: 'Tidak ada',
+                    folderNotes: 'Catatan folder'
+                }
+            },
             recentNotesCount: {
                 name: 'Jumlah catatan terbaru',
                 desc: 'Jumlah catatan terbaru yang ditampilkan.'
