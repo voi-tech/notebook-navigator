@@ -10,6 +10,12 @@
     padding-left: 1em;
 }
 
+/* Restore bottom padding on last setting inside sub-settings containers
+   (Obsidian's .setting-item:last-child removes it, but nested containers need it) */
+.nn-sub-settings > .setting-item:last-child {
+    padding-bottom: var(--size-4-4);
+}
+
 /* Settings layout root */
 .nn-settings-tab-root {
     display: block;
