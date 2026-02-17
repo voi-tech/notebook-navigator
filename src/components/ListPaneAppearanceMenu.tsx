@@ -228,7 +228,7 @@ export function showListPaneAppearanceMenu({
         // Note property header
         menu.addItem(item => {
             item.setTitle(strings.settings.items.notePropertyType.name)
-                .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'file-word-count', 'lucide-case-sensitive'))
+                .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'file-word-count', 'lucide-sigma'))
                 .setDisabled(true);
         });
 

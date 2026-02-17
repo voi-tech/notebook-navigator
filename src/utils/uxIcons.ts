@@ -87,7 +87,7 @@ export const UX_ICON_DEFINITIONS: UXIconDefinition[] = [
     { id: 'list-new-note', category: 'listPane', defaultIconId: 'pen-box' },
     { id: 'list-pinned', category: 'listPane', defaultIconId: 'pin' },
     { id: 'file-unfinished-task', category: 'fileItems', defaultIconId: 'circle-alert' },
-    { id: 'file-word-count', category: 'fileItems', defaultIconId: 'case-sensitive' }
+    { id: 'file-word-count', category: 'fileItems', defaultIconId: 'sigma' }
 ];
 
 const UX_ICON_ID_SET: ReadonlySet<string> = new Set(UX_ICON_DEFINITIONS.map(definition => definition.id));
