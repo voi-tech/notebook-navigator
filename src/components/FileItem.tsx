@@ -68,7 +68,7 @@ import { openFileInContext } from '../utils/openFileInContext';
 import { FILE_VISIBILITY, getExtensionSuffix, isImageFile, shouldDisplayFile } from '../utils/fileTypeUtils';
 import { resolveFileDragIconId, resolveFileIconId } from '../utils/fileIconUtils';
 import { naturalCompare, resolveDefaultDateField } from '../utils/sortUtils';
-import { getCachedFileTags } from '../utils/tagUtils';
+import { getCachedFileTags, getTagSearchModifierOperator } from '../utils/tagUtils';
 import {
     arePropertyItemsEqual,
     clonePropertyItems,
@@ -76,13 +76,12 @@ import {
     parseStrictWikiLink,
     type WikiLinkTarget
 } from '../utils/propertyUtils';
-import { shouldShowPropertyRow, shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
+import { shouldShowFeatureImageArea } from '../utils/listPaneMeasurements';
 import { getIconService, useIconServiceVersion } from '../services/icons';
 import type { SearchResultMeta } from '../types/search';
 import { createHiddenTagVisibility } from '../utils/tagPrefixMatcher';
 import { areStringArraysEqual, mergeRanges, NumericRange } from '../utils/arrayUtils';
 import { openAddTagToFilesModal } from '../utils/tagModalHelpers';
-import { getTagSearchModifierOperator } from '../utils/tagUtils';
 import { resolveUXIcon } from '../utils/uxIcons';
 import type { InclusionOperator } from '../utils/filterSearch';
 import {
@@ -153,13 +152,39 @@ type PropertyPill = {
     value: string;
     label: string;
     wikiLink: WikiLinkTarget | null;
+    iconId?: string;
     fieldKey?: string;
+    propertyKeyNodeId?: string;
     color?: string;
     background?: string;
     propertyNodeId?: string;
     propertySearchKey?: string;
     propertySearchValuePath?: string | null;
 };
+
+function resolveNormalizedPropertyKeyNodeId(fieldKey: string | undefined): string | undefined {
+    const trimmedFieldKey = fieldKey?.trim() ?? '';
+    if (!trimmedFieldKey) {
+        return undefined;
+    }
+
+    const rawKeyNodeId = buildPropertyKeyNodeId(trimmedFieldKey);
+    return normalizePropertyNodeId(rawKeyNodeId) ?? rawKeyNodeId;
+}
+
+function hasOwnRecordEntries(record: Record<string, string> | undefined): boolean {
+    if (!record) {
+        return false;
+    }
+
+    for (const key in record) {
+        if (Object.prototype.hasOwnProperty.call(record, key)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 interface FileItemProps {
     file: TFile;
@@ -462,6 +487,7 @@ export const FileItem = React.memo(function FileItem({
     const hasUnfinishedTasks = typeof taskUnfinished === 'number' && taskUnfinished > 0;
     const showFileIconUnfinishedTask = settings.showFileIconUnfinishedTask && hasUnfinishedTasks;
     const unfinishedTaskIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'file-unfinished-task'), [settings.interfaceIcons]);
+    const wordCountPillIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'file-word-count'), [settings.interfaceIcons]);
 
     // Get display name from RAM cache (handles frontmatter title)
     const displayName = useMemo(() => {
@@ -768,6 +794,41 @@ export const FileItem = React.memo(function FileItem({
         settings.showFileProperties
     ]);
 
+    const canShowPropertyPills = useMemo(() => {
+        if (file.extension !== 'md') {
+            return false;
+        }
+
+        if (isCompactMode && !settings.showFilePropertiesInCompactMode) {
+            return false;
+        }
+
+        return true;
+    }, [file.extension, isCompactMode, settings.showFilePropertiesInCompactMode]);
+
+    const wordCountPropertyPill = useMemo<PropertyPill | null>(() => {
+        if (!canShowPropertyPills) {
+            return null;
+        }
+
+        if (appearanceSettings.notePropertyType !== 'wordCount') {
+            return null;
+        }
+
+        // Don't show `0`: it can mean "no words", a huge file (content read skipped), or an Excalidraw document.
+        if (typeof wordCount !== 'number' || !Number.isFinite(wordCount) || wordCount <= 0) {
+            return null;
+        }
+
+        const truncatedWordCount = Math.trunc(wordCount);
+        return {
+            value: truncatedWordCount.toString(),
+            label: truncatedWordCount.toLocaleString(),
+            wikiLink: null,
+            iconId: wordCountPillIconId
+        };
+    }, [appearanceSettings.notePropertyType, canShowPropertyPills, wordCount, wordCountPillIconId]);
+
     const propertyPills = useMemo<PropertyPill[]>(() => {
         void propertyColorSignature;
 
@@ -776,15 +837,7 @@ export const FileItem = React.memo(function FileItem({
         const colorFileProperties = settings.colorFileProperties;
         const prioritizeColoredFileProperties = settings.prioritizeColoredFileProperties;
 
-        if (appearanceSettings.notePropertyType === 'wordCount') {
-            // Don't show `0`: it can mean "no words", a huge file (content read skipped), or an Excalidraw document.
-            if (typeof wordCount === 'number' && Number.isFinite(wordCount) && wordCount > 0) {
-                const rawValue = Math.trunc(wordCount).toString();
-                pills.push({ value: rawValue, label: Math.trunc(wordCount).toLocaleString(), wikiLink: null });
-            }
-        }
-
-        if (!settings.showFileProperties) {
+        if (!canShowPropertyPills || !settings.showFileProperties) {
             return pills;
         }
 
@@ -832,6 +885,9 @@ export const FileItem = React.memo(function FileItem({
             })();
 
             const parsedPropertyNode = propertyNodeId ? parsePropertyNodeId(propertyNodeId) : null;
+            const propertyKeyNodeId = propertyNodeId
+                ? (getPropertyKeyNodeIdFromNodeId(propertyNodeId) ?? resolveNormalizedPropertyKeyNodeId(trimmedFieldKey))
+                : resolveNormalizedPropertyKeyNodeId(trimmedFieldKey);
             const propertySearchKey = parsedPropertyNode?.key || trimmedFieldKey;
             const propertySearchValuePath = isKeyOnlyValue ? null : (parsedPropertyNode?.valuePath ?? normalizedValuePath);
 
@@ -840,6 +896,7 @@ export const FileItem = React.memo(function FileItem({
                 label,
                 wikiLink,
                 fieldKey: entry.fieldKey,
+                propertyKeyNodeId,
                 color: colorData.color,
                 background: colorData.background,
                 propertyNodeId,
@@ -873,20 +930,15 @@ export const FileItem = React.memo(function FileItem({
             pills.push(...sortPropertyPillGroup(group, prioritizeColoredPills));
         });
 
-        if (groupOrder.length > 0) {
-            return pills;
-        }
-
         return pills;
     }, [
-        appearanceSettings.notePropertyType,
+        canShowPropertyPills,
         metadataService,
         properties,
         propertyColorSignature,
         settings.colorFileProperties,
         settings.prioritizeColoredFileProperties,
-        settings.showFileProperties,
-        wordCount
+        settings.showFileProperties
     ]);
 
     const propertyColorData = useMemo(() => {
@@ -939,39 +991,8 @@ export const FileItem = React.memo(function FileItem({
         return entries;
     }, [propertyPills]);
 
-    const shouldShowProperty = useMemo(() => {
-        return shouldShowPropertyRow({
-            notePropertyType: appearanceSettings.notePropertyType,
-            showFileProperties: settings.showFileProperties,
-            showFilePropertiesInCompactMode: settings.showFilePropertiesInCompactMode,
-            isCompactMode,
-            file,
-            wordCount,
-            properties
-        });
-    }, [
-        appearanceSettings.notePropertyType,
-        properties,
-        file,
-        isCompactMode,
-        settings.showFileProperties,
-        settings.showFilePropertiesInCompactMode,
-        wordCount
-    ]);
-
-    const shouldShowPillRowIcons = useMemo(() => {
-        return shouldShowFileTags && shouldShowProperty;
-    }, [shouldShowProperty, shouldShowFileTags]);
-
-    const fileTagPillIconId = useMemo(() => resolveUXIcon(settings.interfaceIcons, 'nav-tag'), [settings.interfaceIcons]);
-    const propertyPillIconId = useMemo(() => {
-        const hasWordCountPill = appearanceSettings.notePropertyType === 'wordCount';
-        const hasFrontmatterPills = Boolean(
-            settings.showFileProperties && properties && properties.some(entry => entry.value.trim().length > 0)
-        );
-        const icon = hasWordCountPill && !hasFrontmatterPills ? 'file-word-count' : 'file-property';
-        return resolveUXIcon(settings.interfaceIcons, icon);
-    }, [appearanceSettings.notePropertyType, properties, settings.interfaceIcons, settings.showFileProperties]);
+    const shouldShowProperty = propertyPills.length > 0;
+    const shouldShowWordCountProperty = Boolean(wordCountPropertyPill);
 
     const propertyRows = useMemo((): PropertyPill[][] => {
         if (!settings.showPropertiesOnSeparateRows) {
@@ -1022,19 +1043,104 @@ export const FileItem = React.memo(function FileItem({
         [settings.showFileTagAncestors]
     );
 
+    const tagPillIcons = useMemo(() => {
+        const icons = new Map<string, string>();
+        const tagIcons = settings.tagIcons;
+        if (!tagIcons || !hasOwnRecordEntries(tagIcons) || categorizedTags.length === 0) {
+            return icons;
+        }
+
+        categorizedTags.forEach(tag => {
+            const iconId = metadataService.getTagIcon(tag);
+            if (iconId) {
+                icons.set(tag, iconId);
+            }
+        });
+
+        return icons;
+    }, [categorizedTags, metadataService, settings.tagIcons]);
+
+    const propertyPillIcons = useMemo(() => {
+        const icons = new Map<PropertyPill, string>();
+        const propertyIcons = settings.propertyIcons;
+        if (!propertyIcons || !hasOwnRecordEntries(propertyIcons)) {
+            if (wordCountPropertyPill?.iconId) {
+                icons.set(wordCountPropertyPill, wordCountPropertyPill.iconId);
+            }
+            return icons;
+        }
+
+        if (propertyPills.length === 0) {
+            if (wordCountPropertyPill?.iconId) {
+                icons.set(wordCountPropertyPill, wordCountPropertyPill.iconId);
+            }
+            return icons;
+        }
+
+        const resolvePropertyPillIconId = (pill: PropertyPill): string | undefined => {
+            if (pill.iconId) {
+                return pill.iconId;
+            }
+
+            let checkedKeyNodeId: string | null = null;
+            if (pill.propertyNodeId) {
+                const valueIconId = metadataService.getPropertyIcon(pill.propertyNodeId);
+                if (valueIconId) {
+                    return valueIconId;
+                }
+
+                const keyNodeIdFromNode = getPropertyKeyNodeIdFromNodeId(pill.propertyNodeId);
+                if (keyNodeIdFromNode) {
+                    checkedKeyNodeId = keyNodeIdFromNode;
+                    if (keyNodeIdFromNode !== pill.propertyNodeId) {
+                        const keyIconId = metadataService.getPropertyIcon(keyNodeIdFromNode);
+                        if (keyIconId) {
+                            return keyIconId;
+                        }
+                    }
+                }
+            }
+
+            const fallbackKeyNodeId = pill.propertyKeyNodeId;
+            if (!fallbackKeyNodeId) {
+                return undefined;
+            }
+
+            if (checkedKeyNodeId === fallbackKeyNodeId) {
+                return undefined;
+            }
+
+            return metadataService.getPropertyIcon(fallbackKeyNodeId);
+        };
+
+        propertyPills.forEach(pill => {
+            const iconId = resolvePropertyPillIconId(pill);
+            if (iconId) {
+                icons.set(pill, iconId);
+            }
+        });
+
+        if (wordCountPropertyPill?.iconId) {
+            icons.set(wordCountPropertyPill, wordCountPropertyPill.iconId);
+        }
+
+        return icons;
+    }, [metadataService, propertyPills, settings.propertyIcons, wordCountPropertyPill]);
+
     // Render tags
     const renderTags = useCallback(() => {
         if (!shouldShowFileTags) {
             return null;
         }
 
-        const tagContainer = (
+        return (
             <div className="nn-file-tags">
                 {categorizedTags.map((tag, index) => {
                     const tagColors = tagColorData.get(tag);
                     const tagColor = tagColors?.color;
                     const tagBackground = tagColors?.background;
                     const displayTag = getTagDisplayName(tag);
+                    const tagIconId = tagPillIcons.get(tag);
                     const tagStyle: React.CSSProperties & { '--nn-file-tag-custom-bg'?: string } = {};
 
                     if (tagBackground) {
@@ -1056,33 +1162,17 @@ export const FileItem = React.memo(function FileItem({
                             tabIndex={0}
                             style={tagColor || tagBackground ? tagStyle : undefined}
                         >
+                            {tagIconId ? <ServiceIcon iconId={tagIconId} className="nn-file-pill-inline-icon" aria-hidden={true} /> : null}
                             {displayTag}
                         </span>
                     );
                 })}
             </div>
         );
+    }, [categorizedTags, getTagDisplayName, handleTagClick, shouldShowFileTags, tagColorData, tagPillIcons]);
 
-        if (!shouldShowPillRowIcons) {
-            return tagContainer;
-        }
-
-        return (
-            <div className="nn-file-pill-row nn-file-pill-row-tags">
-                <ServiceIcon iconId={fileTagPillIconId} className="nn-file-pill-row-icon nn-file-pill-row-icon-tags" aria-hidden={true} />
-                {tagContainer}
-            </div>
-        );
-    }, [categorizedTags, fileTagPillIconId, getTagDisplayName, handleTagClick, shouldShowFileTags, shouldShowPillRowIcons, tagColorData]);
-
-    const renderProperty = useCallback(() => {
-        if (!shouldShowProperty) {
-            return null;
-        }
-
-        const showOnSeparateRows = settings.showPropertiesOnSeparateRows;
-
-        const renderPropertyPill = (pill: PropertyPill, index: number) => {
+    const renderPropertyPill = useCallback(
+        (pill: PropertyPill, index: number) => {
             const isClickable = Boolean(pill.propertyNodeId) && Boolean(pill.propertySearchKey);
             const isWikiLink = Boolean(pill.wikiLink);
             const className = [
@@ -1099,6 +1189,7 @@ export const FileItem = React.memo(function FileItem({
             const resolvedColorData = colorToken || backgroundToken ? propertyColorData.get(cacheKey) : undefined;
             const hasColor = Boolean(resolvedColorData?.hasColor);
             const hasBackground = Boolean(resolvedColorData?.hasBackground);
+            const propertyIconId = propertyPillIcons.get(pill);
 
             return (
                 <span
@@ -1111,66 +1202,53 @@ export const FileItem = React.memo(function FileItem({
                     tabIndex={isClickable ? 0 : undefined}
                     style={resolvedColorData?.style}
                 >
+                    {propertyIconId ? (
+                        <ServiceIcon iconId={propertyIconId} className="nn-file-pill-inline-icon" aria-hidden={true} />
+                    ) : null}
                     {pill.label}
                 </span>
             );
-        };
+        },
+        [handlePropertyClick, propertyColorData, propertyPillIcons]
+    );
 
-        if (!showOnSeparateRows) {
-            const propertyContent = <div className="nn-file-property-row">{propertyPills.map(renderPropertyPill)}</div>;
-
-            if (!shouldShowPillRowIcons) {
-                return propertyContent;
-            }
-
-            return (
-                <div className="nn-file-pill-row nn-file-pill-row-property">
-                    <ServiceIcon
-                        iconId={propertyPillIconId}
-                        className="nn-file-pill-row-icon nn-file-pill-row-icon-property"
-                        aria-hidden={true}
-                    />
-                    {propertyContent}
-                </div>
-            );
+    const renderProperties = useCallback(() => {
+        if (!shouldShowProperty) {
+            return null;
         }
 
-        if (!shouldShowPillRowIcons) {
-            return (
-                <>
-                    {propertyRows.map((row, rowIndex) => (
-                        <div key={rowIndex} className="nn-file-property-row">
-                            {row.map((pill, index) => renderPropertyPill(pill, index))}
-                        </div>
-                    ))}
-                </>
-            );
+        if (!settings.showPropertiesOnSeparateRows) {
+            return <div className="nn-file-property-row">{propertyPills.map(renderPropertyPill)}</div>;
         }
 
         return (
             <>
                 {propertyRows.map((row, rowIndex) => (
-                    <div key={rowIndex} className="nn-file-pill-row nn-file-pill-row-property">
-                        <ServiceIcon
-                            iconId={propertyPillIconId}
-                            className="nn-file-pill-row-icon nn-file-pill-row-icon-property"
-                            aria-hidden={true}
-                        />
-                        <div className="nn-file-property-row">{row.map((pill, index) => renderPropertyPill(pill, index))}</div>
+                    <div key={rowIndex} className="nn-file-property-row">
+                        {row.map((pill, index) => renderPropertyPill(pill, index))}
                     </div>
                 ))}
             </>
         );
-    }, [
-        propertyPillIconId,
-        propertyColorData,
-        propertyPills,
-        propertyRows,
-        handlePropertyClick,
-        settings.showPropertiesOnSeparateRows,
-        shouldShowProperty,
-        shouldShowPillRowIcons
-    ]);
+    }, [propertyPills, propertyRows, renderPropertyPill, settings.showPropertiesOnSeparateRows, shouldShowProperty]);
+
+    const renderWordCountProperty = useCallback(() => {
+        if (!shouldShowWordCountProperty || !wordCountPropertyPill) {
+            return null;
+        }
+
+        return <div className="nn-file-property-row">{renderPropertyPill(wordCountPropertyPill, 0)}</div>;
+    }, [renderPropertyPill, shouldShowWordCountProperty, wordCountPropertyPill]);
+
+    const renderPillRows = useCallback(() => {
+        return (
+            <>
+                {renderTags()}
+                {renderProperties()}
+                {renderWordCountProperty()}
+            </>
+        );
+    }, [renderProperties, renderTags, renderWordCountProperty]);
 
     // Format display date based on current sort
     const displayDate = useMemo(() => {
@@ -1239,7 +1317,7 @@ export const FileItem = React.memo(function FileItem({
     const shouldUseMultiLinePreviewLayout = !pinnedItemShouldUseCompactLayout && appearanceSettings.previewRows >= 2;
     const shouldCollapseEmptyPreviewSpace = heightOptimizationEnabled && !hasPreviewContent && !showFeatureImageArea; // Optimization: compact layout for empty preview
     const shouldAlwaysReservePreviewSpace = heightOptimizationDisabled || hasPreviewContent || showFeatureImageArea; // Show full layout when not optimizing OR has content
-    const hasVisiblePillRows = shouldShowFileTags || shouldShowProperty;
+    const hasVisiblePillRows = shouldShowFileTags || shouldShowProperty || shouldShowWordCountProperty;
     const shouldSuppressEmptyPreviewLines = !hasPreviewContent && hasVisiblePillRows;
     const shouldShowSingleLineSecondLine = settings.showFileDate || (settings.showFilePreview && !shouldSuppressEmptyPreviewLines);
 
@@ -1889,8 +1967,7 @@ export const FileItem = React.memo(function FileItem({
                                     </div>
                                 ) : null}
                             </div>
-                            {renderProperty()}
-                            {renderTags()}
+                            {renderPillRows()}
                         </div>
                     ) : (
                         // ========== NORMAL MODE ==========
@@ -1917,8 +1994,7 @@ export const FileItem = React.memo(function FileItem({
                                         ) : null}
 
                                         {/* Pills */}
-                                        {renderProperty()}
-                                        {renderTags()}
+                                        {renderPillRows()}
 
                                         {/* Parent folder - gets its own line */}
                                         {renderParentFolder()}
@@ -1936,8 +2012,7 @@ export const FileItem = React.memo(function FileItem({
                                         {shouldCollapseEmptyPreviewSpace && (
                                             <>
                                                 {/* Pills (show even when no preview text) */}
-                                                {renderProperty()}
-                                                {renderTags()}
+                                                {renderPillRows()}
                                                 {/* Date + Parent folder share the second line (compact layout) */}
                                                 <div className="nn-file-second-line">
                                                     {settings.showFileDate && <div className="nn-file-date">{displayDate}</div>}
@@ -1962,8 +2037,7 @@ export const FileItem = React.memo(function FileItem({
                                                 )}
 
                                                 {/* Pills */}
-                                                {renderProperty()}
-                                                {renderTags()}
+                                                {renderPillRows()}
 
                                                 {/* Date + Parent folder share the metadata line */}
                                                 <div className="nn-file-second-line">

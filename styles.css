@@ -3923,51 +3923,6 @@ body {
     -ms-overflow-style: none;
 }
 
-.nn-file-pill-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: var(--nn-file-tag-row-gap);
-    height: var(--nn-file-tag-row-height);
-}
-
-.nn-file-pill-row .nn-file-tags,
-.nn-file-pill-row .nn-file-property-row {
-    margin-top: 0;
-    flex: 1;
-    min-width: 0;
-}
-
-.nn-file-pill-row-icon {
-    width: 14px;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.nn-file-pill-row-icon svg {
-    width: 14px;
-    height: 14px;
-}
-
-.nn-file-pill-row-tags .nn-file-pill-row-icon {
-    color: var(--nn-theme-file-tag-color);
-}
-
-.nn-file-pill-row-property .nn-file-pill-row-icon {
-    color: var(--nn-theme-file-property-color);
-}
-
-.nn-file.nn-selected .nn-file-pill-row-tags .nn-file-pill-row-icon {
-    color: var(--nn-selected-file-tag-color);
-}
-
-.nn-file.nn-selected .nn-file-pill-row-property .nn-file-pill-row-icon {
-    color: var(--nn-selected-file-property-color);
-}
-
 .nn-file-tags::-webkit-scrollbar,
 .nn-file-property-row::-webkit-scrollbar {
     display: none;
@@ -3991,6 +3946,22 @@ body {
     font-weight: var(--nn-theme-file-tag-font-weight);
     white-space: nowrap;
     flex-shrink: 0;
+}
+
+.nn-file-pill-inline-icon {
+    width: 12px;
+    height: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    color: currentColor;
+    flex-shrink: 0;
+}
+
+.nn-file-pill-inline-icon svg {
+    width: 12px;
+    height: 12px;
 }
 
 .nn-file-tag[data-has-color='true'],

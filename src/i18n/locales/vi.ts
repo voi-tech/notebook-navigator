@@ -414,8 +414,7 @@ export const STRINGS_VI = {
                 'nav-property-value': 'Giá trị',
                 'list-pinned': 'Mục đã ghim',
                 'file-unfinished-task': 'Nhiệm vụ chưa hoàn thành',
-                'file-word-count': 'Số từ',
-                'file-property': 'Thuộc tính'
+                'file-word-count': 'Số từ'
             }
         },
         colorPicker: {

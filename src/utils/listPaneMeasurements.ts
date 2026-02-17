@@ -107,7 +107,7 @@ export function shouldShowFeatureImageArea({
     return featureImageStatus === 'has';
 }
 
-export function shouldShowPropertyRow({
+function shouldShowPropertyRow({
     notePropertyType,
     showFileProperties,
     showFilePropertiesInCompactMode,
@@ -176,22 +176,21 @@ export function getPropertyRowCount({
 
     const wordCountEnabled =
         notePropertyType === 'wordCount' && typeof wordCount === 'number' && Number.isFinite(wordCount) && wordCount > 0;
-    const wordCountPillCount = wordCountEnabled ? 1 : 0;
+    const wordCountRowCount = wordCountEnabled ? 1 : 0;
 
-    const propertyRowCount =
+    const frontmatterPropertyRowCount =
         showFileProperties && properties
             ? new Set(properties.filter(entry => entry.value.trim().length > 0).map(entry => entry.fieldKey.trim())).size
             : 0;
-    const totalRowCount = wordCountPillCount + propertyRowCount;
-    if (totalRowCount === 0) {
-        return 0;
+
+    if (frontmatterPropertyRowCount === 0) {
+        return wordCountRowCount;
     }
 
-    const shouldUseSeparateRows = showPropertiesOnSeparateRows;
-    if (!shouldUseSeparateRows) {
-        // Property values are rendered as pills on a single row when separate-row mode is disabled.
-        return 1;
+    if (!showPropertiesOnSeparateRows) {
+        // Frontmatter properties share one row in non-separate mode; word count remains its own row.
+        return 1 + wordCountRowCount;
     }
 
-    return totalRowCount;
+    return frontmatterPropertyRowCount + wordCountRowCount;
 }

@@ -416,8 +416,7 @@ export const STRINGS_PL = {
                 'nav-property-value': 'Wartość',
                 'list-pinned': 'Przypięte elementy',
                 'file-unfinished-task': 'Nieukończone zadania',
-                'file-word-count': 'Liczba słów',
-                'file-property': 'Właściwość'
+                'file-word-count': 'Liczba słów'
             }
         },
         colorPicker: {

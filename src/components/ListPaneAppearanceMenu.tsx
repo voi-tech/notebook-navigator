@@ -227,8 +227,8 @@ export function showListPaneAppearanceMenu({
 
         // Note property header
         menu.addItem(item => {
-            item.setTitle(strings.modals.interfaceIcons.items['file-property'])
-                .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'file-property', 'lucide-align-left'))
+            item.setTitle(strings.settings.items.notePropertyType.name)
+                .setIcon(resolveUXIconForMenu(settings.interfaceIcons, 'file-word-count', 'lucide-case-sensitive'))
                 .setDisabled(true);
         });
 

@@ -185,6 +185,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
         const tagBackgroundColors = sanitizeRecord(plugin.settings.tagBackgroundColors);
         const propertyColors = sanitizeRecord(plugin.settings.propertyColors);
         const propertyBackgroundColors = sanitizeRecord(plugin.settings.propertyBackgroundColors);
+        const tagIcons = sanitizeRecord(plugin.settings.tagIcons, isStringRecordValue);
+        const propertyIcons = sanitizeRecord(plugin.settings.propertyIcons, isStringRecordValue);
         const rawInterfaceIcons = plugin.settings.interfaceIcons;
         const interfaceIconsCache = previousInterfaceIconsRef.current;
         const interfaceIcons =
@@ -201,6 +203,8 @@ export function SettingsProvider({ children, plugin }: SettingsProviderProps) {
             tagBackgroundColors,
             propertyColors,
             propertyBackgroundColors,
+            tagIcons,
+            propertyIcons,
             interfaceIcons,
             folderAppearances: cloneAppearanceMap(plugin.settings.folderAppearances),
             tagAppearances: cloneAppearanceMap(plugin.settings.tagAppearances),

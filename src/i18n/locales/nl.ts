@@ -416,8 +416,7 @@ export const STRINGS_NL = {
                 'nav-property-value': 'Waarde',
                 'list-pinned': 'Vastgezette items',
                 'file-unfinished-task': 'Onvoltooide taken',
-                'file-word-count': 'Aantal woorden',
-                'file-property': 'Eigenschap'
+                'file-word-count': 'Aantal woorden'
             }
         },
         colorPicker: {

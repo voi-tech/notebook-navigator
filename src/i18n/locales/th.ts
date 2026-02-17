@@ -414,8 +414,7 @@ export const STRINGS_TH = {
                 'nav-property-value': 'ค่า',
                 'list-pinned': 'รายการที่ปักหมุด',
                 'file-unfinished-task': 'งานที่ยังไม่เสร็จ',
-                'file-word-count': 'จำนวนคำ',
-                'file-property': 'คุณสมบัติ'
+                'file-word-count': 'จำนวนคำ'
             }
         },
         colorPicker: {

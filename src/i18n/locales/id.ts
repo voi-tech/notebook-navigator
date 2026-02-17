@@ -415,8 +415,7 @@ export const STRINGS_ID = {
                 'nav-property-value': 'Nilai',
                 'list-pinned': 'Item tersemat',
                 'file-unfinished-task': 'Tugas belum selesai',
-                'file-word-count': 'Jumlah kata',
-                'file-property': 'Properti'
+                'file-word-count': 'Jumlah kata'
             }
         },
         colorPicker: {

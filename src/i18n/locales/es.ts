@@ -415,8 +415,7 @@ export const STRINGS_ES = {
                 'nav-property-value': 'Valor',
                 'list-pinned': 'Elementos fijados',
                 'file-unfinished-task': 'Tareas pendientes',
-                'file-word-count': 'Conteo de palabras',
-                'file-property': 'Propiedad'
+                'file-word-count': 'Conteo de palabras'
             }
         },
         colorPicker: {

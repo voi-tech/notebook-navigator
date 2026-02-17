@@ -414,8 +414,7 @@ export const STRINGS_ZH_TW = {
                 'nav-property-value': '值',
                 'list-pinned': '釘選項目',
                 'file-unfinished-task': '未完成任務',
-                'file-word-count': '字數統計',
-                'file-property': '屬性'
+                'file-word-count': '字數統計'
             }
         },
         colorPicker: {

@@ -414,8 +414,7 @@ export const STRINGS_JA = {
                 'nav-property-value': '値',
                 'list-pinned': 'ピン留め項目',
                 'file-unfinished-task': '未完了タスク',
-                'file-word-count': '単語数',
-                'file-property': 'プロパティ'
+                'file-word-count': '単語数'
             }
         },
         colorPicker: {

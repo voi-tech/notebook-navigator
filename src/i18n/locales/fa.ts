@@ -414,8 +414,7 @@ export const STRINGS_FA = {
                 'nav-property-value': 'مقدار',
                 'list-pinned': 'آیتم‌های سنجاق شده',
                 'file-unfinished-task': 'وظایف ناتمام',
-                'file-word-count': 'تعداد کلمات',
-                'file-property': 'ویژگی'
+                'file-word-count': 'تعداد کلمات'
             }
         },
         colorPicker: {

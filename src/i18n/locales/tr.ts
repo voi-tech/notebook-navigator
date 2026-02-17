@@ -415,8 +415,7 @@ export const STRINGS_TR = {
                 'nav-property-value': 'Değer',
                 'list-pinned': 'Sabitlenmiş öğeler',
                 'file-unfinished-task': 'Tamamlanmamış görevler',
-                'file-word-count': 'Kelime sayısı',
-                'file-property': 'Özellik'
+                'file-word-count': 'Kelime sayısı'
             }
         },
         colorPicker: {

@@ -413,8 +413,7 @@ export const STRINGS_KO = {
                 'nav-property-value': '값',
                 'list-pinned': '고정 항목',
                 'file-unfinished-task': '미완료 작업',
-                'file-word-count': '단어 수',
-                'file-property': '속성'
+                'file-word-count': '단어 수'
             }
         },
         colorPicker: {

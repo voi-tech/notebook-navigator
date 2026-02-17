@@ -415,8 +415,7 @@ export const STRINGS_UK = {
                 'nav-property-value': 'Значення',
                 'list-pinned': 'Закріплені елементи',
                 'file-unfinished-task': 'Незавершені завдання',
-                'file-word-count': 'Кількість слів',
-                'file-property': 'Властивість'
+                'file-word-count': 'Кількість слів'
             }
         },
         colorPicker: {

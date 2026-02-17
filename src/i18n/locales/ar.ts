@@ -414,8 +414,7 @@ export const STRINGS_AR = {
                 'nav-property-value': 'قيمة',
                 'list-pinned': 'العناصر المثبتة',
                 'file-unfinished-task': 'مهام غير مكتملة',
-                'file-word-count': 'عدد الكلمات',
-                'file-property': 'خاصية'
+                'file-word-count': 'عدد الكلمات'
             }
         },
         colorPicker: {
