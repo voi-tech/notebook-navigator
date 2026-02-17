@@ -374,6 +374,7 @@ export function Calendar({
                     date,
                     resolverContext: dayNoteResolverContext,
                     displayLocale,
+                    weekLocale: calendarRulesLocale,
                     customCalendarRootFolderSettings,
                     momentApi
                 });
@@ -391,6 +392,7 @@ export function Calendar({
             dailyNoteSettings,
             dayNoteResolverContext,
             displayLocale,
+            calendarRulesLocale,
             momentApi,
             settings.calendarIntegrationMode
         ]
@@ -658,6 +660,7 @@ export function Calendar({
             dailyNoteSettings,
             momentApi,
             displayLocale,
+            weekLocale: calendarRulesLocale,
             customCalendarRootFolderSettings,
             openFile,
             clearHoverTooltip,

@@ -558,6 +558,9 @@ export function renderCalendarTab(context: SettingsTabContext): void {
         const fallbackLocale = momentApi.locale() || 'en';
         const requestedDisplayLocale = (currentLanguage || fallbackLocale).replace(/_/g, '-');
         const displayLocale = resolveMomentLocale(requestedDisplayLocale, momentApi, fallbackLocale);
+        const requestedCalendarRulesLocale =
+            plugin.settings.calendarLocale === 'system-default' ? displayLocale : plugin.settings.calendarLocale;
+        const calendarRulesLocale = resolveMomentLocale(requestedCalendarRulesLocale, momentApi, displayLocale);
 
         const sampleDate = momentApi('2026-01-19', 'YYYY-MM-DD', true);
         if (!sampleDate.isValid()) {
@@ -577,7 +580,7 @@ export function renderCalendarTab(context: SettingsTabContext): void {
             const fileFormatter = createCalendarCustomDateFormatter(filePattern);
 
             const momentPattern = folderPattern ? `${folderPattern}/${filePattern}` : filePattern;
-            const dateForPath = resolveCalendarCustomNotePathDate(kind, sampleDate, momentPattern, displayLocale);
+            const dateForPath = resolveCalendarCustomNotePathDate(kind, sampleDate, momentPattern, displayLocale, calendarRulesLocale);
             const folderSuffix = folderFormatter(dateForPath);
             const folderPath = normalizeCalendarVaultFolderPath(folderSuffix || '/');
             const folderPathRelative = folderPath === '/' ? '' : folderPath;

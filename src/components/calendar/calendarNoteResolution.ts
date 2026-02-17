@@ -47,6 +47,7 @@ interface ResolveCalendarNotePathOptions {
     date: MomentInstance;
     resolverContext: CalendarNotePathResolverContext;
     displayLocale: string;
+    weekLocale: string;
     customCalendarRootFolderSettings: CalendarNoteRootFolderSettings;
     momentApi: MomentApi | null;
 }
@@ -69,6 +70,7 @@ export function resolveCalendarNotePath({
     date,
     resolverContext,
     displayLocale,
+    weekLocale,
     customCalendarRootFolderSettings,
     momentApi
 }: ResolveCalendarNotePathOptions): ResolvedCalendarNotePath | null {
@@ -77,7 +79,7 @@ export function resolveCalendarNotePath({
         return null;
     }
 
-    const dateForPath = resolveCalendarCustomNotePathDate(kind, date, momentPattern, displayLocale);
+    const dateForPath = resolveCalendarCustomNotePathDate(kind, date, momentPattern, displayLocale, weekLocale);
     return buildCustomCalendarFilePathForPattern(
         dateForPath,
         customCalendarRootFolderSettings,
@@ -92,6 +94,7 @@ export function getExistingCalendarNoteFile({
     date,
     resolverContext,
     displayLocale,
+    weekLocale,
     customCalendarRootFolderSettings,
     momentApi
 }: GetExistingCalendarNoteFileOptions): TFile | null {
@@ -100,6 +103,7 @@ export function getExistingCalendarNoteFile({
         date,
         resolverContext,
         displayLocale,
+        weekLocale,
         customCalendarRootFolderSettings,
         momentApi
     });

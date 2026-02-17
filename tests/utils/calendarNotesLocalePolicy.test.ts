@@ -70,7 +70,15 @@ describe('calendar note locale policy', () => {
         }
     });
 
-    test('anchors locale week patterns to startOf(week) using display locale', () => {
+    test('anchors locale week patterns to startOf(week) using week locale override', () => {
+        const context = { localeCalls: [] as string[], startOfCalls: [] as string[] };
+        const date = createMoment(context);
+        resolveCalendarCustomNotePathDate('week', date, 'gggg/[W]ww', 'sv', 'de');
+        expect(context.localeCalls).toEqual(['de']);
+        expect(context.startOfCalls).toEqual(['week']);
+    });
+
+    test('anchors locale week patterns to startOf(week) using display locale when week locale is omitted', () => {
         const context = { localeCalls: [] as string[], startOfCalls: [] as string[] };
         const date = createMoment(context);
         resolveCalendarCustomNotePathDate('week', date, 'gggg/[W]ww', 'sv');
@@ -78,10 +86,10 @@ describe('calendar note locale policy', () => {
         expect(context.startOfCalls).toEqual(['week']);
     });
 
-    test('anchors ISO week patterns to startOf(isoWeek) using display locale', () => {
+    test('anchors ISO week patterns to startOf(isoWeek) using week locale override', () => {
         const context = { localeCalls: [] as string[], startOfCalls: [] as string[] };
         const date = createMoment(context);
-        resolveCalendarCustomNotePathDate('week', date, 'GGGG-[W]WW', 'en-gb');
+        resolveCalendarCustomNotePathDate('week', date, 'GGGG-[W]WW', 'fr', 'en-gb');
         expect(context.localeCalls).toEqual(['en-gb']);
         expect(context.startOfCalls).toEqual(['isoWeek']);
     });

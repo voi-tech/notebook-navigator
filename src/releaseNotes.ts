@@ -102,7 +102,8 @@ const RELEASE_NOTES: ReleaseNote[] = [
         ],
         fixed: [
             'Fixed an issue where moving files did not update list pane until refreshing the view.',
-            'Fixed an issue where full month calendar in navigation pane always reserved 6 lines, even if month had 4 or 5 weeks.'
+            'Fixed an issue where full month calendar in navigation pane always reserved 6 lines, even if month had 4 or 5 weeks.',
+            'Fixed an issue where clicking on a week in calendar view opened wrong week in some locales.'
         ]
     },
     {

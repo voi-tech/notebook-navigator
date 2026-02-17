@@ -43,6 +43,7 @@ interface UseCalendarNoteActionsOptions {
     dailyNoteSettings: DailyNoteSettings | null;
     momentApi: MomentApi | null;
     displayLocale: string;
+    weekLocale: string;
     customCalendarRootFolderSettings: CalendarNoteRootFolderSettings;
     openFile: (file: TFile | null, options?: { active?: boolean }) => void;
     clearHoverTooltip: () => void;
@@ -64,6 +65,7 @@ export function useCalendarNoteActions({
     dailyNoteSettings,
     momentApi,
     displayLocale,
+    weekLocale,
     customCalendarRootFolderSettings,
     openFile,
     clearHoverTooltip,
@@ -91,11 +93,12 @@ export function useCalendarNoteActions({
                 date,
                 resolverContext: getCustomCalendarResolverContext(kind),
                 displayLocale,
+                weekLocale,
                 customCalendarRootFolderSettings,
                 momentApi
             });
         },
-        [app, customCalendarRootFolderSettings, displayLocale, getCustomCalendarResolverContext, momentApi]
+        [app, customCalendarRootFolderSettings, displayLocale, getCustomCalendarResolverContext, momentApi, weekLocale]
     );
 
     const openOrCreateCustomCalendarNote = useCallback(
@@ -112,6 +115,7 @@ export function useCalendarNoteActions({
                 date,
                 resolverContext,
                 displayLocale,
+                weekLocale,
                 customCalendarRootFolderSettings,
                 momentApi
             });
@@ -171,7 +175,8 @@ export function useCalendarNoteActions({
             momentApi,
             onVaultChange,
             openFile,
-            settings
+            settings,
+            weekLocale
         ]
     );
 

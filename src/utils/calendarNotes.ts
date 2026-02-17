@@ -108,10 +108,11 @@ export function resolveCalendarCustomNotePathDate(
     kind: CalendarNoteKind,
     date: MomentInstance,
     momentPattern: string,
-    displayLocale: string
+    displayLocale: string,
+    weekLocale?: string
 ): MomentInstance {
     if (kind === 'week') {
-        return getCalendarCustomWeekAnchorDate(date, momentPattern, displayLocale);
+        return getCalendarCustomWeekAnchorDate(date, momentPattern, weekLocale ?? displayLocale);
     }
     return date.clone().locale(displayLocale);
 }
